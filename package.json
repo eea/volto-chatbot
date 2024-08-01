@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-chatbot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "@eeacms/volto-chatbot: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -24,7 +24,8 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "md5": "^2.3.0"
+    "md5": "^2.3.0",
+    "cypress": "13.1.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
@@ -66,8 +67,5 @@
     "i18n": "make i18n",
     "cypress:run": "make cypress-run",
     "cypress:open": "make cypress-open"
-  }
-}
-en": "make cypress-open"
   }
 }

@@ -3,21 +3,15 @@ import { ChatBlockSchema } from './schema';
 import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
 import ChatBlockView from './ChatBlockView';
 import { addAppUrl } from '@plone/volto/helpers';
+import { withDanswerData } from './helpers';
 
 const SearchBlockEdit = (props) => {
-  const { onChangeBlock, block, data } = props;
+  const { onChangeBlock, block, data, assistants } = props;
+  console.log(assistants, data);
 
-  const schema = React.useMemo(() => {
-    const schema = ChatBlockSchema({ formData: data });
-
-    // schema.properties.assistant.choices = Object.keys(searchui).map((k) => [
-    //   k,
-    //   k,
-    //   // conf[k].title || k,
-    // ]);
-
-    return schema;
-  }, [data]);
+  const schema = React.useMemo(() => ChatBlockSchema({ assistants }), [
+    assistants,
+  ]);
 
   return (
     <div>
@@ -41,20 +35,27 @@ const SearchBlockEdit = (props) => {
   );
 };
 
-function withDanswerAssistants(Component) {
-  function WrappedComponent(props) {
-    const [state, setState] = React.useState(null);
-    React.useEffect(() => {
-      async function handler() {
-        const data = await fetch('/_danswer/persona?include_deleted=false');
-        setState(data);
-        console.log('data', data);
-      }
-      handler();
-    }, []);
-    return <Component {...props} />;
-  }
-  return WrappedComponent;
-}
+// function withDanswerAssistants(Component) {
+//   function WrappedComponent(props) {
+//     const [state, setState] = React.useState(null);
+//     React.useEffect(() => {
+//       async function handler() {
+//         const response = await fetch('/_danswer/persona?include_deleted=false');
+//         const data = await response.json();
+//         setState(data);
+//       }
+//       if (!state) handler();
+//     }, [state]);
+//     return state ? (
+//       <Component {...props} assistants={state} />
+//     ) : (
+//       <div>Fetching danswer backend data</div>
+//     );
+//   }
+//   return WrappedComponent;
+// }
 
-export default withDanswerAssistants(SearchBlockEdit);
+export default withDanswerData((props) => [
+  'assistants',
+  fetch('/_danswer/persona?include_deleted=false'),
+])(SearchBlockEdit);

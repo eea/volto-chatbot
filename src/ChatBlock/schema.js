@@ -1,16 +1,17 @@
-export function ChatBlockSchema({ formData }) {
+export function ChatBlockSchema({ assistants }) {
   return {
     title: 'Chatbot',
     fieldsets: [
       {
         id: 'default',
         title: 'Defalt',
-        fields: [],
+        fields: ['assistant'],
       },
     ],
     properties: {
-      title: {
-        title: 'Title',
+      assistant: {
+        title: 'Assistant',
+        choices: assistants.map(({ id, name }) => [id.toString(), name]),
       },
     },
     required: [],

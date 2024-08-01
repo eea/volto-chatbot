@@ -4,18 +4,27 @@ export function withDanswerData(callback) {
   function wrapper(Component) {
     function WrappedComponent(props) {
       const [state, setState] = React.useState(null);
+      const isEmpty = !state;
+
       React.useEffect(() => {
         async function handler() {
-          const response = await fetch(
-            '/_danswer/persona?include_deleted=false',
-          );
-          const data = await response.json();
-          setState(data);
+          const [name, fetcher] = callback(props);
+          if (fetcher) {
+            const response = await fetcher;
+            const data = await response.json();
+            setState({ [name]: data });
+          }
         }
-        if (!state) handler();
-      }, [state]);
+        if (isEmpty) handler();
+      });
 
-      return <Component {...props} />;
+      console.log('state', state);
+
+      return state ? (
+        <Component {...props} {...state} />
+      ) : (
+        <div>Fetching external data...</div>
+      );
     }
     return WrappedComponent;
   }

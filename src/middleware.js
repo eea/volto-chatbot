@@ -1,11 +1,13 @@
 import superagent from 'superagent';
 
 let cached_auth_cookie = null;
+// TODO: use time-based invalidation
 let last_fetched = null;
 
-const INVALID_MSG =
+const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing DANSWER username and password';
-const FETCH_AUTH_COOKIE_MSG = 'Error while fetching authentication cookie';
+const MSG_FETCH_COOKIE = 'Error while fetching authentication cookie';
+const MSG_ERROR_REQUEST = 'Error in processing request to Danswer';
 
 async function get_login_cookie(username, password) {
   const url = `${process.env.DANSWER_URL}/api/auth/login`;
@@ -23,7 +25,7 @@ async function get_login_cookie(username, password) {
     return header;
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error in fetching login cookie', error);
+    console.error(MSG_FETCH_COOKIE, error);
   }
 }
 
@@ -38,10 +40,8 @@ export default async function middleware(req, res, next) {
 
   if (!(username && password)) {
     res.send({
-      error: INVALID_MSG,
+      error: MSG_INVALID_CONFIGURATION,
     });
-    // eslint-disable-next-line no-console
-    console.warn(INVALID_MSG);
     return;
   }
 
@@ -53,9 +53,13 @@ export default async function middleware(req, res, next) {
     const response = await handler(url)
       .type('json')
       .set('Cookie', cached_auth_cookie);
+
     res.send(response.body);
     return;
-  } catch {}
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(MSG_ERROR_REQUEST, error);
+  }
 
   res.send({ error: 'nothing yet', path });
 }

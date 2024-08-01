@@ -45,7 +45,9 @@ module.exports = {
   },
   ...(process.env.JEST_USE_SETUP === 'ON' && {
     setupFilesAfterEnv: [
-      '<rootDir>/node_modules/@eeacms/volto-addon-template/jest.setup.js',
+      '<rootDir>/node_modules/@eeacms/volto-chatbot/jest.setup.js',
     ],
   }),
+}
+ }),
 }

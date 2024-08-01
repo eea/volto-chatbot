@@ -68,6 +68,3 @@
     "cypress:open": "make cypress-open"
   }
 }
-en": "make cypress-open"
-  }
-}

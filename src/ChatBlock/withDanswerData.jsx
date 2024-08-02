@@ -1,24 +1,22 @@
 import React from 'react';
 
-export function withDanswerData(callback) {
+export default function withDanswerData(callback) {
   function wrapper(Component) {
     function WrappedComponent(props) {
       const [state, setState] = React.useState(null);
-      const isEmpty = !state;
+      const [name, fetcher, depKey] = callback(props);
 
       React.useEffect(() => {
         async function handler() {
-          const [name, fetcher] = callback(props);
           if (fetcher) {
             const response = await fetcher;
-            const data = await response.json();
-            setState({ [name]: data });
+            setState({ [name]: response.body });
           }
         }
-        if (isEmpty) handler();
-      });
-
-      console.log('state', state);
+        handler();
+        // the fetcher is not a stable function, but we depend on the relevant depKey
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+      }, [depKey, name]);
 
       return state ? (
         <Component {...props} {...state} />

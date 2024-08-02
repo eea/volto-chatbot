@@ -1,6 +1,7 @@
 import React from 'react';
-import { withDanswerData } from './helpers';
+import withDanswerData from './withDanswerData';
 import ChatWindow from './ChatWindow';
+import superagent from 'superagent';
 
 function StarterMessage({ msg }) {
   const handler = () => {
@@ -38,6 +39,7 @@ function ChatBlockView(props) {
 export default withDanswerData((props) => [
   'assistantData',
   typeof props.data?.assistant !== 'undefined'
-    ? fetch(`/_danswer/persona/${props.data.assistant}`)
+    ? superagent.get(`/_danswer/persona/${props.data.assistant}`).type('json')
     : null,
+  props.data?.assistant,
 ])(ChatBlockView);

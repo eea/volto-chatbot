@@ -1,13 +1,13 @@
 import React from 'react';
+import superagent from 'superagent';
 import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
 
 import ChatBlockView from './ChatBlockView';
 import { ChatBlockSchema } from './schema';
-import { withDanswerData } from './helpers';
+import withDanswerData from './withDanswerData';
 
 const SearchBlockEdit = (props) => {
-  const { onChangeBlock, block, data, assistants } = props;
-  console.log(assistants, data);
+  const { onChangeBlock, block, assistants } = props;
 
   const schema = React.useMemo(
     () => ChatBlockSchema({ assistants }),
@@ -16,7 +16,7 @@ const SearchBlockEdit = (props) => {
 
   return (
     <div>
-      <ChatBlockView {...props} mode="edit"></ChatBlockView>
+      <ChatBlockView {...props} mode="edit" />
       <SidebarPortal selected={props.selected}>
         <BlockDataForm
           schema={schema}
@@ -36,7 +36,7 @@ const SearchBlockEdit = (props) => {
   );
 };
 
-export default withDanswerData((props) => [
+export default withDanswerData(() => [
   'assistants',
-  fetch('/_danswer/persona?include_deleted=false'),
+  superagent.get('/_danswer/persona?include_deleted=false').type('json'),
 ])(SearchBlockEdit);

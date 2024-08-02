@@ -8,13 +8,8 @@ import { ChatMessageBubble } from './ChatMessageBubble';
 import AutoResizeTextarea from './AutoResizeTextarea';
 
 function ChatWindow(props) {
-  const {
-    highlightJs,
-    marked,
-    fastJsonPatch,
-    fetchEventSource,
-    persona,
-  } = props;
+  const { highlightJs, marked, fastJsonPatch, fetchEventSource, persona } =
+    props;
 
   const libs = {
     highlightJs,

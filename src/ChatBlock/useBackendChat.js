@@ -72,8 +72,10 @@ export function useBackendChat({ endpoint, libs }) {
           }
           if (msg.event === 'data' && msg.data) {
             const chunk = JSON.parse(msg.data);
-            streamedResponse = applyPatch(streamedResponse, chunk.ops)
-              .newDocument;
+            streamedResponse = applyPatch(
+              streamedResponse,
+              chunk.ops,
+            ).newDocument;
 
             if (
               Array.isArray(

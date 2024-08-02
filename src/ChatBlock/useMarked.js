@@ -20,8 +20,10 @@ export function useMarked(libs) {
     const validLanguage = hljs.getLanguage(language || '')
       ? language
       : 'plaintext';
-    const highlightedCode = hljs.highlight(validLanguage || 'plaintext', code)
-      .value;
+    const highlightedCode = hljs.highlight(
+      validLanguage || 'plaintext',
+      code,
+    ).value;
     return `<pre class="highlight bg-gray-700" style="padding: 5px; border-radius: 5px; overflow: auto; overflow-wrap: anywhere; white-space: pre-wrap; max-width: 100%; display: block; line-height: 1.2">
 <code class="${language}" style="color: #d6e2ef; font-size: 12px; ">${highlightedCode}</code>
 </pre>`;

@@ -9,9 +9,10 @@ const SearchBlockEdit = (props) => {
   const { onChangeBlock, block, data, assistants } = props;
   console.log(assistants, data);
 
-  const schema = React.useMemo(() => ChatBlockSchema({ assistants }), [
-    assistants,
-  ]);
+  const schema = React.useMemo(
+    () => ChatBlockSchema({ assistants }),
+    [assistants],
+  );
 
   return (
     <div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { withDanswerData } from './helpers';
+import ChatWindow from './ChatWindow';
 
 function StarterMessage({ msg }) {
   const handler = () => {
@@ -13,8 +14,11 @@ function StarterMessage({ msg }) {
   );
 }
 
-function ChatBlockView({ assistantData }) {
+function ChatBlockView(props) {
+  const { assistantData } = props;
+
   console.log(assistantData);
+
   return assistantData ? (
     <div>
       <h2>{assistantData.name}</h2>
@@ -23,6 +27,7 @@ function ChatBlockView({ assistantData }) {
         {assistantData?.starter_messages?.map((msg) => (
           <StarterMessage key={msg.name} msg={msg} />
         ))}
+        <ChatWindow />
       </div>
     </div>
   ) : (

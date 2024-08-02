@@ -1,4 +1,5 @@
 import installChatBlock from './ChatBlock';
+import loadable from '@loadable/component';
 
 const applyConfig = (config) => {
   if (__SERVER__) {
@@ -13,6 +14,17 @@ const applyConfig = (config) => {
       middleware,
     ];
   }
+
+  config.settings.loadables = {
+    ...config.settings.loadables,
+    highlightJs: loadable.lib(() => import('highlight.js')),
+    fastJsonPatch: loadable.lib(() => import('fast-json-patch')),
+    marked: loadable.lib(() => import('marked')),
+    fetchEventSource: loadable.lib(() =>
+      import('@microsoft/fetch-event-source'),
+    ),
+  };
+
   installChatBlock(config);
 
   return config;

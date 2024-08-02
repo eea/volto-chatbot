@@ -1,7 +1,9 @@
 import superagent from 'superagent';
+import fetch from 'node-fetch';
 
 let cached_auth_cookie = null;
 // TODO: use time-based invalidation
+// eslint-disable-next-line
 let last_fetched = null;
 
 const MSG_INVALID_CONFIGURATION =
@@ -32,7 +34,6 @@ async function get_login_cookie(username, password) {
 export default async function middleware(req, res, next) {
   const path = req.url.replace('/_da/', '/');
 
-  const handler = superagent[req.method.toLowerCase()];
   const url = `${process.env.DANSWER_URL}/api${path}`;
 
   const username = process.env.DANSWER_USERNAME;
@@ -49,38 +50,25 @@ export default async function middleware(req, res, next) {
     cached_auth_cookie = await get_login_cookie(username, password);
   }
 
-  console.log('body', req.url, req.body);
+  const options = {
+    method: req.method,
+    headers: {
+      Cookie: cached_auth_cookie,
+      'Content-Type': 'application/json',
+    },
+  };
 
-  await handler(url)
-    .set('Cookie', cached_auth_cookie)
-    .send(req.body)
-    .buffer(true)
-    // .parse((res, callback) => {
-    //   // This function does nothing to avoid parsing
-    //   res.setEncoding('binary');
-    //   res.data = '';
-    //   res.on('data', (chunk) => {
-    //     res.data += chunk;
-    //   });
-    //   res.on('end', () => {
-    //     callback(null, Buffer.from(res.data, 'binary'));
-    //   });
-    // })
-    .on('response', (backendRes) => {
-      console.log('response');
-      // res.set(backendRes.headers);
-      res.set('Content-type', 'application/json');
-      if (backendRes.type === 'application/json') {
-        res.send(backendRes.body);
-      } else {
-        backendRes.pipe(res);
-      }
-    })
-    .on('error', (error) => {
-      // eslint-disable-next-line no-console
-      console.error(MSG_ERROR_REQUEST, error.response?.text || error);
-      res.send({ error: error.text });
-    });
+  if (req.body && req.method === 'POST') {
+    options.body = JSON.stringify(req.body);
+  }
+  try {
+    const response = await fetch(url, options, req.body);
 
-  // res.send({ error: 'nothing yet', path });
+    res.set('Content-type', 'application/json');
+    response.body.pipe(res);
+  } catch (error) {
+    // eslint-disable-next-line
+    console.error(MSG_ERROR_REQUEST, error?.response?.text);
+    res.send({ error: error?.response?.text || 'error' });
+  }
 }

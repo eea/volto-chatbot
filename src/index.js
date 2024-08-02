@@ -6,7 +6,7 @@ const applyConfig = (config) => {
     const express = require('express');
     const middleware = express.Router();
     const proxyMiddleware = require('./middleware').default;
-    middleware.all('**/_danswer/**', proxyMiddleware);
+    middleware.all('**/_da/**', proxyMiddleware);
     middleware.id = 'danswer';
 
     config.settings.expressMiddleware = [

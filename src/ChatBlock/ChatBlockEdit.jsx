@@ -38,5 +38,5 @@ const SearchBlockEdit = (props) => {
 
 export default withDanswerData(() => [
   'assistants',
-  superagent.get('/_danswer/persona?include_deleted=false').type('json'),
+  superagent.get('/_da/persona?include_deleted=false').type('json'),
 ])(SearchBlockEdit);

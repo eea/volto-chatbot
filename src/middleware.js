@@ -30,7 +30,7 @@ async function get_login_cookie(username, password) {
 }
 
 export default async function middleware(req, res, next) {
-  const path = req.url.replace('/_danswer/', '/');
+  const path = req.url.replace('/_da/', '/');
 
   const handler = superagent[req.method.toLowerCase()];
   const url = `${process.env.DANSWER_URL}/api${path}`;
@@ -49,17 +49,38 @@ export default async function middleware(req, res, next) {
     cached_auth_cookie = await get_login_cookie(username, password);
   }
 
-  try {
-    const response = await handler(url)
-      .type('json')
-      .set('Cookie', cached_auth_cookie);
+  console.log('body', req.url, req.body);
 
-    res.send(response.body);
-    return;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(MSG_ERROR_REQUEST, error);
-  }
+  await handler(url)
+    .set('Cookie', cached_auth_cookie)
+    .send(req.body)
+    .buffer(true)
+    // .parse((res, callback) => {
+    //   // This function does nothing to avoid parsing
+    //   res.setEncoding('binary');
+    //   res.data = '';
+    //   res.on('data', (chunk) => {
+    //     res.data += chunk;
+    //   });
+    //   res.on('end', () => {
+    //     callback(null, Buffer.from(res.data, 'binary'));
+    //   });
+    // })
+    .on('response', (backendRes) => {
+      console.log('response');
+      // res.set(backendRes.headers);
+      res.set('Content-type', 'application/json');
+      if (backendRes.type === 'application/json') {
+        res.send(backendRes.body);
+      } else {
+        backendRes.pipe(res);
+      }
+    })
+    .on('error', (error) => {
+      // eslint-disable-next-line no-console
+      console.error(MSG_ERROR_REQUEST, error.response?.text || error);
+      res.send({ error: error.text });
+    });
 
-  res.send({ error: 'nothing yet', path });
+  // res.send({ error: 'nothing yet', path });
 }

@@ -8,7 +8,13 @@ import { ChatMessageBubble } from './ChatMessageBubble';
 import AutoResizeTextarea from './AutoResizeTextarea';
 
 function ChatWindow(props) {
-  const { highlightJs, marked, fastJsonPatch, fetchEventSource, data } = props;
+  const {
+    highlightJs,
+    marked,
+    fastJsonPatch,
+    fetchEventSource,
+    persona,
+  } = props;
 
   const libs = {
     highlightJs,
@@ -21,6 +27,7 @@ function ChatWindow(props) {
   const { sendMessage, input, setInput, messages, isLoading } = useBackendChat({
     endpoint,
     libs,
+    persona,
   });
   const textareaRef = React.useRef(null);
 
@@ -45,7 +52,7 @@ function ChatWindow(props) {
               />
             ))
         ) : (
-          <EmptyState onChoice={sendMessage} data={data} />
+          <EmptyState onChoice={sendMessage} persona={persona} />
         )}
         <Form>
           <AutoResizeTextarea

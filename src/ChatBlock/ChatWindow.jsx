@@ -47,7 +47,6 @@ function ChatWindow({ persona }) {
           <AutoResizeTextarea
             ref={textareaRef}
             value={input}
-            maxRows={20}
             placeholder={
               messages.length > 0 ? 'Ask follow-up...' : 'Placeholder text'
             }
@@ -64,7 +63,6 @@ function ChatWindow({ persona }) {
             trigger={
               <Button
                 variant="ghost"
-                size="sm"
                 disabled={isLoading}
                 type="submit"
                 aria-label="Send"

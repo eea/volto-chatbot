@@ -346,33 +346,6 @@ class SubmitHandler {
         }
       }
     }
-
-    // try {
-    // } catch (e) {
-    //   const errorMsg = e.message;
-    //   console.log('error', e);
-    //   upsertToCompleteMessageMap({
-    //     messages: [
-    //       {
-    //         messageId: TEMP_USER_MESSAGE_ID,
-    //         message: currMessage,
-    //         type: 'user',
-    //         files: [], // currentMessageFiles,
-    //         toolCalls: [],
-    //         parentMessageId: parentMessage?.messageId || SYSTEM_MESSAGE_ID,
-    //       },
-    //       {
-    //         messageId: TEMP_ASSISTANT_MESSAGE_ID,
-    //         message: errorMsg,
-    //         type: 'error',
-    //         files: aiMessageImages || [],
-    //         toolCalls: [],
-    //         parentMessageId: TEMP_USER_MESSAGE_ID,
-    //       },
-    //     ],
-    //     completeMessageMapOverride: frozenMessageMap,
-    //   });
-    // }
     this.setIsStreaming(false);
   }
 }
@@ -391,6 +364,7 @@ export function useBackendChat({ persona }) {
     sessionId: null,
     messageMap: new Map(),
   });
+
   const messageHistory = buildLatestMessageChain(
     completeMessageDetail.messageMap,
   );
@@ -409,23 +383,3 @@ export function useBackendChat({ persona }) {
 
   return { messages: messageHistory, onSubmit: submitHandler.onSubmit };
 }
-
-// const updateFn = ({
-//   messages,
-//   finalMessage,
-//   frozenMessageMap,
-//   frozenSessionId,
-// }) => {
-//   const replacementsMap = finalMessage
-//     ? new Map([
-//         [messages[0].messageId, TEMP_USER_MESSAGE_ID],
-//         [messages[1].messageId, TEMP_ASSISTANT_MESSAGE_ID],
-//       ])
-//     : null;
-//   upsertToCompleteMessageMap({
-//     messages: messages,
-//     replacementsMap: replacementsMap,
-//     completeMessageMapOverride: frozenMessageMap,
-//     chatSessionId: frozenSessionId,
-//   });
-// };

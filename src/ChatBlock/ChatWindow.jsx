@@ -1,11 +1,11 @@
+import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import React from 'react';
 import { Button, Form } from 'semantic-ui-react';
-import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 
-import { useBackendChat } from './useBackendChat';
-// import EmptyState from './EmptyState';
-// import { ChatMessageBubble } from './ChatMessageBubble';
 import AutoResizeTextarea from './AutoResizeTextarea';
+import { ChatMessageBubble } from './ChatMessageBubble';
+import EmptyState from './EmptyState';
+import { useBackendChat } from './useBackendChat';
 
 function ChatWindow({ persona }) {
   const { onSubmit, messages, isLoading } = useBackendChat({
@@ -21,28 +21,24 @@ function ChatWindow({ persona }) {
     }
   }, []);
 
-  // console.log(messages);
-
-  // {messages.length > 0 ? (
-  //   [...messages]
-  //     .reverse()
-  //     .map((m, index) => (
-  //       <ChatMessageBubble
-  //         sources={[]}
-  //         key={m.id}
-  //         message={m}
-  //         aiEmoji="🦜"
-  //         isMostRecent={index === 0}
-  //         isLoading={isLoading}
-  //       />
-  //     ))
-  // ) : (
-  //   <EmptyState onChoice={sendMessage} persona={persona} />
-  // )}
+  console.log(messages);
 
   return (
     <div>
       <div className="flex flex-col-reverse w-full mb-2 overflow-auto">
+        {messages.length > 0 ? (
+          messages.map((m, index) => (
+            <ChatMessageBubble
+              sources={[]}
+              key={m.messageId}
+              message={m}
+              isMostRecent={index === 0}
+              isLoading={isLoading}
+            />
+          ))
+        ) : (
+          <EmptyState onChoice={onSubmit} persona={persona} />
+        )}
         <Form>
           <AutoResizeTextarea
             ref={textareaRef}

@@ -4,7 +4,7 @@ export function ChatMessageBubble(props) {
   const { message, isLoading, isMostRecent, sources } = props;
   const showLoader = isMostRecent && isLoading;
   const colorClassName =
-    message.role === 'user' ? 'bg-lime-300' : 'bg-slate-50 text-black';
+    message.type === 'user' ? 'bg-lime-300' : 'bg-slate-50 text-black';
   const alignmentClassName = message.role === 'user' ? 'ml-auto' : 'mr-auto';
 
   // const icon =
@@ -22,7 +22,7 @@ export function ChatMessageBubble(props) {
     >
       {/* <div className="mr-2">{icon}</div> */}
       <div className="whitespace-pre-wrap flex flex-col">
-        <span dangerouslySetInnerHTML={{ __html: message.content }}></span>
+        <span dangerouslySetInnerHTML={{ __html: message.message }}></span>
         {!showLoader && sources && sources.length ? (
           <>
             <code className="mt-4 mr-auto bg-gray-200 px-2 py-1 rounded">

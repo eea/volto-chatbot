@@ -31,12 +31,12 @@ const delay = (ms) => {
 };
 
 function upsertToCompleteMessageMap({
-  messages,
-  completeMessageMapOverride,
   chatSessionId,
-  replacementsMap = null,
-  makeLatestChildMessage = false,
   completeMessageDetail,
+  completeMessageMapOverride,
+  makeLatestChildMessage = false,
+  messages,
+  replacementsMap = null,
   setCompleteMessageDetail,
 }) {
   // deep copy
@@ -199,12 +199,15 @@ class SubmitHandler {
       });
     }
 
-    const result = upsertToCompleteMessageMap({
+    const info = {
       messages: messageUpdates,
       chatSessionId: this.currChatSessionId,
       completeMessageDetail: this.completeMessageDetail,
       setCompleteMessageDetail: this.setCompleteMessageDetail,
-    });
+    };
+    console.log('will upsert from onSubmit', info);
+
+    const result = upsertToCompleteMessageMap(info);
 
     console.log('result from upsert', result);
 
@@ -331,12 +334,15 @@ class SubmitHandler {
                 [localMessages[1].messageId, TEMP_ASSISTANT_MESSAGE_ID],
               ])
             : null;
-          upsertToCompleteMessageMap({
+          const info = {
+            chatSessionId: frozenSessionId,
+            completeMessageMapOverride: frozenMessageMap,
             messages: localMessages,
             replacementsMap: replacementsMap,
-            completeMessageMapOverride: frozenMessageMap,
-            chatSessionId: frozenSessionId,
-          });
+            setCompleteMessageDetail: this.setCompleteMessageDetail,
+          };
+          console.log('upserting info', info);
+          upsertToCompleteMessageMap(info);
         }
 
         if (this.isCancelledRef.current) {

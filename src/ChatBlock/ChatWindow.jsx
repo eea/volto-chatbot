@@ -7,17 +7,17 @@ import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useBackendChat } from './useBackendChat';
 
-function ChatWindow({ persona }) {
+function ChatWindow({ persona, marked, highlightJs }) {
+  const libs = { marked, highlightJs }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isLoading } = useBackendChat({
     persona,
   });
-  const textareaRef = React.useRef(null);
   const [input, setInput] = React.useState('');
 
+  const textareaRef = React.useRef(null);
   React.useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.focus();
-      // console.log('focusing', textareaRef);
     }
   }, []);
 
@@ -34,6 +34,7 @@ function ChatWindow({ persona }) {
               message={m}
               isMostRecent={index === 0}
               isLoading={isLoading}
+              libs={libs}
             />
           ))
         ) : (
@@ -82,8 +83,7 @@ function ChatWindow({ persona }) {
 }
 
 export default injectLazyLibs([
-  'highlightJs',
+  // 'rehypePrism', 'remarkGfm'
   'marked',
-  'fastJsonPatch',
-  'fetchEventSource',
+  'highlightJs',
 ])(ChatWindow);

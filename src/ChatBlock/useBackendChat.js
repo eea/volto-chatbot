@@ -111,9 +111,11 @@ class SubmitHandler {
     this.completeMessageDetail = completeMessageDetail;
     this.currChatSessionId = currChatSessionId;
     this.setCurrChatSessionId = setCurrChatSessionId;
+
+    this.onSubmit = this.onSubmit.bind(this);
   }
 
-  async apply({
+  async onSubmit({
     messageIdToResend,
     messageOverride,
     queryOverride,
@@ -380,7 +382,7 @@ export function useBackendChat({ persona }) {
     completeMessageDetail.messageMap,
   );
 
-  const onSubmit = new SubmitHandler({
+  const submitHandler = new SubmitHandler({
     persona,
     setIsStreaming,
     isCancelledRef,
@@ -391,5 +393,5 @@ export function useBackendChat({ persona }) {
     setCurrChatSessionId,
   });
 
-  return { messages: messageHistory, onSubmit };
+  return { messages: messageHistory, onSubmit: submitHandler.onSubmit };
 }

@@ -26,6 +26,10 @@ export const ChatFileType = {
   PLAIN_TEXT: 'plain_text',
 };
 
+const delay = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 function upsertToCompleteMessageMap({
   messages,
   completeMessageMapOverride,
@@ -38,9 +42,11 @@ function upsertToCompleteMessageMap({
   // deep copy
   const frozenCompleteMessageMap =
     completeMessageMapOverride || completeMessageDetail.messageMap;
+
   // eslint is old, structuredClone is builtin
   // eslint-disable-next-line no-undef
   const newCompleteMessageMap = structuredClone(frozenCompleteMessageMap);
+
   if (newCompleteMessageMap.size === 0) {
     const systemMessageId = messages[0].parentMessageId || SYSTEM_MESSAGE_ID;
     const firstMessageId = messages[0].messageId;
@@ -102,6 +108,7 @@ class SubmitHandler {
     completeMessageDetail,
     currChatSessionId,
     setCurrChatSessionId,
+    setCompleteMessageDetail,
   }) {
     this.persona = persona;
     this.setIsStreaming = setIsStreaming;
@@ -111,6 +118,7 @@ class SubmitHandler {
     this.completeMessageDetail = completeMessageDetail;
     this.currChatSessionId = currChatSessionId;
     this.setCurrChatSessionId = setCurrChatSessionId;
+    this.setCompleteMessageDetail = setCompleteMessageDetail;
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -145,6 +153,7 @@ class SubmitHandler {
       ? this.messageHistory.indexOf(messageToResend)
       : null;
     if (!messageToResend && messageIdToResend !== undefined) {
+      // eslint-disable-next-line no-console
       console.log({
         message:
           'Failed to re-send message - please refresh the page and try again.',
@@ -189,12 +198,15 @@ class SubmitHandler {
         latestChildMessageId: TEMP_USER_MESSAGE_ID,
       });
     }
+
     const result = upsertToCompleteMessageMap({
       messages: messageUpdates,
       chatSessionId: this.currChatSessionId,
       completeMessageDetail: this.completeMessageDetail,
       setCompleteMessageDetail: this.setCompleteMessageDetail,
     });
+
+    console.log('result from upsert', result);
 
     const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = result;
 
@@ -217,149 +229,150 @@ class SubmitHandler {
     let finalMessage = null;
     let toolCalls = [];
 
-    try {
-      const glsm = getLastSuccessfulMessageId;
-      const lastSuccessfulMessageId = glsm(currMessageHistory);
+    const glsm = getLastSuccessfulMessageId;
+    const lastSuccessfulMessageId = glsm(currMessageHistory);
 
-      const stack = new CurrentMessageFIFO();
-      updateCurrentMessageFIFO(
-        stack,
-        {
-          message: currMessage,
-          alternateAssistantId: currentAssistantId,
-          fileDescriptors: [],
-          parentMessageId: lastSuccessfulMessageId,
-          chatSessionId: this.currChatSessionId,
-          promptId: 0,
-          filters: [],
-          selectedDocumentIds: [],
-          queryOverride,
-          forceSearch,
-          useExistingUserMessage: isSeededChat,
-        },
-        this.isCancelledRef,
-        this.setIsCancelled,
-      );
+    const stack = new CurrentMessageFIFO();
+    await updateCurrentMessageFIFO(
+      stack,
+      {
+        message: currMessage,
+        alternateAssistantId: currentAssistantId,
+        fileDescriptors: [],
+        parentMessageId: lastSuccessfulMessageId,
+        chatSessionId: this.currChatSessionId,
+        promptId: 0,
+        filters: [],
+        selectedDocumentIds: [],
+        queryOverride,
+        forceSearch,
+        useExistingUserMessage: isSeededChat,
+      },
+      this.isCancelledRef,
+      this.setIsCancelled,
+    );
 
-      const updateFn = (messages) => {
-        const replacementsMap = finalMessage
-          ? new Map([
-              [messages[0].messageId, TEMP_USER_MESSAGE_ID],
-              [messages[1].messageId, TEMP_ASSISTANT_MESSAGE_ID],
-            ])
-          : null;
-        upsertToCompleteMessageMap({
-          messages: messages,
-          replacementsMap: replacementsMap,
-          completeMessageMapOverride: frozenMessageMap,
-          chatSessionId: frozenSessionId,
-        });
-      };
-      const delay = (ms) => {
-        return new Promise((resolve) => setTimeout(resolve, ms));
-      };
+    await delay(50);
 
-      await delay(50);
-      while (!stack.isComplete || !stack.isEmpty()) {
-        await delay(2);
+    while (!stack.isComplete || !stack.isEmpty()) {
+      // console.log('loop', stack, stack.isEmpty(), stack.isComplete);
+      await delay(2);
 
-        if (!stack.isEmpty()) {
-          const packet = stack.nextPacket();
+      if (!stack.isEmpty()) {
+        const packet = stack.nextPacket();
+        console.log('packet', packet);
 
-          if (packet) {
-            if (Object.hasOwn(packet, 'answer_piece')) {
-              answer += packet.answer_piece;
-            } else if (Object.hasOwn(packet, 'top_documents')) {
-              documents = packet.top_documents;
-              query = packet.rephrased_query;
-              retrievalType = RetrievalType.Search;
-              if (documents && documents.length > 0) {
-                // point to the latest message (we don't know the messageId yet, which is why
-                // we have to use -1)
-                // setSelectedMessageForDocDisplay(TEMP_USER_MESSAGE_ID);
-              }
-            } else if (Object.hasOwn(packet, 'tool_name')) {
-              toolCalls = [
-                {
-                  tool_name: packet.tool_name,
-                  tool_args: packet.tool_args,
-                  tool_result: packet.tool_result,
-                },
-              ];
-            } else if (Object.hasOwn(packet, 'file_ids')) {
-              aiMessageImages = packet.file_ids.map((fileId) => {
-                return {
-                  id: fileId,
-                  type: ChatFileType.IMAGE,
-                };
-              });
-            } else if (Object.hasOwn(packet, 'error')) {
-              error = packet.error;
-            } else if (Object.hasOwn(packet, 'message_id')) {
-              finalMessage = packet;
+        if (packet) {
+          if (Object.hasOwn(packet, 'answer_piece')) {
+            answer += packet.answer_piece;
+          } else if (Object.hasOwn(packet, 'top_documents')) {
+            documents = packet.top_documents;
+            query = packet.rephrased_query;
+            retrievalType = RetrievalType.Search;
+            if (documents && documents.length > 0) {
+              // point to the latest message (we don't know the messageId yet, which is why
+              // we have to use -1)
+              // setSelectedMessageForDocDisplay(TEMP_USER_MESSAGE_ID);
             }
+          } else if (Object.hasOwn(packet, 'tool_name')) {
+            toolCalls = [
+              {
+                tool_name: packet.tool_name,
+                tool_args: packet.tool_args,
+                tool_result: packet.tool_result,
+              },
+            ];
+          } else if (Object.hasOwn(packet, 'file_ids')) {
+            aiMessageImages = packet.file_ids.map((fileId) => {
+              return {
+                id: fileId,
+                type: ChatFileType.IMAGE,
+              };
+            });
+          } else if (Object.hasOwn(packet, 'error')) {
+            error = packet.error;
+          } else if (Object.hasOwn(packet, 'message_id')) {
+            finalMessage = packet;
+          }
 
-            const newUserMessageId =
-              finalMessage?.parent_message || TEMP_USER_MESSAGE_ID;
-            const newAssistantMessageId =
-              finalMessage?.message_id || TEMP_ASSISTANT_MESSAGE_ID;
-            updateFn([
-              {
-                messageId: newUserMessageId,
-                message: currMessage,
-                type: 'user',
-                files: [],
-                toolCalls: [],
-                parentMessageId: parentMessage?.messageId || null,
-                childrenMessageIds: [newAssistantMessageId],
-                latestChildMessageId: newAssistantMessageId,
-              },
-              {
-                messageId: newAssistantMessageId,
-                message: error || answer,
-                type: error ? 'error' : 'assistant',
-                retrievalType,
-                query: finalMessage?.rephrased_query || query,
-                documents:
-                  finalMessage?.context_docs?.top_documents || documents,
-                citations: finalMessage?.citations || {},
-                files: finalMessage?.files || aiMessageImages || [],
-                toolCalls: finalMessage?.tool_calls || toolCalls,
-                parentMessageId: newUserMessageId,
-                alternateAssistantID: null, // alternativeAssistant?.id,
-              },
-            ]);
-          }
-          if (this.isCancelledRef.current) {
-            this.setIsCancelled(false);
-            break;
-          }
+          const newUserMessageId =
+            finalMessage?.parent_message || TEMP_USER_MESSAGE_ID;
+          const newAssistantMessageId =
+            finalMessage?.message_id || TEMP_ASSISTANT_MESSAGE_ID;
+
+          const localMessages = [
+            {
+              messageId: newUserMessageId,
+              message: currMessage,
+              type: 'user',
+              files: [],
+              toolCalls: [],
+              parentMessageId: parentMessage?.messageId || null,
+              childrenMessageIds: [newAssistantMessageId],
+              latestChildMessageId: newAssistantMessageId,
+            },
+            {
+              messageId: newAssistantMessageId,
+              message: error || answer,
+              type: error ? 'error' : 'assistant',
+              retrievalType,
+              query: finalMessage?.rephrased_query || query,
+              documents: finalMessage?.context_docs?.top_documents || documents,
+              citations: finalMessage?.citations || {},
+              files: finalMessage?.files || aiMessageImages || [],
+              toolCalls: finalMessage?.tool_calls || toolCalls,
+              parentMessageId: newUserMessageId,
+              alternateAssistantID: null, // alternativeAssistant?.id,
+            },
+          ];
+          const replacementsMap = finalMessage
+            ? new Map([
+                [localMessages[0].messageId, TEMP_USER_MESSAGE_ID],
+                [localMessages[1].messageId, TEMP_ASSISTANT_MESSAGE_ID],
+              ])
+            : null;
+          upsertToCompleteMessageMap({
+            messages: localMessages,
+            replacementsMap: replacementsMap,
+            completeMessageMapOverride: frozenMessageMap,
+            chatSessionId: frozenSessionId,
+          });
+        }
+
+        if (this.isCancelledRef.current) {
+          this.setIsCancelled(false);
+          console.log('break');
+          break;
         }
       }
-    } catch (e) {
-      const errorMsg = e.message;
-      upsertToCompleteMessageMap({
-        messages: [
-          {
-            messageId: TEMP_USER_MESSAGE_ID,
-            message: currMessage,
-            type: 'user',
-            files: [], // currentMessageFiles,
-            toolCalls: [],
-            parentMessageId: parentMessage?.messageId || SYSTEM_MESSAGE_ID,
-          },
-          {
-            messageId: TEMP_ASSISTANT_MESSAGE_ID,
-            message: errorMsg,
-            type: 'error',
-            files: aiMessageImages || [],
-            toolCalls: [],
-            parentMessageId: TEMP_USER_MESSAGE_ID,
-          },
-        ],
-        completeMessageMapOverride: frozenMessageMap,
-      });
     }
+
+    // try {
+    // } catch (e) {
+    //   const errorMsg = e.message;
+    //   console.log('error', e);
+    //   upsertToCompleteMessageMap({
+    //     messages: [
+    //       {
+    //         messageId: TEMP_USER_MESSAGE_ID,
+    //         message: currMessage,
+    //         type: 'user',
+    //         files: [], // currentMessageFiles,
+    //         toolCalls: [],
+    //         parentMessageId: parentMessage?.messageId || SYSTEM_MESSAGE_ID,
+    //       },
+    //       {
+    //         messageId: TEMP_ASSISTANT_MESSAGE_ID,
+    //         message: errorMsg,
+    //         type: 'error',
+    //         files: aiMessageImages || [],
+    //         toolCalls: [],
+    //         parentMessageId: TEMP_USER_MESSAGE_ID,
+    //       },
+    //     ],
+    //     completeMessageMapOverride: frozenMessageMap,
+    //   });
+    // }
     this.setIsStreaming(false);
   }
 }
@@ -383,15 +396,36 @@ export function useBackendChat({ persona }) {
   );
 
   const submitHandler = new SubmitHandler({
-    persona,
-    setIsStreaming,
-    isCancelledRef,
-    setIsCancelled,
-    messageHistory,
     completeMessageDetail,
     currChatSessionId,
+    isCancelledRef,
+    messageHistory,
+    persona,
+    setCompleteMessageDetail,
     setCurrChatSessionId,
+    setIsCancelled,
+    setIsStreaming,
   });
 
   return { messages: messageHistory, onSubmit: submitHandler.onSubmit };
 }
+
+// const updateFn = ({
+//   messages,
+//   finalMessage,
+//   frozenMessageMap,
+//   frozenSessionId,
+// }) => {
+//   const replacementsMap = finalMessage
+//     ? new Map([
+//         [messages[0].messageId, TEMP_USER_MESSAGE_ID],
+//         [messages[1].messageId, TEMP_ASSISTANT_MESSAGE_ID],
+//       ])
+//     : null;
+//   upsertToCompleteMessageMap({
+//     messages: messages,
+//     replacementsMap: replacementsMap,
+//     completeMessageMapOverride: frozenMessageMap,
+//     chatSessionId: frozenSessionId,
+//   });
+// };

@@ -68,10 +68,8 @@ export function removeMessage(messageId, completeMessageMap) {
   completeMessageMap.delete(messageId);
 }
 
-export function buildLatestMessageChain(
-  messageMap,
-  additionalMessagesOnMainline,
-) {
+export function buildLatestMessageChain(messageMap) {
+  console.log('buildLatestMessageChain', messageMap);
   const rootMessage = Array.from(messageMap.values()).find(
     (message) => message.parentMessageId === null,
   );
@@ -94,7 +92,7 @@ export function buildLatestMessageChain(
   if (finalMessageList.length > 0 && finalMessageList[0].type === 'system') {
     finalMessageList = finalMessageList.slice(1);
   }
-  return finalMessageList.concat(additionalMessagesOnMainline);
+  return finalMessageList; // .concat(additionalMessagesOnMainline);
 }
 
 export async function* sendMessage({
@@ -263,7 +261,9 @@ export async function updateCurrentMessageFIFO(
 ) {
   try {
     for await (const packetBunch of sendMessage(params)) {
+      console.log('pucket bunch', packetBunch);
       for (const packet of packetBunch) {
+        console.log('packet', packet);
         stack.push(packet);
       }
 

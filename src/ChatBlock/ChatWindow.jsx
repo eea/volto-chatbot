@@ -15,10 +15,13 @@ function ChatWindow({ persona }) {
   const [input, setInput] = React.useState('');
 
   React.useEffect(() => {
-    if (textareaRef.current) textareaRef.current.focus();
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+      // console.log('focusing', textareaRef);
+    }
   }, []);
 
-  console.log(messages);
+  // console.log(messages);
 
   // {messages.length > 0 ? (
   //   [...messages]

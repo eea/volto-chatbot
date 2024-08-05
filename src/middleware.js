@@ -63,8 +63,14 @@ export default async function middleware(req, res, next) {
   }
   try {
     const response = await fetch(url, options, req.body);
+    console.log(response.headers);
 
-    res.set('Content-type', 'application/json');
+    if (response.headers.get('transfer-encoding') === 'chunked') {
+      res.set('Content-Type', 'text/event-stream');
+    } else {
+      res.set('Content-Type', 'application/json');
+    }
+
     response.body.pipe(res);
   } catch (error) {
     // eslint-disable-next-line

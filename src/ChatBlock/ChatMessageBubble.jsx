@@ -1,5 +1,9 @@
 import React from 'react';
 import { SourceDetails } from './Source';
+import loadable from '@loadable/component';
+
+// import Markdown from 'react-markdown';
+const Markdown = loadable(() => import('react-markdown'));
 
 const MarkdownRenderer = ({ markdown, marked }) => {
   const htmlContent = marked.parse(markdown);
@@ -29,7 +33,8 @@ export function ChatMessageBubble(props) {
     >
       {/* <div className="mr-2">{icon}</div> */}
       <div className="whitespace-pre-wrap flex flex-col">
-        <MarkdownRenderer markdown={message.message} marked={libs.marked} />
+        {/* <MarkdownRenderer markdown={message.message} marked={libs.marked} /> */}
+        <Markdown>{message.message}</Markdown>
         {!showLoader && sources && sources.length ? (
           <>
             <code className="mt-4 mr-auto bg-gray-200 px-2 py-1 rounded">

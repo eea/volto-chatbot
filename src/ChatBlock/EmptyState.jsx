@@ -14,17 +14,17 @@ function StarterMessage({ msg, onClick }) {
 export default function EmptyState(props) {
   const { persona, onChoice } = props;
 
-  const handleClick = (e) => {
-    onChoice(e.target.innerText);
-  };
-
   return (
     <div className="rounded flex flex-col items-center max-w-full md:p-8">
       <h2>{persona.name}</h2>
       <p>{persona.description}</p>
 
       {persona.starter_messages?.map((msg) => (
-        <StarterMessage key={msg.name} msg={msg} onClick={handleClick} />
+        <StarterMessage
+          key={msg.name}
+          msg={msg}
+          onClick={() => onChoice(`${msg.name}\n${msg.description}`)}
+        />
       ))}
     </div>
   );

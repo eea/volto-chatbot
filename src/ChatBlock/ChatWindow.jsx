@@ -21,7 +21,8 @@ function ChatWindow({ persona, marked, highlightJs }) {
     }
   }, []);
 
-  // console.log(messages);
+  //eslint-disable-next-line
+  console.log(messages);
 
   return (
     <div>

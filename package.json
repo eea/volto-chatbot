@@ -17,6 +17,7 @@
     "url": "git@github.com:eea/volto-chatbot.git"
   },
   "devDependencies": {
+    "cypress": "13.1.0",
     "@babel/plugin-proposal-private-methods": "7.18.6",
     "@cypress/code-coverage": "^3.10.0",
     "@plone/scripts": "*",

@@ -5,14 +5,14 @@ import loadable from '@loadable/component';
 // import Markdown from 'react-markdown';
 const Markdown = loadable(() => import('react-markdown'));
 
-const MarkdownRenderer = ({ markdown, marked }) => {
-  const htmlContent = marked.parse(markdown);
+// const MarkdownRenderer = ({ markdown, marked }) => {
+//   const htmlContent = marked.parse(markdown);
 
-  return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
-};
+//   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
+// };
 
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, sources, libs } = props;
+  const { message, isLoading, isMostRecent, sources } = props; // libs
   const showLoader = isMostRecent && isLoading;
   const colorClassName =
     message.type === 'user' ? 'bg-lime-300' : 'bg-slate-50 text-black';

@@ -21,6 +21,7 @@ async function get_login_cookie(username, password) {
     client_secret: '',
     grant_type: '',
   };
+  // console.log('data', data);
   try {
     const response = await superagent.post(url).type('form').send(data);
     const header = response.headers['set-cookie'][0];
@@ -61,8 +62,9 @@ export default async function middleware(req, res, next) {
   if (req.body && req.method === 'POST') {
     options.body = JSON.stringify(req.body);
   }
+
   try {
-    const response = await fetch(url, options, req.body);
+    const response = await fetch(url, options);
 
     if (response.headers.get('transfer-encoding') === 'chunked') {
       res.set('Content-Type', 'text/event-stream');

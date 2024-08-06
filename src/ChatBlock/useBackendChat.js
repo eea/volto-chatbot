@@ -368,17 +368,22 @@ export function useBackendChat({ persona }) {
     completeMessageDetail.messageMap,
   );
 
-  const submitHandler = new SubmitHandler({
-    completeMessageDetail,
-    currChatSessionId,
-    isCancelledRef,
-    messageHistory,
-    persona,
-    setCompleteMessageDetail,
-    setCurrChatSessionId,
-    setIsCancelled,
-    setIsStreaming,
-  });
+  const submitHandler = React.useMemo(
+    () =>
+      new SubmitHandler({
+        completeMessageDetail,
+        currChatSessionId,
+        isCancelledRef,
+        messageHistory,
+        persona,
+        setCompleteMessageDetail,
+        setCurrChatSessionId,
+        setIsCancelled,
+        setIsStreaming,
+      }),
+    // eslint-disable-next-line
+    [],
+  );
 
   return {
     messages: messageHistory,

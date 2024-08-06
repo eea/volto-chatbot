@@ -21,6 +21,7 @@ async function get_login_cookie(username, password) {
     client_secret: '',
     grant_type: '',
   };
+  console.log('data', data);
   try {
     const response = await superagent.post(url).type('form').send(data);
     const header = response.headers['set-cookie'][0];

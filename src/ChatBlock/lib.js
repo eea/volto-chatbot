@@ -69,11 +69,9 @@ export function removeMessage(messageId, completeMessageMap) {
 }
 
 export function buildLatestMessageChain(messageMap) {
-  // console.log('buildLatestMessageChain', messageMap);
   const rootMessage = Array.from(messageMap.values()).find(
     (message) => message.parentMessageId === null,
   );
-  // console.log('rootMessage', rootMessage);
 
   let finalMessageList = [];
 
@@ -92,7 +90,6 @@ export function buildLatestMessageChain(messageMap) {
 
   // remove system message
   if (finalMessageList.length > 0 && finalMessageList[0].type === 'system') {
-    // console.log('slicing', finalMessageList)
     finalMessageList = finalMessageList.slice(1);
   }
   return finalMessageList; // .concat(additionalMessagesOnMainline);
@@ -167,7 +164,6 @@ export async function* sendMessage({
     throw Error(`Failed to send message - ${errorMsg}`);
   }
 
-  // console.log('sendMessageResponse', sendMessageResponse);
   yield* handleStream(sendMessageResponse);
 }
 
@@ -187,7 +183,6 @@ export const processRawChunkString = (rawChunkString, previousPartialChunk) => {
   /* This is required because, in practice, we see that nginx does not send over
   each chunk one at a time even with buffering turned off. Instead,
   chunks are sometimes in batches or are sometimes incomplete */
-  // console.log('rawChunkString', rawChunkString);
 
   if (!rawChunkString) {
     return [[], null];
@@ -199,13 +194,11 @@ export const processRawChunkString = (rawChunkString, previousPartialChunk) => {
   let parsedChunkSections = [];
   let currPartialChunk = previousPartialChunk;
 
-  // console.log('chunks', chunkSections);
   chunkSections.forEach((chunk) => {
     const [processedChunk, partialChunk] = processSingleChunk(
       chunk,
       currPartialChunk,
     );
-    // console.log('pp', [processedChunk, partialChunk]);
     if (processedChunk) {
       parsedChunkSections.push(processedChunk);
       currPartialChunk = null;
@@ -213,8 +206,6 @@ export const processRawChunkString = (rawChunkString, previousPartialChunk) => {
       currPartialChunk = partialChunk;
     }
   });
-
-  // console.log('return', [parsedChunkSections, currPartialChunk]);
 
   return [parsedChunkSections, currPartialChunk];
 };
@@ -226,7 +217,6 @@ export async function* handleStream(streamingResponse) {
   let previousPartialChunk = null;
   while (true) {
     const rawChunk = await reader?.read();
-    // console.log('rawChunk', rawChunk);
     if (!rawChunk) {
       throw new Error('Unable to process chunk');
     }
@@ -239,13 +229,11 @@ export async function* handleStream(streamingResponse) {
       decoder.decode(value, { stream: true }),
       previousPartialChunk,
     );
-    // console.log('ccc', [completedChunks, partialChunk]);
     if (!completedChunks.length && !partialChunk) {
       break;
     }
     previousPartialChunk = partialChunk;
 
-    // console.log('chunk', completedChunks);
     yield await Promise.resolve(completedChunks);
   }
 }
@@ -278,9 +266,7 @@ export async function updateCurrentMessageFIFO(
 
   try {
     for await (const packetBunch of promise) {
-      // console.log('pucket bunch', packetBunch);
       for (const packet of packetBunch) {
-        // console.log('packet', packet);
         stack.push(packet);
       }
 

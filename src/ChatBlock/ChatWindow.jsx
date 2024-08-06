@@ -9,7 +9,7 @@ import { useBackendChat } from './useBackendChat';
 
 function ChatWindow({ persona, marked, highlightJs }) {
   const libs = { marked, highlightJs }; // rehypePrism, remarkGfm
-  const { onSubmit, messages, isLoading } = useBackendChat({
+  const { onSubmit, messages, isStreaming } = useBackendChat({
     persona,
   });
   const [input, setInput] = React.useState('');
@@ -21,7 +21,7 @@ function ChatWindow({ persona, marked, highlightJs }) {
     }
   }, []);
 
-  console.log(messages);
+  // console.log(messages);
 
   return (
     <div>
@@ -33,12 +33,15 @@ function ChatWindow({ persona, marked, highlightJs }) {
               key={m.messageId}
               message={m}
               isMostRecent={index === 0}
-              isLoading={isLoading}
+              isLoading={isStreaming}
               libs={libs}
             />
           ))
         ) : (
-          <EmptyState onChoice={onSubmit} persona={persona} />
+          <EmptyState
+            onChoice={(message) => onSubmit({ message })}
+            persona={persona}
+          />
         )}
         <Form>
           <AutoResizeTextarea
@@ -60,7 +63,7 @@ function ChatWindow({ persona, marked, highlightJs }) {
             trigger={
               <Button
                 variant="ghost"
-                disabled={isLoading}
+                disabled={isStreaming}
                 type="submit"
                 aria-label="Send"
                 onKeyDown={(e) => {

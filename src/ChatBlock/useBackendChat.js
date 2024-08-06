@@ -205,11 +205,8 @@ class SubmitHandler {
       completeMessageDetail: this.completeMessageDetail,
       setCompleteMessageDetail: this.setCompleteMessageDetail,
     };
-    console.log('will upsert from onSubmit', info);
 
     const result = upsertToCompleteMessageMap(info);
-
-    console.log('result from upsert', result);
 
     const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = result;
 
@@ -258,12 +255,10 @@ class SubmitHandler {
     await delay(50);
 
     while (!stack.isComplete || !stack.isEmpty()) {
-      // console.log('loop', stack, stack.isEmpty(), stack.isComplete);
       await delay(2);
 
       if (!stack.isEmpty()) {
         const packet = stack.nextPacket();
-        console.log('packet', packet);
 
         if (packet) {
           if (Object.hasOwn(packet, 'answer_piece')) {
@@ -341,13 +336,11 @@ class SubmitHandler {
             replacementsMap: replacementsMap,
             setCompleteMessageDetail: this.setCompleteMessageDetail,
           };
-          console.log('upserting info', info);
           upsertToCompleteMessageMap(info);
         }
 
         if (this.isCancelledRef.current) {
           this.setIsCancelled(false);
-          console.log('break');
           break;
         }
       }
@@ -387,5 +380,10 @@ export function useBackendChat({ persona }) {
     setIsStreaming,
   });
 
-  return { messages: messageHistory, onSubmit: submitHandler.onSubmit };
+  return {
+    messages: messageHistory,
+    onSubmit: submitHandler.onSubmit,
+    isStreaming,
+    isCancelled,
+  };
 }

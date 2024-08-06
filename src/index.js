@@ -5,6 +5,10 @@ const applyConfig = (config) => {
   if (__SERVER__) {
     const express = require('express');
     const middleware = express.Router();
+
+    middleware.use(express.json({ limit: config.settings.maxResponseSize }));
+    middleware.use(express.urlencoded({ extended: true }));
+
     const proxyMiddleware = require('./middleware').default;
     middleware.all('**/_da/**', proxyMiddleware);
     middleware.id = 'danswer';

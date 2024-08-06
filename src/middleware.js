@@ -62,8 +62,9 @@ export default async function middleware(req, res, next) {
   if (req.body && req.method === 'POST') {
     options.body = JSON.stringify(req.body);
   }
+
   try {
-    const response = await fetch(url, options, req.body);
+    const response = await fetch(url, options);
 
     if (response.headers.get('transfer-encoding') === 'chunked') {
       res.set('Content-Type', 'text/event-stream');

@@ -63,7 +63,6 @@ export default async function middleware(req, res, next) {
   }
   try {
     const response = await fetch(url, options, req.body);
-    console.log(response.headers);
 
     if (response.headers.get('transfer-encoding') === 'chunked') {
       res.set('Content-Type', 'text/event-stream');

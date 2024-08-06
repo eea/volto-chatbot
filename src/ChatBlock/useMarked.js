@@ -34,14 +34,7 @@ export function useMarked(libs) {
 
   const parser = React.useCallback(
     async (msg) => {
-      const res = await marked.parse(`## Hello world
-
-this is my text.
-
-- this is a list
-- and another list
-`);
-      console.log('parsing message', { msg, res });
+      const res = await marked.parse(msg);
       return res;
     },
     [marked],

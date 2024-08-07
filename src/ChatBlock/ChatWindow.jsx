@@ -1,11 +1,13 @@
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import React from 'react';
-import { Button, Form } from 'semantic-ui-react';
+import { Button, Form, PlaceholderLine, Placeholder } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useBackendChat } from './useBackendChat';
+
+import './style.less';
 
 function ChatWindow({ persona, rehypePrism, remarkGfm }) {
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
@@ -27,7 +29,6 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
   return (
     <div>
       <div className="flex flex-col-reverse w-full mb-2 overflow-auto">
-        {isStreaming && <div>BUSY INDICATOR</div>}
         {messages.length > 0 ? (
           messages.map((m, index) => (
             <ChatMessageBubble
@@ -44,6 +45,14 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
             persona={persona}
           />
         )}
+        {isStreaming && (
+          <Placeholder>
+            <PlaceholderLine length="medium" />
+            <PlaceholderLine length="very long" />
+            <PlaceholderLine length="long" />
+          </Placeholder>
+        )}
+
         <Form>
           <AutoResizeTextarea
             ref={textareaRef}

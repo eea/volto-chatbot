@@ -1,9 +1,10 @@
-import React from 'react';
-import { SourceDetails } from './Source';
 import loadable from '@loadable/component';
+import React from 'react';
 import { Citation } from './Citation';
+import { SourceDetails } from './Source';
 
 const Markdown = loadable(() => import('react-markdown'));
+
 const components = {
   a: (props) => {
     const { node, ...rest } = props;
@@ -25,7 +26,7 @@ const components = {
       );
     } else {
       return (
-        <a
+        <button
           key={node?.position?.start?.offset}
           onClick={() =>
             rest.href ? window.open(rest.href, '_blank') : undefined
@@ -33,17 +34,26 @@ const components = {
           className="cursor-pointer text-link hover:text-link-hover"
         >
           {rest.children}
-        </a>
+        </button>
       );
     }
   },
-  code: (props) => <CodeBlock {...props} content={content} />,
+  // code: (props) => <CodeBlock {...props} content={content} />,
   p: ({ node, ...props }) => <p {...props} className="text-default" />,
 };
 
+const CITATION_MATCH = /\[\d+\]/gm;
+
+function addCitations(text) {
+  return text.replaceAll(CITATION_MATCH, (match) => {
+    const number = match.match(/\d+/)[0];
+    return `${match}(#${number})`;
+  });
+}
+
 export function ChatMessageBubble(props) {
   const { message, isLoading, isMostRecent, libs } = props;
-  const { remarkGfm, rehypePrism } = libs;
+  const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents } = message;
 
   const showLoader = isMostRecent && isLoading;
@@ -69,7 +79,7 @@ export function ChatMessageBubble(props) {
       {/* <div className="mr-2">{icon}</div> */}
       <div className="whitespace-pre-wrap flex flex-col">
         <Markdown components={components} remarkPlugins={[remarkGfm]}>
-          {message.message}
+          {addCitations(message.message)}
         </Markdown>
         {!showLoader && sources.length ? (
           <>

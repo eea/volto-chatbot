@@ -1,10 +1,12 @@
 export const SourceDetails = ({ source, index }) => {
   return (
     <>
-      <h4 className="text-sm font-semibold">
-        {index + 1}. {source.title || 'untitled document'}
-      </h4>
-      {source.pageContent}
+      <strong className="text-sm font-semibold">
+        {index + 1}. {source.semantic_identifier || 'untitled document'}
+      </strong>
+      {source.match_highlights.map((text, i) => (
+        <div key={i} dangerouslySetInnerHTML={{ __html: text }} />
+      ))}
     </>
   );
 };

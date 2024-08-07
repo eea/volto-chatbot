@@ -2,7 +2,7 @@ import loadable from '@loadable/component';
 import React from 'react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
-
+import { Icon, Divider, Button } from 'semantic-ui-react';
 const Markdown = loadable(() => import('react-markdown'));
 
 const components = {
@@ -26,15 +26,18 @@ const components = {
       );
     } else {
       return (
-        <button
-          key={node?.position?.start?.offset}
-          onClick={() =>
-            rest.href ? window.open(rest.href, '_blank') : undefined
-          }
-          className="cursor-pointer text-link hover:text-link-hover"
-        >
-          {rest.children}
-        </button>
+        <sup>
+          <Button
+            basic
+            key={node?.position?.start?.offset}
+            onClick={() =>
+              rest.href ? window.open(rest.href, '_blank') : undefined
+            }
+            className="cursor-pointer text-link hover:text-link-hover"
+          >
+            {rest.children}
+          </Button>
+        </sup>
       );
     }
   },
@@ -83,12 +86,10 @@ export function ChatMessageBubble(props) {
         </Markdown>
         {!showLoader && sources.length ? (
           <>
-            <div>
-              <span role="img" aria-label="Lens icon">
-                🔍
-              </span>{' '}
-              Sources:
-            </div>
+            <Divider />
+            <h5>
+              <Icon name="copy outline" /> Sources:
+            </h5>
             {sources.map((source, i) => (
               <SourceDetails source={source} key={i} index={i} />
             ))}

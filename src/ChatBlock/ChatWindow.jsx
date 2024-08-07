@@ -27,6 +27,7 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
   return (
     <div>
       <div className="flex flex-col-reverse w-full mb-2 overflow-auto">
+        {isStreaming && <div>BUSY INDICATOR</div>}
         {messages.length > 0 ? (
           messages.map((m, index) => (
             <ChatMessageBubble

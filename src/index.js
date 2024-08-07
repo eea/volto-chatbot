@@ -21,11 +21,12 @@ const applyConfig = (config) => {
 
   config.settings.loadables = {
     ...config.settings.loadables,
-    highlightJs: loadable.lib(() => import('highlight.js')),
-    marked: loadable.lib(() => import('marked')),
+    rehypePrism: loadable.lib(() => import('rehype-prism-plus')),
+    remarkGfm: loadable.lib(() => import('remark-gfm')),
 
-    // rehypePrism: loadable.lib(() => import('rehype-prism-plus')),
-    // remarkGfm: loadable.lib(() => import('remark-gfm')),
+    // highlightJs: loadable.lib(() => import('highlight.js')),
+    // marked: loadable.lib(() => import('marked')),
+
     // fastJsonPatch: loadable.lib(() => import('fast-json-patch')),
     // fetchEventSource: loadable.lib(() =>
     //   import('@microsoft/fetch-event-source'),

@@ -76,8 +76,8 @@
     "marked": "13.0.3",
     "node-fetch": "2.7.0",
     "react-markdown": "6.0.3",
-    "rehype-prism-plus": "2.0.0",
-    "remark-gfm": "4.0.0",
+    "rehype-prism-plus": "1.6.0",
+    "remark-gfm": "3.0.1",
     "uuid": "10.0.0"
   }
 }

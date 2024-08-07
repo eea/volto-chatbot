@@ -7,8 +7,8 @@ import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useBackendChat } from './useBackendChat';
 
-function ChatWindow({ persona, marked, highlightJs }) {
-  const libs = { marked, highlightJs }; // rehypePrism, remarkGfm
+function ChatWindow({ persona, rehypePrism, remarkGfm }) {
+  const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming } = useBackendChat({
     persona,
   });
@@ -30,7 +30,6 @@ function ChatWindow({ persona, marked, highlightJs }) {
         {messages.length > 0 ? (
           messages.map((m, index) => (
             <ChatMessageBubble
-              sources={[]}
               key={m.messageId}
               message={m}
               isMostRecent={index === 0}
@@ -86,8 +85,4 @@ function ChatWindow({ persona, marked, highlightJs }) {
   );
 }
 
-export default injectLazyLibs([
-  // 'rehypePrism', 'remarkGfm'
-  'marked',
-  'highlightJs',
-])(ChatWindow);
+export default injectLazyLibs(['rehypePrism', 'remarkGfm'])(ChatWindow);

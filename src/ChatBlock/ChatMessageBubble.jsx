@@ -1,18 +1,51 @@
 import React from 'react';
 import { SourceDetails } from './Source';
 import loadable from '@loadable/component';
+import { Citation } from './Citation';
 
-// import Markdown from 'react-markdown';
 const Markdown = loadable(() => import('react-markdown'));
+const components = {
+  a: (props) => {
+    const { node, ...rest } = props;
+    const value = rest.children;
 
-// const MarkdownRenderer = ({ markdown, marked }) => {
-//   const htmlContent = marked.parse(markdown);
-
-//   return <div dangerouslySetInnerHTML={{ __html: htmlContent }} />;
-// };
+    if (value?.toString().startsWith('*')) {
+      return (
+        <div className="flex-none bg-background-800 inline-block rounded-full h-3 w-3 ml-2" />
+      );
+    } else if (value?.toString().startsWith('[')) {
+      // for some reason <a> tags cause the onClick to not apply
+      // and the links are unclickable
+      // TODO: fix the fact that you have to double click to follow link
+      // for the first link
+      return (
+        <Citation link={rest?.href} key={node?.position?.start?.offset}>
+          {rest.children}
+        </Citation>
+      );
+    } else {
+      return (
+        <a
+          key={node?.position?.start?.offset}
+          onClick={() =>
+            rest.href ? window.open(rest.href, '_blank') : undefined
+          }
+          className="cursor-pointer text-link hover:text-link-hover"
+        >
+          {rest.children}
+        </a>
+      );
+    }
+  },
+  code: (props) => <CodeBlock {...props} content={content} />,
+  p: ({ node, ...props }) => <p {...props} className="text-default" />,
+};
 
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, sources } = props; // libs
+  const { message, isLoading, isMostRecent, libs } = props;
+  const { remarkGfm, rehypePrism } = libs;
+  const { citations = {}, documents } = message;
+
   const showLoader = isMostRecent && isLoading;
   const colorClassName =
     message.type === 'user' ? 'bg-lime-300' : 'bg-slate-50 text-black';
@@ -27,29 +60,28 @@ export function ChatMessageBubble(props) {
   //     <BotIcon />
   //   );
 
+  const sources = Object.keys(citations).map((index) => documents[index]);
+
   return (
     <div
       className={`${alignmentClassName} ${colorClassName} rounded px-4 py-2 max-w-[80%] mb-8 flex`}
     >
       {/* <div className="mr-2">{icon}</div> */}
       <div className="whitespace-pre-wrap flex flex-col">
-        {/* <MarkdownRenderer markdown={message.message} marked={libs.marked} /> */}
-        <Markdown>{message.message}</Markdown>
-        {!showLoader && sources && sources.length ? (
+        <Markdown components={components} remarkPlugins={[remarkGfm]}>
+          {message.message}
+        </Markdown>
+        {!showLoader && sources.length ? (
           <>
-            <code className="mt-4 mr-auto bg-gray-200 px-2 py-1 rounded">
-              <h2>
-                <span role="img" aria-label="Lens icon">
-                  🔍
-                </span>{' '}
-                Sources:
-              </h2>
-            </code>
-            <code className="mt-1 mr-2 px-2 py-1 rounded text-xs">
-              {sources?.map((source, i) => (
-                <SourceDetails source={source} key={i} index={i} />
-              ))}
-            </code>
+            <div>
+              <span role="img" aria-label="Lens icon">
+                🔍
+              </span>{' '}
+              Sources:
+            </div>
+            {sources.map((source, i) => (
+              <SourceDetails source={source} key={i} index={i} />
+            ))}
           </>
         ) : (
           ''

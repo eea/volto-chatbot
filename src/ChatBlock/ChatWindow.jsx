@@ -1,6 +1,7 @@
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import React from 'react';
 import {
+  Icon,
   Form,
   Button,
   Segment,
@@ -65,7 +66,7 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
           <>
             <Segment clearing basic>
               <Button right onClick={handleClearChat} className="right floated">
-                Clear Chat
+                <Icon name="edit outline" /> New chat
               </Button>
             </Segment>
             {messages.map((m, index) => (

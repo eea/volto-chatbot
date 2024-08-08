@@ -84,6 +84,7 @@ export function ChatMessageBubble(props) {
         <Markdown components={components} remarkPlugins={[remarkGfm]}>
           {addCitations(message.message)}
         </Markdown>
+
         {!showLoader && sources.length ? (
           <>
             <Divider />

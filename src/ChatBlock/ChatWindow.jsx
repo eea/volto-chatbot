@@ -1,6 +1,12 @@
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import React from 'react';
-import { Button, Form, PlaceholderLine, Placeholder } from 'semantic-ui-react';
+import {
+  Form,
+  Button,
+  Segment,
+  Placeholder,
+  PlaceholderLine,
+} from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
@@ -11,10 +17,11 @@ import './style.less';
 
 function ChatWindow({ persona, rehypePrism, remarkGfm }) {
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
-  const { onSubmit, messages, isStreaming } = useBackendChat({
+  const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
   });
   const [input, setInput] = React.useState('');
+  const [showLandingPage, setShowLandingPage] = React.useState(false);
 
   const textareaRef = React.useRef(null);
   React.useEffect(() => {
@@ -23,27 +30,54 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
     }
   }, []);
 
+  const handleClearChat = () => {
+    clearChat();
+    setShowLandingPage(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (input.trim()) {
+      onSubmit({ message: input });
+      setInput('');
+    }
+  };
+
+  React.useEffect(() => {
+    setShowLandingPage(messages.length === 0);
+  }, [messages]);
+
   //eslint-disable-next-line
   console.log(messages);
 
   return (
     <div>
       <div className="flex flex-col-reverse w-full mb-2 overflow-auto">
-        {messages.length > 0 ? (
-          messages.map((m, index) => (
-            <ChatMessageBubble
-              key={m.messageId}
-              message={m}
-              isMostRecent={index === 0}
-              isLoading={isStreaming}
-              libs={libs}
-            />
-          ))
-        ) : (
+        {showLandingPage ? (
           <EmptyState
-            onChoice={(message) => onSubmit({ message })}
+            onChoice={(message) => {
+              onSubmit({ message });
+              setShowLandingPage(false);
+            }}
             persona={persona}
           />
+        ) : (
+          <>
+            <Segment clearing basic>
+              <Button right onClick={handleClearChat} className="right floated">
+                Clear Chat
+              </Button>
+            </Segment>
+            {messages.map((m, index) => (
+              <ChatMessageBubble
+                key={m.messageId}
+                message={m}
+                isMostRecent={index === 0}
+                isLoading={isStreaming}
+                libs={libs}
+              />
+            ))}
+          </>
         )}
         {isStreaming && (
           <Placeholder>
@@ -63,8 +97,7 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                onSubmit({ message: input });
+                handleSubmit(e);
               } else if (e.key === 'Enter' && e.shiftKey) {
                 e.preventDefault();
                 setInput(input + '\n');
@@ -77,12 +110,10 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
                 type="submit"
                 aria-label="Send"
                 onKeyDown={(e) => {
-                  e.preventDefault();
-                  onSubmit({ message: input });
+                  handleSubmit(e);
                 }}
                 onClick={(e) => {
-                  e.preventDefault();
-                  onSubmit({ message: input });
+                  handleSubmit(e);
                 }}
               >
                 Send

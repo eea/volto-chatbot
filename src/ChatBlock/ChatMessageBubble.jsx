@@ -1,56 +1,39 @@
-import loadable from '@loadable/component';
 import React from 'react';
+import loadable from '@loadable/component';
+import { Icon } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
-import { Icon, Divider, Button } from 'semantic-ui-react';
+
 const Markdown = loadable(() => import('react-markdown'));
 
-const components = {
-  a: (props) => {
-    const { node, ...rest } = props;
-    const value = rest.children;
+const components = (message) => {
+  return {
+    a: (props) => {
+      const { node, ...rest } = props;
+      const value = rest.children;
 
-    if (value?.toString().startsWith('*')) {
-      return (
-        <div className="flex-none bg-background-800 inline-block rounded-full h-3 w-3 ml-2" />
-      );
-    } else if (value?.toString().startsWith('[')) {
-      // for some reason <a> tags cause the onClick to not apply
-      // and the links are unclickable
-      // TODO: fix the fact that you have to double click to follow link
-      // for the first link
-      return (
-        <Citation link={rest?.href} key={node?.position?.start?.offset}>
-          {rest.children}
-        </Citation>
-      );
-    } else {
-      return (
-        <sup>
-          <Button
-            basic
-            key={node?.position?.start?.offset}
-            onClick={() =>
-              rest.href ? window.open(rest.href, '_blank') : undefined
-            }
-            className="cursor-pointer text-link hover:text-link-hover"
-          >
+      if (value?.toString().startsWith('*')) {
+        return (
+          <div className="flex-none bg-background-800 inline-block rounded-full h-3 w-3 ml-2" />
+        );
+      } else {
+        return (
+          <Citation link={rest?.href} value={value} message={message}>
             {rest.children}
-          </Button>
-        </sup>
-      );
-    }
-  },
-  // code: (props) => <CodeBlock {...props} content={content} />,
-  p: ({ node, ...props }) => <p {...props} className="text-default" />,
+          </Citation>
+        );
+      }
+    },
+    p: ({ node, ...props }) => <p {...props} className="text-default" />,
+  };
 };
 
-const CITATION_MATCH = /\[\d+\]/gm;
+const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 function addCitations(text) {
   return text.replaceAll(CITATION_MATCH, (match) => {
     const number = match.match(/\d+/)[0];
-    return `${match}(#${number})`;
+    return `${match}(${number})`;
   });
 }
 
@@ -76,24 +59,24 @@ export function ChatMessageBubble(props) {
   const sources = Object.keys(citations).map((index) => documents[index]);
 
   return (
-    <div
-      className={`${alignmentClassName} ${colorClassName} rounded px-4 py-2 max-w-[80%] mb-8 flex`}
-    >
+    <div className={`${alignmentClassName} ${colorClassName} `}>
       {/* <div className="mr-2">{icon}</div> */}
-      <div className="whitespace-pre-wrap flex flex-col">
-        <Markdown components={components} remarkPlugins={[remarkGfm]}>
+      <div>
+        <Markdown components={components(message)} remarkPlugins={[remarkGfm]}>
           {addCitations(message.message)}
         </Markdown>
 
         {!showLoader && sources.length ? (
           <>
-            <Divider />
             <h5>
               <Icon name="copy outline" /> Sources:
             </h5>
-            {sources.map((source, i) => (
-              <SourceDetails source={source} key={i} index={i} />
-            ))}
+
+            <div className="sources">
+              {sources.map((source, i) => (
+                <SourceDetails source={source} key={i} index={i} />
+              ))}
+            </div>
           </>
         ) : (
           ''

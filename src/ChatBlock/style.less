@@ -1,4 +1,6 @@
 @linkColor: #145dd5;
+@citationCircleColor: #e6e7e8;
+@citationCircleHoverColor: #005c97;
 
 .mr-auto {
   margin: 2em 0;
@@ -12,9 +14,21 @@
   display: flex;
 }
 
-.source {
-  margin: 1em 0;
-  font-size: 14px;
+.sources {
+  display: flex;
+  flex-direction: row;
+  gap: 0.8em;
+
+  @media only screen and (max-width: 800px) {
+    display: inline-flex;
+    flex-direction: column;
+  }
+
+  .source {
+    padding: 0.3em 0.4em;
+    border: 1px solid #dbdbdb;
+    font-size: 14px;
+  }
 }
 
 .ui.basic.button.text-link {
@@ -27,5 +41,34 @@
     background: transparent !important;
     box-shadow: none;
     color: @linkColor !important;
+  }
+}
+
+.citation {
+  display: inline-block;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 3em;
+  background-color: @citationCircleColor;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: bold;
+  line-height: 2em;
+  text-align: center;
+
+  &:hover {
+    background-color: @citationCircleHoverColor;
+    color: #ffffff;
+  }
+}
+
+#citation {
+  .ui.popup {
+    padding: 0.8em;
+    font-size: 13px;
+  }
+
+  .ui.popup > .header {
+    font-size: 15px;
   }
 }

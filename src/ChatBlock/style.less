@@ -20,13 +20,13 @@
   gap: 0.8em;
 
   @media only screen and (max-width: 800px) {
-    flex-direction: column;
     display: inline-flex;
+    flex-direction: column;
   }
 
   .source {
-    border: 1px solid #dbdbdb;
     padding: 0.3em 0.4em;
+    border: 1px solid #dbdbdb;
     font-size: 14px;
   }
 }
@@ -45,14 +45,14 @@
 }
 
 .citation {
-  cursor: pointer;
-  font-weight: bold;
-  background-color: @citationCircleColor;
-  border-radius: 3em;
-  height: 1.8em;
-  width: 1.8em;
   display: inline-block;
+  width: 1.8em;
+  height: 1.8em;
+  border-radius: 3em;
+  background-color: @citationCircleColor;
+  cursor: pointer;
   font-size: 11px;
+  font-weight: bold;
   line-height: 2em;
   text-align: center;
 
@@ -64,9 +64,10 @@
 
 #citation {
   .ui.popup {
-    font-size: 13px;
     padding: 0.8em;
+    font-size: 13px;
   }
+
   .ui.popup > .header {
     font-size: 15px;
   }

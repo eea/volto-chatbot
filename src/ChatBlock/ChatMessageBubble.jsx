@@ -1,8 +1,8 @@
 import React from 'react';
 import loadable from '@loadable/component';
-import { Icon } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
+import { transformEmailsToLinks } from './utils';
 
 const Markdown = loadable(() => import('react-markdown'));
 
@@ -24,7 +24,21 @@ const components = (message) => {
         );
       }
     },
-    p: ({ node, ...props }) => <p {...props} className="text-default" />,
+    p: ({ node, ...props }) => {
+      const children = props.children;
+      const text = React.Children.map(children, (child) => {
+        if (typeof child === 'string') {
+          return transformEmailsToLinks(child);
+        }
+        return child;
+      });
+
+      return (
+        <p {...props} className="text-default">
+          {text}
+        </p>
+      );
+    },
   };
 };
 
@@ -68,9 +82,7 @@ export function ChatMessageBubble(props) {
 
         {!showLoader && sources.length ? (
           <>
-            <h5>
-              <Icon name="copy outline" /> Sources:
-            </h5>
+            <h5>Sources:</h5>
 
             <div className="sources">
               {sources.map((source, i) => (

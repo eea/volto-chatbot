@@ -380,10 +380,19 @@ export function useBackendChat({ persona }) {
     setIsStreaming,
   });
 
+  const clearChat = () => {
+    setCompleteMessageDetail({
+      sessionId: null,
+      messageMap: new Map(),
+    });
+    setCurrChatSessionId(null);
+  };
+
   return {
     messages: messageHistory,
     onSubmit: submitHandler.onSubmit,
     isStreaming,
     isCancelled,
+    clearChat,
   };
 }

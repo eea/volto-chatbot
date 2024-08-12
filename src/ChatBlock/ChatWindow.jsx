@@ -1,13 +1,6 @@
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import React from 'react';
-import {
-  Icon,
-  Form,
-  Button,
-  Segment,
-  Placeholder,
-  PlaceholderLine,
-} from 'semantic-ui-react';
+import { Icon, Form, Button, Segment } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
@@ -52,8 +45,8 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
   console.log(messages);
 
   return (
-    <div>
-      <div className="flex flex-col-reverse w-full mb-2 overflow-auto">
+    <div className="chat-window">
+      <div className="messages">
         {showLandingPage ? (
           <EmptyState
             onChoice={(message) => {
@@ -69,25 +62,23 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
                 <Icon name="edit outline" /> New chat
               </Button>
             </Segment>
-            {messages.map((m, index) => (
-              <ChatMessageBubble
-                key={m.messageId}
-                message={m}
-                isMostRecent={index === 0}
-                isLoading={isStreaming}
-                libs={libs}
-              />
-            ))}
+            <div className="conversation">
+              {messages.map((m, index) => (
+                <ChatMessageBubble
+                  key={m.messageId}
+                  message={m}
+                  isMostRecent={index === 0}
+                  isLoading={isStreaming}
+                  libs={libs}
+                />
+              ))}
+            </div>
           </>
         )}
-        {isStreaming && (
-          <Placeholder>
-            <PlaceholderLine length="medium" />
-            <PlaceholderLine length="very long" />
-            <PlaceholderLine length="long" />
-          </Placeholder>
-        )}
+        {isStreaming && <div class="loader"></div>}
+      </div>
 
+      <div className="chat-form">
         <Form>
           <AutoResizeTextarea
             ref={textareaRef}

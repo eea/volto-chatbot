@@ -1,9 +1,29 @@
+@blue: #005c97;
+@grey: #3d5265;
+@teal: #00b3ae;
 @linkColor: #145dd5;
 @citationCircleColor: #e6e7e8;
-@citationCircleHoverColor: #005c97;
+@citationCircleHoverColor: @blue;
 
 .mr-auto {
   margin: 2em 0;
+}
+
+.circle {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  flex: none;
+  align-content: end;
+  text-align: center;
+
+  &.user {
+    background-color: @teal;
+  }
+
+  &.assistant {
+    background-color: @grey;
+  }
 }
 
 .ui.form {
@@ -72,5 +92,69 @@
 
   .ui.popup > .header {
     font-size: 15px;
+  }
+}
+
+.comment {
+  display: flex;
+  gap: 0.8em;
+
+  i.inverted.circular.grey.icon {
+    background-color: #3d5265 !important;
+  }
+
+  i.icon,
+  i.icons {
+    font-size: 1em;
+  }
+}
+
+.loader {
+  margin-left: 64px;
+  margin-top: 1em;
+  position: relative;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: @grey;
+  animation: dot-flashing 1s infinite linear alternate;
+  animation-delay: 0.5s;
+
+  &:before,
+  &:after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+  }
+
+  &:before {
+    left: -15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: @grey;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 0s;
+  }
+
+  &:after {
+    left: 15px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: @grey;
+    animation: dot-flashing 1s infinite alternate;
+    animation-delay: 1s;
+  }
+}
+
+@keyframes dot-flashing {
+  0% {
+    background-color: @grey;
+  }
+  50%,
+  100% {
+    background-color: rgba(61, 82, 101, 0.2);
   }
 }

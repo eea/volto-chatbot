@@ -12,9 +12,9 @@
 .circle {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
   flex: none;
   align-content: end;
+  border-radius: 50%;
   text-align: center;
 
   &.user {
@@ -110,22 +110,22 @@
 }
 
 .loader {
-  margin-left: 64px;
-  margin-top: 1em;
   position: relative;
   width: 10px;
   height: 10px;
   border-radius: 5px;
-  background-color: @grey;
+  margin-top: 1em;
+  margin-left: 64px;
   animation: dot-flashing 1s infinite linear alternate;
   animation-delay: 0.5s;
+  background-color: @grey;
 
   &:before,
   &:after {
-    content: '';
-    display: inline-block;
     position: absolute;
     top: 0;
+    display: inline-block;
+    content: '';
   }
 
   &:before {
@@ -133,9 +133,9 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: @grey;
     animation: dot-flashing 1s infinite alternate;
     animation-delay: 0s;
+    background-color: @grey;
   }
 
   &:after {
@@ -143,9 +143,9 @@
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    background-color: @grey;
     animation: dot-flashing 1s infinite alternate;
     animation-delay: 1s;
+    background-color: @grey;
   }
 }
 
@@ -153,6 +153,7 @@
   0% {
     background-color: @grey;
   }
+
   50%,
   100% {
     background-color: rgba(61, 82, 101, 0.2);

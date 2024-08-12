@@ -16,6 +16,9 @@
   align-content: end;
   border-radius: 50%;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
   &.user {
     background-color: @teal;
@@ -23,6 +26,10 @@
 
   &.assistant {
     background-color: @grey;
+  }
+
+  svg {
+    margin: 0 auto;
   }
 }
 

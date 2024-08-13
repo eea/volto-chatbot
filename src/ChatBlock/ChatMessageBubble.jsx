@@ -73,7 +73,13 @@ export function ChatMessageBubble(props) {
     </div>
   );
 
-  const sources = Object.keys(citations).map((index) => documents[index]);
+  // For some reason the list is shifted by one. It's all weird
+  const sources = Object.keys(citations).map(
+    (index) => documents[(parseInt(index) - 1).toString()],
+  );
+  const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
+    return { ...acc, [v]: k };
+  }, {});
 
   return (
     <div className={`${alignmentClassName} ${colorClassName} `}>
@@ -94,7 +100,11 @@ export function ChatMessageBubble(props) {
 
               <div className="sources">
                 {sources.map((source, i) => (
-                  <SourceDetails source={source} key={i} index={i} />
+                  <SourceDetails
+                    source={source}
+                    key={i}
+                    index={inverseMap[source.db_doc_id]}
+                  />
                 ))}
               </div>
             </>

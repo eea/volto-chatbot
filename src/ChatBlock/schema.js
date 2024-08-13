@@ -11,7 +11,7 @@ export function ChatBlockSchema({ assistants }) {
     properties: {
       assistant: {
         title: 'Assistant',
-        choices: assistants.map(({ id, name }) => [id.toString(), name]),
+        choices: assistants?.map(({ id, name }) => [id.toString(), name]),
       },
     },
     required: [],

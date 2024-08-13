@@ -23,7 +23,9 @@ export default function EmptyState(props) {
         <StarterMessage
           key={msg.name}
           msg={msg}
-          onClick={() => onChoice(`${msg.name}\n${msg.description}`)}
+          onClick={() =>
+            onChoice(msg.message || `${msg.name}\n${msg.description}`)
+          }
         />
       ))}
     </div>

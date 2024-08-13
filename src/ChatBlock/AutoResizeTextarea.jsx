@@ -1,4 +1,5 @@
-import { TextArea } from 'semantic-ui-react';
+import TextareaAutosize from 'react-textarea-autosize';
+
 import React from 'react';
 
 export default React.forwardRef(function AutoResizeTextarea(
@@ -7,7 +8,7 @@ export default React.forwardRef(function AutoResizeTextarea(
 ) {
   return (
     <>
-      <TextArea {...rest} ref={ref} />
+      <TextareaAutosize {...rest} ref={ref} />
       {trigger}
     </>
   );

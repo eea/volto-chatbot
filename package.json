@@ -25,8 +25,7 @@
     "cypress-fail-fast": "^5.0.1",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "md5": "^2.3.0",
-    "cypress": "13.1.0"
+    "md5": "^2.3.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
@@ -76,6 +75,7 @@
     "marked": "13.0.3",
     "node-fetch": "2.7.0",
     "react-markdown": "6.0.3",
+    "react-textarea-autosize": "^8.5.3",
     "rehype-prism-plus": "1.6.0",
     "remark-gfm": "3.0.1",
     "uuid": "10.0.0"

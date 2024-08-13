@@ -1,11 +1,14 @@
-import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import React from 'react';
+import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import { Icon, Form, Button, Segment } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useBackendChat } from './useBackendChat';
+
+import { SVGIcon } from './utils';
+import SendIcon from './../icons/send.svg';
 
 import './style.less';
 
@@ -80,38 +83,45 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
 
       <div className="chat-form">
         <Form>
-          <AutoResizeTextarea
-            ref={textareaRef}
-            value={input}
-            placeholder={
-              messages.length > 0 ? 'Ask follow-up...' : 'Placeholder text'
-            }
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' && !e.shiftKey) {
-                handleSubmit(e);
-              } else if (e.key === 'Enter' && e.shiftKey) {
-                e.preventDefault();
-                setInput(input + '\n');
+          <div className="textarea-wrapper">
+            <AutoResizeTextarea
+              maxRows={8}
+              minRows={1}
+              rows={1}
+              ref={textareaRef}
+              value={input}
+              placeholder={
+                messages.length > 0 ? 'Ask follow-up...' : 'Placeholder text'
               }
-            }}
-            trigger={
-              <Button
-                variant="ghost"
-                disabled={isStreaming}
-                type="submit"
-                aria-label="Send"
-                onKeyDown={(e) => {
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
                   handleSubmit(e);
-                }}
-                onClick={(e) => {
-                  handleSubmit(e);
-                }}
-              >
-                Send
-              </Button>
-            }
-          />
+                } else if (e.key === 'Enter' && e.shiftKey) {
+                  e.preventDefault();
+                  setInput(input + '\n');
+                }
+              }}
+              trigger={
+                <Button
+                  className="submit-btn"
+                  disabled={isStreaming}
+                  type="submit"
+                  aria-label="Send"
+                  onKeyDown={(e) => {
+                    handleSubmit(e);
+                  }}
+                  onClick={(e) => {
+                    handleSubmit(e);
+                  }}
+                >
+                  <div className="btn-icon">
+                    <SVGIcon name={SendIcon} size="28" />
+                  </div>
+                </Button>
+              }
+            />
+          </div>
         </Form>
       </div>
     </div>

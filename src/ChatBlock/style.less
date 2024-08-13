@@ -15,7 +15,6 @@
   height: 30px;
   flex: none;
   flex-direction: column;
-  align-content: end;
   justify-content: center;
   border-radius: 50%;
   text-align: center;
@@ -113,6 +112,41 @@
   i.icon,
   i.icons {
     font-size: 1em;
+  }
+}
+
+.textarea-wrapper {
+  background-color: #fbfbfb;
+  width: 100%;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #e5e5e5;
+  padding: 0.5em 0.8em !important;
+
+  textarea {
+    background: none !important;
+    border: none !important;
+    resize: none !important;
+    max-width: none;
+    box-shadow: none !important;
+  }
+}
+
+.ui.button.submit-btn {
+  background: none;
+  padding: 0;
+  margin: 0 0.5em 0 0.8em;
+
+  &:hover {
+    background: none;
+  }
+
+  svg {
+    color: @grey;
+
+    margin-top: 0.1em;
   }
 }
 

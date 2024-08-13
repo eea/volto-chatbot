@@ -13,6 +13,7 @@ const components = (message) => {
     a: (props) => {
       const { node, ...rest } = props;
       const value = rest.children;
+      console.log(props, message);
 
       if (value?.toString().startsWith('*')) {
         return (
@@ -60,6 +61,8 @@ export function ChatMessageBubble(props) {
   const isUser = type === 'user';
 
   const showLoader = isMostRecent && isLoading;
+
+  // TODO: these classes are not actually used, remove them
   const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
   const alignmentClassName = isUser ? 'ml-auto' : 'mr-auto';
 

@@ -13,6 +13,7 @@ const components = (message) => {
     a: (props) => {
       const { node, ...rest } = props;
       const value = rest.children;
+      console.log(props, message);
 
       if (value?.toString().startsWith('*')) {
         return (
@@ -60,6 +61,8 @@ export function ChatMessageBubble(props) {
   const isUser = type === 'user';
 
   const showLoader = isMostRecent && isLoading;
+
+  // TODO: these classes are not actually used, remove them
   const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
   const alignmentClassName = isUser ? 'ml-auto' : 'mr-auto';
 
@@ -73,7 +76,13 @@ export function ChatMessageBubble(props) {
     </div>
   );
 
-  const sources = Object.keys(citations).map((index) => documents[index]);
+  // For some reason the list is shifted by one. It's all weird
+  const sources = Object.keys(citations).map(
+    (index) => documents[(parseInt(index) - 1).toString()],
+  );
+  const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
+    return { ...acc, [v]: k };
+  }, {});
 
   return (
     <div className={`${alignmentClassName} ${colorClassName} `}>
@@ -94,7 +103,11 @@ export function ChatMessageBubble(props) {
 
               <div className="sources">
                 {sources.map((source, i) => (
-                  <SourceDetails source={source} key={i} index={i} />
+                  <SourceDetails
+                    source={source}
+                    key={i}
+                    index={inverseMap[source.db_doc_id]}
+                  />
                 ))}
               </div>
             </>

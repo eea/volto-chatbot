@@ -13,7 +13,6 @@ const components = (message) => {
     a: (props) => {
       const { node, ...rest } = props;
       const value = rest.children;
-      console.log(props, message);
 
       if (value?.toString().startsWith('*')) {
         return (

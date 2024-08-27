@@ -9,9 +9,10 @@ import withDanswerData from './withDanswerData';
 const SearchBlockEdit = (props) => {
   const { onChangeBlock, block, assistants } = props;
 
-  const schema = React.useMemo(() => ChatBlockSchema({ assistants }), [
-    assistants,
-  ]);
+  const schema = React.useMemo(
+    () => ChatBlockSchema({ assistants }),
+    [assistants],
+  );
 
   console.log('data', props.data);
 

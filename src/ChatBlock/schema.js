@@ -5,13 +5,17 @@ export function ChatBlockSchema({ assistants }) {
       {
         id: 'default',
         title: 'Defalt',
-        fields: ['assistant'],
+        fields: ['assistant', 'placeholderPrompt'],
       },
     ],
     properties: {
       assistant: {
         title: 'Assistant',
         choices: assistants?.map(({ id, name }) => [id.toString(), name]),
+      },
+      placeholderPrompt: {
+        default: 'Ask a question',
+        title: 'Prompt',
       },
     },
     required: [],

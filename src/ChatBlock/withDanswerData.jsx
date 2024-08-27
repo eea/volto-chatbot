@@ -1,4 +1,21 @@
 import React from 'react';
+import {
+  PlaceholderParagraph,
+  PlaceholderLine,
+  PlaceholderHeader,
+  Placeholder,
+} from 'semantic-ui-react';
+
+const Loader = () => (
+  <Placeholder>
+    <PlaceholderParagraph>
+      <PlaceholderLine />
+      <PlaceholderLine />
+      <PlaceholderLine />
+      <PlaceholderLine />
+    </PlaceholderParagraph>
+  </Placeholder>
+);
 
 export default function withDanswerData(callback) {
   function wrapper(Component) {
@@ -21,7 +38,7 @@ export default function withDanswerData(callback) {
       return state ? (
         <Component {...props} {...state} />
       ) : (
-        <div>Fetching external data...</div>
+        <Loader active={true} />
       );
     }
     return WrappedComponent;

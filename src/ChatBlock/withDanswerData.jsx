@@ -2,7 +2,6 @@ import React from 'react';
 import {
   PlaceholderParagraph,
   PlaceholderLine,
-  PlaceholderHeader,
   Placeholder,
 } from 'semantic-ui-react';
 

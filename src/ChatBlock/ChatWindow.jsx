@@ -12,7 +12,12 @@ import SendIcon from './../icons/send.svg';
 
 import './style.less';
 
-function ChatWindow({ persona, rehypePrism, remarkGfm }) {
+function ChatWindow({
+  persona,
+  rehypePrism,
+  remarkGfm,
+  placeholderPrompt = 'Ask a question',
+}) {
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
@@ -91,7 +96,7 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
               ref={textareaRef}
               value={input}
               placeholder={
-                messages.length > 0 ? 'Ask follow-up...' : 'Placeholder text'
+                messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
               }
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {

@@ -4,14 +4,13 @@ import ChatWindow from './ChatWindow';
 import superagent from 'superagent';
 
 function ChatBlockView(props) {
-  const { assistantData } = props;
+  const { assistantData, data } = props;
 
   return assistantData ? (
-    <div>
-      <div>
-        <ChatWindow persona={assistantData} />
-      </div>
-    </div>
+    <ChatWindow
+      persona={assistantData}
+      placeholderPrompt={data.placeholderPrompt}
+    />
   ) : (
     <div>Chatbot</div>
   );

@@ -14,8 +14,6 @@ const SearchBlockEdit = (props) => {
     [assistants],
   );
 
-  console.log('data', props.data);
-
   return (
     <div>
       <ChatBlockView {...props} mode="edit" />

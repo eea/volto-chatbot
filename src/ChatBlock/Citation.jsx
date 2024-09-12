@@ -58,9 +58,11 @@ export function Citation({ children, link, index, value, message }) {
       content={popupContent}
       header={!isLinkType ? document.semantic_identifier : undefined}
       trigger={
-        <span className="citation">{isLinkType ? innerText : children}</span>
+        <span className="chat-citation">
+          {isLinkType ? innerText : children}
+        </span>
       }
-      popper={{ id: 'citation' }}
+      popper={{ id: 'chat-citation-popup' }}
     />
   );
 }

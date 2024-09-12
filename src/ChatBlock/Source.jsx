@@ -11,7 +11,7 @@ export const SourceDetails = ({ source, index }) => {
   return (
     <div className="source">
       <div className="source-header">
-        {index && <span className="citation">{index}</span>}{' '}
+        {index && <span className="chat-citation">{index}</span>}{' '}
         <div className="source-title">
           {semantic_identifier || 'untitled document'}
         </div>

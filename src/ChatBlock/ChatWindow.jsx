@@ -87,7 +87,6 @@ function ChatWindow({ persona, rehypePrism, remarkGfm }) {
             <AutoResizeTextarea
               maxRows={8}
               minRows={1}
-              rows={1}
               ref={textareaRef}
               value={input}
               placeholder={

@@ -53,7 +53,7 @@ export function Citation({ children, link, index, value, message }) {
 
   return (
     <Popup
-      on="click"
+      // on="click"
       wide="very"
       content={popupContent}
       header={!isLinkType ? document.semantic_identifier : undefined}

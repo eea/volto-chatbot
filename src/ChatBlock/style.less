@@ -52,9 +52,43 @@
   }
 
   .source {
-    padding: 0.3em 0.4em;
-    border: 1px solid #dbdbdb;
+    display: flex;
+    width: 200px;
+    flex-direction: column;
+    padding: 0.5em 0.7em;
+    border-radius: 6px;
+    background-color: #f9f9f9;
+    gap: 0.3em;
+  }
+
+  .source-header {
+    display: flex;
+    gap: 0.3em;
+  }
+
+  .source-title {
+    overflow: hidden;
+    width: 130px;
     font-size: 14px;
+    font-weight: 600;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-all;
+  }
+
+  .source-date span {
+    padding: 0.1em 0.3em;
+    border-radius: 5px;
+    background-color: #e5e7eb;
+    font-size: 12px;
+  }
+
+  .source-desc {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    font-size: 12px;
+    -webkit-line-clamp: 3;
     word-break: break-all;
   }
 }
@@ -76,15 +110,18 @@
   display: inline-block;
   width: 1.8em;
   height: 1.8em;
+  border: 1px solid #dbd9d9;
   border-radius: 3em;
   background-color: @citationCircleColor;
   cursor: pointer;
+  cursor: help;
   font-size: 11px;
   font-weight: bold;
-  line-height: 2em;
+  line-height: 1.8em;
   text-align: center;
 
   &:hover {
+    border: 1px solid @citationCircleHoverColor;
     background-color: @citationCircleHoverColor;
     color: #ffffff;
   }

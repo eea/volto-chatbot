@@ -68,7 +68,7 @@ function ChatWindow({
         ) : (
           <>
             <Segment clearing basic>
-              <Button right onClick={handleClearChat} className="right floated">
+              <Button onClick={handleClearChat} className="right floated">
                 <Icon name="edit outline" /> New chat
               </Button>
             </Segment>
@@ -85,7 +85,7 @@ function ChatWindow({
             </div>
           </>
         )}
-        {isStreaming && <div class="loader"></div>}
+        {isStreaming && <div className="loader"></div>}
       </div>
 
       <div className="chat-form">

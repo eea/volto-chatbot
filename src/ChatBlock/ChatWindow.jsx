@@ -6,6 +6,7 @@ import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useBackendChat } from './useBackendChat';
+import { useScrollonStream } from './lib';
 
 import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
@@ -19,6 +20,7 @@ function ChatWindow({
   placeholderPrompt = 'Ask a question',
   ...data
 }) {
+  const { height } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
@@ -27,6 +29,10 @@ function ChatWindow({
   const [showLandingPage, setShowLandingPage] = React.useState(false);
 
   const textareaRef = React.useRef(null);
+  const conversationRef = React.useRef(null);
+  const endDivRef = React.useRef(null);
+  const scrollDist = React.useRef(0); // Keep track of scroll distance
+
   React.useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.focus();
@@ -53,6 +59,15 @@ function ChatWindow({
   //eslint-disable-next-line
   console.log(messages);
 
+  useScrollonStream({
+    isStreaming,
+    scrollableDivRef: conversationRef,
+    scrollDist,
+    endDivRef,
+    distance: 500, // distance that should "engage" the scroll
+    debounce: 100, // time for debouncing
+  });
+
   return (
     <div className="chat-window">
       <div className="messages">
@@ -68,11 +83,15 @@ function ChatWindow({
         ) : (
           <>
             <Segment clearing basic>
-              <Button right onClick={handleClearChat} className="right floated">
+              <Button onClick={handleClearChat} className="right floated">
                 <Icon name="edit outline" /> New chat
               </Button>
             </Segment>
-            <div className="conversation">
+            <div
+              ref={conversationRef}
+              className={`conversation ${height ? 'include-scrollbar' : ''}`}
+              style={{ maxHeight: height + 'px' }}
+            >
               {messages.map((m, index) => (
                 <ChatMessageBubble
                   key={m.messageId}
@@ -82,10 +101,11 @@ function ChatWindow({
                   libs={libs}
                 />
               ))}
+              <div ref={endDivRef} /> {/* End div to mark the bottom */}
             </div>
           </>
         )}
-        {isStreaming && <div class="loader"></div>}
+        {isStreaming && <div className="loader"></div>}
       </div>
 
       <div className="chat-form">

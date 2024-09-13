@@ -8,6 +8,7 @@ export function ChatBlockSchema({ assistants }) {
         fields: [
           'assistant',
           'placeholderPrompt',
+          'height',
           'showAssistantTitle',
           'showAssistantDescription',
           'showAssistantPrompts',
@@ -43,6 +44,9 @@ export function ChatBlockSchema({ assistants }) {
         title: 'Chat title',
         description: 'Chat are saved with this title. Visible only in Danswer',
         default: 'Online public chat',
+      },
+      height: {
+        title: 'Chat window height',
       },
     },
     required: [],

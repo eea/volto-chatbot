@@ -3,6 +3,7 @@ import loadable from '@loadable/component';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
 import { transformEmailsToLinks, SVGIcon } from './utils';
+
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
 
@@ -76,9 +77,14 @@ export function ChatMessageBubble(props) {
   );
 
   // For some reason the list is shifted by one. It's all weird
-  const sources = Object.keys(citations).map(
-    (index) => documents[(parseInt(index) - 1).toString()],
+  // const sources = Object.keys(citations).map(
+  //   (index) => documents[(parseInt(index) - 1).toString()],
+  // );
+
+  const sources = Object.values(citations).map((doc_id) =>
+    documents.find((doc) => doc.db_doc_id === doc_id),
   );
+
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
   }, {});

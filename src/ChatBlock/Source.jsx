@@ -2,6 +2,7 @@ import { DateTime } from 'luxon';
 import { SVGIcon } from './utils';
 
 import FileIcon from './../icons/file.svg';
+import GlobeIcon from './../icons/globe.svg';
 
 export const SourceDetails = ({ source, index }) => {
   const { semantic_identifier, updated_at, blurb, source_type } = source;
@@ -16,6 +17,7 @@ export const SourceDetails = ({ source, index }) => {
           {semantic_identifier || 'untitled document'}
         </div>
         {source_type === 'file' && <SVGIcon name={FileIcon} size="18" />}
+        {source_type === 'web' && <SVGIcon name={GlobeIcon} size="18" />}
       </div>
       {updated_at && (
         <div className="source-date">

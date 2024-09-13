@@ -10,6 +10,7 @@ function ChatBlockView(props) {
     <ChatWindow
       persona={assistantData}
       placeholderPrompt={data.placeholderPrompt}
+      height={data.height}
     />
   ) : (
     <div>Chatbot</div>

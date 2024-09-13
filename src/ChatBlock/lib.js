@@ -324,7 +324,6 @@ export async function useScrollonStream({
       if (
         scrollDist.current < distance &&
         !blockActionRef.current &&
-        !blockActionRef.current &&
         !preventScroll.current &&
         endDivRef &&
         endDivRef.current

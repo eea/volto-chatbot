@@ -5,7 +5,7 @@ export function ChatBlockSchema({ assistants }) {
       {
         id: 'default',
         title: 'Defalt',
-        fields: ['assistant', 'placeholderPrompt'],
+        fields: ['assistant', 'placeholderPrompt', 'height'],
       },
     ],
     properties: {
@@ -16,6 +16,9 @@ export function ChatBlockSchema({ assistants }) {
       placeholderPrompt: {
         default: 'Ask a question',
         title: 'Prompt',
+      },
+      height: {
+        title: 'Chat window height',
       },
     },
     required: [],

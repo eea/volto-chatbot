@@ -17,6 +17,7 @@ function ChatWindow({
   rehypePrism,
   remarkGfm,
   placeholderPrompt = 'Ask a question',
+  ...data
 }) {
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
@@ -62,6 +63,7 @@ function ChatWindow({
               setShowLandingPage(false);
             }}
             persona={persona}
+            {...data}
           />
         ) : (
           <>

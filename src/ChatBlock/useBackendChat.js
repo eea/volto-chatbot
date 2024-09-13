@@ -6,7 +6,6 @@ import {
   getLastSuccessfulMessageId,
   removeMessage,
   updateCurrentMessageFIFO,
-  // createChatSession,
   updateParentChildren,
 } from './lib';
 
@@ -109,8 +108,10 @@ class SubmitHandler {
     currChatSessionId,
     setCurrChatSessionId,
     setCompleteMessageDetail,
+    chatTitle,
   }) {
     this.persona = persona;
+    this.chatTitle = chatTitle;
     this.setIsStreaming = setIsStreaming;
     this.isCancelledRef = isCancelledRef;
     this.setIsCancelled = setIsCancelled;
@@ -134,7 +135,7 @@ class SubmitHandler {
     if (this.currChatSessionId === null) {
       this.currChatSessionId = await createChatSession(
         this.persona.id,
-        'Online public chat',
+        this.chatTitle,
       );
       this.setCurrChatSessionId(this.currChatSessionId);
     }
@@ -206,9 +207,8 @@ class SubmitHandler {
       setCompleteMessageDetail: this.setCompleteMessageDetail,
     };
 
-    const result = upsertToCompleteMessageMap(info);
-
-    const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = result;
+    const _res = upsertToCompleteMessageMap(info);
+    const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = _res;
 
     // on initial message send, we insert a dummy system message
     // set this as the parent here if no parent is set
@@ -233,28 +233,41 @@ class SubmitHandler {
     const lastSuccessfulMessageId = glsm(currMessageHistory);
 
     const stack = new CurrentMessageFIFO();
-    await updateCurrentMessageFIFO(
-      stack,
-      {
-        message: currMessage,
-        alternateAssistantId: currentAssistantId,
-        fileDescriptors: [],
-        parentMessageId: lastSuccessfulMessageId,
-        chatSessionId: this.currChatSessionId,
-        promptId: 0,
-        filters: [],
-        selectedDocumentIds: [],
-        queryOverride,
-        forceSearch,
-        useExistingUserMessage: isSeededChat,
-      },
+    // here is the problem
+    const params = {
+      message: currMessage,
+      alternateAssistantId: currentAssistantId,
+      fileDescriptors: [],
+      parentMessageId: lastSuccessfulMessageId,
+      chatSessionId: this.currChatSessionId,
+      promptId: 0,
+      filters: [],
+      selectedDocumentIds: [],
+      queryOverride,
+      forceSearch,
+      useExistingUserMessage: isSeededChat,
+    };
+    const promise = updateCurrentMessageFIFO(
+      params,
       this.isCancelledRef,
       this.setIsCancelled,
     );
 
     await delay(50);
 
-    while (!stack.isComplete || !stack.isEmpty()) {
+    for await (const bit of promise) {
+      if (bit.error) {
+        stack.error = bit.error;
+      } else if (bit.isComplete) {
+        stack.isComplete = true;
+      } else {
+        stack.push(bit.packet);
+      }
+
+      if (stack.isComplete || stack.isEmpty()) {
+        break;
+      }
+
       await delay(2);
 
       if (!stack.isEmpty()) {
@@ -345,6 +358,7 @@ class SubmitHandler {
         }
       }
     }
+
     this.setIsStreaming(false);
   }
 }

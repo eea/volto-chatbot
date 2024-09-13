@@ -12,22 +12,29 @@ function StarterMessage({ msg, onClick }) {
 }
 
 export default function EmptyState(props) {
-  const { persona, onChoice } = props;
+  const {
+    persona,
+    onChoice,
+    showAssistantTitle = true,
+    showAssistantPrompts = true,
+    showAssistantDescription = true,
+  } = props;
 
   return (
-    <div className="rounded flex flex-col items-center max-w-full md:p-8">
-      <h2>{persona.name}</h2>
-      <p>{persona.description}</p>
+    <div className="">
+      {showAssistantTitle && <h2>{persona.name}</h2>}
+      {showAssistantDescription && <p>{persona.description}</p>}
 
-      {persona.starter_messages?.map((msg) => (
-        <StarterMessage
-          key={msg.name}
-          msg={msg}
-          onClick={() =>
-            onChoice(msg.message || `${msg.name}\n${msg.description}`)
-          }
-        />
-      ))}
+      {showAssistantPrompts &&
+        persona.starter_messages?.map((msg) => (
+          <StarterMessage
+            key={msg.name}
+            msg={msg}
+            onClick={() =>
+              onChoice(msg.message || `${msg.name}\n${msg.description}`)
+            }
+          />
+        ))}
     </div>
   );
 }

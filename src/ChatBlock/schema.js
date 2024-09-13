@@ -5,7 +5,14 @@ export function ChatBlockSchema({ assistants }) {
       {
         id: 'default',
         title: 'Defalt',
-        fields: ['assistant', 'placeholderPrompt'],
+        fields: [
+          'assistant',
+          'placeholderPrompt',
+          'showAssistantTitle',
+          'showAssistantDescription',
+          'showAssistantPrompts',
+          'chatTitle',
+        ],
       },
     ],
     properties: {
@@ -16,6 +23,26 @@ export function ChatBlockSchema({ assistants }) {
       placeholderPrompt: {
         default: 'Ask a question',
         title: 'Prompt',
+      },
+      showAssistantTitle: {
+        title: 'Show assistant title',
+        type: 'boolean',
+        default: true,
+      },
+      showAssistantDescription: {
+        title: 'Show assistant description',
+        type: 'boolean',
+        default: true,
+      },
+      showAssistantPrompts: {
+        title: 'Show predefined prompts',
+        type: 'boolean',
+        default: true,
+      },
+      chatTitle: {
+        title: 'Chat title',
+        description: 'Chat are saved with this title. Visible only in Danswer',
+        default: 'Online public chat',
       },
     },
     required: [],

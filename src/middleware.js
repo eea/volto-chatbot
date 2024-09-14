@@ -5,6 +5,7 @@ let cached_auth_cookie = null;
 // TODO: use time-based invalidation
 // eslint-disable-next-line
 let last_fetched = null;
+let maxAge;
 
 const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing DANSWER username and password';
@@ -21,15 +22,22 @@ async function get_login_cookie(username, password) {
     client_secret: '',
     grant_type: '',
   };
-  // console.log('data', data);
   try {
     const response = await superagent.post(url).type('form').send(data);
     const header = response.headers['set-cookie'][0];
+    console.log(header);
     return header;
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error(MSG_FETCH_COOKIE, error);
   }
+}
+
+async function getAuthCookie(username, password) {
+  cached_auth_cookie = await get_login_cookie(username, password);
+  const maxAgeMatch = cached_auth_cookie.match(/Max-Age=(\d+)/);
+  maxAge = parseInt(maxAgeMatch[1]);
+  last_fetched = new Date();
 }
 
 export default async function middleware(req, res, next) {
@@ -47,10 +55,9 @@ export default async function middleware(req, res, next) {
     return;
   }
 
-  if (!cached_auth_cookie) {
-    cached_auth_cookie = await get_login_cookie(username, password);
+  if (!cached_auth_cookie || (last_fetched - new Date()) / 1000 > maxAge) {
+    await getAuthCookie(username, password);
   }
-
   const options = {
     method: req.method,
     headers: {
@@ -62,9 +69,8 @@ export default async function middleware(req, res, next) {
   if (req.body && req.method === 'POST') {
     options.body = JSON.stringify(req.body);
   }
-
   try {
-    const response = await fetch(url, options);
+    const response = await fetch(url, options, req.body);
 
     if (response.headers.get('transfer-encoding') === 'chunked') {
       res.set('Content-Type', 'text/event-stream');

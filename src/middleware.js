@@ -25,7 +25,6 @@ async function get_login_cookie(username, password) {
   try {
     const response = await superagent.post(url).type('form').send(data);
     const header = response.headers['set-cookie'][0];
-    console.log(header);
     return header;
   } catch (error) {
     // eslint-disable-next-line no-console

@@ -47,6 +47,7 @@ export const SourceDetails = ({ source, index }) => {
               trigger={<span className="chat-citation">{index}</span>}
               popper={{ id: 'chat-citation-popup' }}
             />
+            <div className="source-title">{semantic_identifier}</div>
             {renderIcon()}
           </>
         )}

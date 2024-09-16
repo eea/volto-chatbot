@@ -46,7 +46,18 @@ export function ChatBlockSchema({ assistants }) {
         default: 'Online public chat',
       },
       height: {
-        title: 'Chat window height',
+        title: (
+          <a
+            rel="noreferrer"
+            target="_blank"
+            href="https://developer.mozilla.org/en-US/docs/Web/CSS/height"
+          >
+            Height
+          </a>
+        ),
+        description:
+          'Chat window height. ' +
+          'Use CSS numeric dimmension (ex: 500px or 70vh).',
       },
     },
     required: [],

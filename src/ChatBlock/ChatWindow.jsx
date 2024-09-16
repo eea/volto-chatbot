@@ -90,7 +90,7 @@ function ChatWindow({
             <div
               ref={conversationRef}
               className={`conversation ${height ? 'include-scrollbar' : ''}`}
-              style={{ maxHeight: height + 'px' }}
+              style={{ maxHeight: height }}
             >
               {messages.map((m, index) => (
                 <ChatMessageBubble

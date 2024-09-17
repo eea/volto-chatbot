@@ -1,0 +1,30 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`EmptyState should render the component 1`] = `
+<div
+  className=""
+>
+  <h2>
+    In enim justo rhoncus ut
+  </h2>
+  <p>
+    Nullam dictum felis eu pede
+  </p>
+  <button
+    className="ui button"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="button"
+    tabIndex={-1}
+  >
+    <strong>
+      Curabitur at lacus ac velit
+    </strong>
+    <div>
+      <em>
+        Vestibulum purus quam scelerisque ut 
+      </em>
+    </div>
+  </button>
+</div>
+`;

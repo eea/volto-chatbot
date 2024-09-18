@@ -10,21 +10,27 @@ exports[`EmptyState should render the component 1`] = `
   <p>
     Nullam dictum felis eu pede
   </p>
-  <button
-    className="ui button"
-    onClick={[Function]}
-    onKeyDown={[Function]}
-    role="button"
-    tabIndex={-1}
+  <div
+    className="starter-messages-container"
   >
-    <strong>
-      Curabitur at lacus ac velit
-    </strong>
-    <div>
-      <em>
+    <button
+      className="ui button starter-message"
+      onClick={[Function]}
+      onKeyDown={[Function]}
+      role="button"
+      tabIndex={-1}
+    >
+      <span
+        className="starter-message-title"
+      >
+        Curabitur at lacus ac velit
+      </span>
+      <div
+        className="starter-message-desc"
+      >
         Vestibulum purus quam scelerisque ut 
-      </em>
-    </div>
-  </button>
+      </div>
+    </button>
+  </div>
 </div>
 `;

@@ -3,6 +3,8 @@ import {
   buildLatestMessageChain,
   createChatSession,
   CurrentMessageFIFO,
+  delay,
+  fetchRelatedQuestions,
   getLastSuccessfulMessageId,
   removeMessage,
   updateCurrentMessageFIFO,
@@ -23,10 +25,6 @@ export const ChatFileType = {
   IMAGE: 'image',
   DOCUMENT: 'document',
   PLAIN_TEXT: 'plain_text',
-};
-
-const delay = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 function upsertToCompleteMessageMap({
@@ -109,6 +107,7 @@ class SubmitHandler {
     setCurrChatSessionId,
     setCompleteMessageDetail,
     chatTitle,
+    qgenAsistantId,
   }) {
     this.persona = persona;
     this.chatTitle = chatTitle;
@@ -120,6 +119,7 @@ class SubmitHandler {
     this.currChatSessionId = currChatSessionId;
     this.setCurrChatSessionId = setCurrChatSessionId;
     this.setCompleteMessageDetail = setCompleteMessageDetail;
+    this.qgenAsistantId = qgenAsistantId;
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -139,6 +139,8 @@ class SubmitHandler {
       );
       this.setCurrChatSessionId(this.currChatSessionId);
     }
+
+    let newCompleteMessageDetail = {};
 
     const messageToResend = this.messageHistory.find(
       (message) => message.messageId === messageIdToResend,
@@ -349,7 +351,7 @@ class SubmitHandler {
             replacementsMap: replacementsMap,
             setCompleteMessageDetail: this.setCompleteMessageDetail,
           };
-          upsertToCompleteMessageMap(info);
+          newCompleteMessageDetail = upsertToCompleteMessageMap(info);
         }
 
         if (this.isCancelledRef.current) {
@@ -359,11 +361,25 @@ class SubmitHandler {
       }
     }
 
+    console.log('newCompleteMessageDetail', newCompleteMessageDetail);
     this.setIsStreaming(false);
+    if (newCompleteMessageDetail.messageMap) {
+      // check if last message comes from assistant
+      const { messageMap } = newCompleteMessageDetail;
+      const messageList = buildLatestMessageChain(messageMap).reverse();
+
+      const lastMessage = messageList.find((m) => m.type === 'assistant');
+      const userMessage = messageList.find((m) => m.type === 'user');
+      if (lastMessage && userMessage) {
+        const query = userMessage.message;
+        const answer = lastMessage.message;
+        await fetchRelatedQuestions({ query, answer }, this.qgenAsistantId);
+      }
+    }
   }
 }
 
-export function useBackendChat({ persona }) {
+export function useBackendChat({ persona, qgenAsistantId }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
   const [isCancelled, setIsCancelled] = React.useState(false);
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
@@ -381,7 +397,6 @@ export function useBackendChat({ persona }) {
   const messageHistory = buildLatestMessageChain(
     completeMessageDetail.messageMap,
   );
-
   const submitHandler = new SubmitHandler({
     completeMessageDetail,
     currChatSessionId,
@@ -392,6 +407,7 @@ export function useBackendChat({ persona }) {
     setCurrChatSessionId,
     setIsCancelled,
     setIsStreaming,
+    qgenAsistantId,
   });
 
   const clearChat = () => {

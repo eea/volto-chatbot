@@ -22,8 +22,10 @@ function ChatWindow({
 }) {
   const { height } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
+  const { qgenAsistantId } = data;
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
+    qgenAsistantId,
   });
   const [input, setInput] = React.useState('');
   const [showLandingPage, setShowLandingPage] = React.useState(false);
@@ -57,7 +59,7 @@ function ChatWindow({
   }, [messages]);
 
   //eslint-disable-next-line
-  console.log(messages);
+  // console.log(messages);
 
   useScrollonStream({
     isStreaming,

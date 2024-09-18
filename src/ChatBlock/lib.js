@@ -1,5 +1,9 @@
 import { useRef, useEffect } from 'react';
 
+export const delay = (ms) => {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+};
+
 export async function createChatSession(personaId, description) {
   const createChatSessionResponse = await fetch(
     '/_da/chat/create-chat-session',
@@ -254,6 +258,56 @@ export class CurrentMessageFIFO {
   isEmpty() {
     return this.stack.length === 0;
   }
+}
+
+export async function fetchRelatedQuestions(message, qgenAsistantId) {
+  const { query, answer } = message;
+  const chatSessionId = await createChatSession(qgenAsistantId, `Q: ${query}`);
+  console.log({ query, answer, qgenAsistantId });
+
+  const params = {
+    message: `Question: ${query}\nAnswer:\n${answer}`,
+    alternateAssistantId: qgenAsistantId,
+    fileDescriptors: [],
+    parentMessageId: null,
+    chatSessionId,
+    promptId: 0,
+    filters: [],
+    selectedDocumentIds: [],
+  };
+  const promise = updateCurrentMessageFIFO(params, {}, () => {});
+
+  let result = '';
+
+  const stack = new CurrentMessageFIFO();
+  for await (const bit of promise) {
+    if (bit.error) {
+      stack.error = bit.error;
+    } else if (bit.isComplete) {
+      stack.isComplete = true;
+    } else {
+      stack.push(bit.packet);
+    }
+
+    if (stack.isComplete || stack.isEmpty()) {
+      break;
+    }
+
+    await delay(2);
+
+    if (!stack.isEmpty()) {
+      const packet = stack.nextPacket();
+
+      if (packet) {
+        if (Object.hasOwn(packet, 'answer_piece')) {
+          result += packet.answer_piece;
+        }
+      }
+    }
+  }
+
+  console.log('related questions answer', result);
+  return result;
 }
 
 export async function* updateCurrentMessageFIFO(

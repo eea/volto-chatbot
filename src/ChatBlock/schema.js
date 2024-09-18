@@ -7,6 +7,7 @@ export function ChatBlockSchema({ assistants }) {
         title: 'Defalt',
         fields: [
           'assistant',
+          'qgenAsistantId',
           'placeholderPrompt',
           'height',
           'showAssistantTitle',
@@ -20,6 +21,11 @@ export function ChatBlockSchema({ assistants }) {
       assistant: {
         title: 'Assistant',
         choices: assistants?.map(({ id, name }) => [id.toString(), name]),
+      },
+      qgenAsistantId: {
+        title: 'QAssistant',
+        choices: assistants?.map(({ id, name }) => [id.toString(), name]),
+        description: 'The assistant used to generate the related questions',
       },
       placeholderPrompt: {
         default: 'Ask a question',
@@ -48,8 +54,8 @@ export function ChatBlockSchema({ assistants }) {
       height: {
         title: (
           <a
-            rel="noreferrer"
             target="_blank"
+            rel="noreferrer"
             href="https://developer.mozilla.org/en-US/docs/Web/CSS/height"
           >
             Height

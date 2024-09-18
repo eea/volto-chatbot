@@ -8,6 +8,7 @@ export function ChatBlockSchema({ assistants }) {
         fields: [
           'assistant',
           'qgenAsistantId',
+          'enableQgen',
           'placeholderPrompt',
           'height',
           'showAssistantTitle',
@@ -26,6 +27,11 @@ export function ChatBlockSchema({ assistants }) {
         title: 'QAssistant',
         choices: assistants?.map(({ id, name }) => [id.toString(), name]),
         description: 'The assistant used to generate the related questions',
+      },
+      enableQgen: {
+        title: 'Enable related question generation',
+        type: 'boolean',
+        default: false,
       },
       placeholderPrompt: {
         default: 'Ask a question',

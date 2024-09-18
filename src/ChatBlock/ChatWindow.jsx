@@ -20,12 +20,12 @@ function ChatWindow({
   placeholderPrompt = 'Ask a question',
   ...data
 }) {
-  const { height } = data;
+  const { height, qgenAsistantId, enableQgen } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
-  const { qgenAsistantId } = data;
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
     qgenAsistantId,
+    enableQgen,
   });
   const [input, setInput] = React.useState('');
   const [showLandingPage, setShowLandingPage] = React.useState(false);

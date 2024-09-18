@@ -108,6 +108,7 @@ class SubmitHandler {
     setCompleteMessageDetail,
     chatTitle,
     qgenAsistantId,
+    enableQgen,
   }) {
     this.persona = persona;
     this.chatTitle = chatTitle;
@@ -120,6 +121,7 @@ class SubmitHandler {
     this.setCurrChatSessionId = setCurrChatSessionId;
     this.setCompleteMessageDetail = setCompleteMessageDetail;
     this.qgenAsistantId = qgenAsistantId;
+    this.enableQgen = enableQgen;
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -361,7 +363,11 @@ class SubmitHandler {
       }
     }
 
-    if (newCompleteMessageDetail.messageMap) {
+    if (
+      newCompleteMessageDetail.messageMap &&
+      this.enableQgen &&
+      typeof this.qgenAsistantId !== 'undefined'
+    ) {
       // check if last message comes from assistant
       const { messageMap } = newCompleteMessageDetail;
       const messageList = buildLatestMessageChain(messageMap).reverse();
@@ -399,7 +405,7 @@ function extractJSON(str) {
   }
 }
 
-export function useBackendChat({ persona, qgenAsistantId }) {
+export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
   const [isCancelled, setIsCancelled] = React.useState(false);
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
@@ -428,6 +434,7 @@ export function useBackendChat({ persona, qgenAsistantId }) {
     setIsCancelled,
     setIsStreaming,
     qgenAsistantId,
+    enableQgen,
   });
 
   const clearChat = () => {

@@ -1,16 +1,12 @@
 @blue: #005c97;
 @grey: #3d5265;
 @teal: #00b3ae;
-@linkColor: #145dd5;
 @citationCircleColor: #e6e7e8;
 @citationCircleHoverColor: @blue;
+@borderRadius: 0.4rem;
 
 .mr-auto {
   margin: 2em 0;
-}
-
-.chat-window {
-  margin: 1.5em 0;
 }
 
 .include-scrollbar {
@@ -18,104 +14,176 @@
   scrollbar-width: thin;
 }
 
-.circle {
-  display: flex;
-  width: 30px;
-  height: 30px;
-  flex: none;
-  flex-direction: column;
-  justify-content: center;
-  border-radius: 50%;
-  text-align: center;
+.chat-window {
+  margin: 1.5em 0;
 
-  &.user {
-    background-color: @teal;
-  }
-
-  &.assistant {
-    background-color: @grey;
-  }
-
-  svg {
-    margin: 0 auto;
-  }
-}
-
-.ui.form {
-  margin-top: 2em;
-}
-
-.sources-title {
-  display: flex;
-}
-
-.sources {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 0.8em;
-
-  @media only screen and (max-width: 800px) {
-    display: inline-flex;
-    flex-direction: column;
-  }
-
-  .source {
+  .circle {
     display: flex;
-    width: 200px;
+    width: 30px;
+    height: 30px;
+    flex: none;
     flex-direction: column;
-    padding: 0.5em 0.7em;
-    border-radius: 6px;
-    background-color: #f9f9f9;
-    gap: 0.3em;
+    justify-content: center;
+    border-radius: 50%;
+    text-align: center;
+
+    &.user {
+      background-color: @teal;
+    }
+
+    &.assistant {
+      background-color: @grey;
+    }
+
+    svg {
+      margin: 0 auto;
+    }
   }
 
-  .source-header,
-  .source-header a {
+  .comment {
     display: flex;
-    width: 100%;
-    align-items: center;
-    color: #3d5265;
+    gap: 0.8em;
+
+    i.inverted.circular.grey.icon {
+      background-color: #3d5265 !important;
+    }
+
+    i.icon,
+    i.icons {
+      font-size: 1em;
+    }
   }
 
-  .source-title {
-    overflow: hidden;
-    width: 130px;
-    margin: 0 5px;
-    font-size: 14px;
-    font-weight: 600;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    word-break: break-all;
+  .sources {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.8em;
+
+    @media only screen and (max-width: 800px) {
+      display: inline-flex;
+      flex-direction: column;
+    }
+
+    .source {
+      display: flex;
+      width: 200px;
+      flex-direction: column;
+      padding: 0.6em 0.7em;
+      border-radius: @borderRadius;
+      background-color: #f9f9f9;
+      gap: 0.3em;
+    }
+
+    .source-header,
+    .source-header a {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      color: #3d5265;
+    }
+
+    .source-title {
+      overflow: hidden;
+      width: 130px;
+      margin: 0 5px;
+      font-size: 14px;
+      font-weight: 600;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      word-break: break-all;
+    }
+
+    .source-date span {
+      padding: 0.2em 0.4em;
+      border-radius: 5px;
+      background-color: #e5e7eb;
+      font-size: 12px;
+    }
+
+    .source-desc {
+      display: -webkit-box;
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      font-size: 12px;
+      -webkit-line-clamp: 3;
+      word-break: break-all;
+    }
   }
 
-  .source-date span {
-    padding: 0.1em 0.3em;
+  .loader {
+    position: relative;
+    width: 10px;
+    height: 10px;
     border-radius: 5px;
-    background-color: #e5e7eb;
-    font-size: 12px;
-  }
+    margin-top: 1em;
+    margin-left: 64px;
+    animation: dot-flashing 1s infinite linear alternate;
+    animation-delay: 0.5s;
+    background-color: @grey;
 
-  .source-desc {
-    display: -webkit-box;
-    overflow: hidden;
-    -webkit-box-orient: vertical;
-    font-size: 12px;
-    -webkit-line-clamp: 3;
-    word-break: break-all;
+    &:before,
+    &:after {
+      position: absolute;
+      top: 0;
+      display: inline-block;
+      content: '';
+    }
+
+    &:before {
+      left: -15px;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      animation: dot-flashing 1s infinite alternate;
+      animation-delay: 0s;
+      background-color: @grey;
+    }
+
+    &:after {
+      left: 15px;
+      width: 10px;
+      height: 10px;
+      border-radius: 5px;
+      animation: dot-flashing 1s infinite alternate;
+      animation-delay: 1s;
+      background-color: @grey;
+    }
   }
 }
 
-.ui.basic.button.text-link {
-  color: @linkColor !important;
-  font-size: 13px;
-  font-weight: bold;
+.starter-messages-container {
+  display: grid;
+  width: 100%;
+  grid-gap: 0.7rem;
+  grid-template-columns: repeat(2, 1fr);
+
+  @media screen and (max-width: 580px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ui.button.starter-message {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  padding: 0.7rem;
+  border: 1px solid #e5e5e5;
+  border-radius: @borderRadius;
+  margin: 0;
+  background-color: white;
+  color: inherit;
+  gap: 5px;
+  transition: background-color 0.3s ease;
 
   &:hover {
-    border: none;
-    background: transparent !important;
-    box-shadow: none;
-    color: @linkColor !important;
+    background-color: #fbfbfb;
+  }
+
+  .starter-message-desc {
+    color: #6b7280;
+    font-size: 14px;
+    font-weight: normal;
   }
 }
 
@@ -151,21 +219,9 @@
   }
 }
 
-.comment {
-  display: flex;
-  gap: 0.8em;
-
-  i.inverted.circular.grey.icon {
-    background-color: #3d5265 !important;
-  }
-
-  i.icon,
-  i.icons {
-    font-size: 1em;
-  }
-}
-
 .chat-form .ui.form {
+  margin-top: 2em;
+
   .textarea-wrapper {
     display: flex;
     width: 100%;
@@ -173,7 +229,7 @@
     justify-content: space-between;
     padding: 0.6em 0.8em;
     border: 1px solid #e5e5e5;
-    border-radius: 8px;
+    border-radius: @borderRadius;
     background-color: #fbfbfb;
 
     // &:focus-within {
@@ -204,46 +260,6 @@
       margin-top: 0.1em;
       color: @grey;
     }
-  }
-}
-
-.loader {
-  position: relative;
-  width: 10px;
-  height: 10px;
-  border-radius: 5px;
-  margin-top: 1em;
-  margin-left: 64px;
-  animation: dot-flashing 1s infinite linear alternate;
-  animation-delay: 0.5s;
-  background-color: @grey;
-
-  &:before,
-  &:after {
-    position: absolute;
-    top: 0;
-    display: inline-block;
-    content: '';
-  }
-
-  &:before {
-    left: -15px;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    animation: dot-flashing 1s infinite alternate;
-    animation-delay: 0s;
-    background-color: @grey;
-  }
-
-  &:after {
-    left: 15px;
-    width: 10px;
-    height: 10px;
-    border-radius: 5px;
-    animation: dot-flashing 1s infinite alternate;
-    animation-delay: 1s;
-    background-color: @grey;
   }
 }
 

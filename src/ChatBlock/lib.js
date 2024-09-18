@@ -263,7 +263,6 @@ export class CurrentMessageFIFO {
 export async function fetchRelatedQuestions(message, qgenAsistantId) {
   const { query, answer } = message;
   const chatSessionId = await createChatSession(qgenAsistantId, `Q: ${query}`);
-  console.log({ query, answer, qgenAsistantId });
 
   const params = {
     message: `Question: ${query}\nAnswer:\n${answer}`,
@@ -306,7 +305,6 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
     }
   }
 
-  console.log('related questions answer', result);
   return result;
 }
 

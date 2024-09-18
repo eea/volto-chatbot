@@ -361,8 +361,6 @@ class SubmitHandler {
       }
     }
 
-    console.log('newCompleteMessageDetail', newCompleteMessageDetail);
-    this.setIsStreaming(false);
     if (newCompleteMessageDetail.messageMap) {
       // check if last message comes from assistant
       const { messageMap } = newCompleteMessageDetail;
@@ -373,9 +371,31 @@ class SubmitHandler {
       if (lastMessage && userMessage) {
         const query = userMessage.message;
         const answer = lastMessage.message;
-        await fetchRelatedQuestions({ query, answer }, this.qgenAsistantId);
+        const relatedQuestionsText = await fetchRelatedQuestions(
+          { query, answer },
+          this.qgenAsistantId,
+        );
+
+        lastMessage.relatedQuestions = extractJSON(relatedQuestionsText);
+
+        this.setCompleteMessageDetail({
+          ...newCompleteMessageDetail,
+          messageMap,
+        });
       }
     }
+    this.setIsStreaming(false);
+  }
+}
+
+function extractJSON(str) {
+  const regex = /\[([\s\S]*?)\]/;
+  const match = str.match(regex);
+
+  if (match) {
+    const jsonText = match[0];
+    // TODO: do we need safety here?
+    return JSON.parse(jsonText);
   }
 }
 

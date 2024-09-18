@@ -59,7 +59,7 @@ function ChatWindow({
   }, [messages]);
 
   //eslint-disable-next-line
-  // console.log(messages);
+  console.log(messages);
 
   useScrollonStream({
     isStreaming,
@@ -101,6 +101,9 @@ function ChatWindow({
                   isMostRecent={index === 0}
                   isLoading={isStreaming}
                   libs={libs}
+                  onChoice={(message) => {
+                    onSubmit({ message });
+                  }}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}

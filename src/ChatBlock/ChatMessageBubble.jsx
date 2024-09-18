@@ -55,7 +55,7 @@ function addCitations(text) {
 }
 
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, libs } = props;
+  const { message, isLoading, isMostRecent, libs, onChoice } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
@@ -102,7 +102,7 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
-          {!showLoader && sources.length ? (
+          {!showLoader && sources.length > 0 && (
             <>
               <h5>Sources:</h5>
 
@@ -116,8 +116,22 @@ export function ChatMessageBubble(props) {
                 ))}
               </div>
             </>
-          ) : (
-            ''
+          )}
+          {message.relatedQuestions?.length > 0 && (
+            <div>
+              <strong>Related Questions:</strong>
+              {message.relatedQuestions?.map(({ question }) => (
+                <div
+                  className="relatedQuestionButton"
+                  role="button"
+                  onClick={() => onChoice(question)}
+                  onKeyDown={() => onChoice(question)}
+                  tabIndex="-1"
+                >
+                  {question}
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>

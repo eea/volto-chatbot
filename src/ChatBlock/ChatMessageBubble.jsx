@@ -118,7 +118,7 @@ export function ChatMessageBubble(props) {
             </>
           )}
           {message.relatedQuestions?.length > 0 && (
-            <div>
+            <>
               <h5>Related Questions:</h5>
               {message.relatedQuestions?.map(({ question }) => (
                 <div
@@ -131,7 +131,7 @@ export function ChatMessageBubble(props) {
                   {question}
                 </div>
               ))}
-            </div>
+            </>
           )}
         </div>
       </div>

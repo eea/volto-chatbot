@@ -402,6 +402,8 @@ function extractJSON(str) {
     const jsonText = match[0];
     // TODO: do we need safety here?
     return JSON.parse(jsonText);
+  } else {
+    return str.split('\n').map((question) => ({ question }));
   }
 }
 

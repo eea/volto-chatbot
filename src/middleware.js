@@ -48,7 +48,7 @@ async function login(username, password) {
   }
 }
 
-async function check_credentials(username, password) {
+async function check_credentials() {
   const reqUrl = `${process.env.DANSWER_URL}/api/persona/-1`;
 
   const options = {
@@ -62,16 +62,16 @@ async function check_credentials(username, password) {
 }
 
 async function send_danswer_request(req, res, { username, password, url }) {
+  await login(username, password);
+
   try {
-    const resp = await check_credentials(username, password);
+    const resp = await check_credentials();
     if (resp.status !== 200) {
-      await login(username, password);
+      await getAuthCookie(username, password);
     }
   } catch (error) {
-    await login(username, password);
+    await getAuthCookie(username, password);
   }
-  // await getAuthCookie(username, password);
-  // await login(username, password);
 
   const options = {
     method: req.method,

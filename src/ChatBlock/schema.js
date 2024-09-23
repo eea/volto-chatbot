@@ -1,4 +1,9 @@
 export function ChatBlockSchema({ assistants }) {
+  const assistantChoices = () =>
+    Array.isArray(assistants)
+      ? assistants.map(({ id, name }) => [id.toString(), name])
+      : [];
+
   return {
     title: 'Chatbot',
     fieldsets: [
@@ -21,11 +26,11 @@ export function ChatBlockSchema({ assistants }) {
     properties: {
       assistant: {
         title: 'Assistant',
-        choices: assistants?.map(({ id, name }) => [id.toString(), name]),
+        choices: assistantChoices(),
       },
       qgenAsistantId: {
         title: 'QAssistant',
-        choices: assistants?.map(({ id, name }) => [id.toString(), name]),
+        choices: assistantChoices(),
         description: 'The assistant used to generate the related questions',
       },
       enableQgen: {

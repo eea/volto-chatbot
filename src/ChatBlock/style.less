@@ -175,7 +175,7 @@
 .ui.button.starter-message {
   display: flex;
   flex-direction: column;
-  align-items: start;
+  align-items: flex-start;
   padding: 0.7rem;
   border: 1px solid #e5e5e5;
   border-radius: @borderRadius;
@@ -185,7 +185,8 @@
   gap: 5px;
   transition: background-color 0.3s ease;
 
-  &:hover {
+  &:hover,
+  &:active {
     background-color: #fbfbfb;
   }
 

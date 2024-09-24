@@ -3,10 +3,11 @@ import {
   buildLatestMessageChain,
   createChatSession,
   CurrentMessageFIFO,
+  delay,
+  fetchRelatedQuestions,
   getLastSuccessfulMessageId,
   removeMessage,
   updateCurrentMessageFIFO,
-  // createChatSession,
   updateParentChildren,
 } from './lib';
 
@@ -24,10 +25,6 @@ export const ChatFileType = {
   IMAGE: 'image',
   DOCUMENT: 'document',
   PLAIN_TEXT: 'plain_text',
-};
-
-const delay = (ms) => {
-  return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 function upsertToCompleteMessageMap({
@@ -109,8 +106,12 @@ class SubmitHandler {
     currChatSessionId,
     setCurrChatSessionId,
     setCompleteMessageDetail,
+    chatTitle,
+    qgenAsistantId,
+    enableQgen,
   }) {
     this.persona = persona;
+    this.chatTitle = chatTitle;
     this.setIsStreaming = setIsStreaming;
     this.isCancelledRef = isCancelledRef;
     this.setIsCancelled = setIsCancelled;
@@ -119,6 +120,8 @@ class SubmitHandler {
     this.currChatSessionId = currChatSessionId;
     this.setCurrChatSessionId = setCurrChatSessionId;
     this.setCompleteMessageDetail = setCompleteMessageDetail;
+    this.qgenAsistantId = qgenAsistantId;
+    this.enableQgen = enableQgen;
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -134,10 +137,12 @@ class SubmitHandler {
     if (this.currChatSessionId === null) {
       this.currChatSessionId = await createChatSession(
         this.persona.id,
-        'Online public chat',
+        this.chatTitle,
       );
       this.setCurrChatSessionId(this.currChatSessionId);
     }
+
+    let newCompleteMessageDetail = {};
 
     const messageToResend = this.messageHistory.find(
       (message) => message.messageId === messageIdToResend,
@@ -206,9 +211,8 @@ class SubmitHandler {
       setCompleteMessageDetail: this.setCompleteMessageDetail,
     };
 
-    const result = upsertToCompleteMessageMap(info);
-
-    const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = result;
+    const _res = upsertToCompleteMessageMap(info);
+    const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = _res;
 
     // on initial message send, we insert a dummy system message
     // set this as the parent here if no parent is set
@@ -233,28 +237,41 @@ class SubmitHandler {
     const lastSuccessfulMessageId = glsm(currMessageHistory);
 
     const stack = new CurrentMessageFIFO();
-    await updateCurrentMessageFIFO(
-      stack,
-      {
-        message: currMessage,
-        alternateAssistantId: currentAssistantId,
-        fileDescriptors: [],
-        parentMessageId: lastSuccessfulMessageId,
-        chatSessionId: this.currChatSessionId,
-        promptId: 0,
-        filters: [],
-        selectedDocumentIds: [],
-        queryOverride,
-        forceSearch,
-        useExistingUserMessage: isSeededChat,
-      },
+    // here is the problem
+    const params = {
+      message: currMessage,
+      alternateAssistantId: currentAssistantId,
+      fileDescriptors: [],
+      parentMessageId: lastSuccessfulMessageId,
+      chatSessionId: this.currChatSessionId,
+      promptId: 0,
+      filters: [],
+      selectedDocumentIds: [],
+      queryOverride,
+      forceSearch,
+      useExistingUserMessage: isSeededChat,
+    };
+    const promise = updateCurrentMessageFIFO(
+      params,
       this.isCancelledRef,
       this.setIsCancelled,
     );
 
     await delay(50);
 
-    while (!stack.isComplete || !stack.isEmpty()) {
+    for await (const bit of promise) {
+      if (bit.error) {
+        stack.error = bit.error;
+      } else if (bit.isComplete) {
+        stack.isComplete = true;
+      } else {
+        stack.push(bit.packet);
+      }
+
+      if (stack.isComplete || stack.isEmpty()) {
+        break;
+      }
+
       await delay(2);
 
       if (!stack.isEmpty()) {
@@ -336,7 +353,7 @@ class SubmitHandler {
             replacementsMap: replacementsMap,
             setCompleteMessageDetail: this.setCompleteMessageDetail,
           };
-          upsertToCompleteMessageMap(info);
+          newCompleteMessageDetail = upsertToCompleteMessageMap(info);
         }
 
         if (this.isCancelledRef.current) {
@@ -345,11 +362,52 @@ class SubmitHandler {
         }
       }
     }
+
+    if (
+      newCompleteMessageDetail.messageMap &&
+      this.enableQgen &&
+      typeof this.qgenAsistantId !== 'undefined'
+    ) {
+      // check if last message comes from assistant
+      const { messageMap } = newCompleteMessageDetail;
+      const messageList = buildLatestMessageChain(messageMap).reverse();
+
+      const lastMessage = messageList.find((m) => m.type === 'assistant');
+      const userMessage = messageList.find((m) => m.type === 'user');
+      if (lastMessage && userMessage) {
+        const query = userMessage.message;
+        const answer = lastMessage.message;
+        const relatedQuestionsText = await fetchRelatedQuestions(
+          { query, answer },
+          this.qgenAsistantId,
+        );
+
+        lastMessage.relatedQuestions = extractJSON(relatedQuestionsText);
+
+        this.setCompleteMessageDetail({
+          ...newCompleteMessageDetail,
+          messageMap,
+        });
+      }
+    }
     this.setIsStreaming(false);
   }
 }
 
-export function useBackendChat({ persona }) {
+function extractJSON(str) {
+  const regex = /\[([\s\S]*?)\]/;
+  const match = str.match(regex);
+
+  if (match) {
+    const jsonText = match[0];
+    // TODO: do we need safety here?
+    return JSON.parse(jsonText);
+  } else {
+    return str.split('\n').map((question) => ({ question }));
+  }
+}
+
+export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
   const [isCancelled, setIsCancelled] = React.useState(false);
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
@@ -367,7 +425,6 @@ export function useBackendChat({ persona }) {
   const messageHistory = buildLatestMessageChain(
     completeMessageDetail.messageMap,
   );
-
   const submitHandler = new SubmitHandler({
     completeMessageDetail,
     currChatSessionId,
@@ -378,6 +435,8 @@ export function useBackendChat({ persona }) {
     setCurrChatSessionId,
     setIsCancelled,
     setIsStreaming,
+    qgenAsistantId,
+    enableQgen,
   });
 
   const clearChat = () => {

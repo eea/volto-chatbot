@@ -1,6 +1,6 @@
 import { Popup } from 'semantic-ui-react';
 
-export function Citation({ children, link, index, value, message }) {
+export function Citation({ link, index, value, message }) {
   const isLinkType = value?.toString().startsWith('[');
 
   const innerText = isLinkType
@@ -21,12 +21,7 @@ export function Citation({ children, link, index, value, message }) {
   const content = link ? (
     <div>
       <p>
-        <a
-          href={link}
-          tabIndex="-1"
-          onClick={handleClick}
-          className="cursor-pointer"
-        >
+        <a href={link} tabIndex="-1" onClick={handleClick}>
           {link}
         </a>
       </p>
@@ -52,15 +47,21 @@ export function Citation({ children, link, index, value, message }) {
   );
 
   return (
-    <Popup
-      on="click"
-      wide="very"
-      content={popupContent}
-      header={!isLinkType ? document.semantic_identifier : undefined}
-      trigger={
-        <span className="citation">{isLinkType ? innerText : children}</span>
-      }
-      popper={{ id: 'citation' }}
-    />
+    <>
+      {link ? (
+        <a href={link} tabIndex="-1" onClick={handleClick}>
+          <span className="chat-citation">{innerText}</span>
+        </a>
+      ) : (
+        <Popup
+          on="click"
+          wide="very"
+          content={popupContent}
+          header={!isLinkType ? document.semantic_identifier : undefined}
+          trigger={<span className="chat-citation">{innerText}</span>}
+          popper={{ id: 'chat-citation-popup' }}
+        />
+      )}
+    </>
   );
 }

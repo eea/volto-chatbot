@@ -7,10 +7,7 @@ function ChatBlockView(props) {
   const { assistantData, data } = props;
 
   return assistantData ? (
-    <ChatWindow
-      persona={assistantData}
-      placeholderPrompt={data.placeholderPrompt}
-    />
+    <ChatWindow persona={assistantData} {...data} />
   ) : (
     <div>Chatbot</div>
   );

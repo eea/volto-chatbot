@@ -13,9 +13,10 @@ export function ChatBlockSchema({ assistants }) {
         fields: [
           'assistant',
           'qgenAsistantId',
-          'enableQgen',
           'placeholderPrompt',
           'height',
+          'enableQgen',
+          'scrollToInput',
           'showAssistantTitle',
           'showAssistantDescription',
           'showAssistantPrompts',
@@ -75,6 +76,10 @@ export function ChatBlockSchema({ assistants }) {
         description:
           'Chat window height. ' +
           'Use CSS numeric dimmension (ex: 500px or 70vh).',
+      },
+      scrollToInput: {
+        title: 'Scroll the page to focus on the chat input',
+        type: 'boolean',
       },
     },
     required: [],

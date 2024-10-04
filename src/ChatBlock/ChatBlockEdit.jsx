@@ -6,13 +6,12 @@ import ChatBlockView from './ChatBlockView';
 import { ChatBlockSchema } from './schema';
 import withDanswerData from './withDanswerData';
 
-const SearchBlockEdit = (props) => {
+const ChatBlockEdit = (props) => {
   const { onChangeBlock, block, assistants } = props;
 
-  const schema = React.useMemo(
-    () => ChatBlockSchema({ assistants }),
-    [assistants],
-  );
+  const schema = React.useMemo(() => ChatBlockSchema({ assistants }), [
+    assistants,
+  ]);
 
   return (
     <div>
@@ -39,4 +38,4 @@ const SearchBlockEdit = (props) => {
 export default withDanswerData(() => [
   'assistants',
   superagent.get('/_da/persona?include_deleted=false').type('json'),
-])(SearchBlockEdit);
+])(ChatBlockEdit);

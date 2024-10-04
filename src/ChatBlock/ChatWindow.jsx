@@ -20,7 +20,7 @@ function ChatWindow({
   placeholderPrompt = 'Ask a question',
   ...data
 }) {
-  const { height, qgenAsistantId, enableQgen } = data;
+  const { height, qgenAsistantId, enableQgen, scrollToInput } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
@@ -36,10 +36,12 @@ function ChatWindow({
   const scrollDist = React.useRef(0); // Keep track of scroll distance
 
   React.useEffect(() => {
-    if (textareaRef.current) {
+    if (!textareaRef.current) return;
+
+    if (isStreaming || scrollToInput) {
       textareaRef.current.focus();
     }
-  }, []);
+  }, [isStreaming, scrollToInput]);
 
   const handleClearChat = () => {
     clearChat();

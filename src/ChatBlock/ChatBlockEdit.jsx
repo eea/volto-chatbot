@@ -15,7 +15,7 @@ const ChatBlockEdit = (props) => {
 
   return (
     <div>
-      <ChatBlockView {...props} mode="edit" />
+      <ChatBlockView {...props} isEditMode />
       <SidebarPortal selected={props.selected}>
         <BlockDataForm
           schema={schema}

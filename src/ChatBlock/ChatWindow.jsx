@@ -18,6 +18,7 @@ function ChatWindow({
   rehypePrism,
   remarkGfm,
   placeholderPrompt = 'Ask a question',
+  isEditMode,
   ...data
 }) {
   const { height, qgenAsistantId, enableQgen, scrollToInput } = data;
@@ -36,12 +37,12 @@ function ChatWindow({
   const scrollDist = React.useRef(0); // Keep track of scroll distance
 
   React.useEffect(() => {
-    if (!textareaRef.current) return;
+    if (!textareaRef.current || isEditMode) return;
 
     if (isStreaming || scrollToInput) {
       textareaRef.current.focus();
     }
-  }, [isStreaming, scrollToInput]);
+  }, [isStreaming, scrollToInput, isEditMode]);
 
   const handleClearChat = () => {
     clearChat();

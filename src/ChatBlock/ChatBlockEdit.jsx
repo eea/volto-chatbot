@@ -6,7 +6,7 @@ import ChatBlockView from './ChatBlockView';
 import { ChatBlockSchema } from './schema';
 import withDanswerData from './withDanswerData';
 
-const SearchBlockEdit = (props) => {
+const ChatBlockEdit = (props) => {
   const { onChangeBlock, block, assistants } = props;
 
   const schema = React.useMemo(
@@ -16,7 +16,7 @@ const SearchBlockEdit = (props) => {
 
   return (
     <div>
-      <ChatBlockView {...props} mode="edit" />
+      <ChatBlockView {...props} isEditMode />
       <SidebarPortal selected={props.selected}>
         <BlockDataForm
           schema={schema}
@@ -39,4 +39,4 @@ const SearchBlockEdit = (props) => {
 export default withDanswerData(() => [
   'assistants',
   superagent.get('/_da/persona?include_deleted=false').type('json'),
-])(SearchBlockEdit);
+])(ChatBlockEdit);

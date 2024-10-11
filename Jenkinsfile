@@ -9,7 +9,7 @@ pipeline {
   environment {
     GIT_NAME = "volto-chatbot"
     NAMESPACE = "@eeacms"
-    SONARQUBE_TAGS = "volto.eea.europa.eu"
+    SONARQUBE_TAGS = "volto.eea.europa.eu,www.eea.europa.eu-en"
     DEPENDENCIES = ""
     BACKEND_PROFILES = "eea.kitkat:testing"
     BACKEND_ADDONS = ""

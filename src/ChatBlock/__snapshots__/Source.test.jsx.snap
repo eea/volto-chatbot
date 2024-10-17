@@ -41,7 +41,7 @@ exports[`SourceDetails should render the component with doc type 1`] = `
     className="source-date"
   >
     <span>
-      6 months ago
+      7 months ago
     </span>
   </div>
   <div

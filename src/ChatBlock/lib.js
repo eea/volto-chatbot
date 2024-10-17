@@ -271,7 +271,7 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
     parentMessageId: null,
     chatSessionId,
     promptId: 0,
-    filters: [],
+    filters: {},
     selectedDocumentIds: [],
   };
   const promise = updateCurrentMessageFIFO(params, {}, () => {});

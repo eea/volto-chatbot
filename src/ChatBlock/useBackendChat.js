@@ -245,7 +245,7 @@ class SubmitHandler {
       parentMessageId: lastSuccessfulMessageId,
       chatSessionId: this.currChatSessionId,
       promptId: 0,
-      filters: [],
+      filters: {},
       selectedDocumentIds: [],
       queryOverride,
       forceSearch,

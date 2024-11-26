@@ -40,7 +40,7 @@ export function Citation({ link, index, value, message }) {
     content
   ) : (
     <div>
-      {document.match_highlights.map((text, i) => (
+      {document?.match_highlights?.map((text, i) => (
         <div key={i} dangerouslySetInnerHTML={{ __html: text }} />
       ))}
     </div>

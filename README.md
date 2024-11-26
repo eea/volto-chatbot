@@ -1,4 +1,49 @@
-# volto-chatbot
+
+# Volto Chatbot
+
+The **Volto Chatbot** block allows the integration of an AI-powered chatbot into your Volto project. It offers a customizable interface and advanced settings to tailor the chatbot's behavior to your needs. Below is an overview of its features and configuration options.
+
+---
+
+## Functionalities
+
+| **Property**              | **Description**                                                                                             | **Type**          | **Default**                 |
+|---------------------------|-------------------------------------------------------------------------------------------------------------|-------------------|-----------------------------|
+| `assistant`               | Choose from the list of available assistants configured in the application.                                | Dropdown          | -                           |
+| `qgenAsistantId`          | Select an assistant for generating related questions.                                                      | Dropdown          | -                           |
+| `enableQgen`              | Toggle the generation of related questions.                                                                | Boolean           | `false`                     |
+| `placeholderPrompt`       | Set placeholder text for the chat input field.                                                             | String            | `Ask a question`            |
+| `showAssistantTitle`      | Display or hide the assistant's title in the chat interface.                                               | Boolean           | `true`                      |
+| `showAssistantDescription`| Display or hide the assistant's description in the chat interface.                                         | Boolean           | `true`                      |
+| `showAssistantPrompts`    | Show or hide predefined prompts provided by the assistant.                                                 | Boolean           | `true`                      |
+| `chatTitle`               | Title assigned to saved chats, visible only in Danswer or analytics.                                       | String            | `Online public chat`        |
+| `height`                  | Set the height of the chat window using CSS dimensions (e.g., `500px`, `70vh`).                            | String            | -                           |
+| `scrollToInput`           | Automatically scroll the page to focus on the chat input when interacting.                                 | Boolean           | `false`                     |
+
+---
+
+## Configuring Assistants
+
+To use the `assistant` and `qgenAsistantId` options, you must first configure your assistants in the application. Assistants are defined as an array of objects, each containing an `id` and `name`.
+
+### Example Assistant Configuration
+
+---
+
+## Customization Options
+
+### User Interface
+
+- The block supports toggling the visibility of key elements such as the assistant's title, description, and predefined prompts.
+- You can define a custom title for the chat to organize and differentiate saved conversations.
+
+### Behavior
+
+- Configure the chatbot to generate related questions using a dedicated assistant (`qgenAsistantId`).
+- Enable automatic scrolling to improve the user experience when interacting with the chat input.
+
+---
+
 
 [![Releases](https://img.shields.io/github/v/release/eea/volto-chatbot)](https://github.com/eea/volto-chatbot/releases)
 

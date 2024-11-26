@@ -1,4 +1,5 @@
-# volto-chatbot
+
+# Volto Chatbot
 
 [![Releases](https://img.shields.io/github/v/release/eea/volto-chatbot)](https://github.com/eea/volto-chatbot/releases)
 
@@ -15,11 +16,39 @@
 [![Duplicated Lines (%)](https://sonarqube.eea.europa.eu/api/project_badges/measure?project=volto-chatbot-develop&metric=duplicated_lines_density)](https://sonarqube.eea.europa.eu/dashboard?id=volto-chatbot-develop)
 
 
-[Volto](https://github.com/plone/volto) add-on
+[Volto](https://github.com/plone/volto) add-on that integrates an AI-powered chatbot with a customizable interface and advanced settings to tailor its behavior and enhance user interactions.
 
 ## Features
 
-Demo GIF
+
+
+https://github.com/user-attachments/assets/f9b5f813-672f-4e4d-81d0-bf2aec35b587
+
+
+
+The **Volto Chatbot** block allows the integration of an AI-powered chatbot into your Volto project. It offers a customizable interface and advanced settings to tailor the chatbot's behavior to your needs. Below is an overview of its features and configuration options.
+
+
+
+---
+
+## Functionalities
+
+| **Property**              | **Description**                                                                                             | **Type**          | **Default**                 |
+|---------------------------|-------------------------------------------------------------------------------------------------------------|-------------------|-----------------------------|
+| `assistant`               | Choose from the list of available assistants configured in the application.                                | Dropdown          | -                           |
+| `qgenAsistantId`          | Select an assistant for generating related questions.                                                      | Dropdown          | -                           |
+| `enableQgen`              | Toggle the generation of related questions.                                                                | Boolean           | `false`                     |
+| `placeholderPrompt`       | Set placeholder text for the chat input field.                                                             | String            | `Ask a question`            |
+| `showAssistantTitle`      | Display or hide the assistant's title in the chat interface.                                               | Boolean           | `true`                      |
+| `showAssistantDescription`| Display or hide the assistant's description in the chat interface.                                         | Boolean           | `true`                      |
+| `showAssistantPrompts`    | Show or hide predefined prompts provided by the assistant.                                                 | Boolean           | `true`                      |
+| `chatTitle`               | Title assigned to saved chats, visible only in Danswer or analytics.                                       | String            | `Online public chat`        |
+| `height`                  | Set the height of the chat window using CSS dimensions (e.g., `500px`, `70vh`).                            | String            | -                           |
+| `scrollToInput`           | Automatically scroll the page to focus on the chat input when interacting.                                 | Boolean           | `false`                     |
+
+---
+
 
 ## Getting started
 
@@ -69,9 +98,28 @@ Go to http://localhost:3000
    yarn start
    ```
 
-1. Go to http://localhost:3000
 
-1. Happy editing!
+## Environment Configuration
+
+To properly configure the middleware and authenticate with the Danswer service, ensure that the following environment variables are set:
+
+| **Environment Variable**  | **Description**                                             |
+|---------------------------|-------------------------------------------------------------|
+| `DANSWER_URL`             | The base URL of the Danswer service (e.g., `https://api.danswer.com`). |
+| `DANSWER_USERNAME`        | Username for authenticating with the Danswer service.       |
+| `DANSWER_PASSWORD`        | Password for authenticating with the Danswer service.       |
+
+### Example `.env` File
+
+Create a `.env` file in your project root with the following content:
+
+```env
+DANSWER_URL=https://api.danswer.com
+DANSWER_USERNAME=your_username
+DANSWER_PASSWORD=your_password
+```
+ If you encounter issues, double-check your `.env` configuration and ensure the Danswer service is accessible at the URL you’ve provided.
+
 
 ## Release
 

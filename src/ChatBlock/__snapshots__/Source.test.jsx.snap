@@ -38,13 +38,6 @@ exports[`SourceDetails should render the component with doc type 1`] = `
     />
   </div>
   <div
-    className="source-date"
-  >
-    <span>
-      7 months ago
-    </span>
-  </div>
-  <div
     className="source-desc"
   >
     <span>

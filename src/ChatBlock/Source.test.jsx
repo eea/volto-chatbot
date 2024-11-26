@@ -59,7 +59,7 @@ describe('SourceDetails', () => {
         link: 'https://www.example.com',
         source_type: 'file',
         semantic_identifier: 'Nam at tortor in tellus',
-        updated_at: '2024-03-11T14:25:02+00:00',
+        updated_at: null,
       },
     };
 

@@ -99,17 +99,6 @@ To use the `assistant` and `qgenAsistantId` options, you must first configure yo
 ---
 
 
-### User Interface
-
-- The block supports toggling the visibility of key elements such as the assistant's title, description, and predefined prompts.
-- You can define a custom title for the chat to organize and differentiate saved conversations.
-
-### Behavior
-
-- Configure the chatbot to generate related questions using a dedicated assistant (`qgenAsistantId`).
-- Enable automatic scrolling to improve the user experience when interacting with the chat input.
-
----
 
 ## Release
 

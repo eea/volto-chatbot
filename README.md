@@ -22,9 +22,13 @@
 
 
 
+https://github.com/user-attachments/assets/f9b5f813-672f-4e4d-81d0-bf2aec35b587
+
+
+
 The **Volto Chatbot** block allows the integration of an AI-powered chatbot into your Volto project. It offers a customizable interface and advanced settings to tailor the chatbot's behavior to your needs. Below is an overview of its features and configuration options.
 
-[screen-capture (12).webm](https://github.com/user-attachments/assets/d5da08a7-cf0c-4078-a0f9-d5e0101e1664)
+
 
 ---
 

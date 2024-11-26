@@ -94,14 +94,27 @@ Go to http://localhost:3000
    yarn start
    ```
 
-## Configuring Assistants
 
-To use the `assistant` and `qgenAsistantId` options, you must first configure your assistants in the application. Assistants are defined as an array of objects, each containing an `id` and `name`.
+## Environment Configuration
 
-### Example Assistant Configuration
+To properly configure the middleware and authenticate with the Danswer service, ensure that the following environment variables are set:
 
----
+| **Environment Variable**  | **Description**                                             |
+|---------------------------|-------------------------------------------------------------|
+| `DANSWER_URL`             | The base URL of the Danswer service (e.g., `https://api.danswer.com`). |
+| `DANSWER_USERNAME`        | Username for authenticating with the Danswer service.       |
+| `DANSWER_PASSWORD`        | Password for authenticating with the Danswer service.       |
 
+### Example `.env` File
+
+Create a `.env` file in your project root with the following content:
+
+```env
+DANSWER_URL=https://api.danswer.com
+DANSWER_USERNAME=your_username
+DANSWER_PASSWORD=your_password
+```
+ If you encounter issues, double-check your `.env` configuration and ensure the Danswer service is accessible at the URL you’ve provided.
 
 
 ## Release

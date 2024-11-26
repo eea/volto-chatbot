@@ -20,6 +20,7 @@
 
 ## Features
 
+
 The **Volto Chatbot** block allows the integration of an AI-powered chatbot into your Volto project. It offers a customizable interface and advanced settings to tailor the chatbot's behavior to your needs. Below is an overview of its features and configuration options.
 
 ---

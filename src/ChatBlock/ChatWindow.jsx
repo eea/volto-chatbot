@@ -21,13 +21,8 @@ function ChatWindow({
   isEditMode,
   ...data
 }) {
-  const {
-    height,
-    qgenAsistantId,
-    enableQgen,
-    scrollToInput,
-    showToolCalls,
-  } = data;
+  const { height, qgenAsistantId, enableQgen, scrollToInput, showToolCalls } =
+    data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,

@@ -21,7 +21,13 @@ function ChatWindow({
   isEditMode,
   ...data
 }) {
-  const { height, qgenAsistantId, enableQgen, scrollToInput } = data;
+  const {
+    height,
+    qgenAsistantId,
+    enableQgen,
+    scrollToInput,
+    showToolCalls,
+  } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
@@ -62,7 +68,7 @@ function ChatWindow({
   }, [messages]);
 
   //eslint-disable-next-line
-  console.log(messages);
+  // console.log(messages);
 
   useScrollonStream({
     isStreaming,
@@ -72,6 +78,15 @@ function ChatWindow({
     distance: 500, // distance that should "engage" the scroll
     debounce: 100, // time for debouncing
   });
+
+  // const timeoutRef = React.useRef();
+
+  // const debouncedSetInput = React.useCallback((e) => {
+  //   if (timeoutRef.current) clearTimeout(timeoutRef.current);
+  //   timeoutRef.current = setTimeout(() => {
+  //     setInput(e.target.value);
+  //   }, 1000);
+  // }, []);
 
   return (
     <div className="chat-window">
@@ -107,6 +122,7 @@ function ChatWindow({
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}
+                  showToolCalls={showToolCalls}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}

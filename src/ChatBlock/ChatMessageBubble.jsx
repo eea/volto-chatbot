@@ -55,7 +55,7 @@ function addCitations(text) {
   });
 }
 
-function ToolCall({ tool_args, tool_name, tool_result }) {
+export function ToolCall({ tool_args, tool_name, tool_result }) {
   if (tool_name === 'run_search') {
     return (
       <div className="tool_info">
@@ -67,8 +67,14 @@ function ToolCall({ tool_args, tool_name, tool_result }) {
 }
 
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
-    props;
+  const {
+    message,
+    isLoading,
+    isMostRecent,
+    libs,
+    onChoice,
+    showToolCalls,
+  } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';

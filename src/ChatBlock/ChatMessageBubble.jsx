@@ -1,11 +1,14 @@
-import React from 'react';
 import loadable from '@loadable/component';
+import React from 'react';
+
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
-import { transformEmailsToLinks, SVGIcon } from './utils';
+import { SVGIcon, transformEmailsToLinks } from './utils';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
+
+const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
@@ -45,8 +48,6 @@ const components = (message) => {
   };
 };
 
-const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
-
 function addCitations(text) {
   return text.replaceAll(CITATION_MATCH, (match) => {
     const number = match.match(/\d+/)[0];
@@ -54,8 +55,20 @@ function addCitations(text) {
   });
 }
 
+export function ToolCall({ tool_args, tool_name, tool_result }) {
+  if (tool_name === 'run_search') {
+    return (
+      <div className="tool_info">
+        Searched for: <em>{tool_args?.query || ''}</em>
+      </div>
+    );
+  }
+  return null;
+}
+
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, libs, onChoice } = props;
+  const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
+    props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
@@ -95,6 +108,10 @@ export function ChatMessageBubble(props) {
         {icon}
 
         <div>
+          {showToolCalls &&
+            message.toolCalls?.map((info, index) => (
+              <ToolCall key={index} {...info} />
+            ))}
           <Markdown
             components={components(message)}
             remarkPlugins={[remarkGfm]}

@@ -17,6 +17,7 @@ export function ChatBlockSchema({ assistants }) {
           'height',
           'enableQgen',
           'scrollToInput',
+          'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
           'showAssistantPrompts',
@@ -38,6 +39,11 @@ export function ChatBlockSchema({ assistants }) {
         title: 'Enable related question generation',
         type: 'boolean',
         default: false,
+      },
+      showToolCalls: {
+        title: 'Show query used in retriever',
+        type: 'boolean',
+        default: true,
       },
       placeholderPrompt: {
         default: 'Ask a question',

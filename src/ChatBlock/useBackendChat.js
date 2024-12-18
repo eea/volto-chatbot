@@ -447,6 +447,8 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     setCurrChatSessionId(null);
   };
 
+  // console.log('history', messageHistory);
+
   return {
     messages: messageHistory,
     onSubmit: submitHandler.onSubmit,

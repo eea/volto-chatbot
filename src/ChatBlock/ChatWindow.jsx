@@ -1,15 +1,12 @@
-import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
-import { Icon, Form, Button, Segment } from 'semantic-ui-react';
+import React from 'react';
+import { Button, Form, Icon, Segment } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
-import { useBackendChat } from './useBackendChat';
 import { useScrollonStream } from './lib';
-
-import { SVGIcon } from './utils';
-import SendIcon from './../icons/send.svg';
+import { useBackendChat } from './useBackendChat';
 
 import './style.less';
 
@@ -21,14 +18,14 @@ function ChatWindow({
   isEditMode,
   ...data
 }) {
-  const { height, qgenAsistantId, enableQgen, scrollToInput } = data;
+  const { height, qgenAsistantId, enableQgen, scrollToInput, showToolCalls } =
+    data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
     qgenAsistantId,
     enableQgen,
   });
-  const [input, setInput] = React.useState('');
   const [showLandingPage, setShowLandingPage] = React.useState(false);
 
   const textareaRef = React.useRef(null);
@@ -49,20 +46,9 @@ function ChatWindow({
     setShowLandingPage(true);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (input.trim()) {
-      onSubmit({ message: input });
-      setInput('');
-    }
-  };
-
   React.useEffect(() => {
     setShowLandingPage(messages.length === 0);
   }, [messages]);
-
-  //eslint-disable-next-line
-  console.log(messages);
 
   useScrollonStream({
     isStreaming,
@@ -107,6 +93,7 @@ function ChatWindow({
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}
+                  showToolCalls={showToolCalls}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}
@@ -123,37 +110,11 @@ function ChatWindow({
               maxRows={8}
               minRows={1}
               ref={textareaRef}
-              value={input}
               placeholder={
                 messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
               }
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  handleSubmit(e);
-                } else if (e.key === 'Enter' && e.shiftKey) {
-                  e.preventDefault();
-                  setInput(input + '\n');
-                }
-              }}
-              trigger={
-                <Button
-                  className="submit-btn"
-                  disabled={isStreaming}
-                  type="submit"
-                  aria-label="Send"
-                  onKeyDown={(e) => {
-                    handleSubmit(e);
-                  }}
-                  onClick={(e) => {
-                    handleSubmit(e);
-                  }}
-                >
-                  <div className="btn-icon">
-                    <SVGIcon name={SendIcon} size="28" />
-                  </div>
-                </Button>
-              }
+              isStreaming={isStreaming}
+              onSubmit={onSubmit}
             />
           </div>
         </Form>

@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ToolCall should render the component 1`] = `
+<div
+  className="tool_info"
+>
+  Searched for: 
+  <em>
+    Tell me a joke
+  </em>
+</div>
+`;

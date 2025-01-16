@@ -18,8 +18,13 @@ function ChatWindow({
   isEditMode,
   ...data
 }) {
-  const { height, qgenAsistantId, enableQgen, scrollToInput, showToolCalls } =
-    data;
+  const {
+    height,
+    qgenAsistantId,
+    enableQgen,
+    scrollToInput,
+    showToolCalls,
+  } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
@@ -74,7 +79,11 @@ function ChatWindow({
         ) : (
           <>
             <Segment clearing basic>
-              <Button onClick={handleClearChat} className="right floated">
+              <Button
+                disabled={isStreaming}
+                onClick={handleClearChat}
+                className="right floated"
+              >
                 <Icon name="edit outline" /> New chat
               </Button>
             </Segment>

@@ -66,8 +66,6 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
   return null;
 }
 
-let click_signal = { current: null };
-
 export function ChatMessageBubble(props) {
   const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
     props;

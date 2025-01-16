@@ -1,4 +1,5 @@
 import { Button } from 'semantic-ui-react';
+import { debounce } from './utils';
 
 function StarterMessage({ msg, onClick }) {
   return (
@@ -14,6 +15,8 @@ function StarterMessage({ msg, onClick }) {
     </Button>
   );
 }
+
+let click_signal = { current: null };
 
 export default function EmptyState(props) {
   const {
@@ -36,7 +39,11 @@ export default function EmptyState(props) {
               key={msg.name}
               msg={msg}
               onClick={() =>
-                onChoice(msg.message || `${msg.name}\n${msg.description}`)
+                debounce(
+                  () =>
+                    onChoice(msg.message || `${msg.name}\n${msg.description}`),
+                  click_signal,
+                )
               }
             />
           ))}

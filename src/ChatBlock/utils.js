@@ -33,3 +33,13 @@ export const SVGIcon = ({ name, size, color, className, title }) => {
     />
   );
 };
+
+export function debounce(callable, click_signal) {
+  if (!click_signal.current) {
+    click_signal.current = true;
+    setTimeout(() => {
+      click_signal.current = null;
+    }, 1000);
+    callable();
+  }
+}

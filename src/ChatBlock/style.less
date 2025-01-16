@@ -4,6 +4,7 @@
 @citationCircleColor: #e6e7e8;
 @citationCircleHoverColor: @blue;
 @borderRadius: 0.4rem;
+@marginBottom: 1.6em;
 
 .mr-auto {
   margin: 2em 0;
@@ -43,6 +44,7 @@
   .comment {
     display: flex;
     gap: 0.8em;
+    margin-bottom: @marginBottom;
 
     i.inverted.circular.grey.icon {
       background-color: #3d5265 !important;
@@ -59,11 +61,16 @@
     }
   }
 
+  .chat-related-questions {
+    margin-bottom: 2em;
+  }
+
   .sources {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     gap: 0.8em;
+    margin-bottom: @marginBottom;
 
     @media only screen and (max-width: 800px) {
       display: inline-flex;
@@ -170,6 +177,9 @@
 
 .relatedQuestionButton {
   margin-bottom: 0.3em;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
   cursor: pointer;
 
   &:hover {

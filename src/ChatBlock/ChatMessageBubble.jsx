@@ -76,8 +76,8 @@ export function ChatMessageBubble(props) {
   const showLoader = isMostRecent && isLoading;
 
   // TODO: these classes are not actually used, remove them
-  const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
-  const alignmentClassName = isUser ? 'ml-auto' : 'mr-auto';
+  // const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
+  // const alignmentClassName = isUser ? 'ml-auto' : 'mr-auto';
 
   const icon = isUser ? (
     <div className="circle user">
@@ -103,7 +103,7 @@ export function ChatMessageBubble(props) {
   }, {});
 
   return (
-    <div className={`${alignmentClassName} ${colorClassName} `}>
+    <div>
       <div className="comment">
         {icon}
 
@@ -135,20 +135,20 @@ export function ChatMessageBubble(props) {
             </>
           )}
           {message.relatedQuestions?.length > 0 && (
-            <>
+            <div className="chat-related-questions">
               <h5>Related Questions:</h5>
               {message.relatedQuestions?.map(({ question }) => (
                 <div
                   className="relatedQuestionButton"
                   role="button"
-                  onClick={() => onChoice(question)}
-                  onKeyDown={() => onChoice(question)}
+                  onClick={() => !isLoading && onChoice(question)}
+                  onKeyDown={() => !isLoading && onChoice(question)}
                   tabIndex="-1"
                 >
                   {question}
                 </div>
               ))}
-            </>
+            </div>
           )}
         </div>
       </div>

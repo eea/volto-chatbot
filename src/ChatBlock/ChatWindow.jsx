@@ -74,7 +74,11 @@ function ChatWindow({
         ) : (
           <>
             <Segment clearing basic>
-              <Button onClick={handleClearChat} className="right floated">
+              <Button
+                disabled={isStreaming}
+                onClick={handleClearChat}
+                className="right floated"
+              >
                 <Icon name="edit outline" /> New chat
               </Button>
             </Segment>

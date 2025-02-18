@@ -4,7 +4,7 @@ import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
 
 import ChatBlockView from './ChatBlockView';
 import { ChatBlockSchema } from './schema';
-import { withDanswerData } from '@eeacms/chatbotlib';
+import { withOnyxData } from '@eeacms/chatbotlib';
 
 const ChatBlockEdit = (props) => {
   const { onChangeBlock, block, assistants } = props;
@@ -36,7 +36,7 @@ const ChatBlockEdit = (props) => {
   );
 };
 
-export default withDanswerData(() => [
+export default withOnyxData(() => [
   'assistants',
   superagent.get('/_da/persona?include_deleted=false').type('json'),
 ])(ChatBlockEdit);

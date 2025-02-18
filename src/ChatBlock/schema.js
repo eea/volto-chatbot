@@ -66,7 +66,7 @@ export function ChatBlockSchema({ assistants }) {
       },
       chatTitle: {
         title: 'Chat title',
-        description: 'Chat are saved with this title. Visible only in Danswer',
+        description: 'Chat are saved with this title. Visible only in Onyx',
         default: 'Online public chat',
       },
       height: {

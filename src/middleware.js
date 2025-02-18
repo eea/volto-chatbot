@@ -8,7 +8,7 @@ let maxAge;
 const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing DANSWER username and password';
 const MSG_FETCH_COOKIE = 'Error while fetching authentication cookie';
-const MSG_ERROR_REQUEST = 'Error in processing request to Danswer';
+const MSG_ERROR_REQUEST = 'Error in processing request to Onyx';
 
 async function get_login_cookie(username, password) {
   const url = `${process.env.DANSWER_URL}/api/auth/login`;
@@ -120,6 +120,6 @@ export default async function middleware(req, res, next) {
     // eslint-disable-next-line
     console.error(MSG_ERROR_REQUEST, error?.response?.text);
 
-    res.send({ error: `Danswer error: ${error?.response?.text || 'error'}` });
+    res.send({ error: `Onyx error: ${error?.response?.text || 'error'}` });
   }
 }

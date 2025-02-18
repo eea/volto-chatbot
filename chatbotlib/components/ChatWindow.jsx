@@ -5,10 +5,8 @@ import { Button, Form, Icon, Segment } from 'semantic-ui-react';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
-import { useScrollonStream } from './lib';
-import { useBackendChat } from './useBackendChat';
-
-import './style.less';
+import { useScrollonStream } from '../hooks/lib';
+import { useBackendChat } from './../hooks/useBackendChat';
 
 function ChatWindow({
   persona,

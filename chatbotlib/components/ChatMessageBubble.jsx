@@ -3,7 +3,8 @@ import React from 'react';
 
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
-import { SVGIcon, transformEmailsToLinks } from './utils';
+import { transformEmailsToLinks } from '../utils';
+import { default as SVGIcon } from './SVGIcon';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';

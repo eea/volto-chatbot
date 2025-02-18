@@ -1,5 +1,5 @@
 import { Button } from 'semantic-ui-react';
-import { debounce } from './utils';
+import { debounce } from './../utils';
 
 function StarterMessage({ msg, onClick }) {
   return (

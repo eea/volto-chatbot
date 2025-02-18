@@ -1,7 +1,8 @@
 import React from 'react';
-import withDanswerData from './withDanswerData';
-import ChatWindow from './ChatWindow';
 import superagent from 'superagent';
+import { withDanswerData, ChatWindow } from '@eeacms/chatbotlib';
+
+import './style.less';
 
 function ChatBlockView(props) {
   const { assistantData, data, isEditMode } = props;

@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer';
 
 import '@testing-library/jest-dom/extend-expect';
 import { Provider } from 'react-intl-redux';
-import EmptyState from './EmptyState';
+import EmptyState from './../../chatbotlib/components/EmptyState';
 
 const mockStore = configureStore();
 

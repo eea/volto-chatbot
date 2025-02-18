@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react';
 
 import React from 'react';
 
-import { SVGIcon } from './utils';
+import { default as SVGIcon } from './SVGIcon';
 import SendIcon from './../icons/send.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {

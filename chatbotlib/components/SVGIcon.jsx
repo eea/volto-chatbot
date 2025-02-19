@@ -7,9 +7,9 @@ export default function SVGIcon({ name, size, color, className, title }) {
       viewBox={name?.attributes && name?.attributes?.viewBox}
       fill={name?.attributes?.fill || 'currentColor'}
       stroke={color || 'currentColor'}
-      strokeWidth={name?.attributes['stroke-width']}
-      strokeLinecap={name?.attributes['stroke-linecap']}
-      strokeLinejoin={name?.attributes[' stroke-linejoin']}
+      strokeWidth={name?.attributes?.['stroke-width']}
+      strokeLinecap={name?.attributes?.['stroke-linecap']}
+      strokeLinejoin={name?.attributes?.[' stroke-linejoin']}
       className={className ? `icon ${className}` : 'icon'}
       dangerouslySetInnerHTML={{
         __html: title ? `<title>${title}</title>${name.content}` : name.content,

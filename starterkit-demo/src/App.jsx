@@ -1,14 +1,34 @@
-// import { useState } from 'react';
-// import reactLogo from './assets/react.svg';
-// import viteLogo from '/vite.svg';
+import React from 'react';
 import './App.css';
-import { ChatWindow } from '@eeacms/chatbotlib';
+import superagent from 'superagent';
+import { ChatWindow, withOnyxData } from '@eeacms/chatbotlib';
+
+function getEnv() {
+  return {
+    qaAssistantId: import.meta.env.VITE_API_QA_ASSISTANT_ID,
+    assistantId: import.meta.env.VITE_API_MAIN_ASSISTANT_ID,
+  };
+}
+
+const WrappedChatWindow = withOnyxData(({ assistant }) => [
+  'persona',
+  typeof assistant !== 'undefined'
+    ? superagent.get(`/_da/persona/${assistant}`).type('json')
+    : null,
+  assistant,
+])(ChatWindow);
 
 function App() {
-  return (
-    <>
-      <ChatWindow />
-    </>
+  const envs = getEnv();
+  const [isClient, setIsClient] = React.useState(false);
+  React.useEffect(() => setIsClient(true), []);
+
+  console.log('envs', envs);
+
+  return isClient ? (
+    <WrappedChatWindow assistant={envs.assistantId} />
+  ) : (
+    <div></div>
   );
 }
 

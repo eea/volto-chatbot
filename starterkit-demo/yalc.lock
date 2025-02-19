@@ -1,0 +1,9 @@
+{
+  "version": "v1",
+  "packages": {
+    "@eeacms/chatbotlib": {
+      "signature": "68e52664d114a66662cb4d419aaf297c",
+      "file": true
+    }
+  }
+}

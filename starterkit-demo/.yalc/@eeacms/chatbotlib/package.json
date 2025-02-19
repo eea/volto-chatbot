@@ -1,0 +1,26 @@
+{
+  "name": "@eeacms/chatbotlib",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/chatbotlib.umd.js",
+  "module": "dist/chatbotlib.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/chatbotlib.es.js",
+      "require": "./dist/chatbotlib.umd.js"
+    }
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "vite build"
+  },
+  "author": "",
+  "license": "ISC",
+  "root": true,
+  "dependencies": {
+    "react-textarea-autosize": "^8.5.7",
+    "rehype-prism-plus": "^1.6.0",
+    "remark-gfm": "^3.0.1"
+  },
+  "yalcSig": "68e52664d114a66662cb4d419aaf297c"
+}

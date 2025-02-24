@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 const libraryMapping = {
   // rehypePrism: () => import("rehype-prism-plus"),
-  // remarkGfm: () => import('remark-gfm'),
+  // remarkGfm: () => import("remark-gfm"),
 };
 
 const injectLazyLibs = (libraryNames) => (WrappedComponent) => {
@@ -23,7 +23,7 @@ const injectLazyLibs = (libraryNames) => (WrappedComponent) => {
       };
 
       loadLibraries();
-    }, []); // libraryNames
+    }, libraryNames); // libraryNames
 
     if (loading) {
       return <div>Loading libraries...</div>;

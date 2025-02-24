@@ -1,12 +1,12 @@
-import React from 'react';
+import React from "react";
 // import { Button, Form, Icon, Segment } from 'semantic-ui-react';
 
-import { useScrollonStream } from '../hooks/lib';
-import { default as injectLazyLibs } from '../hooks/lazyLibs';
-import { useBackendChat } from './../hooks/useBackendChat';
-import AutoResizeTextarea from './AutoResizeTextarea';
-import { ChatMessageBubble } from './ChatMessageBubble';
-import EmptyState from './EmptyState';
+import { useScrollonStream } from "../hooks/lib";
+import { default as injectLazyLibs } from "../hooks/lazyLibs";
+import { useBackendChat } from "./../hooks/useBackendChat";
+import AutoResizeTextarea from "./AutoResizeTextarea";
+import { ChatMessageBubble } from "./ChatMessageBubble";
+import EmptyState from "./EmptyState";
 
 function Button(props) {
   return <button {...props} />;
@@ -26,15 +26,15 @@ function Segment(props) {
 
 function ChatWindow({
   persona,
-  rehypePrism,
+  // rehypePrism,
   remarkGfm,
-  placeholderPrompt = 'Ask a question',
+  placeholderPrompt = "Ask a question",
   isEditMode,
   ...data
 }) {
   const { height, qgenAsistantId, enableQgen, scrollToInput, showToolCalls } =
     data;
-  const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
+  const libs = { remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
     qgenAsistantId,
@@ -98,7 +98,7 @@ function ChatWindow({
             </Segment>
             <div
               ref={conversationRef}
-              className={`conversation ${height ? 'include-scrollbar' : ''}`}
+              className={`conversation ${height ? "include-scrollbar" : ""}`}
               style={{ maxHeight: height }}
             >
               {messages.map((m, index) => (
@@ -129,7 +129,7 @@ function ChatWindow({
               minRows={1}
               ref={textareaRef}
               placeholder={
-                messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
+                messages.length > 0 ? "Ask follow-up..." : placeholderPrompt
               }
               isStreaming={isStreaming}
               onSubmit={onSubmit}
@@ -141,4 +141,7 @@ function ChatWindow({
   );
 }
 
-export default injectLazyLibs(['rehypePrism', 'remarkGfm'])(ChatWindow);
+export default injectLazyLibs([
+  // "rehypePrism",
+  "remarkGfm",
+])(ChatWindow);

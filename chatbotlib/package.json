@@ -23,6 +23,8 @@
   "license": "ISC",
   "root": true,
   "dependencies": {
+    "luxon": "^3.5.0",
+    "react-markdown": "^6.0.3",
     "react-textarea-autosize": "^8.5.7",
     "rehype-prism-plus": "^1.6.0",
     "remark-gfm": "^3.0.1"

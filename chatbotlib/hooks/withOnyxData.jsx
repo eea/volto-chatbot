@@ -1,9 +1,13 @@
-import React from 'react';
-import {
-  PlaceholderParagraph,
-  PlaceholderLine,
-  Placeholder,
-} from 'semantic-ui-react';
+import React from "react";
+// import {
+//   PlaceholderParagraph,
+//   PlaceholderLine,
+//   Placeholder,
+// } from 'semantic-ui-react';
+
+const Placeholder = (props) => <div {...props} />;
+const PlaceholderLine = (props) => <div {...props} />;
+const PlaceholderParagraph = (props) => <div {...props} />;
 
 const Loader = () => (
   <Placeholder>

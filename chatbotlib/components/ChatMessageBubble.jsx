@@ -10,7 +10,7 @@ import UserIcon from "./../icons/user.svg";
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
-// const Markdown = React.lazy(() => import('react-markdown'));
+const Markdown = React.lazy(() => import("react-markdown"));
 
 const components = (message) => {
   return {
@@ -69,7 +69,7 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
 export function ChatMessageBubble(props) {
   const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
     props;
-  const { remarkGfm } = libs; // , rehypePrism
+  // const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === "user";
 
@@ -102,6 +102,8 @@ export function ChatMessageBubble(props) {
     return { ...acc, [v]: k };
   }, {});
 
+  // remarkGfm
+
   return (
     <div>
       <div className="comment">
@@ -112,12 +114,9 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
-          {/* <Markdown */}
-          {/*   components={components(message)} */}
-          {/*   remarkPlugins={[remarkGfm]} */}
-          {/* > */}
-          {/*   {addCitations(message.message)} */}
-          {/* </Markdown> */}
+          <Markdown components={components(message)} remarkPlugins={[]}>
+            {addCitations(message.message)}
+          </Markdown>
 
           {!showLoader && sources.length > 0 && (
             <>

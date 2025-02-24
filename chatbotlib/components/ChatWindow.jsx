@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 // import { Button, Form, Icon, Segment } from 'semantic-ui-react';
 
 import { useScrollonStream } from "../hooks/lib";
@@ -27,14 +27,14 @@ function Segment(props) {
 function ChatWindow({
   persona,
   // rehypePrism,
-  remarkGfm,
+  // remarkGfm,
   placeholderPrompt = "Ask a question",
   isEditMode,
   ...data
 }) {
   const { height, qgenAsistantId, enableQgen, scrollToInput, showToolCalls } =
     data;
-  const libs = { remarkGfm }; // rehypePrism, remarkGfm
+  const libs = {}; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
     qgenAsistantId,
@@ -96,26 +96,28 @@ function ChatWindow({
                 <Icon name="edit outline" /> New chat
               </Button>
             </Segment>
-            <div
-              ref={conversationRef}
-              className={`conversation ${height ? "include-scrollbar" : ""}`}
-              style={{ maxHeight: height }}
-            >
-              {messages.map((m, index) => (
-                <ChatMessageBubble
-                  key={m.messageId}
-                  message={m}
-                  isMostRecent={index === 0}
-                  isLoading={isStreaming}
-                  libs={libs}
-                  onChoice={(message) => {
-                    onSubmit({ message });
-                  }}
-                  showToolCalls={showToolCalls}
-                />
-              ))}
-              <div ref={endDivRef} /> {/* End div to mark the bottom */}
-            </div>
+            <Suspense fallback={<div>Loading suspense</div>}>
+              <div
+                ref={conversationRef}
+                className={`conversation ${height ? "include-scrollbar" : ""}`}
+                style={{ maxHeight: height }}
+              >
+                {messages.map((m, index) => (
+                  <ChatMessageBubble
+                    key={m.messageId}
+                    message={m}
+                    isMostRecent={index === 0}
+                    isLoading={isStreaming}
+                    libs={libs}
+                    onChoice={(message) => {
+                      onSubmit({ message });
+                    }}
+                    showToolCalls={showToolCalls}
+                  />
+                ))}
+                <div ref={endDivRef} /> {/* End div to mark the bottom */}
+              </div>
+            </Suspense>
           </>
         )}
         {isStreaming && <div className="loader"></div>}
@@ -143,5 +145,5 @@ function ChatWindow({
 
 export default injectLazyLibs([
   // "rehypePrism",
-  "remarkGfm",
+  // "remarkGfm",
 ])(ChatWindow);

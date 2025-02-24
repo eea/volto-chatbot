@@ -57,11 +57,11 @@ const defaultConfig = {
   },
 };
 
-console.log(addonExtenders);
-// const config = addonExtenders.reduce(
-//   (acc, extender) => extender.modify(acc),
-//   defaultConfig,
-// );
-const config = defaultConfig;
+// console.log(addonExtenders);
+const config = addonExtenders.reduce(
+  (acc, extender) => extender.modify(acc),
+  defaultConfig,
+);
+// const config = defaultConfig;
 
 module.exports = config;

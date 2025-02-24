@@ -8,7 +8,7 @@ const modify = (config, { target, dev }, webpack) => {
   );
   const chatbotPath = path.resolve(`${voltoChatbotPath}/../chatbotlib`);
 
-  config.resolve.alias['@eeacms/chatbotlib'] = chatbotPath;
+  // config.resolve.alias['@eeacms/chatbotlib'] = chatbotPath;
 
   const babelLoaderFinder = makeLoaderFinder('babel-loader');
   const babelLoader = config.module.rules.find(babelLoaderFinder);
@@ -16,7 +16,7 @@ const modify = (config, { target, dev }, webpack) => {
   const { include } = babelLoader;
 
   include.push(markedPath);
-  include.push(chatbotPath);
+  // include.push(chatbotPath);
 
   babelLoader.use[0].options.plugins = [
     ...(babelLoader.use[0].options.plugins || []),

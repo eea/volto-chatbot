@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 const libraryMapping = {
-  rehypePrism: () => import('rehype-prism-plus'),
-  remarkGfm: () => import('remark-gfm'),
+  // rehypePrism: () => import('rehype-prism-plus'),
+  // remarkGfm: () => import('remark-gfm'),
 };
 
 const injectLazyLibs = (libraryNames) => (WrappedComponent) => {
@@ -17,6 +17,7 @@ const injectLazyLibs = (libraryNames) => (WrappedComponent) => {
             libs[name] = await libraryMapping[name]();
           }
         }
+        console.log("loading", libs);
         setLibraries(libs);
         setLoading(false);
       };

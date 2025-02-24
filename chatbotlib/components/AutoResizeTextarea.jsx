@@ -1,20 +1,22 @@
-import TextareaAutosize from 'react-textarea-autosize';
+// import TextareaAutosize from 'react-textarea-autosize';
 // import { Button } from 'semantic-ui-react';
 
-import React from 'react';
+const TextareaAutosize = (props) => <textarea {...props} />;
 
-import { default as SVGIcon } from './SVGIcon';
-import SendIcon from './../icons/send.svg';
+import React from "react";
+
+import { default as SVGIcon } from "./SVGIcon";
+import SendIcon from "./../icons/send.svg";
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
   const { onSubmit, isStreaming, ...rest } = props;
-  const [input, setInput] = React.useState('');
+  const [input, setInput] = React.useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (input.trim()) {
       onSubmit({ message: input });
-      setInput('');
+      setInput("");
     }
   };
 
@@ -24,11 +26,11 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
+          if (e.key === "Enter" && !e.shiftKey) {
             handleSubmit(e);
-          } else if (e.key === 'Enter' && e.shiftKey) {
+          } else if (e.key === "Enter" && e.shiftKey) {
             e.preventDefault();
-            setInput(input + '\n');
+            setInput(input + "\n");
           }
         }}
         {...rest}

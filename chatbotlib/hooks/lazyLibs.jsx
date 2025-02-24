@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 const libraryMapping = {
-  // rehypePrism: () => import('rehype-prism-plus'),
+  // rehypePrism: () => import("rehype-prism-plus"),
   // remarkGfm: () => import('remark-gfm'),
 };
 

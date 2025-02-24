@@ -1,11 +1,12 @@
 import React from 'react';
 import superagent from 'superagent';
-import { withOnyxData, ChatWindow } from '@eeacms/chatbotlib';
+import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 
 import './style.less';
 
 function ChatBlockView(props) {
-  const { assistantData, data, isEditMode } = props;
+  const { assistantData, data, isEditMode, chatbotLib } = props;
+  const ChatWindow = chatbotLib.ChatWindow;
 
   return assistantData ? (
     <ChatWindow persona={assistantData} isEditMode={isEditMode} {...data} />
@@ -14,10 +15,21 @@ function ChatBlockView(props) {
   );
 }
 
-export default withOnyxData((props) => [
-  'assistantData',
-  typeof props.data?.assistant !== 'undefined'
-    ? superagent.get(`/_da/persona/${props.data.assistant}`).type('json')
-    : null,
-  props.data?.assistant,
-])(ChatBlockView);
+function WithOnyxDataChatBlockView(props) {
+  const { withOnyxData } = props.chatbotLib;
+
+  const Wrapped = React.useMemo(() => {
+    const wrapper = withOnyxData((props) => [
+      'assistantData',
+      typeof props.data?.assistant !== 'undefined'
+        ? superagent.get(`/_da/persona/${props.data.assistant}`).type('json')
+        : null,
+      props.data?.assistant,
+    ]);
+    return wrapper(ChatBlockView);
+  }, [withOnyxData]);
+
+  return <Wrapped {...props} />;
+}
+
+export default injectLazyLibs(['chatbotLib'])(WithOnyxDataChatBlockView);

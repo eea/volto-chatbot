@@ -32,4 +32,6 @@ function WithOnyxDataChatBlockView(props) {
   return <Wrapped {...props} />;
 }
 
-export default injectLazyLibs(['chatbotLib'])(WithOnyxDataChatBlockView);
+export default injectLazyLibs(['chatbotLib', 'rehypePrism'])(
+  WithOnyxDataChatBlockView,
+);

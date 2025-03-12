@@ -18,7 +18,7 @@ const SYSTEM_MESSAGE_ID = -3;
 export const RetrievalType = {
   None: 'none',
   Search: 'search',
-  SelectedDocs: 'selectedDocs',
+  // SelectedDocs: 'selectedDocs',
 };
 
 export const ChatFileType = {

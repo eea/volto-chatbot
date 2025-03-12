@@ -11,7 +11,7 @@ const MSG_FETCH_COOKIE = 'Error while fetching authentication cookie';
 const MSG_ERROR_REQUEST = 'Error in processing request to Onyx';
 
 async function get_login_cookie(username, password) {
-  const url = `${process.env.DANSWER_URL}/api/auth/login`;
+  const url = `${process.env.VITE_API_URL}/api/auth/login`;
   const data = {
     username,
     password,
@@ -49,7 +49,7 @@ async function login(username, password) {
 }
 
 async function check_credentials() {
-  const reqUrl = `${process.env.DANSWER_URL}/api/persona/-1`;
+  const reqUrl = `${process.env.VITE_API_URL}/api/persona/-1`;
 
   const options = {
     method: 'GET',
@@ -99,13 +99,13 @@ async function send_danswer_request(req, res, { username, password, url }) {
   }
 }
 
-export default async function middleware(req, res, next) {
+export default async function proxyMiddleware(req, res, next) {
   const path = req.url.replace('/_da/', '/');
 
-  const reqUrl = `${process.env.DANSWER_URL}/api${path}`;
+  const reqUrl = `${process.env.VITE_API_URL}/api${path}`;
 
-  const username = process.env.DANSWER_USERNAME;
-  const password = process.env.DANSWER_PASSWORD;
+  const username = process.env.VITE_API_USERNAME;
+  const password = process.env.VITE_API_PASSWORD;
 
   if (!(username && password)) {
     res.send({

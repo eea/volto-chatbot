@@ -1,16 +1,16 @@
-import loadable from '@loadable/component';
-import React from 'react';
+import React from "react";
 
-import { Citation } from './Citation';
-import { SourceDetails } from './Source';
-import { SVGIcon, transformEmailsToLinks } from './utils';
+import { Citation } from "./Citation";
+import { SourceDetails } from "./Source";
+import { transformEmailsToLinks } from "../utils";
+import { default as SVGIcon } from "./SVGIcon";
 
-import BotIcon from './../icons/bot.svg';
-import UserIcon from './../icons/user.svg';
+import BotIcon from "./../icons/bot.svg";
+import UserIcon from "./../icons/user.svg";
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
-const Markdown = loadable(() => import('react-markdown'));
+const Markdown = React.lazy(() => import("react-markdown"));
 
 const components = (message) => {
   return {
@@ -18,7 +18,7 @@ const components = (message) => {
       const { node, ...rest } = props;
       const value = rest.children;
 
-      if (value?.toString().startsWith('*')) {
+      if (value?.toString().startsWith("*")) {
         return (
           <div className="flex-none bg-background-800 inline-block rounded-full h-3 w-3 ml-2" />
         );
@@ -33,7 +33,7 @@ const components = (message) => {
     p: ({ node, ...props }) => {
       const children = props.children;
       const text = React.Children.map(children, (child) => {
-        if (typeof child === 'string') {
+        if (typeof child === "string") {
           return transformEmailsToLinks(child);
         }
         return child;
@@ -56,10 +56,10 @@ function addCitations(text) {
 }
 
 export function ToolCall({ tool_args, tool_name, tool_result }) {
-  if (tool_name === 'run_search') {
+  if (tool_name === "run_search") {
     return (
       <div className="tool_info">
-        Searched for: <em>{tool_args?.query || ''}</em>
+        Searched for: <em>{tool_args?.query || ""}</em>
       </div>
     );
   }
@@ -69,9 +69,9 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
 export function ChatMessageBubble(props) {
   const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
     props;
-  const { remarkGfm } = libs; // , rehypePrism
+  // const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
-  const isUser = type === 'user';
+  const isUser = type === "user";
 
   const showLoader = isMostRecent && isLoading;
 
@@ -102,6 +102,8 @@ export function ChatMessageBubble(props) {
     return { ...acc, [v]: k };
   }, {});
 
+  // remarkGfm
+
   return (
     <div>
       <div className="comment">
@@ -112,10 +114,7 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
-          <Markdown
-            components={components(message)}
-            remarkPlugins={[remarkGfm]}
-          >
+          <Markdown components={components(message)} remarkPlugins={[]}>
             {addCitations(message.message)}
           </Markdown>
 

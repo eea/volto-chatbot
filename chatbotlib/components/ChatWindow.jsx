@@ -1,26 +1,40 @@
-import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
-import React from 'react';
-import { Button, Form, Icon, Segment } from 'semantic-ui-react';
+import React, { Suspense } from "react";
+// import { Button, Form, Icon, Segment } from 'semantic-ui-react';
 
-import AutoResizeTextarea from './AutoResizeTextarea';
-import { ChatMessageBubble } from './ChatMessageBubble';
-import EmptyState from './EmptyState';
-import { useScrollonStream } from './lib';
-import { useBackendChat } from './useBackendChat';
+import { useScrollonStream } from "../hooks/lib";
+import { default as injectLazyLibs } from "../hooks/lazyLibs";
+import { useBackendChat } from "./../hooks/useBackendChat";
+import AutoResizeTextarea from "./AutoResizeTextarea";
+import { ChatMessageBubble } from "./ChatMessageBubble";
+import EmptyState from "./EmptyState";
 
-import './style.less';
+function Button(props) {
+  return <button {...props} />;
+}
+
+function Form(props) {
+  return <div {...props} />;
+}
+
+function Icon(props) {
+  return <div {...props}></div>;
+}
+
+function Segment(props) {
+  return <div {...props}></div>;
+}
 
 function ChatWindow({
   persona,
-  rehypePrism,
-  remarkGfm,
-  placeholderPrompt = 'Ask a question',
+  // rehypePrism,
+  // remarkGfm,
+  placeholderPrompt = "Ask a question",
   isEditMode,
   ...data
 }) {
   const { height, qgenAsistantId, enableQgen, scrollToInput, showToolCalls } =
     data;
-  const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
+  const libs = {}; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
     qgenAsistantId,
@@ -82,26 +96,28 @@ function ChatWindow({
                 <Icon name="edit outline" /> New chat
               </Button>
             </Segment>
-            <div
-              ref={conversationRef}
-              className={`conversation ${height ? 'include-scrollbar' : ''}`}
-              style={{ maxHeight: height }}
-            >
-              {messages.map((m, index) => (
-                <ChatMessageBubble
-                  key={m.messageId}
-                  message={m}
-                  isMostRecent={index === 0}
-                  isLoading={isStreaming}
-                  libs={libs}
-                  onChoice={(message) => {
-                    onSubmit({ message });
-                  }}
-                  showToolCalls={showToolCalls}
-                />
-              ))}
-              <div ref={endDivRef} /> {/* End div to mark the bottom */}
-            </div>
+            <Suspense fallback={<div>Loading suspense</div>}>
+              <div
+                ref={conversationRef}
+                className={`conversation ${height ? "include-scrollbar" : ""}`}
+                style={{ maxHeight: height }}
+              >
+                {messages.map((m, index) => (
+                  <ChatMessageBubble
+                    key={m.messageId}
+                    message={m}
+                    isMostRecent={index === 0}
+                    isLoading={isStreaming}
+                    libs={libs}
+                    onChoice={(message) => {
+                      onSubmit({ message });
+                    }}
+                    showToolCalls={showToolCalls}
+                  />
+                ))}
+                <div ref={endDivRef} /> {/* End div to mark the bottom */}
+              </div>
+            </Suspense>
           </>
         )}
         {isStreaming && <div className="loader"></div>}
@@ -115,7 +131,7 @@ function ChatWindow({
               minRows={1}
               ref={textareaRef}
               placeholder={
-                messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
+                messages.length > 0 ? "Ask follow-up..." : placeholderPrompt
               }
               isStreaming={isStreaming}
               onSubmit={onSubmit}
@@ -127,4 +143,7 @@ function ChatWindow({
   );
 }
 
-export default injectLazyLibs(['rehypePrism', 'remarkGfm'])(ChatWindow);
+export default injectLazyLibs([
+  // "rehypePrism",
+  // "remarkGfm",
+])(ChatWindow);

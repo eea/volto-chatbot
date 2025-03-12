@@ -1,5 +1,9 @@
-import { Button } from 'semantic-ui-react';
-import { debounce } from './utils';
+// import { Button } from 'semantic-ui-react';
+import { debounce } from './../utils';
+
+function Button(props) {
+  return <button {...props} />;
+}
 
 function StarterMessage({ msg, onClick }) {
   return (

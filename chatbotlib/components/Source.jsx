@@ -1,9 +1,13 @@
-import { Popup } from 'semantic-ui-react';
+// import { Popup } from 'semantic-ui-react';
 import { DateTime } from 'luxon';
-import { SVGIcon } from './utils';
+import { default as SVGIcon } from './SVGIcon';
 
 import FileIcon from './../icons/file.svg';
 import GlobeIcon from './../icons/globe.svg';
+
+function Popup(props) {
+  return <div {...props} />;
+}
 
 export const SourceDetails = ({ source, index }) => {
   const {

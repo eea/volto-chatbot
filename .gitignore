@@ -24,3 +24,5 @@ videos
 .env.test.local
 .env.production.local
 *~
+.yalc
+yalc.lock

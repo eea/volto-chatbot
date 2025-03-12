@@ -16,7 +16,7 @@ const Loader = () => (
   </Placeholder>
 );
 
-export default function withDanswerData(callback) {
+export default function withOnyxData(callback) {
   function wrapper(Component) {
     function WrappedComponent(props) {
       const [state, setState] = React.useState(null);

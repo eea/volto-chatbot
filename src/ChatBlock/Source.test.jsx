@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer';
 
 import '@testing-library/jest-dom/extend-expect';
 import { Provider } from 'react-intl-redux';
-import { SourceDetails } from './Source';
+import { SourceDetails } from './../../chatbotlib/components/Source';
 
 const mockStore = configureStore();
 

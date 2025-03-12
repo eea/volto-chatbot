@@ -1,4 +1,8 @@
-import { Popup } from 'semantic-ui-react';
+// import { Popup } from 'semantic-ui-react';
+
+function Popup(props) {
+  return <div {...props} />;
+}
 
 export function Citation({ link, index, value, message }) {
   const isLinkType = value?.toString().startsWith('[');

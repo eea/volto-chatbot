@@ -269,6 +269,7 @@ class SubmitHandler {
       }
 
       if (stack.isComplete || stack.isEmpty()) {
+        // console.log('breaking', stack.isComplete, stack.isEmpty(), stack.stack);
         break;
       }
 
@@ -278,6 +279,15 @@ class SubmitHandler {
         const packet = stack.nextPacket();
 
         if (packet) {
+          // console.log('inside packagt', packet, {
+          //   has_message_id: Object.hasOwn(packet, 'message_id'),
+          //   has_answer_piece: Object.hasOwn(packet, 'answer_piece'),
+          //   has_top_docs: Object.hasOwn(packet, 'top_documents'),
+          //   has_tool_name: Object.hasOwn(packet, 'tool_name'),
+          //   has_file_ids: Object.hasOwn(packet, 'file_ids'),
+          //   has_error: Object.hasOwn(packet, 'error'),
+          // });
+
           if (Object.hasOwn(packet, 'answer_piece')) {
             answer += packet.answer_piece;
           } else if (Object.hasOwn(packet, 'top_documents')) {
@@ -304,7 +314,7 @@ class SubmitHandler {
                 type: ChatFileType.IMAGE,
               };
             });
-          } else if (Object.hasOwn(packet, 'error')) {
+          } else if (packet.error) {
             error = packet.error;
           } else if (Object.hasOwn(packet, 'message_id')) {
             finalMessage = packet;

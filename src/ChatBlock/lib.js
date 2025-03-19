@@ -243,9 +243,11 @@ export async function* handleStream(streamingResponse) {
 }
 
 export class CurrentMessageFIFO {
-  stack = [];
-  isComplete = false;
-  error = null;
+  constructor() {
+    this.stack = [];
+    this.isComplete = false;
+    this.error = null;
+  }
 
   push(packetBunch) {
     this.stack.push(packetBunch);

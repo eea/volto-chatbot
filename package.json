@@ -72,7 +72,6 @@
     "cypress:open": "make cypress-open"
   },
   "dependencies": {
-    "@eeacms/chatbotlib": "file:.yalc/@eeacms/chatbotlib",
     "@microsoft/fetch-event-source": "2.0.1",
     "fast-json-patch": "3.1.1",
     "highlight.js": "11.10.0",
@@ -84,5 +83,8 @@
     "rehype-prism-plus": "1.6.0",
     "remark-gfm": "3.0.1",
     "uuid": "10.0.0"
+  },
+  "old-deps": {
+    "@eeacms/chatbotlib": "*"
   }
 }

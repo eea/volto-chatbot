@@ -22,8 +22,9 @@ const applyConfig = (config) => {
   config.settings.loadables = {
     ...config.settings.loadables,
     chatbotLib: loadable.lib(() => import('@eeacms/chatbotlib')),
-    rehypePrism: loadable.lib(() => import('rehype-prism-plus')),
-    // remarkGfm: loadable.lib(() => import('remark-gfm')),
+    remarkGfm: loadable.lib(() => import('remark-gfm')),
+
+    // rehypePrism: loadable.lib(() => import('rehype-prism-plus')),
 
     // highlightJs: loadable.lib(() => import('highlight.js')),
     // marked: loadable.lib(() => import('marked')),

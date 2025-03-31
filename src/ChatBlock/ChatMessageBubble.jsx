@@ -68,8 +68,15 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
 }
 
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
-    props;
+  const {
+    message,
+    isLoading,
+    isMostRecent,
+    libs,
+    onChoice,
+    showToolCalls,
+    enableFeedback,
+  } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
@@ -153,7 +160,7 @@ export function ChatMessageBubble(props) {
             </>
           )}
 
-          {!isUser && !isLoading && (
+          {enableFeedback && !isUser && !isLoading && (
             <div className="message-actions">
               <Button basic onClick={() => handleFeedback('up')}>
                 <Icon name="thumbs up outline" size="large" />

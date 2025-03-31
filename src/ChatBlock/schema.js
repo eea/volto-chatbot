@@ -9,13 +9,14 @@ export function ChatBlockSchema({ assistants }) {
     fieldsets: [
       {
         id: 'default',
-        title: 'Defalt',
+        title: 'Default',
         fields: [
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
           'height',
           'enableQgen',
+          'enableFeedback',
           'scrollToInput',
           'showToolCalls',
           'showAssistantTitle',
@@ -39,6 +40,11 @@ export function ChatBlockSchema({ assistants }) {
         title: 'Enable related question generation',
         type: 'boolean',
         default: false,
+      },
+      enableFeedback: {
+        title: 'Enable Feedback',
+        type: 'boolean',
+        default: true,
       },
       showToolCalls: {
         title: 'Show query used in retriever',
@@ -81,7 +87,7 @@ export function ChatBlockSchema({ assistants }) {
         ),
         description:
           'Chat window height. ' +
-          'Use CSS numeric dimmension (ex: 500px or 70vh).',
+          'Use CSS numeric dimension (ex: 500px or 70vh).',
       },
       scrollToInput: {
         title: 'Scroll the page to focus on the chat input',

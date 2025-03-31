@@ -1,9 +1,10 @@
+import React, { useState } from 'react';
 import loadable from '@loadable/component';
-import React from 'react';
-
+import { Icon, Button } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
 import { SVGIcon, transformEmailsToLinks } from './utils';
+import FeedbackModal from './FeedbackModal';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
@@ -67,13 +68,36 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
 }
 
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
-    props;
+  const {
+    message,
+    isLoading,
+    isMostRecent,
+    libs,
+    onChoice,
+    showToolCalls,
+  } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
 
   const showLoader = isMostRecent && isLoading;
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [feedbackType, setFeedbackType] = useState(null);
+
+  const handleFeedback = (type) => {
+    setFeedbackType(type);
+    setModalOpen(true);
+  };
+
+  const submitFeedback = (feedback) => {
+    // console.log('Feedback:', {
+    //   messageId: message.messageId,
+    //   type: feedbackType,
+    //   feedback,
+    // });
+    setModalOpen(false);
+  };
 
   // TODO: these classes are not actually used, remove them
   // const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
@@ -134,6 +158,25 @@ export function ChatMessageBubble(props) {
               </div>
             </>
           )}
+
+          {!isUser && !isLoading && (
+            <div className="message-actions">
+              <Button basic onClick={() => handleFeedback('up')}>
+                <Icon name="thumbs up outline" size="large" />
+              </Button>
+              <Button basic onClick={() => handleFeedback('down')}>
+                <Icon name="thumbs down outline" size="large" />
+              </Button>
+
+              <FeedbackModal
+                modalOpen={modalOpen}
+                onClose={() => setModalOpen(false)}
+                onSubmit={submitFeedback}
+                feedbackType={feedbackType}
+              />
+            </div>
+          )}
+
           {message.relatedQuestions?.length > 0 && (
             <div className="chat-related-questions">
               <h5>Related Questions:</h5>

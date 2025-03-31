@@ -187,6 +187,46 @@
   }
 }
 
+.feedback-modal {
+  .ui.form textarea {
+    max-width: 100%;
+  }
+
+  .reason-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.5em;
+    margin-bottom: @marginBottom;
+  }
+}
+
+.message-actions {
+  margin-bottom: @marginBottom;
+
+  .ui.basic.button {
+    margin-right: 0.2em;
+    padding: 5px;
+
+    &:hover  {
+      background-color: #f9f9f9 !important;
+      border-radius: 3px;
+
+      i.icon {
+        color: #0a0a0a;
+      }
+    }
+
+    i.icon {
+      color: #333;
+    }
+  }
+
+  .ui.basic.button:hover {
+    box-shadow: none;
+  }
+}
+
 .ui.button.starter-message {
   display: flex;
   flex-direction: column;

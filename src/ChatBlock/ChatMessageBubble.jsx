@@ -198,7 +198,7 @@ export function ChatMessageBubble(props) {
               <h5>Sources:</h5>
 
               <div className="sources">
-                {documents.map((source, i) => (
+                {documents?.map((source, i) => (
                   <SourceDetails source={source} key={i} index={i} />
                 ))}
               </div>

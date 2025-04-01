@@ -297,7 +297,7 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
       break;
     }
 
-    await delay(2);
+    // await delay(2);
 
     if (!stack.isEmpty()) {
       const packet = stack.nextPacket();

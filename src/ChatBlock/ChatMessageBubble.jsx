@@ -65,6 +65,59 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
   );
 }
 
+function Subquestion({ info, libs }) {
+  const message = { documents: info.context_docs?.top_documents };
+  const { remarkGfm } = libs; // , rehypePrism
+
+  return (
+    <div>
+      <div>
+        Q: <strong>{info.question}</strong>
+      </div>
+      <div>
+        <h5>Searching</h5>
+        {info.sub_queries
+          .filter((q) => q.query !== info.question)
+          .map((sq, index) => (
+            <div key={index}>{sq.query}</div>
+          ))}
+      </div>
+      <div>
+        <h5>Reading</h5>
+        <ul>
+          {info.context_docs?.top_documents?.map((doc, index) => (
+            <li key={index}>
+              <a href={doc?.link}>{doc.semantic_identifier}</a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h5>Analyzing</h5>
+        <div>
+          <Markdown
+            components={components(message)}
+            remarkPlugins={[remarkGfm]}
+          >
+            {addCitations(info.answer)}
+          </Markdown>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AgentQuestions({ message, libs }) {
+  if (!message.sub_questions || message.sub_questions?.length === 0)
+    return null;
+
+  console.log(message.sub_questions);
+
+  return message.sub_questions
+    ?.filter((sq) => sq.level === 0)
+    .map((sq, index) => <Subquestion key={index} info={sq} libs={libs} />);
+}
+
 export function ChatMessageBubble(props) {
   const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
     props;
@@ -111,6 +164,7 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
+          <AgentQuestions message={message} libs={libs} />
           <Markdown
             components={components(message)}
             remarkPlugins={[remarkGfm]}

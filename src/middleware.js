@@ -64,40 +64,99 @@ async function check_credentials() {
   return await fetch(reqUrl, options);
 }
 
+// function mock_llm_call(res) {
+//   // Set appropriate headers for SSE
+//   res.setHeader('Content-Type', 'text/event-stream');
+//   res.setHeader('Cache-Control', 'no-cache');
+//   res.setHeader('Connection', 'keep-alive');
+//
+//   const filePath = path.join(
+//     __dirname,
+//     '../src/addons/volto-chatbot/dummy.jsonl',
+//   );
+//
+//   // Make sure the file exists
+//   if (!fs.existsSync(filePath)) {
+//     console.error('File not found:', filePath);
+//     res.status(404).send('File not found');
+//     return;
+//   }
+//
+//   const fileStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+//   const rl = readline.createInterface({
+//     input: fileStream,
+//     crlfDelay: Infinity,
+//   });
+//
+//   // Keep track of pending timeouts
+//   const pendingTimeouts = [];
+//
+//   // Function to send a line with a delay
+//   const sendLineWithDelay = (line) => {
+//     const timeout = setTimeout(() => {
+//       res.write(`${line}\n`); // data:
+//       // Remove this timeout from the pending list
+//       const index = pendingTimeouts.indexOf(timeout);
+//       if (index > -1) {
+//         pendingTimeouts.splice(index, 1);
+//       }
+//
+//       // If there are no more pending timeouts and the stream is closed, end the response
+//       if (pendingTimeouts.length === 0 && streamClosed) {
+//         res.end();
+//       }
+//     }, 300);
+//
+//     pendingTimeouts.push(timeout);
+//   };
+//
+//   let streamClosed = false;
+//
+//   // Read the file line by line
+//   rl.on('line', (line) => {
+//     console.log('Sending line:', line);
+//     sendLineWithDelay(line);
+//   });
+//
+//   // Handle stream errors
+//   rl.on('error', (err) => {
+//     console.error('Error reading file:', err);
+//     // Clean up any pending timeouts
+//     pendingTimeouts.forEach(clearTimeout);
+//     res.status(500).send('Internal Server Error');
+//   });
+//
+//   // Handle stream end
+//   rl.on('close', () => {
+//     console.log('File stream ended');
+//     streamClosed = true;
+//
+//     // Only end the response if all pending timeouts have completed
+//     if (pendingTimeouts.length === 0) {
+//       res.end();
+//     }
+//     // Otherwise, the response will be ended when the last timeout completes
+//   });
+// }
+
 function mock_llm_call(res) {
   const filePath = path.join(
     __dirname,
     '../src/addons/volto-chatbot/dummy.jsonl',
   );
-  const fileStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+  const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
 
-  // Create an interface to read the file line by line
-  const rl = readline.createInterface({
-    input: fileStream,
-    crlfDelay: Infinity,
-  });
-
-  // Function to send a line with a delay
-  const sendLineWithDelay = (line) => {
-    setTimeout(() => {
-      res.write(`data: ${line}\n\n`);
-    }, 300);
-  };
-
-  // Read the file line by line
-  rl.on('line', (line) => {
-    console.log(line);
-    sendLineWithDelay(line);
-  });
+  // Pipe the read stream to the response object
+  readStream.pipe(res);
 
   // Handle stream errors
-  rl.on('error', (err) => {
+  readStream.on('error', (err) => {
     console.error('Error reading file:', err);
     res.status(500).send('Internal Server Error');
   });
 
   // Handle stream end
-  rl.on('close', () => {
+  readStream.on('end', () => {
     console.log('File stream ended');
     res.end();
   });

@@ -566,3 +566,16 @@ export const constructSubQuestions = (subQuestions, newDetail) => {
 
   return updatedSubQuestions;
 };
+
+export function extractJSON(str) {
+  const regex = /\[([\s\S]*?)\]/;
+  const match = str.match(regex);
+
+  if (match) {
+    const jsonText = match[0];
+    // TODO: do we need safety here?
+    return JSON.parse(jsonText);
+  } else {
+    return str.split('\n').map((question) => ({ question }));
+  }
+}

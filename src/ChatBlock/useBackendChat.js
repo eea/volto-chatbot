@@ -9,6 +9,7 @@ import {
   removeMessage,
   updateCurrentMessageFIFO,
   updateParentChildren,
+  constructSubQuestions,
 } from './lib';
 
 const TEMP_USER_MESSAGE_ID = -1;
@@ -109,6 +110,8 @@ class SubmitHandler {
     chatTitle,
     qgenAsistantId,
     enableQgen,
+    setAgenticGenerating,
+    updateChatState,
   }) {
     this.persona = persona;
     this.chatTitle = chatTitle;
@@ -122,6 +125,17 @@ class SubmitHandler {
     this.setCompleteMessageDetail = setCompleteMessageDetail;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
+
+    this.agenticDocs = null;
+    this.secondLevelMessageId = null;
+    this.includeAgentic = true;
+    this.second_level_generating = false;
+    this.isImprovement = false;
+    this.is_generating = false;
+    this.isStreamingQuestions = false;
+    this.setAgenticGenerating = setAgenticGenerating;
+    this.sub_questions = [];
+    this.updateChatState = updateChatState;
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -288,8 +302,109 @@ class SubmitHandler {
           //   has_error: Object.hasOwn(packet, 'error'),
           // });
 
-          if (Object.hasOwn(packet, 'answer_piece')) {
-            answer += packet.answer_piece;
+          if (Object.hasOwn(packet, 'agentic_message_ids')) {
+            const agenticMessageIds = packet.agentic_message_ids;
+            const level1MessageId = agenticMessageIds.find(
+              (item) => item.level === 1,
+            )?.message_id;
+            if (level1MessageId) {
+              this.secondLevelMessageId = level1MessageId;
+              this.includeAgentic = true;
+            }
+          }
+
+          if (Object.hasOwn(packet, 'level')) {
+            if (packet.level === 1) {
+              this.second_level_generating = true;
+            }
+          }
+
+          if (Object.hasOwn(packet, 'refined_answer_improvement')) {
+            this.isImprovement = packet.refined_answer_improvement;
+          }
+
+          if (Object.hasOwn(packet, 'stream_type')) {
+            if (packet.stream_type === 'main_answer') {
+              this.is_generating = false;
+              this.second_level_generating = true;
+            }
+          }
+
+          // // Continuously refine the sub_questions based on the packets that we receive
+          if (
+            Object.hasOwn(packet, 'stop_reason') &&
+            Object.hasOwn(packet, 'level_question_num')
+          ) {
+            if (packet.stream_type === 'main_answer') {
+              this.updateChatState('streaming', frozenSessionId);
+            }
+            if (
+              packet.stream_type === 'sub_questions' &&
+              packet.level_question_num === undefined
+            ) {
+              this.isStreamingQuestions = false;
+            }
+            this.sub_questions = constructSubQuestions(
+              this.sub_questions,
+              packet,
+            );
+          } else if (Object.hasOwn(packet, 'sub_question')) {
+            this.updateChatState('toolBuilding', frozenSessionId);
+            this.is_generating = true;
+            this.sub_questions = constructSubQuestions(
+              this.sub_questions,
+              packet,
+            );
+            this.setAgenticGenerating(true);
+          } else if (Object.hasOwn(packet, 'sub_query')) {
+            this.sub_questions = constructSubQuestions(
+              this.sub_questions,
+              packet,
+            );
+          } else if (
+            Object.hasOwn(packet, 'answer_piece') &&
+            Object.hasOwn(packet, 'answer_type') &&
+            packet.answer_type === 'agent_sub_answer'
+          ) {
+            this.sub_questions = constructSubQuestions(
+              this.sub_questions,
+              packet,
+            );
+          } else if (Object.hasOwn(packet, 'answer_piece')) {
+            // answer += packet.answer_piece;
+
+            this.sub_questions = this.sub_questions.map((subQ) => ({
+              ...subQ,
+              is_generating: false,
+            }));
+
+            if (Object.hasOwn(packet, 'level') && packet.level === 1) {
+              this.second_level_answer += packet.answer_piece;
+            } else {
+              answer += packet.answer_piece;
+            }
+          } else if (
+            Object.hasOwn(packet, 'top_documents') &&
+            Object.hasOwn(packet, 'level_question_num') &&
+            packet.level_question_num !== undefined
+          ) {
+            const documentsResponse = packet;
+            this.sub_questions = constructSubQuestions(
+              this.sub_questions,
+              documentsResponse,
+            );
+
+            if (
+              documentsResponse.level_question_num === 0 &&
+              documentsResponse.level === 0
+            ) {
+              documents = packet.top_documents;
+            } else if (
+              documentsResponse.level_question_num === 0 &&
+              documentsResponse.level === 1
+            ) {
+              this.agenticDocs = packet.top_documents;
+            }
           } else if (Object.hasOwn(packet, 'top_documents')) {
             documents = packet.top_documents;
             query = packet.rephrased_query;
@@ -307,6 +422,25 @@ class SubmitHandler {
                 tool_result: packet.tool_result,
               },
             ];
+
+            // if (!toolCall.tool_name.includes("agent")) {
+            //   if (
+            //     !toolCall.tool_result ||
+            //     toolCall.tool_result == undefined
+            //   ) {
+            //     updateChatState("toolBuilding", frozenSessionId);
+            //   } else {
+            //     updateChatState("streaming", frozenSessionId);
+            //   }
+            //
+            //   // This will be consolidated in upcoming tool calls udpate,
+            //   // but for now, we need to set query as early as possible
+            //   if (toolCall.tool_name == SEARCH_TOOL_NAME) {
+            //     query = toolCall.tool_args["query"];
+            //   }
+            // } else {
+            //   toolCall = null;
+            // }
           } else if (Object.hasOwn(packet, 'file_ids')) {
             aiMessageImages = packet.file_ids.map((fileId) => {
               return {
@@ -315,6 +449,7 @@ class SubmitHandler {
               };
             });
           } else if (packet.error) {
+            // TODO: add more on errors and stop reason from original code
             error = packet.error;
           } else if (Object.hasOwn(packet, 'message_id')) {
             finalMessage = packet;
@@ -423,6 +558,30 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);
 
+  const [chatState, setChatState] = useState(new Map([[null, 'input']]));
+
+  const updateChatState = (newState, sessionId) => {
+    setChatState((prevState) => {
+      const newChatState = new Map(prevState);
+      newChatState.set(
+        sessionId !== undefined ? sessionId : currChatSessionId,
+        newState,
+      );
+      return newChatState;
+    });
+  };
+
+  const currentChatState = () => {
+    return chatState.get(currChatSessionId()) || 'input';
+  };
+
+  // const [chatState, setChatState] = useState(
+  //   new Map([[chatSessionIdRef.current, firstMessage ? "loading" : "input"]])
+  // );
+
+  // TODO: tweak is scrolling enabled if agentic generating
+  const [agenticGenerating, setAgenticGenerating] = React.useState(false);
+
   React.useEffect(() => {
     isCancelledRef.current = isCancelled;
   }, [isCancelled]);
@@ -447,6 +606,8 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     setIsStreaming,
     qgenAsistantId,
     enableQgen,
+    setAgenticGenerating,
+    updateChatState,
   });
 
   const clearChat = () => {
@@ -457,7 +618,7 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     setCurrChatSessionId(null);
   };
 
-  // console.log('history', messageHistory);
+  console.log('history', messageHistory);
 
   return {
     messages: messageHistory,

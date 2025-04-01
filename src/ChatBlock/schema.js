@@ -18,6 +18,7 @@ export function ChatBlockSchema({ assistants }) {
           'enableQgen',
           'scrollToInput',
           'showToolCalls',
+          'deepResearch',
           'showAssistantTitle',
           'showAssistantDescription',
           'showAssistantPrompts',
@@ -26,6 +27,15 @@ export function ChatBlockSchema({ assistants }) {
       },
     ],
     properties: {
+      deepResearch: {
+        title: 'Deep research',
+        choices: [
+          ['always_on', 'Always on'],
+          ['unavailable', 'Unavailable'],
+          ['user_on', 'User choice, on by default'],
+          ['user_off', 'User choice, off by default'],
+        ],
+      },
       assistant: {
         title: 'Assistant',
         choices: assistantChoices(),

@@ -56,14 +56,13 @@ function addCitations(text) {
 }
 
 export function ToolCall({ tool_args, tool_name, tool_result }) {
-  if (tool_name === 'run_search') {
-    return (
-      <div className="tool_info">
-        Searched for: <em>{tool_args?.query || ''}</em>
-      </div>
-    );
-  }
-  return null;
+  // eslint-disable-next-line no-console
+  console.log('tool call', { tool_args, tool_name, tool_result });
+  return (
+    <div className="tool_info">
+      Searched for: <em>{tool_args?.query || ''}</em>
+    </div>
+  );
 }
 
 export function ChatMessageBubble(props) {

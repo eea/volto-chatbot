@@ -57,7 +57,7 @@ function addCitations(text) {
 
 export function ToolCall({ tool_args, tool_name, tool_result }) {
   // eslint-disable-next-line no-console
-  console.log('tool call', { tool_args, tool_name, tool_result });
+  // console.log('tool call', { tool_args, tool_name, tool_result });
   return (
     <div className="tool_info">
       Searched for: <em>{tool_args?.query || ''}</em>

@@ -1,5 +1,8 @@
 import superagent from 'superagent';
 import fetch from 'node-fetch';
+import readline from 'readline';
+import fs from 'fs';
+import path from 'path';
 
 let cached_auth_cookie = null;
 let last_fetched = null;
@@ -61,6 +64,45 @@ async function check_credentials() {
   return await fetch(reqUrl, options);
 }
 
+function mock_llm_call(res) {
+  const filePath = path.join(
+    __dirname,
+    '../src/addons/volto-chatbot/dummy.jsonl',
+  );
+  const fileStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+
+  // Create an interface to read the file line by line
+  const rl = readline.createInterface({
+    input: fileStream,
+    crlfDelay: Infinity,
+  });
+
+  // Function to send a line with a delay
+  const sendLineWithDelay = (line) => {
+    setTimeout(() => {
+      res.write(`data: ${line}\n\n`);
+    }, 300);
+  };
+
+  // Read the file line by line
+  rl.on('line', (line) => {
+    console.log(line);
+    sendLineWithDelay(line);
+  });
+
+  // Handle stream errors
+  rl.on('error', (err) => {
+    console.error('Error reading file:', err);
+    res.status(500).send('Internal Server Error');
+  });
+
+  // Handle stream end
+  rl.on('close', () => {
+    console.log('File stream ended');
+    res.end();
+  });
+}
+
 async function send_danswer_request(req, res, { username, password, url }) {
   await login(username, password);
 
@@ -84,6 +126,14 @@ async function send_danswer_request(req, res, { username, password, url }) {
   if (req.body && req.method === 'POST') {
     options.body = JSON.stringify(req.body);
   }
+
+  if (req.url.endsWith('send-message') && process.env.MOCK_LLM_CALL) {
+    res.set('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    mock_llm_call(res);
+    return;
+  }
   try {
     const response = await fetch(url, options, req.body);
 
@@ -92,7 +142,6 @@ async function send_danswer_request(req, res, { username, password, url }) {
     } else {
       res.set('Content-Type', 'application/json');
     }
-
     response.body.pipe(res);
   } catch (error) {
     throw error;

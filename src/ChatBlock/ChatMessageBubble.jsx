@@ -3,7 +3,7 @@ import loadable from '@loadable/component';
 import { Icon, Button } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
-import { SVGIcon, transformEmailsToLinks } from './utils';
+import { SVGIcon, transformEmailsToLinks, useCopyToClipboard } from './utils';
 import FeedbackModal from './FeedbackModal';
 
 import BotIcon from './../icons/bot.svg';
@@ -85,6 +85,7 @@ export function ChatMessageBubble(props) {
 
   const [modalOpen, setModalOpen] = useState(false);
   const [feedbackType, setFeedbackType] = useState(null);
+  const [copied, handleCopy] = useCopyToClipboard(message.message);
 
   const handleFeedback = (type) => {
     setFeedbackType(type);
@@ -144,6 +145,48 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
+          {!isUser && !isLoading && (
+            <div className="message-actions">
+              <Button
+                basic
+                onClick={() => handleCopy()}
+                title="Copy"
+                aria-label="Copy"
+                disabled={copied}
+              >
+                <Icon name={copied ? 'check' : 'copy outline'} />
+              </Button>
+
+              {enableFeedback && (
+                <>
+                  <Button
+                    basic
+                    onClick={() => handleFeedback('up')}
+                    title="Like"
+                    aria-label="Like"
+                  >
+                    <Icon name="thumbs up outline" />
+                  </Button>
+                  <Button
+                    basic
+                    onClick={() => handleFeedback('down')}
+                    title="Dislike"
+                    aria-label="Dislike"
+                  >
+                    <Icon name="thumbs down outline" />
+                  </Button>
+
+                  <FeedbackModal
+                    modalOpen={modalOpen}
+                    onClose={() => setModalOpen(false)}
+                    onSubmit={submitFeedback}
+                    feedbackType={feedbackType}
+                  />
+                </>
+              )}
+            </div>
+          )}
+
           {!showLoader && sources.length > 0 && (
             <>
               <h5>Sources:</h5>
@@ -160,39 +203,23 @@ export function ChatMessageBubble(props) {
             </>
           )}
 
-          {enableFeedback && !isUser && !isLoading && (
-            <div className="message-actions">
-              <Button basic onClick={() => handleFeedback('up')}>
-                <Icon name="thumbs up outline" size="large" />
-              </Button>
-              <Button basic onClick={() => handleFeedback('down')}>
-                <Icon name="thumbs down outline" size="large" />
-              </Button>
-
-              <FeedbackModal
-                modalOpen={modalOpen}
-                onClose={() => setModalOpen(false)}
-                onSubmit={submitFeedback}
-                feedbackType={feedbackType}
-              />
-            </div>
-          )}
-
           {message.relatedQuestions?.length > 0 && (
-            <div className="chat-related-questions">
+            <>
               <h5>Related Questions:</h5>
-              {message.relatedQuestions?.map(({ question }) => (
-                <div
-                  className="relatedQuestionButton"
-                  role="button"
-                  onClick={() => !isLoading && onChoice(question)}
-                  onKeyDown={() => !isLoading && onChoice(question)}
-                  tabIndex="-1"
-                >
-                  {question}
-                </div>
-              ))}
-            </div>
+              <div className="chat-related-questions">
+                {message.relatedQuestions?.map(({ question }) => (
+                  <div
+                    className="relatedQuestionButton"
+                    role="button"
+                    onClick={() => !isLoading && onChoice(question)}
+                    onKeyDown={() => !isLoading && onChoice(question)}
+                    tabIndex="-1"
+                  >
+                    {question}
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>

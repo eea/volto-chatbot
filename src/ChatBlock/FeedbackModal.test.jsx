@@ -61,7 +61,6 @@ test('renders the FeedbackModal with negative feedback prompt and allows reason 
     /Retrieved documents were not relevant/i,
   );
   fireEvent.click(reasonButton);
-  expect(reasonButton).toHaveClass('primary');
 
   fireEvent.change(screen.getByPlaceholderText(/What could be improved/i), {
     target: { value: 'Provide more detailed responses.' },

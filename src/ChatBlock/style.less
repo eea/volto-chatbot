@@ -97,9 +97,9 @@
 
     .source-title {
       overflow: hidden;
-      width: 130px;
+      width: 140px;
       margin: 0 5px;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -110,7 +110,7 @@
       padding: 0.2em 0.4em;
       border-radius: 5px;
       background-color: #e5e7eb;
-      font-size: 12px;
+      font-size: 11px;
     }
 
     .source-desc {
@@ -119,6 +119,7 @@
       -webkit-box-orient: vertical;
       font-size: 12px;
       -webkit-line-clamp: 3;
+      line-clamp: 3;
       word-break: break-all;
     }
   }
@@ -202,11 +203,15 @@
 }
 
 .message-actions {
-  margin-bottom: @marginBottom;
-
   .ui.basic.button {
     padding: 5px;
     margin-right: 0.2em;
+
+    &:active,
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
 
     &:hover {
       border-radius: 3px;

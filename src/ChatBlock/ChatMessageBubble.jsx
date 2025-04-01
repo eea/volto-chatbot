@@ -113,9 +113,15 @@ function AgentQuestions({ message, libs }) {
 
   console.log(message.sub_questions);
 
-  return message.sub_questions
-    ?.filter((sq) => sq.level === 0)
-    .map((sq, index) => <Subquestion key={index} info={sq} libs={libs} />);
+  return (
+    <div style={{ borderBottom: '1px solid black', marginBottom: '1em' }}>
+      {message.sub_questions
+        ?.filter((sq) => sq.level === 0)
+        .map((sq, index) => (
+          <Subquestion key={index} info={sq} libs={libs} />
+        ))}
+    </div>
+  );
 }
 
 export function ChatMessageBubble(props) {
@@ -183,6 +189,17 @@ export function ChatMessageBubble(props) {
                     key={i}
                     index={inverseMap[source.db_doc_id]}
                   />
+                ))}
+              </div>
+            </>
+          )}
+          {!showLoader && sources.length === 0 && (
+            <>
+              <h5>Sources:</h5>
+
+              <div className="sources">
+                {documents.map((source, i) => (
+                  <SourceDetails source={source} key={i} index={i} />
                 ))}
               </div>
             </>

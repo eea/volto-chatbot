@@ -189,14 +189,8 @@ function AgentQuestions({ message, libs }) {
 }
 
 export function ChatMessageBubble(props) {
-  const {
-    message,
-    isLoading,
-    isMostRecent,
-    libs,
-    onChoice,
-    showToolCalls,
-  } = props;
+  const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
+    props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';

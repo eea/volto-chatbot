@@ -193,7 +193,7 @@ export class SubmitHandler {
       this.setIsCancelled,
     );
 
-    await delay(1);
+    // await delay(1);
 
     for await (const bit of promise) {
       if (bit.error) {
@@ -209,10 +209,11 @@ export class SubmitHandler {
         break;
       }
 
-      await delay(2);
+      // await delay(2);
 
       if (!stack.isEmpty()) {
         const packet = stack.nextPacket();
+        console.log('packet', packet);
 
         if (packet) {
           // console.log('inside packagt', packet, {
@@ -257,9 +258,10 @@ export class SubmitHandler {
             Object.hasOwn(packet, 'stop_reason') &&
             Object.hasOwn(packet, 'level_question_num')
           ) {
-            if (packet.stream_type === 'main_answer') {
-              this.updateChatState('streaming', frozenSessionId);
-            }
+            // TODO
+            // if (packet.stream_type === 'main_answer') {
+            //   this.updateChatState('streaming', frozenSessionId);
+            // }
             if (
               packet.stream_type === 'sub_questions' &&
               packet.level_question_num === undefined
@@ -271,13 +273,15 @@ export class SubmitHandler {
               packet,
             );
           } else if (Object.hasOwn(packet, 'sub_question')) {
-            this.updateChatState('toolBuilding', frozenSessionId);
+            // TODO
+            // this.updateChatState('toolBuilding', frozenSessionId);
             this.is_generating = true;
             this.sub_questions = constructSubQuestions(
               this.sub_questions,
               packet,
             );
-            this.setAgenticGenerating(true);
+            // TODO
+            // this.setAgenticGenerating(true);
           } else if (Object.hasOwn(packet, 'sub_query')) {
             this.sub_questions = constructSubQuestions(
               this.sub_questions,
@@ -402,6 +406,7 @@ export class SubmitHandler {
               query: finalMessage?.rephrased_query || query,
               documents: finalMessage?.context_docs?.top_documents || documents,
               citations: finalMessage?.citations || {},
+              sub_questions: finalMessage?.sub_questions || this.sub_questions,
               files: finalMessage?.files || aiMessageImages || [],
               toolCalls: finalMessage?.tool_calls || toolCalls,
               parentMessageId: newUserMessageId,
@@ -421,7 +426,7 @@ export class SubmitHandler {
             chatSessionId: frozenSessionId,
             completeMessageMapOverride: frozenMessageMap,
             messages: localMessages,
-            replacementsMap: replacementsMap,
+            replacementsMap,
             setCompleteMessageDetail: this.setCompleteMessageDetail,
           };
           newCompleteMessageDetail = upsertToCompleteMessageMap(info);
@@ -435,9 +440,9 @@ export class SubmitHandler {
     }
 
     if (
-      newCompleteMessageDetail.messageMap &&
       this.enableQgen &&
-      typeof this.qgenAsistantId !== 'undefined'
+      typeof this.qgenAsistantId !== 'undefined' &&
+      newCompleteMessageDetail.messageMap
     ) {
       // check if last message comes from assistant
       const { messageMap } = newCompleteMessageDetail;

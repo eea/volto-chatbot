@@ -108,7 +108,7 @@
 
     .source-date span {
       padding: 0.2em 0.4em;
-      border-radius: 5px;
+      border-radius: @borderRadius;
       background-color: #e5e7eb;
       font-size: 12px;
     }
@@ -287,6 +287,35 @@
     }
   }
 }
+
+.ui.accordion.subquestion-accordion {
+  margin: 1em 0 2em 0;
+
+  .active.title {
+    background-color: #efefef;
+  }
+
+  .question-label-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+  
+    .question-label {
+      background-color: #e3e3e3;
+      padding: 4px 7px;
+      font-size: 13px;
+      border-radius: @borderRadius;
+    }
+  
+  }
+  
+  .analyzing-toggle-btn {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    cursor: pointer;
+  }
+}
+
 
 @keyframes dot-flashing {
   0% {

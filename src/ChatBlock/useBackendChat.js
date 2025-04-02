@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
-import {
-  buildLatestMessageChain,
-  // createChatSession,
-  // CurrentMessageFIFO,
-  // delay,
-  // fetchRelatedQuestions,
-  // getLastSuccessfulMessageId,
-  // removeMessage,
-  // updateCurrentMessageFIFO,
-  // updateParentChildren,
-  // constructSubQuestions,
-} from './lib';
+import { buildLatestMessageChain } from './lib';
 import { SubmitHandler } from './submitHandler';
+import useWhyDidYouUpdate from './useWhyDidYouUpdate';
 
 export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
@@ -55,21 +45,25 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const messageHistory = buildLatestMessageChain(
     completeMessageDetail.messageMap,
   );
-  const submitHandler = new SubmitHandler({
-    completeMessageDetail,
-    currChatSessionId,
-    isCancelledRef,
-    messageHistory,
-    persona,
-    setCompleteMessageDetail,
-    setCurrChatSessionId,
-    setIsCancelled,
-    setIsStreaming,
-    qgenAsistantId,
-    enableQgen,
-    setAgenticGenerating,
-    updateChatState,
-  });
+  const submitHandler = React.useMemo(
+    () =>
+      new SubmitHandler({
+        completeMessageDetail,
+        currChatSessionId,
+        isCancelledRef,
+        messageHistory, // needed to resend last message. Should be parrentMessage.messageId, also currMessage
+        persona,
+        setCompleteMessageDetail,
+        setCurrChatSessionId,
+        setIsCancelled,
+        setIsStreaming,
+        qgenAsistantId,
+        enableQgen,
+        setAgenticGenerating,
+        updateChatState,
+      }),
+    [persona, qgenAsistantId, enableQgen, currChatSessionId],
+  );
 
   const clearChat = () => {
     setCompleteMessageDetail({
@@ -78,6 +72,8 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     });
     setCurrChatSessionId(null);
   };
+
+  useWhyDidYouUpdate('Chatblock', [persona]);
 
   // console.log('history', messageHistory);
 

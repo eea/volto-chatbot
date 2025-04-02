@@ -111,7 +111,7 @@ function AgentQuestions({ message, libs }) {
   if (!message.sub_questions || message.sub_questions?.length === 0)
     return null;
 
-  console.log(message.sub_questions);
+  console.log('Agent questions', message.sub_questions);
 
   return (
     <div style={{ borderBottom: '1px solid black', marginBottom: '1em' }}>

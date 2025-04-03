@@ -1,6 +1,11 @@
 import loadable from '@loadable/component';
 import React from 'react';
-
+import {
+  Icon,
+  Accordion,
+  AccordionTitle,
+  AccordionContent,
+} from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
 import { SVGIcon, transformEmailsToLinks } from './utils';
@@ -65,62 +70,121 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
   );
 }
 
-function Subquestion({ info, libs }) {
+function Subquestion({ info, libs, index, activeIndex, setActiveIndex }) {
   const message = { documents: info.context_docs?.top_documents };
   const { remarkGfm } = libs; // , rehypePrism
 
+  const [isAnalyzingOpen, setIsAnalyzingOpen] = React.useState(false);
+  const handleAccordionClick = () => {
+    setActiveIndex(activeIndex === index ? -1 : index);
+  };
+
   return (
-    <div>
-      <div>
-        Q: <strong>{info.question}</strong>
-      </div>
-      <div>
-        <h5>Searching</h5>
-        {info.sub_queries
-          .filter((q) => q.query !== info.question)
-          .map((sq, index) => (
-            <div key={index}>{sq.query}</div>
-          ))}
-      </div>
-      <div>
-        <h5>Reading</h5>
-        <ul>
-          {info.context_docs?.top_documents?.map((doc, index) => (
-            <li key={index}>
-              <a href={doc?.link}>{doc.semantic_identifier}</a>
-            </li>
-          ))}
-        </ul>
-      </div>
-      <div>
-        <h5>Analyzing</h5>
-        <div>
-          <Markdown
-            components={components(message)}
-            remarkPlugins={[remarkGfm]}
-          >
-            {addCitations(info.answer)}
-          </Markdown>
+    <>
+      <AccordionTitle
+        active={activeIndex === index}
+        onClick={handleAccordionClick}
+      >
+        <Icon
+          className={
+            activeIndex === index
+              ? 'ri-arrow-up-s-line'
+              : 'ri-arrow-down-s-line'
+          }
+        />
+        <span>{info?.question}</span>
+      </AccordionTitle>
+
+      <AccordionContent active={activeIndex === index}>
+        {info.sub_queries.length > 0 && (
+          <>
+            <h5>Searching</h5>
+            <div className="question-label-wrapper">
+              {info.sub_queries
+                .filter((q) => q.query !== info.question)
+                .map((sq, idx) => (
+                  <div key={idx} className="question-label">
+                    <Icon name="search" />
+                    {sq.query}
+                  </div>
+                ))}
+            </div>
+          </>
+        )}
+
+        {info.context_docs?.top_documents.length > 0 && (
+          <>
+            <h5>Reading</h5>
+            <div className="question-label-wrapper">
+              {info.context_docs?.top_documents?.map((doc, idx) => (
+                <div key={idx} className="question-label">
+                  <a href={doc?.link}>{doc.semantic_identifier}</a>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div
+          role="button"
+          tabIndex="0"
+          onClick={() => setIsAnalyzingOpen(!isAnalyzingOpen)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setIsAnalyzingOpen(!isAnalyzingOpen);
+            }
+          }}
+          aria-expanded={isAnalyzingOpen}
+          className="analyzing-toggle-btn"
+        >
+          <h5>
+            Analyzing{' '}
+            <Icon
+              className={
+                isAnalyzingOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'
+              }
+            />
+          </h5>
         </div>
-      </div>
-    </div>
+
+        {isAnalyzingOpen && (
+          <div>
+            <Markdown
+              components={components(message)}
+              remarkPlugins={[remarkGfm]}
+            >
+              {addCitations(info.answer)}
+            </Markdown>
+          </div>
+        )}
+      </AccordionContent>
+    </>
   );
 }
 
 function AgentQuestions({ message, libs }) {
+  const [activeIndex, setActiveIndex] = React.useState(-1);
+
   if (!message.sub_questions || message.sub_questions?.length === 0)
     return null;
 
   console.log('Agent questions', message.sub_questions);
 
   return (
-    <div style={{ borderBottom: '1px solid black', marginBottom: '1em' }}>
+    <Accordion className="subquestion-accordion">
       {message.sub_questions
         ?.filter((sq) => sq.level === 0)
         .map((sq, index) => (
-          <Subquestion key={index} info={sq} libs={libs} />
+          <Subquestion
+            key={index}
+            info={sq}
+            libs={libs}
+            index={index}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+          />
         ))}
-    </div>
+    </Accordion>
   );
 }
 
@@ -178,7 +242,7 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
-          {!showLoader && sources.length > 0 && (
+          {!isUser && !showLoader && sources.length > 0 && (
             <>
               <h5>Sources:</h5>
 
@@ -193,7 +257,7 @@ export function ChatMessageBubble(props) {
               </div>
             </>
           )}
-          {!showLoader && sources.length === 0 && (
+          {!isUser && !showLoader && sources.length === 0 && (
             <>
               <h5>Sources:</h5>
 

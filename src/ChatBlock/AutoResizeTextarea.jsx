@@ -1,14 +1,26 @@
-import TextareaAutosize from 'react-textarea-autosize';
-import { Button } from 'semantic-ui-react';
-
 import React from 'react';
+import TextareaAutosize from 'react-textarea-autosize';
+import { Button, Checkbox } from 'semantic-ui-react';
 
 import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
-  const { onSubmit, isStreaming, ...rest } = props;
+  const { onSubmit, isStreaming, deepResearch, ...rest } = props;
+  const showDeepResearchToggle =
+    deepResearch === 'user_on' || deepResearch === 'user_off';
   const [input, setInput] = React.useState('');
+  const [isDeepResearchEnabled, setIsDeepResearchEnabled] = React.useState(
+    false,
+  );
+
+  React.useEffect(() => {
+    if (deepResearch === 'user_on') {
+      setIsDeepResearchEnabled(true);
+    } else if (deepResearch === 'user_off') {
+      setIsDeepResearchEnabled(false);
+    }
+  }, [deepResearch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,22 +47,35 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
         ref={ref}
       />
 
-      <Button
-        className="submit-btn"
-        disabled={isStreaming}
-        type="submit"
-        aria-label="Send"
-        onKeyDown={(e) => {
-          handleSubmit(e);
-        }}
-        onClick={(e) => {
-          handleSubmit(e);
-        }}
-      >
-        <div className="btn-icon">
-          <SVGIcon name={SendIcon} size="28" />
-        </div>
-      </Button>
+      <div className="chat-right-actions">
+        {showDeepResearchToggle && (
+          <div className="deep-research-toggle">
+            <Checkbox
+              toggle
+              checked={isDeepResearchEnabled}
+              onChange={(e, { checked }) => setIsDeepResearchEnabled(checked)}
+            />
+            Deep research
+          </div>
+        )}
+
+        <Button
+          className="submit-btn"
+          disabled={isStreaming}
+          type="submit"
+          aria-label="Send"
+          onKeyDown={(e) => {
+            handleSubmit(e);
+          }}
+          onClick={(e) => {
+            handleSubmit(e);
+          }}
+        >
+          <div className="btn-icon">
+            <SVGIcon name={SendIcon} size="28" />
+          </div>
+        </Button>
+      </div>
     </>
   );
 });

@@ -10,9 +10,8 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
   const showDeepResearchToggle =
     deepResearch === 'user_on' || deepResearch === 'user_off';
   const [input, setInput] = React.useState('');
-  const [isDeepResearchEnabled, setIsDeepResearchEnabled] = React.useState(
-    false,
-  );
+  const [isDeepResearchEnabled, setIsDeepResearchEnabled] =
+    React.useState(false);
 
   React.useEffect(() => {
     if (deepResearch === 'user_on') {

@@ -335,36 +335,37 @@
 
 .feedback-toast {
   position: fixed;
+  z-index: 9999;
   bottom: -100px;
   left: 50%;
-  transform: translateX(-50%);
-  padding: 15px 25px;
-  border-radius: 3px;
-  transition: bottom 0.35s ease-in-out, opacity 0.35s ease-in-out;
-  opacity: 0;
-  font-size: 18px;
-  z-index: 9999;
   display: flex;
   align-items: center;
-  
+  padding: 15px 25px;
+  border-radius: 3px;
+  font-size: 18px;
+  opacity: 0;
+  transform: translateX(-50%);
+  transition:
+    bottom 0.35s ease-in-out,
+    opacity 0.35s ease-in-out;
+
   &.active {
     bottom: 20px;
     opacity: 1;
   }
-  
+
   &.success {
-    background-color:#fcfff5;
-    color: #2c662d;
     border: 1px solid #2c662d;
+    background-color: #fcfff5;
+    color: #2c662d;
   }
-  
+
   &.error {
+    border: 1px solid #db2828;
     background-color: #ffe8e6;
     color: #db2828;
-    border: 1px solid #db2828;
   }
 }
-
 
 @keyframes dot-flashing {
   0% {

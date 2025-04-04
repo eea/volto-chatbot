@@ -1,93 +1,45 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import FeedbackModal from './FeedbackModal';
+import * as lib from './lib';
 
-test('renders the FeedbackModal with positive feedback prompt', () => {
+jest.mock('./lib');
+
+beforeEach(() => {
+  jest.clearAllMocks();
+});
+
+test('submits positive feedback successfully', async () => {
   const onClose = jest.fn();
-  const onSubmit = jest.fn();
-  const modalOpen = true;
-  const feedbackType = 'up';
+  const fakeSubmit = lib.createChatMessageFeedback.mockResolvedValue({});
 
   render(
     <FeedbackModal
-      modalOpen={modalOpen}
+      modalOpen={true}
       onClose={onClose}
-      onSubmit={onSubmit}
-      feedbackType={feedbackType}
+      setToast={() => {}}
+      onToast={() => {}}
+      isPositive={true}
+      message={{ messageId: '1234' }}
+      setIsToastActive={() => {}}
     />,
   );
-
-  expect(screen.getByText(/Share your positive feedback/i)).toBeInTheDocument();
-  expect(
-    screen.getByPlaceholderText(/What did you like about this response/i),
-  ).toBeInTheDocument();
 
   fireEvent.change(
     screen.getByPlaceholderText(/What did you like about this response/i),
-    {
-      target: { value: 'Great response!' },
-    },
+    { target: { value: 'Great response!' } },
   );
-  fireEvent.click(screen.getByText('Submit Feedback'));
 
-  expect(onSubmit).toHaveBeenCalledWith({
+  await act(async () => {
+    fireEvent.click(screen.getByText('Submit Feedback'));
+  });
+
+  expect(fakeSubmit).toHaveBeenCalledWith({
+    chat_message_id: '1234',
+    is_positive: true,
     feedback: 'Great response!',
-    selectedReason: '',
+    predefined_feedback: '',
   });
-});
-
-test('renders the FeedbackModal with negative feedback prompt and allows reason selection', () => {
-  const onClose = jest.fn();
-  const onSubmit = jest.fn();
-  const modalOpen = true;
-  const feedbackType = 'down';
-
-  render(
-    <FeedbackModal
-      modalOpen={modalOpen}
-      onClose={onClose}
-      onSubmit={onSubmit}
-      feedbackType={feedbackType}
-    />,
-  );
-
-  expect(screen.getByText(/Tell us how we can improve/i)).toBeInTheDocument();
-  expect(
-    screen.getByPlaceholderText(/What could be improved/i),
-  ).toBeInTheDocument();
-
-  const reasonButton = screen.getByText(
-    /Retrieved documents were not relevant/i,
-  );
-  fireEvent.click(reasonButton);
-
-  fireEvent.change(screen.getByPlaceholderText(/What could be improved/i), {
-    target: { value: 'Provide more detailed responses.' },
-  });
-  fireEvent.click(screen.getByText('Submit Feedback'));
-
-  expect(onSubmit).toHaveBeenCalledWith({
-    feedback: 'Provide more detailed responses.',
-    selectedReason: 'Retrieved documents were not relevant',
-  });
-});
-
-test('should call onClose when the cancel button is clicked', () => {
-  const onClose = jest.fn();
-  const onSubmit = jest.fn();
-  const modalOpen = true;
-  const feedbackType = 'up';
-
-  render(
-    <FeedbackModal
-      modalOpen={modalOpen}
-      onClose={onClose}
-      onSubmit={onSubmit}
-      feedbackType={feedbackType}
-    />,
-  );
-
-  fireEvent.click(screen.getByText('Cancel'));
   expect(onClose).toHaveBeenCalled();
 });

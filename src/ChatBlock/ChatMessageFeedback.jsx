@@ -10,7 +10,7 @@ const Toast = ({ message, type, isActive }) => (
 );
 
 const ChatMessageFeedback = (props) => {
-  const { message } = props;
+  const { message, feedbackReasons } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [isPositive, setIsPositive] = useState(null);
@@ -63,6 +63,7 @@ const ChatMessageFeedback = (props) => {
         isPositive={isPositive}
         message={message}
         setIsToastActive={setIsToastActive}
+        feedbackReasons={feedbackReasons}
       />
     </>
   );

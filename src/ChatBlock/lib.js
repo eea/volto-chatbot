@@ -64,8 +64,7 @@ export async function createChatMessageFeedback({
     throw Error(`Failed to submit feedback.`);
   }
 
-  const createChatMessageFeedbackResponseJson =
-    await createChatMessageFeedbackResponse.json();
+  const createChatMessageFeedbackResponseJson = await createChatMessageFeedbackResponse.json();
   return await createChatMessageFeedbackResponseJson;
 }
 

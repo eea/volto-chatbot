@@ -76,6 +76,7 @@ export function ChatMessageBubble(props) {
     onChoice,
     showToolCalls,
     enableFeedback,
+    feedbackReasons,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
@@ -141,7 +142,10 @@ export function ChatMessageBubble(props) {
 
               {enableFeedback && (
                 <>
-                  <ChatMessageFeedback message={message} />
+                  <ChatMessageFeedback
+                    message={message}
+                    feedbackReasons={feedbackReasons}
+                  />
                 </>
               )}
             </div>

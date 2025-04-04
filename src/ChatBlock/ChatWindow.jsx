@@ -25,6 +25,7 @@ function ChatWindow({
     enableFeedback,
     scrollToInput,
     showToolCalls,
+    feedbackReasons,
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
@@ -100,6 +101,7 @@ function ChatWindow({
                   isMostRecent={index === 0}
                   isLoading={isStreaming}
                   enableFeedback={enableFeedback}
+                  feedbackReasons={feedbackReasons}
                   libs={libs}
                   onChoice={(message) => {
                     onSubmit({ message });

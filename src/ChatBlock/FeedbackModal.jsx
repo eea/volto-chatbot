@@ -2,12 +2,6 @@ import React, { useState } from 'react';
 import { Modal, Button, TextArea, Form, Icon } from 'semantic-ui-react';
 import { createChatMessageFeedback } from './lib';
 
-const feedbackReasons = [
-  'Retrieved documents were not relevant',
-  'AI misread the documents',
-  'Cited source had incorrect information',
-];
-
 const FeedbackModal = ({
   modalOpen,
   onClose,
@@ -16,6 +10,7 @@ const FeedbackModal = ({
   isPositive,
   message,
   setIsToastActive,
+  feedbackReasons,
 }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [selectedReason, setSelectedReason] = useState('');
@@ -35,8 +30,8 @@ const FeedbackModal = ({
     try {
       await createChatMessageFeedback({
         chat_message_id: message.messageId,
+        feedback_text: feedbackText,
         is_positive: isPositive,
-        feedback: feedbackText,
         predefined_feedback: selectedReason,
       });
       setIsToastActive(true);

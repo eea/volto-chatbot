@@ -38,7 +38,7 @@ test('submits positive feedback successfully', async () => {
   expect(fakeSubmit).toHaveBeenCalledWith({
     chat_message_id: '1234',
     is_positive: true,
-    feedback: 'Great response!',
+    feedback_text: 'Great response!',
     predefined_feedback: '',
   });
   expect(onClose).toHaveBeenCalled();

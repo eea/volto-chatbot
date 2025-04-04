@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Modal, Button, TextArea, Form, Icon } from 'semantic-ui-react';
+import { createChatMessageFeedback } from './lib';
 
 const feedbackReasons = [
   'Retrieved documents were not relevant',
@@ -7,25 +8,48 @@ const feedbackReasons = [
   'Cited source had incorrect information',
 ];
 
-const FeedbackModal = ({ modalOpen, onClose, onSubmit, feedbackType }) => {
-  const [feedback, setFeedback] = useState('');
+const FeedbackModal = ({
+  modalOpen,
+  onClose,
+  setToast,
+  onToast,
+  isPositive,
+  message,
+  setIsToastActive,
+}) => {
+  const [feedbackText, setFeedbackText] = useState('');
   const [selectedReason, setSelectedReason] = useState('');
-  const isPositiveFeedback = feedbackType === 'up';
-
-  const handleSubmit = () => {
-    onSubmit({ feedback, selectedReason });
-    resetForm();
-    onClose();
-  };
+  const isPositiveFeedback = isPositive;
 
   const resetForm = () => {
-    setFeedback('');
+    setFeedbackText('');
     setSelectedReason('');
   };
 
   const handleClose = () => {
     resetForm();
     onClose();
+  };
+
+  const submitFeedback = async () => {
+    try {
+      await createChatMessageFeedback({
+        chat_message_id: message.messageId,
+        is_positive: isPositive,
+        feedback: feedbackText,
+        predefined_feedback: selectedReason,
+      });
+      setIsToastActive(true);
+      onToast('Thanks for your feedback!', 'success');
+    } catch (error) {
+      setIsToastActive(true);
+      onToast('Failed to submit feedback.', 'error');
+    } finally {
+      setTimeout(() => setIsToastActive(false), 5000);
+      setTimeout(() => setToast(null), 3500);
+      resetForm();
+      onClose();
+    }
   };
 
   return (
@@ -75,15 +99,15 @@ const FeedbackModal = ({ modalOpen, onClose, onSubmit, feedbackType }) => {
                 ? 'What did you like about this response? (Optional)'
                 : 'What could be improved? (Optional)'
             }
-            value={feedback}
-            onChange={(e) => setFeedback(e.target.value)}
+            value={feedbackText}
+            onChange={(e) => setFeedbackText(e.target.value)}
           />
         </Form>
       </Modal.Content>
 
       <Modal.Actions>
         <Button onClick={handleClose}>Cancel</Button>
-        <Button primary onClick={handleSubmit}>
+        <Button primary onClick={submitFeedback}>
           Submit Feedback
         </Button>
       </Modal.Actions>

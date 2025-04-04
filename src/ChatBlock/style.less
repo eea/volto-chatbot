@@ -333,6 +333,39 @@
   }
 }
 
+.feedback-toast {
+  position: fixed;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 15px 25px;
+  border-radius: 3px;
+  transition: bottom 0.35s ease-in-out, opacity 0.35s ease-in-out;
+  opacity: 0;
+  font-size: 18px;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  
+  &.active {
+    bottom: 20px;
+    opacity: 1;
+  }
+  
+  &.success {
+    background-color:#fcfff5;
+    color: #2c662d;
+    border: 1px solid #2c662d;
+  }
+  
+  &.error {
+    background-color: #ffe8e6;
+    color: #db2828;
+    border: 1px solid #db2828;
+  }
+}
+
+
 @keyframes dot-flashing {
   0% {
     background-color: @grey;

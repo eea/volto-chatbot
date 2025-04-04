@@ -29,6 +29,45 @@ export async function createChatSession(personaId, description) {
   return chatSessionResponseJson.chat_session_id;
 }
 
+export async function createChatMessageFeedback({
+  chat_message_id,
+  feedback_text = '',
+  is_positive,
+  predefined_feedback = '',
+}) {
+  const payload = {
+    chat_message_id,
+    feedback_text,
+    is_positive,
+  };
+
+  if (!is_positive) {
+    payload.predefined_feedback = predefined_feedback;
+  }
+
+  const createChatMessageFeedbackResponse = await fetch(
+    '/_da/chat/create-chat-message-feedback',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!createChatMessageFeedbackResponse.ok) {
+    //eslint-disable-next-line no-console
+    console.log(
+      `Failed to submit feedback - ${createChatMessageFeedbackResponse.status}`,
+    );
+    throw Error(`Failed to submit feedback.`);
+  }
+
+  const createChatMessageFeedbackResponseJson = await createChatMessageFeedbackResponse.json();
+  return await createChatMessageFeedbackResponseJson;
+}
+
 export function updateParentChildren(
   message,
   completeMessageMap,

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import loadable from '@loadable/component';
 import { Icon, Button } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
 import { SVGIcon, transformEmailsToLinks, useCopyToClipboard } from './utils';
-import FeedbackModal from './FeedbackModal';
+import ChatMessageFeedback from './ChatMessageFeedback';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
@@ -80,26 +80,8 @@ export function ChatMessageBubble(props) {
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
-
   const showLoader = isMostRecent && isLoading;
-
-  const [modalOpen, setModalOpen] = useState(false);
-  const [feedbackType, setFeedbackType] = useState(null);
   const [copied, handleCopy] = useCopyToClipboard(message.message);
-
-  const handleFeedback = (type) => {
-    setFeedbackType(type);
-    setModalOpen(true);
-  };
-
-  const submitFeedback = (feedback) => {
-    // console.log('Feedback:', {
-    //   messageId: message.messageId,
-    //   type: feedbackType,
-    //   feedback,
-    // });
-    setModalOpen(false);
-  };
 
   // TODO: these classes are not actually used, remove them
   // const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
@@ -159,29 +141,7 @@ export function ChatMessageBubble(props) {
 
               {enableFeedback && (
                 <>
-                  <Button
-                    basic
-                    onClick={() => handleFeedback('up')}
-                    title="Like"
-                    aria-label="Like"
-                  >
-                    <Icon name="thumbs up outline" />
-                  </Button>
-                  <Button
-                    basic
-                    onClick={() => handleFeedback('down')}
-                    title="Dislike"
-                    aria-label="Dislike"
-                  >
-                    <Icon name="thumbs down outline" />
-                  </Button>
-
-                  <FeedbackModal
-                    modalOpen={modalOpen}
-                    onClose={() => setModalOpen(false)}
-                    onSubmit={submitFeedback}
-                    feedbackType={feedbackType}
-                  />
+                  <ChatMessageFeedback message={message} />
                 </>
               )}
             </div>

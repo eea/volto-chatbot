@@ -9,10 +9,10 @@ import withDanswerData from './withDanswerData';
 const ChatBlockEdit = (props) => {
   const { onChangeBlock, block, assistants, data } = props;
 
-  const schema = React.useMemo(() => ChatBlockSchema({ assistants, data }), [
-    assistants,
-    data,
-  ]);
+  const schema = React.useMemo(
+    () => ChatBlockSchema({ assistants, data }),
+    [assistants, data],
+  );
 
   return (
     <div>

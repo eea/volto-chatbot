@@ -21,10 +21,10 @@ export const SourceDetails = ({ source, index }) => {
 
   const renderIcon = () => {
     if (isLinkType) {
-      return <SVGIcon name={GlobeIcon} size="18" alt="Web icon" />;
+      return <SVGIcon name={GlobeIcon} size="15" alt="Web icon" />;
     }
     if (isDocumentType) {
-      return <SVGIcon name={FileIcon} size="18" alt="File icon" />;
+      return <SVGIcon name={FileIcon} size="15" alt="File icon" />;
     }
     return null;
   };

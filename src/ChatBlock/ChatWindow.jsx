@@ -1,5 +1,5 @@
-import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import React from 'react';
+import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import { Button, Form, Icon, Segment } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
@@ -18,8 +18,15 @@ function ChatWindow({
   isEditMode,
   ...data
 }) {
-  const { height, qgenAsistantId, enableQgen, scrollToInput, showToolCalls } =
-    data;
+  const {
+    height,
+    qgenAsistantId,
+    enableQgen,
+    enableFeedback,
+    scrollToInput,
+    showToolCalls,
+    feedbackReasons,
+  } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
     persona,
@@ -93,6 +100,8 @@ function ChatWindow({
                   message={m}
                   isMostRecent={index === 0}
                   isLoading={isStreaming}
+                  enableFeedback={enableFeedback}
+                  feedbackReasons={feedbackReasons}
                   libs={libs}
                   onChoice={(message) => {
                     onSubmit({ message });

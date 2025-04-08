@@ -7,11 +7,11 @@ import { ChatBlockSchema } from './schema';
 import withDanswerData from './withDanswerData';
 
 const ChatBlockEdit = (props) => {
-  const { onChangeBlock, block, assistants } = props;
+  const { onChangeBlock, block, assistants, data } = props;
 
   const schema = React.useMemo(
-    () => ChatBlockSchema({ assistants }),
-    [assistants],
+    () => ChatBlockSchema({ assistants, data }),
+    [assistants, data],
   );
 
   return (

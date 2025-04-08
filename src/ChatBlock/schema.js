@@ -1,4 +1,4 @@
-export function ChatBlockSchema({ assistants }) {
+export function ChatBlockSchema({ assistants, data }) {
   const assistantChoices = () =>
     Array.isArray(assistants)
       ? assistants.map(({ id, name }) => [id.toString(), name])
@@ -9,13 +9,15 @@ export function ChatBlockSchema({ assistants }) {
     fieldsets: [
       {
         id: 'default',
-        title: 'Defalt',
+        title: 'Default',
         fields: [
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
           'height',
           'enableQgen',
+          'enableFeedback',
+          ...(data.enableFeedback ? ['feedbackReasons'] : []),
           'scrollToInput',
           'showToolCalls',
           'showAssistantTitle',
@@ -39,6 +41,43 @@ export function ChatBlockSchema({ assistants }) {
         title: 'Enable related question generation',
         type: 'boolean',
         default: false,
+      },
+      enableFeedback: {
+        title: 'Enable Feedback',
+        type: 'boolean',
+        default: true,
+      },
+      feedbackReasons: {
+        title: 'Feedback reasons',
+        description: 'Select the reasons for negative feedback.',
+        choices: [
+          ['Repetitive', 'Repetitive'],
+          ['Irrelevant', 'Irrelevant'],
+          ['Inaccurate/Incomplete', 'Inaccurate/Incomplete'],
+          ['Unclear', 'Unclear'],
+          ['Slow', 'Slow'],
+          ['Wrong source(s)', 'Wrong source(s)'],
+          ['Too long', 'Too long'],
+          ['Too short', 'Too short'],
+          ['Outdated sources', 'Outdated sources'],
+          [
+            'Too many follow-up questions needed',
+            'Too many follow-up questions needed',
+          ],
+        ],
+        isMulti: true,
+        default: [
+          'Repetitive',
+          'Irrelevant',
+          'Inaccurate/Incomplete',
+          'Unclear',
+          'Slow',
+          'Wrong source(s)',
+          'Too long',
+          'Too short',
+          'Outdated sources',
+          'Too many follow-up questions needed',
+        ],
       },
       showToolCalls: {
         title: 'Show query used in retriever',
@@ -81,7 +120,7 @@ export function ChatBlockSchema({ assistants }) {
         ),
         description:
           'Chat window height. ' +
-          'Use CSS numeric dimmension (ex: 500px or 70vh).',
+          'Use CSS numeric dimension (ex: 500px or 70vh).',
       },
       scrollToInput: {
         title: 'Scroll the page to focus on the chat input',

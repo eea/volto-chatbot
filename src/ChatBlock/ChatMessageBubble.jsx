@@ -1,9 +1,10 @@
-import loadable from '@loadable/component';
 import React from 'react';
-
+import loadable from '@loadable/component';
+import { Icon, Button } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
-import { SVGIcon, transformEmailsToLinks } from './utils';
+import { SVGIcon, transformEmailsToLinks, useCopyToClipboard } from './utils';
+import ChatMessageFeedback from './ChatMessageFeedback';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
@@ -67,13 +68,21 @@ export function ToolCall({ tool_args, tool_name, tool_result }) {
 }
 
 export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
-    props;
+  const {
+    message,
+    isLoading,
+    isMostRecent,
+    libs,
+    onChoice,
+    showToolCalls,
+    enableFeedback,
+    feedbackReasons,
+  } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
-
   const showLoader = isMostRecent && isLoading;
+  const [copied, handleCopy] = useCopyToClipboard(message.message);
 
   // TODO: these classes are not actually used, remove them
   // const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
@@ -119,6 +128,29 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
+          {!isUser && !isLoading && (
+            <div className="message-actions">
+              <Button
+                basic
+                onClick={() => handleCopy()}
+                title="Copy"
+                aria-label="Copy"
+                disabled={copied}
+              >
+                <Icon name={copied ? 'check' : 'copy outline'} />
+              </Button>
+
+              {enableFeedback && (
+                <>
+                  <ChatMessageFeedback
+                    message={message}
+                    feedbackReasons={feedbackReasons}
+                  />
+                </>
+              )}
+            </div>
+          )}
+
           {!showLoader && sources.length > 0 && (
             <>
               <h5>Sources:</h5>
@@ -134,21 +166,24 @@ export function ChatMessageBubble(props) {
               </div>
             </>
           )}
+
           {message.relatedQuestions?.length > 0 && (
-            <div className="chat-related-questions">
+            <>
               <h5>Related Questions:</h5>
-              {message.relatedQuestions?.map(({ question }) => (
-                <div
-                  className="relatedQuestionButton"
-                  role="button"
-                  onClick={() => !isLoading && onChoice(question)}
-                  onKeyDown={() => !isLoading && onChoice(question)}
-                  tabIndex="-1"
-                >
-                  {question}
-                </div>
-              ))}
-            </div>
+              <div className="chat-related-questions">
+                {message.relatedQuestions?.map(({ question }) => (
+                  <div
+                    className="relatedQuestionButton"
+                    role="button"
+                    onClick={() => !isLoading && onChoice(question)}
+                    onKeyDown={() => !isLoading && onChoice(question)}
+                    tabIndex="-1"
+                  >
+                    {question}
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>

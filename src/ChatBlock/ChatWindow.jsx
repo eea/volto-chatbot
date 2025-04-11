@@ -22,7 +22,7 @@ function ChatWindow({
     height,
     qgenAsistantId,
     enableQgen,
-    enableFeedback,
+    enableFeedback = true,
     scrollToInput,
     showToolCalls,
     feedbackReasons,

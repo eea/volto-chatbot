@@ -25,11 +25,33 @@ const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
+function convertToPercentage(floatValue) {
+  if (floatValue < 0 || floatValue > 1) {
+    return 0;
+  }
+  return (floatValue * 100).toFixed(2) + '%';
+}
+
+function ClaimCitations(props) {
+  const { ids, citations, citedSources } = props;
+  const joinedSources = citedSources.join('\n---\n');
+  return (
+    <div>
+      {(ids || [])
+        .map((id) => citations[id])
+        .map((cit) => (
+          <small key={cit.id}>
+            {joinedSources.slice(cit.startOffset, cit.endOffset)}
+          </small>
+        ))}
+    </div>
+  );
+}
+
 const components = (message, markers, citedSources) => {
   return {
     span: (props) => {
       const { node, ...rest } = props;
-      // console.log('span', node);
       const child = node.children[0];
       let claim;
 
@@ -41,18 +63,13 @@ const components = (message, markers, citedSources) => {
       ) {
         const start = child.position.start.offset;
         const end = child.position.end.offset;
-        claim = markers.claims?.find((claim) => {
-          console.log({
-            child,
-            claim,
-            start,
-            end,
-            position: child.position,
-            result: claim.startOffset >= start && end <= claim.endOffset,
-          });
-          return claim.startOffset >= start && end <= claim.endOffset;
-        });
+        claim = markers.claims?.find(
+          (claim) =>
+            (start >= claim.startOffset && end <= claim.endOffset) ||
+            (claim.startOffset >= start && end <= claim.endOffset),
+        );
       }
+
       return claim ? (
         <Popup
           trigger={
@@ -61,8 +78,13 @@ const components = (message, markers, citedSources) => {
             </span>
           }
         >
-          <PopupHeader>{claim.score}</PopupHeader>
+          <PopupHeader>{convertToPercentage(claim.score)}</PopupHeader>
           <PopupContent>{claim.rationale}</PopupContent>
+          <ClaimCitations
+            ids={claim.citationIds}
+            citations={markers?.citations || []}
+            citedSources={citedSources}
+          />
         </Popup>
       ) : (
         <span>{rest.children}</span>
@@ -171,9 +193,6 @@ export function ChatMessageBubble(props) {
     message.message,
     citedSources,
   );
-  console.log('Markers', markers);
-
-  // console.log({ message, sources, citedDocuments, citedSources });
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -189,7 +208,6 @@ export function ChatMessageBubble(props) {
             children: [node],
           };
           parent.children[idx] = newNode;
-          // console.log('textnode', { node, idx, parent });
         }
       });
     };

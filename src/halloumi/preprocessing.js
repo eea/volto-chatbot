@@ -129,6 +129,7 @@ export function createHalloumiClassifierPrompts(context, response) {
     sentences: responseSentences,
     responseOffsets: responseOffsets,
   };
+  // console.log(halloumiPrompt);
 
   return halloumiPrompt;
 }

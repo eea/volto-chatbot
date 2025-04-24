@@ -1,6 +1,7 @@
 import { getVerifyClaimResponse } from '.';
 
-const MSG_INVALID_CONFIGURATION = 'Invalid configuration: missing LLMGW_TOKEN';
+const MSG_INVALID_CONFIGURATION =
+  'Invalid configuration: missing LLMGW_TOKEN or LLMGW_URL';
 
 const LLMGW_URL = process.env.LLMGW_URL;
 const LLMGW_TOKEN = process.env.LLMGW_TOKEN;
@@ -35,23 +36,24 @@ export default async function middleware(req, res, next) {
     return;
   }
 
-  const reqUrl = `${LLMGW_URL}/api${path}`;
-
   const model = {
     ...(path === '/classify' ? classifyModel : generativeModel),
     apiKey: LLMGW_TOKEN,
   };
-  console.log(req.body);
+  const body = req.body;
 
-  const claims = '';
-  const context = '';
+  const { sources, answer } = body;
 
+  res.set('Content-Type', 'application/json');
   try {
-    const resp = await getVerifyClaimResponse(model, context, claims);
+    const resp = await getVerifyClaimResponse(
+      model,
+      // TODO: map with citation id
+      sources.join('\n---\n'),
+      answer,
+    );
+    res.send(resp);
   } catch (error) {
-    // eslint-disable-next-line
-    console.error(MSG_ERROR_REQUEST, error?.response?.text);
-
-    res.send({ error: `Danswer error: ${error?.response?.text || 'error'}` });
+    res.send({ error: `Halloumi error: ${error}` });
   }
 }

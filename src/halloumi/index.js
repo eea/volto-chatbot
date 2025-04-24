@@ -1,3 +1,4 @@
+import fetch from 'node-fetch';
 import {
   getClaimsFromResponse,
   getClassifierProbabilitiesFromLogits,
@@ -84,9 +85,11 @@ export async function getVerifyClaimResponse(model, context, claims) {
     });
   }
   const prompt = createHalloumiPrompt(context, claims);
-  return halloumiGenerativeAPI(model, prompt).then((claims) => {
+  const result = halloumiGenerativeAPI(model, prompt).then((claims) => {
     return convertGenerativesClaimToVerifyClaimResponse(claims, prompt);
   });
+  console.log('result', result);
+  return result;
 }
 
 /**

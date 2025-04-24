@@ -8,6 +8,7 @@ import ChatMessageFeedback from './ChatMessageFeedback';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
+import { QualityCheck } from './QualityCheck';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
@@ -81,12 +82,7 @@ export function ChatMessageBubble(props) {
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
-  const showLoader = isMostRecent && isLoading;
   const [copied, handleCopy] = useCopyToClipboard(message.message);
-
-  // TODO: these classes are not actually used, remove them
-  // const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
-  // const alignmentClassName = isUser ? 'ml-auto' : 'mr-auto';
 
   const icon = isUser ? (
     <div className="circle user">
@@ -98,14 +94,28 @@ export function ChatMessageBubble(props) {
     </div>
   );
 
-  // For some reason the list is shifted by one. It's all weird
-  // const sources = Object.keys(citations).map(
-  //   (index) => documents[(parseInt(index) - 1).toString()],
-  // );
-
   const sources = Object.values(citations).map((doc_id) =>
     documents.find((doc) => doc.db_doc_id === doc_id),
   );
+  const showLoader = isMostRecent && isLoading;
+  const showSources = !showLoader && sources.length > 0;
+  const citedDocuments = message.toolCalls?.reduce((acc, cur) => {
+    return {
+      ...acc,
+      ...Object.assign(
+        {},
+        {},
+        ...(cur.tool_result || []).map((doc) => ({
+          [doc.document_id]: doc.content,
+        })),
+      ),
+    };
+  }, {});
+  const citedSources = sources.map(
+    (doc) => citedDocuments[doc.document_id] || '',
+  );
+
+  // console.log({ message, sources, citedDocuments, citedSources });
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -127,6 +137,9 @@ export function ChatMessageBubble(props) {
           >
             {addCitations(message.message)}
           </Markdown>
+          {showSources && message.messageId > -1 && (
+            <QualityCheck message={message.message} sources={citedSources} />
+          )}
 
           {!isUser && !isLoading && (
             <div className="message-actions">
@@ -151,7 +164,7 @@ export function ChatMessageBubble(props) {
             </div>
           )}
 
-          {!showLoader && sources.length > 0 && (
+          {showSources && (
             <>
               <h5>Sources:</h5>
 

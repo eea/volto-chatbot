@@ -10,8 +10,12 @@ const applyConfig = (config) => {
     middleware.use(express.urlencoded({ extended: true }));
 
     const proxyMiddleware = require('./middleware').default;
+    const halloumiMiddleware = require('./halloumi/middleware').default;
+
     middleware.all('**/_da/**', proxyMiddleware);
-    middleware.id = 'danswer';
+    middleware.all('**/_ha/**', halloumiMiddleware);
+
+    middleware.id = 'chatbot';
 
     config.settings.expressMiddleware = [
       ...config.settings.expressMiddleware,

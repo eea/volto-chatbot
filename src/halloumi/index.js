@@ -39,11 +39,13 @@ export async function halloumiClassifierAPI(model, context, claims) {
     body: JSON.stringify(data),
   });
   const jsonData = await response.json();
+  console.log('jsonData', jsonData);
   const output = {
     claims: [],
   };
   for (let i = 0; i < classifierPrompts.prompts.length; i++) {
     const embedding = jsonData.data[i].embedding;
+    console.log('embedding', embedding);
     const probs = getClassifierProbabilitiesFromLogits(embedding);
     if (model.plattScaling) {
       const platt = model.plattScaling;
@@ -85,12 +87,14 @@ export async function getVerifyClaimResponse(model, context, claims) {
     });
   }
   const prompt = createHalloumiPrompt(context, claims);
-  const result = halloumiGenerativeAPI(model, prompt).then((claims) => {
+  const result = await halloumiGenerativeAPI(model, prompt).then((claims) => {
     return convertGenerativesClaimToVerifyClaimResponse(claims, prompt);
   });
   console.log('result', result);
   return result;
 }
+
+const tokenChoices = new Set(['supported', 'unsupported']);
 
 /**
  * Gets all claims from a response.
@@ -120,7 +124,6 @@ export async function halloumiGenerativeAPI(model, prompt) {
   });
 
   const jsonData = await response.json();
-  const tokenChoices = new Set()[('supported', 'unsupported')];
   const logits = jsonData.choices[0].logprobs.content;
   const tokenProbabilities = getTokenProbabilitiesFromLogits(
     logits,

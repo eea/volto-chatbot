@@ -1,29 +1,79 @@
 import React from 'react';
+import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Icon, Button } from 'semantic-ui-react';
+import {
+  Icon,
+  Button,
+  Popup,
+  PopupHeader,
+  PopupContent,
+} from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { SourceDetails } from './Source';
 import { SVGIcon, transformEmailsToLinks, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
+import useQualityMarkers from './useQualityMarkers';
+import { useDeepCompareMemoize } from './useDeepCompareMemoize';
+import { getSupportedBgColor } from './colors';
+import './colors.css';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
-import { QualityCheck } from './QualityCheck';
+// import { QualityCheck } from './QualityCheck';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
-const components = (message) => {
+const components = (message, markers, citedSources) => {
   return {
+    span: (props) => {
+      const { node, ...rest } = props;
+      // console.log('span', node);
+      const child = node.children[0];
+      let claim;
+
+      if (
+        child.type === 'text' &&
+        child.position &&
+        child.value?.length > 10 && // we don't show for short text
+        markers
+      ) {
+        const start = child.position.start.offset;
+        const end = child.position.end.offset;
+        claim = markers.claims?.find((claim) => {
+          console.log({
+            child,
+            claim,
+            start,
+            end,
+            position: child.position,
+            result: claim.startOffset >= start && end <= claim.endOffset,
+          });
+          return claim.startOffset >= start && end <= claim.endOffset;
+        });
+      }
+      return claim ? (
+        <Popup
+          trigger={
+            <span className={getSupportedBgColor(claim.score)}>
+              {rest.children}
+            </span>
+          }
+        >
+          <PopupHeader>{claim.score}</PopupHeader>
+          <PopupContent>{claim.rationale}</PopupContent>
+        </Popup>
+      ) : (
+        <span>{rest.children}</span>
+      );
+    },
     a: (props) => {
       const { node, ...rest } = props;
-      const value = rest.children;
+      const value = node.children?.[0]?.children?.[0]?.value || ''; // we assume a <a><span/></a>
 
       if (value?.toString().startsWith('*')) {
-        return (
-          <div className="flex-none bg-background-800 inline-block rounded-full h-3 w-3 ml-2" />
-        );
+        return <div className="" />;
       } else {
         return (
           <Citation link={rest?.href} value={value} message={message}>
@@ -33,6 +83,7 @@ const components = (message) => {
       }
     },
     p: ({ node, ...props }) => {
+      // TODO: reimplement this with rehype
       const children = props.children;
       const text = React.Children.map(children, (child) => {
         if (typeof child === 'string') {
@@ -111,15 +162,38 @@ export function ChatMessageBubble(props) {
       ),
     };
   }, {});
-  const citedSources = sources.map(
-    (doc) => citedDocuments[doc.document_id] || '',
+  const citedSources = useDeepCompareMemoize(
+    sources.map((doc) => citedDocuments[doc.document_id] || ''),
   );
+  const doQualityControl = showSources && message.messageId > -1;
+  const markers = useQualityMarkers(
+    doQualityControl,
+    message.message,
+    citedSources,
+  );
+  console.log('Markers', markers);
 
   // console.log({ message, sources, citedDocuments, citedSources });
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
   }, {});
+
+  const addQualityMarkers = React.useCallback(() => {
+    return function (tree, file) {
+      visit(tree, 'text', function (node, idx, parent) {
+        if (node.value?.trim()) {
+          const newNode = {
+            type: 'element',
+            tagName: 'span',
+            children: [node],
+          };
+          parent.children[idx] = newNode;
+          // console.log('textnode', { node, idx, parent });
+        }
+      });
+    };
+  }, []);
 
   return (
     <div>
@@ -132,14 +206,15 @@ export function ChatMessageBubble(props) {
               <ToolCall key={index} {...info} />
             ))}
           <Markdown
-            components={components(message)}
+            components={components(message, markers, citedSources)}
             remarkPlugins={[remarkGfm]}
+            rehypePlugins={[addQualityMarkers]}
           >
             {addCitations(message.message)}
           </Markdown>
-          {showSources && message.messageId > -1 && (
-            <QualityCheck message={message.message} sources={citedSources} />
-          )}
+          {/* {showSources && message.messageId > -1 && ( */}
+          {/*   <QualityCheck message={message.message} sources={citedSources} /> */}
+          {/* )} */}
 
           {!isUser && !isLoading && (
             <div className="message-actions">

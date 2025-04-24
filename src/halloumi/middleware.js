@@ -45,13 +45,15 @@ export default async function middleware(req, res, next) {
   const { sources, answer } = body;
 
   res.set('Content-Type', 'application/json');
+  const resp = await getVerifyClaimResponse(
+    model,
+    // TODO: map with citation id
+    sources.join('\n---\n'),
+    answer,
+  );
+
   try {
-    const resp = await getVerifyClaimResponse(
-      model,
-      // TODO: map with citation id
-      sources.join('\n---\n'),
-      answer,
-    );
+    console.log('resp', resp);
     res.send(resp);
   } catch (error) {
     res.send({ error: `Halloumi error: ${error}` });

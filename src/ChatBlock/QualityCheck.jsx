@@ -1,8 +1,10 @@
 import React from 'react';
 import { getSupportedBgColor } from './colors';
+import './colors.css';
+import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 
 async function fetchHalloumi(answer, sources) {
-  const halloumiResponse = await fetch('/_ha/classify', {
+  const halloumiResponse = await fetch('/_ha/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -27,7 +29,7 @@ function generateClaimSpan(
   const trailingWhitespace = claimValue.slice(trimEnd);
   const color = getSupportedBgColor(claim.score);
   const underlineClass = ind === selectedClaim ? 'underline' : '';
-  console.log({ claimValue, claim });
+  // console.log({ claimValue, claim });
   return (
     <span
       tabIndex="-1"
@@ -93,27 +95,46 @@ export function ClaimBox(props) {
 
 export function QualityCheck(props) {
   const { message, sources } = props;
+  const stableSources = useDeepCompareMemoize(sources);
 
   const [halloumiResponse, setHalloumiResponse] = React.useState(null);
 
   React.useEffect(() => {
     async function handler() {
-      const feedback = await fetchHalloumi(message, sources);
+      const feedback = await fetchHalloumi(message, stableSources);
       const body = await feedback.json();
-      console.log({ message, sources, body });
+      console.log({ message, stableSources, body });
       setHalloumiResponse(body);
     }
 
     if (!halloumiResponse) {
       handler();
     }
-  }, [halloumiResponse, message, sources]);
+  }, [halloumiResponse, message, stableSources]);
 
   return (
     <div>
       {halloumiResponse && (
-        <ClaimBox value={message} claims={halloumiResponse.claims} />
+        <ClaimBox
+          value={message}
+          claims={halloumiResponse.claims}
+          onClaimClick={() => {}}
+        />
       )}
     </div>
   );
 }
+
+//     {
+//       startOffset: 1306,
+//       endOffset: 1480,
+//       citationIds: [Array],
+//       score: 0.20641613926384872,
+//       rationale: 'The document provides a brief description of the case studies, but only one is explicitly mentioned as being relevant to the Apulia region in southern Italy. The other case study is n
+// ot clearly linked to the Apulia region.'
+//     }
+//   ],
+//   citations: {
+//     '1': { startOffset: 0, endOffset: 55, id: '1' },
+//     '2': { startOffset: 55, endOffset: 116, id: '2' },
+//     '3': { startOffset: 116, endOffset: 191, id: '3' },

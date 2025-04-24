@@ -1,0 +1,38 @@
+/* Red Background Colors */
+.bg-red-500 {
+  background-color: #ef4444; /* Example color for red-500 */
+}
+
+.bg-red-400 {
+  background-color: #f87171; /* Example color for red-400 */
+}
+
+.bg-red-300 {
+  background-color: #fca5a5; /* Example color for red-300 */
+}
+
+.bg-red-200 {
+  background-color: #fecaca; /* Example color for red-200 */
+}
+
+/* Green Background Colors */
+.bg-green-200 {
+  background-color: #bbf7d0; /* Example color for green-200 */
+}
+
+.bg-green-300 {
+  background-color: #86efac; /* Example color for green-300 */
+}
+
+.bg-green-400 {
+  background-color: #4ade80; /* Example color for green-400 */
+}
+
+.bg-green-500 {
+  background-color: #22c55e; /* Example color for green-500 */
+}
+
+/* Gray Background Color */
+.bg-gray-500 {
+  background-color: #6b7280; /* Example color for gray-500 */
+}

@@ -1,11 +1,11 @@
 import React from 'react';
 
 import { transformEmailsToLinks } from './utils';
-import { Modal, Tab, ModalContent } from 'semantic-ui-react';
+import { Modal, ModalContent } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
-import './colors.css';
+import './colors.less';
 
 function convertToPercentage(floatValue) {
   if (floatValue < 0 || floatValue > 1) {

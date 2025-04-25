@@ -85,12 +85,12 @@ export function ChatMessageBubble(props) {
     })),
   );
   const doQualityControl = showSources && message.messageId > -1;
-  const markers = useQualityMarkers(
+  const { markers, isLoadingHalloumi } = useQualityMarkers(
     doQualityControl,
     addCitations(message.message),
     citedSources,
   );
-  console.log({ message, sources, documentIdToText, citedSources });
+  // console.log({ message, sources, documentIdToText, citedSources });
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -129,6 +129,7 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
+          {isLoadingHalloumi && <div>Loading quality check...</div>}
           {!isUser && !isLoading && (
             <div className="message-actions">
               <Button

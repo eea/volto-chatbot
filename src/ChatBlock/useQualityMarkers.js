@@ -13,14 +13,17 @@ async function fetchHalloumi(answer, sources) {
 
 export default function useQualityMarkers(doQualityControl, message, sources) {
   const [halloumiResponse, setHalloumiResponse] = React.useState(null);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   React.useEffect(() => {
     async function handler() {
       const textSources = sources.map(({ text }) => text);
+      setIsLoading(true);
       const feedback = await fetchHalloumi(message, textSources);
       const body = await feedback.json();
       // console.log({ message, sources, body });
       setHalloumiResponse(body);
+      setIsLoading(false);
     }
 
     if (doQualityControl && !halloumiResponse) {
@@ -28,5 +31,5 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
     }
   }, [doQualityControl, halloumiResponse, message, sources]);
 
-  return halloumiResponse;
+  return { markers: halloumiResponse, isLoadingHalloumi: isLoading };
 }

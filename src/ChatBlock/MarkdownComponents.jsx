@@ -1,15 +1,7 @@
 import React from 'react';
 
 import { transformEmailsToLinks } from './utils';
-import {
-  Modal,
-  ModalHeader,
-  Tab,
-  ModalDescription,
-  ModalActions,
-  Button,
-  ModalContent,
-} from 'semantic-ui-react';
+import { Modal, Tab, ModalContent } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
@@ -95,8 +87,11 @@ export function components(message, markers, citedSources) {
           }
         >
           <ModalContent>
-            <h2 className={getSupportedTextColor(claim.score)}>
-              {convertToPercentage(claim.score)}
+            <h2>
+              Score:{' '}
+              <span className={getSupportedTextColor(claim.score)}>
+                {convertToPercentage(claim.score)}
+              </span>
             </h2>
             <Tab
               menu={{ borderless: true, attached: false, tabular: false }}

@@ -7,7 +7,7 @@ import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
 import useQualityMarkers from './useQualityMarkers';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
-import { components } from './MarkdownComponents.jsx';
+import { components } from './MarkdownComponents';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';

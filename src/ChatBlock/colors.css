@@ -1,3 +1,6 @@
+.claim {
+  cursor: pointer;
+}
 .text-red-500 {
   color: #ef4444;
 }
@@ -11,37 +14,37 @@
 }
 
 .bg-red-500 {
-  background-color: #ef4444;
+  border-bottom: 3px solid #ef4444;
 }
 
 .bg-red-400 {
-  background-color: #f87171;
+  border-bottom: 3px solid #f87171;
 }
 
 .bg-red-300 {
-  background-color: #fca5a5;
+  border-bottom: 3px solid #fca5a5;
 }
 
 .bg-red-200 {
-  background-color: #fecaca;
+  border-bottom: 3px solid #fecaca;
 }
 
 .bg-green-200 {
-  background-color: #bbf7d0;
+  border-bottom: 3px solid #bbf7d0;
 }
 
 .bg-green-300 {
-  background-color: #86efac;
+  border-bottom: 3px solid #86efac;
 }
 
 .bg-green-400 {
-  background-color: #4ade80;
+  border-bottom: 3px solid #4ade80;
 }
 
 .bg-green-500 {
-  background-color: #22c55e;
+  border-bottom: 3px solid #22c55e;
 }
 
 .bg-gray-500 {
-  background-color: #6b7280;
+  border-bottom: 3px solid #6b7280;
 }

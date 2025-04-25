@@ -89,7 +89,7 @@ export function components(message, markers, citedSources) {
       return claim ? (
         <Modal
           trigger={
-            <span className={getSupportedBgColor(claim.score)}>
+            <span className={`claim ${getSupportedBgColor(claim.score)}`}>
               {rest.children}
             </span>
           }

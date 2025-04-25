@@ -35,6 +35,21 @@ export function ToolCall({ tool_args, tool_name }) {
   return null;
 }
 
+function addQualityMarkersPlugin() {
+  return function (tree) {
+    visit(tree, 'text', function (node, idx, parent) {
+      if (node.value?.trim()) {
+        const newNode = {
+          type: 'element',
+          tagName: 'span',
+          children: [node],
+        };
+        parent.children[idx] = newNode;
+      }
+    });
+  };
+}
+
 export function ChatMessageBubble(props) {
   const {
     message,
@@ -51,16 +66,6 @@ export function ChatMessageBubble(props) {
   const isUser = type === 'user';
   const [copied, handleCopy] = useCopyToClipboard(message.message);
 
-  const icon = isUser ? (
-    <div className="circle user">
-      <SVGIcon name={UserIcon} size="20" color="white" />
-    </div>
-  ) : (
-    <div className="circle assistant">
-      <SVGIcon name={BotIcon} size="20" color="white" />
-    </div>
-  );
-
   const sources = Object.values(citations).map((doc_id) =>
     documents.find((doc) => doc.db_doc_id === doc_id),
   );
@@ -70,7 +75,6 @@ export function ChatMessageBubble(props) {
     return {
       ...acc,
       ...Object.assign(
-        {},
         {},
         ...(cur.tool_result || []).map((doc) => ({
           [doc.document_id]: doc.content,
@@ -96,26 +100,18 @@ export function ChatMessageBubble(props) {
     return { ...acc, [v]: k };
   }, {});
 
-  const addQualityMarkers = React.useCallback(() => {
-    return function (tree) {
-      visit(tree, 'text', function (node, idx, parent) {
-        if (node.value?.trim()) {
-          const newNode = {
-            type: 'element',
-            tagName: 'span',
-            children: [node],
-          };
-          parent.children[idx] = newNode;
-        }
-      });
-    };
-  }, []);
-
   return (
     <div>
       <div className="comment">
-        {icon}
-
+        {isUser ? (
+          <div className="circle user">
+            <SVGIcon name={UserIcon} size="20" color="white" />
+          </div>
+        ) : (
+          <div className="circle assistant">
+            <SVGIcon name={BotIcon} size="20" color="white" />
+          </div>
+        )}
         <div>
           {showToolCalls &&
             message.toolCalls?.map((info, index) => (
@@ -124,7 +120,7 @@ export function ChatMessageBubble(props) {
           <Markdown
             components={components(message, markers, citedSources)}
             remarkPlugins={[remarkGfm]}
-            rehypePlugins={[addQualityMarkers]}
+            rehypePlugins={[addQualityMarkersPlugin]}
           >
             {addCitations(message.message)}
           </Markdown>

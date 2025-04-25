@@ -1,9 +1,15 @@
 .claim {
   cursor: pointer;
+  display: inline;
+  position: relative;
+  text-decoration: underline;
+  text-decoration-style: wavy; /* This creates the squiggly effect */
 }
 
 .text-red-500 {
-  color: #ef4444;
+  /*color: #ef4444;*/
+
+  text-decoration-color: #ef4444; /* Optional: Change the color of the squiggly line */
 }
 
 .text-green-500 {
@@ -15,37 +21,46 @@
 }
 
 .bg-red-500 {
-  border-bottom: 3px solid #ef4444;
+  /*border-bottom: 3px solid #ef4444;*/
+  text-decoration-color: #ef4444; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-red-400 {
-  border-bottom: 3px solid #f87171;
+  /*border-bottom: 3px solid #f87171;*/
+  text-decoration-color: #f87171; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-red-300 {
-  border-bottom: 3px solid #fca5a5;
+  /*border-bottom: 3px solid #fca5a5;*/
+  text-decoration-color: #fca5a5; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-red-200 {
-  border-bottom: 3px solid #fecaca;
+  /*border-bottom: 3px solid #fecaca;*/
+  text-decoration-color: #fecaca; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-green-200 {
-  border-bottom: 3px solid #bbf7d0;
+  /*border-bottom: 3px solid #bbf7d0;*/
+  text-decoration-color: #bbf7d0; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-green-300 {
-  border-bottom: 3px solid #86efac;
+  /*border-bottom: 3px solid #86efac;*/
+  text-decoration-color: #86efac; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-green-400 {
-  border-bottom: 3px solid #4ade80;
+  /*border-bottom: 3px solid #4ade80;*/
+  text-decoration-color: #4ade80; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-green-500 {
-  border-bottom: 3px solid #22c55e;
+  /*border-bottom: 3px solid #22c55e;*/
+  text-decoration-color: #22c55e; /* Optional: Change the color of the squiggly line */
 }
 
 .bg-gray-500 {
-  border-bottom: 3px solid #6b7280;
+  /*border-bottom: 3px solid #6b7280;*/
+  text-decoration-color: #6b7280; /* Optional: Change the color of the squiggly line */
 }

@@ -129,7 +129,9 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
-          {isLoadingHalloumi && <div>Loading quality check...</div>}
+          <Button>Verify AI claims</Button>
+
+          {isLoadingHalloumi && <div>Verifying AI claims...</div>}
           {!isUser && !isLoading && (
             <div className="message-actions">
               <Button

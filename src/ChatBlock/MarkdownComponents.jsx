@@ -61,23 +61,6 @@ export function components(message, markers, citedSources) {
         );
       }
 
-      const panes = [
-        {
-          menuItem: 'Rationale',
-          render: () => <p>{claim.rationale}</p>,
-        },
-        {
-          menuItem: 'Citations',
-          render: () => (
-            <ClaimCitations
-              ids={claim.citationIds}
-              citations={markers?.citations || []}
-              citedSources={citedSources}
-            />
-          ),
-        },
-      ];
-
       return claim ? (
         <Modal
           trigger={
@@ -88,14 +71,17 @@ export function components(message, markers, citedSources) {
         >
           <ModalContent>
             <h2>
-              Score:{' '}
+              Supported by citations:{' '}
               <span className={getSupportedTextColor(claim.score)}>
                 {convertToPercentage(claim.score)}
               </span>
             </h2>
-            <Tab
-              menu={{ borderless: true, attached: false, tabular: false }}
-              panes={panes}
+            <p>{claim.rationale}</p>
+
+            <ClaimCitations
+              ids={claim.citationIds}
+              citations={markers?.citations || []}
+              citedSources={citedSources}
             />
           </ModalContent>
         </Modal>

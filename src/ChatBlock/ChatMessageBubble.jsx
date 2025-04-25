@@ -19,7 +19,6 @@ import './colors.css';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
-// import { QualityCheck } from './QualityCheck';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
@@ -230,9 +229,6 @@ export function ChatMessageBubble(props) {
           >
             {addCitations(message.message)}
           </Markdown>
-          {/* {showSources && message.messageId > -1 && ( */}
-          {/*   <QualityCheck message={message.message} sources={citedSources} /> */}
-          {/* )} */}
 
           {!isUser && !isLoading && (
             <div className="message-actions">

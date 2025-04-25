@@ -53,7 +53,6 @@ export default async function middleware(req, res, next) {
   );
 
   try {
-    console.log('resp', resp);
     res.send(resp);
   } catch (error) {
     res.send({ error: `Halloumi error: ${error}` });

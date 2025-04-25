@@ -1,9 +1,17 @@
 import React from 'react';
 
 import { transformEmailsToLinks } from './utils';
-import { Popup, PopupHeader, PopupContent } from 'semantic-ui-react';
+import {
+  Modal,
+  ModalHeader,
+  Tab,
+  ModalDescription,
+  ModalActions,
+  Button,
+  ModalContent,
+} from 'semantic-ui-react';
 import { Citation } from './Citation';
-import { getSupportedBgColor } from './colors';
+import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
 import './colors.css';
 
@@ -61,22 +69,41 @@ export function components(message, markers, citedSources) {
         );
       }
 
+      const panes = [
+        {
+          menuItem: 'Rationale',
+          render: () => <p>{claim.rationale}</p>,
+        },
+        {
+          menuItem: 'Citations',
+          render: () => (
+            <ClaimCitations
+              ids={claim.citationIds}
+              citations={markers?.citations || []}
+              citedSources={citedSources}
+            />
+          ),
+        },
+      ];
+
       return claim ? (
-        <Popup
+        <Modal
           trigger={
             <span className={getSupportedBgColor(claim.score)}>
               {rest.children}
             </span>
           }
         >
-          <PopupHeader>{convertToPercentage(claim.score)}</PopupHeader>
-          <PopupContent>{claim.rationale}</PopupContent>
-          <ClaimCitations
-            ids={claim.citationIds}
-            citations={markers?.citations || []}
-            citedSources={citedSources}
-          />
-        </Popup>
+          <ModalContent>
+            <h2 className={getSupportedTextColor(claim.score)}>
+              {convertToPercentage(claim.score)}
+            </h2>
+            <Tab
+              menu={{ borderless: true, attached: false, tabular: false }}
+              panes={panes}
+            />
+          </ModalContent>
+        </Modal>
       ) : (
         rest.children || []
       );

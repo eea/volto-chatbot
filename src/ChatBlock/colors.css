@@ -1,3 +1,14 @@
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-green-500 {
+  color: #22c55e;
+}
+
+.text-gray-500 {
+  color: #6b7280;
+}
 .bg-red-500 {
   background-color: #ef4444;
 }

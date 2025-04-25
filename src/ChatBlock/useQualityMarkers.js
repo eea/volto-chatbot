@@ -16,9 +16,10 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
 
   React.useEffect(() => {
     async function handler() {
-      const feedback = await fetchHalloumi(message, sources);
+      const textSources = sources.map(({ text }) => text);
+      const feedback = await fetchHalloumi(message, textSources);
       const body = await feedback.json();
-      console.log({ message, sources, body });
+      // console.log({ message, sources, body });
       setHalloumiResponse(body);
     }
 

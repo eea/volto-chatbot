@@ -33,7 +33,7 @@ function convertToPercentage(floatValue) {
 
 function ClaimCitations(props) {
   const { ids, citations, citedSources } = props;
-  const joinedSources = citedSources.join('\n---\n');
+  const joinedSources = citedSources.map(({ text }) => text).join('\n---\n');
   return (
     <div>
       {(ids || [])
@@ -86,7 +86,7 @@ const components = (message, markers, citedSources) => {
           />
         </Popup>
       ) : (
-        <span>{rest.children}</span>
+        rest.children || []
       );
     },
     a: (props) => {
@@ -129,7 +129,8 @@ function addCitations(text) {
   });
 }
 
-export function ToolCall({ tool_args, tool_name, tool_result }) {
+export function ToolCall({ tool_args, tool_name }) {
+  // , tool_result
   if (tool_name === 'run_search') {
     return (
       <div className="tool_info">
@@ -171,7 +172,7 @@ export function ChatMessageBubble(props) {
   );
   const showLoader = isMostRecent && isLoading;
   const showSources = !showLoader && sources.length > 0;
-  const citedDocuments = message.toolCalls?.reduce((acc, cur) => {
+  const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
     return {
       ...acc,
       ...Object.assign(
@@ -184,7 +185,10 @@ export function ChatMessageBubble(props) {
     };
   }, {});
   const citedSources = useDeepCompareMemoize(
-    sources.map((doc) => citedDocuments[doc.document_id] || ''),
+    sources.map((doc) => ({
+      id: doc.document_id,
+      text: documentIdToText[doc.document_id] || '',
+    })),
   );
   const doQualityControl = showSources && message.messageId > -1;
   const markers = useQualityMarkers(
@@ -192,13 +196,14 @@ export function ChatMessageBubble(props) {
     message.message,
     citedSources,
   );
+  console.log({ message, sources, documentIdToText, citedSources });
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
   }, {});
 
   const addQualityMarkers = React.useCallback(() => {
-    return function (tree, file) {
+    return function (tree) {
       visit(tree, 'text', function (node, idx, parent) {
         if (node.value?.trim()) {
           const newNode = {

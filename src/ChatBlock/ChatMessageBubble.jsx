@@ -34,15 +34,25 @@ function convertToPercentage(floatValue) {
 function ClaimCitations(props) {
   const { ids, citations, citedSources } = props;
   const joinedSources = citedSources.map(({ text }) => text).join('\n---\n');
+  const snippets = (ids || [])
+    .map((id) => citations[id])
+    .map((cit) => {
+      const info = {
+        snippet: joinedSources.slice(cit.startOffset, cit.endOffset),
+      };
+      const source = citedSources.find((cit) => cit.text.match(info.snippet));
+      info.source_id = source?.id;
+      return info;
+    });
+  // console.log({ snippets });
+
   return (
     <div>
-      {(ids || [])
-        .map((id) => citations[id])
-        .map((cit) => (
-          <small key={cit.id}>
-            {joinedSources.slice(cit.startOffset, cit.endOffset)}
-          </small>
-        ))}
+      {snippets.map((snip, ix) => (
+        <p key={ix}>
+          <a href={snip.source_id}>Source</a> <small>{snip.snippet}</small>
+        </p>
+      ))}
     </div>
   );
 }

@@ -350,6 +350,9 @@ class SubmitHandler {
               alternateAssistantID: null, // alternativeAssistant?.id,
             },
           ];
+          // if (finalMessage) {
+          //   console.log({ finalMessage });
+          // }
           const replacementsMap = finalMessage
             ? new Map([
                 [localMessages[0].messageId, TEMP_USER_MESSAGE_ID],

@@ -71,28 +71,24 @@ export function ChatMessageBubble(props) {
   );
   const showLoader = isMostRecent && isLoading;
   const showSources = !showLoader && sources.length > 0;
-  const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
-    return {
+
+  const contextSources = (message.toolCalls || []).reduce(
+    (acc, cur) => [
       ...acc,
-      ...Object.assign(
-        {},
-        ...(cur.tool_result || []).map((doc) => ({
-          [doc.document_id]: doc.content,
-        })),
-      ),
-    };
-  }, {});
-  const citedSources = useDeepCompareMemoize(
-    sources.map((doc) => ({
-      id: doc.document_id,
-      text: documentIdToText[doc.document_id] || '',
-    })),
+      ...(cur.tool_result || []).map((doc) => ({
+        id: doc.document_id,
+        text: doc.content,
+      })),
+    ], // TODO: make sure we don't add multiple times the same doc
+    [],
   );
+  const stableContextSources = useDeepCompareMemoize(contextSources);
+
   const doQualityControl = showSources && message.messageId > -1;
   const { markers, isLoadingHalloumi } = useQualityMarkers(
     doQualityControl,
     addCitations(message.message),
-    citedSources,
+    stableContextSources,
   );
   // console.log({ message, sources, documentIdToText, citedSources });
 
@@ -118,7 +114,7 @@ export function ChatMessageBubble(props) {
               <ToolCall key={index} {...info} />
             ))}
           <Markdown
-            components={components(message, markers, citedSources)}
+            components={components(message, markers, stableContextSources)}
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[addQualityMarkersPlugin]}
           >
@@ -190,3 +186,21 @@ export function ChatMessageBubble(props) {
     </div>
   );
 }
+
+// const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
+//   return {
+//     ...acc,
+//     ...Object.assign(
+//       {},
+//       ...(cur.tool_result || []).map((doc) => ({
+//         [doc.document_id]: doc.content,
+//       })),
+//     ),
+//   };
+// }, {});
+// const citedSources = useDeepCompareMemoize(
+//   sources.map((doc) => ({
+//     id: doc.document_id,
+//     text: documentIdToText[doc.document_id] || '',
+//   })),
+// );

@@ -24,7 +24,7 @@ export function ClaimCitations(props) {
         snippet: joinedSources.slice(cit.startOffset, cit.endOffset),
       };
       const source = citedSources.find(
-        (cit) => cit.text.search(info.snippet) > -1,
+        (cit) => cit.text.indexOf(info.snippet) > -1,
       );
       info.source_id = source?.id;
       return info;

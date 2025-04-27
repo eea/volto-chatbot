@@ -186,21 +186,3 @@ export function ChatMessageBubble(props) {
     </div>
   );
 }
-
-// const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
-//   return {
-//     ...acc,
-//     ...Object.assign(
-//       {},
-//       ...(cur.tool_result || []).map((doc) => ({
-//         [doc.document_id]: doc.content,
-//       })),
-//     ),
-//   };
-// }, {});
-// const citedSources = useDeepCompareMemoize(
-//   sources.map((doc) => ({
-//     id: doc.document_id,
-//     text: documentIdToText[doc.document_id] || '',
-//   })),
-// );

@@ -3,7 +3,7 @@ import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
 import { Icon, Button, Message } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
-import { convertToPercentage, SVGIcon, useCopyToClipboard } from './utils';
+import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
 import useQualityMarkers from './useQualityMarkers';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';

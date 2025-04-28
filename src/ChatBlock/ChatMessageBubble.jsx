@@ -1,9 +1,9 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Icon, Button } from 'semantic-ui-react';
+import { Icon, Button, Message } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
-import { SVGIcon, useCopyToClipboard } from './utils';
+import { convertToPercentage, SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
 import useQualityMarkers from './useQualityMarkers';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
@@ -60,11 +60,16 @@ export function ChatMessageBubble(props) {
     showToolCalls,
     enableFeedback,
     feedbackReasons,
+    qualityCheck,
+    qualityCheckStages,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents, type } = message;
   const isUser = type === 'user';
   const [copied, handleCopy] = useCopyToClipboard(message.message);
+  const [forceHalloumi, setForceHallomi] = React.useState(
+    qualityCheck === 'enabled' ? true : false,
+  );
 
   const sources = Object.values(citations).map((doc_id) =>
     documents.find((doc) => doc.db_doc_id === doc_id),
@@ -84,13 +89,49 @@ export function ChatMessageBubble(props) {
   );
   const stableContextSources = useDeepCompareMemoize(contextSources);
 
-  const doQualityControl = showSources && message.messageId > -1;
+  const doQualityControl =
+    !isUser &&
+    qualityCheck &&
+    qualityCheck !== 'disabled' &&
+    forceHalloumi &&
+    showSources &&
+    message.messageId > -1;
   const { markers, isLoadingHalloumi } = useQualityMarkers(
     doQualityControl,
     addCitations(message.message),
     stableContextSources,
   );
   // console.log({ message, sources, documentIdToText, citedSources });
+
+  const claims = markers?.claims || [];
+  const score = (
+    (claims.length > 0
+      ? claims.reduce((acc, { score }) => acc + score, 0) / claims.length
+      : 1) * 100
+  ).toFixed(0);
+
+  const scoreStage = qualityCheckStages?.find(
+    ({ start, end }) => start <= score && score <= end,
+  );
+  const scoreColor = scoreStage?.color || 'black';
+  const halloumiMessage = (doQualityControl && scoreStage?.label) || '';
+
+  // console.log('score', {
+  //   halloumiMessage,
+  //   doQualityControl,
+  //   qualityCheck,
+  //   qualityCheckStages,
+  //   score,
+  //   claims,
+  //   scoreAverage:
+  //     claims.length > 0
+  //       ? claims.reduce((acc, { score }) => acc + score, 0) / claims.length
+  //       : 1,
+  //
+  //   stage: qualityCheckStages?.find(
+  //     ({ start, end }) => start <= score && score <= end,
+  //   ),
+  // });
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -121,9 +162,24 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
-          {/* <Button>Verify AI claims</Button> */}
-
-          {isLoadingHalloumi && <div>Verifying AI claims...</div>}
+          {!isUser && (
+            <>
+              {!isLoadingHalloumi &&
+                !isLoading &&
+                qualityCheck === 'ondemand' &&
+                !markers && (
+                  <Button onClick={() => setForceHallomi(true)}>
+                    Verify AI claims
+                  </Button>
+                )}
+              {isLoadingHalloumi && (
+                <Message color="blue">Verifying AI claims...</Message>
+              )}
+              {!!halloumiMessage && !!markers && (
+                <Message color={scoreColor}>{halloumiMessage}</Message>
+              )}
+            </>
+          )}
           {!isUser && !isLoading && (
             <div className="message-actions">
               <Button

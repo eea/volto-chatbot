@@ -1,18 +1,11 @@
 import React from 'react';
 
-import { transformEmailsToLinks } from './utils';
+import { convertToPercentage, transformEmailsToLinks } from './utils';
 import { Modal, ModalContent } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
 import './colors.less';
-
-function convertToPercentage(floatValue) {
-  if (floatValue < 0 || floatValue > 1) {
-    return 0;
-  }
-  return (floatValue * 100).toFixed(2) + '%';
-}
 
 export function ClaimCitations(props) {
   const { ids, citations, citedSources } = props;

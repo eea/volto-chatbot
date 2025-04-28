@@ -26,6 +26,8 @@ function ChatWindow({
     scrollToInput,
     showToolCalls,
     feedbackReasons,
+    qualityCheck = 'disabled',
+    qualityCheckStages = [],
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
@@ -103,6 +105,8 @@ function ChatWindow({
                   enableFeedback={enableFeedback}
                   feedbackReasons={feedbackReasons}
                   libs={libs}
+                  qualityCheck={qualityCheck}
+                  qualityCheckStages={qualityCheckStages}
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}

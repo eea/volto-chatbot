@@ -155,7 +155,7 @@ range is from 0 to 100`,
           },
           {
             '@id': 'five',
-            title:
+            label:
               '✅Fully supported by our content. Safe to trust—no need to double-check.',
             start: 95,
             end: 100,

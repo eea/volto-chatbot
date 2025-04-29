@@ -77,17 +77,35 @@ export function ChatMessageBubble(props) {
   const showLoader = isMostRecent && isLoading;
   const showSources = !showLoader && sources.length > 0;
 
-  const contextSources = (message.toolCalls || []).reduce(
-    (acc, cur) => [
+  // const contextSources = (message.toolCalls || []).reduce(
+  //   (acc, cur) => [
+  //     ...acc,
+  //     ...(cur.tool_result || []).map((doc) => ({
+  //       id: doc.document_id,
+  //       text: doc.content,
+  //     })),
+  //   ], // TODO: make sure we don't add multiple times the same doc
+  //   [],
+  // );
+  // const stableContextSources = useDeepCompareMemoize(contextSources);
+
+  const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
+    return {
       ...acc,
-      ...(cur.tool_result || []).map((doc) => ({
-        id: doc.document_id,
-        text: doc.content,
-      })),
-    ], // TODO: make sure we don't add multiple times the same doc
-    [],
+      ...Object.assign(
+        {},
+        ...(cur.tool_result || []).map((doc) => ({
+          [doc.document_id]: doc.content,
+        })),
+      ),
+    };
+  }, {});
+  const stableContextSources = useDeepCompareMemoize(
+    sources.map((doc) => ({
+      id: doc.document_id,
+      text: documentIdToText[doc.document_id] || '',
+    })),
   );
-  const stableContextSources = useDeepCompareMemoize(contextSources);
 
   const doQualityControl =
     !isUser &&
@@ -169,6 +187,7 @@ export function ChatMessageBubble(props) {
                 qualityCheck === 'ondemand' &&
                 !markers && (
                   <Button onClick={() => setForceHallomi(true)}>
+                    <i class="ri-spy-line"></i>
                     Verify AI claims
                   </Button>
                 )}

@@ -16,6 +16,7 @@ const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
+// TODO: don't use this over the text like this, make it a rehype plugin
 function addCitations(text) {
   return text.replaceAll(CITATION_MATCH, (match) => {
     const number = match.match(/\d+/)[0];
@@ -62,33 +63,28 @@ export function ChatMessageBubble(props) {
     feedbackReasons,
     qualityCheck,
     qualityCheckStages,
+    qualityCheckContext,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
-  const { citations = {}, documents, type } = message;
+  const { citations = {}, documents = [], type } = message;
   const isUser = type === 'user';
   const [copied, handleCopy] = useCopyToClipboard(message.message);
   const [forceHalloumi, setForceHallomi] = React.useState(
     qualityCheck === 'enabled' ? true : false,
   );
 
-  const sources = Object.values(citations).map((doc_id) =>
-    documents.find((doc) => doc.db_doc_id === doc_id),
-  );
+  const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
+    return { ...acc, [v]: k };
+  }, {});
+
+  const sources = Object.values(citations).map((doc_id) => ({
+    ...(documents.find((doc) => doc.db_doc_id === doc_id) || {}),
+    index: inverseMap[doc_id],
+  }));
   const showLoader = isMostRecent && isLoading;
   const showSources = !showLoader && sources.length > 0;
 
-  // const contextSources = (message.toolCalls || []).reduce(
-  //   (acc, cur) => [
-  //     ...acc,
-  //     ...(cur.tool_result || []).map((doc) => ({
-  //       id: doc.document_id,
-  //       text: doc.content,
-  //     })),
-  //   ], // TODO: make sure we don't add multiple times the same doc
-  //   [],
-  // );
-  // const stableContextSources = useDeepCompareMemoize(contextSources);
-
+  // TODO: maybe this should be just on the first tool call?
   const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
     return {
       ...acc,
@@ -100,12 +96,28 @@ export function ChatMessageBubble(props) {
       ),
     };
   }, {});
-  const stableContextSources = useDeepCompareMemoize(
-    sources.map((doc) => ({
-      id: doc.document_id,
-      text: documentIdToText[doc.document_id] || '',
-    })),
-  );
+
+  const contextSources =
+    qualityCheckContext === 'citations'
+      ? sources.map((doc) => ({
+          ...doc,
+          id: doc.document_id,
+          text: documentIdToText[doc.document_id] || '',
+        }))
+      : (message.toolCalls || []).reduce(
+          (acc, cur) => [
+            ...acc,
+            ...(cur.tool_result || []).map((doc) => ({
+              ...doc,
+              id: doc.document_id,
+              text: doc.content,
+            })),
+          ], // TODO: make sure we don't add multiple times the same doc
+          // TODO: this doesn't have the index for source
+          [],
+        );
+
+  const stableContextSources = useDeepCompareMemoize(contextSources);
 
   const doQualityControl =
     !isUser &&
@@ -133,27 +145,6 @@ export function ChatMessageBubble(props) {
   );
   const scoreColor = scoreStage?.color || 'black';
   const halloumiMessage = (doQualityControl && scoreStage?.label) || '';
-
-  // console.log('score', {
-  //   halloumiMessage,
-  //   doQualityControl,
-  //   qualityCheck,
-  //   qualityCheckStages,
-  //   score,
-  //   claims,
-  //   scoreAverage:
-  //     claims.length > 0
-  //       ? claims.reduce((acc, { score }) => acc + score, 0) / claims.length
-  //       : 1,
-  //
-  //   stage: qualityCheckStages?.find(
-  //     ({ start, end }) => start <= score && score <= end,
-  //   ),
-  // });
-
-  const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
-    return { ...acc, [v]: k };
-  }, {});
 
   return (
     <div>
@@ -228,11 +219,7 @@ export function ChatMessageBubble(props) {
 
               <div className="sources">
                 {sources.map((source, i) => (
-                  <SourceDetails
-                    source={source}
-                    key={i}
-                    index={inverseMap[source.db_doc_id]}
-                  />
+                  <SourceDetails source={source} key={i} index={source.index} />
                 ))}
               </div>
             </>

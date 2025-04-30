@@ -69,7 +69,7 @@ export function ChatBlockSchema({ assistants, data }) {
           'enableQgen',
           'qualityCheck',
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
-            ? ['qualityCheckStages']
+            ? ['qualityCheckStages', 'qualityCheckContext']
             : []),
           'qualityCheckStages',
           'enableFeedback',
@@ -112,6 +112,14 @@ export function ChatBlockSchema({ assistants, data }) {
         ],
         default: 'disabled',
         description: 'Show Halloumi-based automated quality check',
+      },
+      qualityCheckContext: {
+        title: 'Context documents',
+        default: 'citations',
+        choices: [
+          ['citations', 'Only cited documents'],
+          ['all', 'All documents passed to LLM'],
+        ],
       },
       qualityCheckStages: {
         title: 'Score ranges',

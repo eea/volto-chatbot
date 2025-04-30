@@ -4,6 +4,7 @@ import { convertToPercentage, transformEmailsToLinks } from './utils';
 import { Modal, ModalContent } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
+import { SourceDetails } from './Source';
 
 import './colors.less';
 
@@ -13,27 +14,47 @@ export function ClaimCitations(props) {
   const snippets = (ids || [])
     .map((id) => citations[id])
     .map((cit) => {
-      const info = {
-        snippet: joinedSources.slice(cit.startOffset, cit.endOffset),
+      const text = joinedSources.slice(cit.startOffset, cit.endOffset);
+      const source = citedSources.find((cit) => cit.text.indexOf(text) > -1);
+      return {
+        ...cit,
+        text,
+        source_id: source?.id,
       };
-      const source = citedSources.find(
-        (cit) => cit.text.indexOf(info.snippet) > -1,
-      );
-      info.source_id = source?.id;
-      return info;
     });
-  // console.log({ snippets });
+  // console.log('snips', snippets);
+  //
+  // const sourcesIds = snippets.reduce(
+  //   (acc, cur) =>
+  //     cur.source_id && acc.indexOf(cur.source_id) === -1
+  //       ? [...acc, cur.source_id]
+  //       : acc,
+  //   [],
+  // );
+
+  // const x = <div>
+  //
+  //               {sources.map((source, i) => (
+  //                 <SourceDetails
+  //                   source={source}
+  //                   key={i}
+  //                   index={source.index}
+  //                 />
+  //               ))}
+  //
+  // </div>
 
   return (
     <div>
       {snippets.map((snip, ix) => (
         <p key={ix}>
-          <a href={snip.source_id}>Source</a> <small>{snip.snippet}</small>
+          <a href={snip.source_id}>Source</a> <small>{snip.text}</small>
         </p>
       ))}
     </div>
   );
 }
+
 export function components(message, markers, citedSources) {
   return {
     span: (props) => {

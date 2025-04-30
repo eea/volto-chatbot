@@ -4,7 +4,7 @@ import { convertToPercentage, transformEmailsToLinks } from './utils';
 import { Modal, ModalContent } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
-import { SourceDetails } from './Source';
+// import { SourceDetails } from './Source';
 
 import './colors.less';
 

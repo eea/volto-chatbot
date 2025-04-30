@@ -28,6 +28,7 @@ function ChatWindow({
     feedbackReasons,
     qualityCheck = 'disabled',
     qualityCheckStages = [],
+    qualityCheckContext = 'citations',
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
@@ -110,6 +111,7 @@ function ChatWindow({
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}
+                  qualityCheckContext={qualityCheckContext}
                   showToolCalls={showToolCalls}
                 />
               ))}

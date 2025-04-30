@@ -69,9 +69,8 @@ export function ChatBlockSchema({ assistants, data }) {
           'enableQgen',
           'qualityCheck',
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
-            ? ['qualityCheckStages', 'qualityCheckContext']
+            ? ['qualityCheckContext', 'qualityCheckStages']
             : []),
-          'qualityCheckStages',
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
           'scrollToInput',

@@ -96,6 +96,7 @@ export function ChatMessageBubble(props) {
       ),
     };
   }, {});
+  console.log({ qualityCheckContext });
 
   const contextSources =
     qualityCheckContext === 'citations'
@@ -178,8 +179,7 @@ export function ChatMessageBubble(props) {
                 qualityCheck === 'ondemand' &&
                 !markers && (
                   <Button onClick={() => setForceHallomi(true)}>
-                    <i class="ri-spy-line"></i>
-                    Verify AI claims
+                    <i class="ri-spy-line"></i> Verify AI claims
                   </Button>
                 )}
               {isLoadingHalloumi && (

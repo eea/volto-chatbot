@@ -4,9 +4,10 @@ import { convertToPercentage, transformEmailsToLinks } from './utils';
 import { Modal, ModalContent } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
-// import { SourceDetails } from './Source';
+import { SourceDetails } from './Source';
 
 import './colors.less';
+const EXPAND = 100;
 
 export function ClaimCitations(props) {
   const { ids, citations, citedSources } = props;
@@ -15,41 +16,64 @@ export function ClaimCitations(props) {
     .map((id) => citations[id])
     .map((cit) => {
       const text = joinedSources.slice(cit.startOffset, cit.endOffset);
+      const before = joinedSources.slice(
+        Math.max(cit.startOffset - EXPAND, 0),
+        cit.startOffset,
+      );
+      const after = joinedSources.slice(
+        cit.endOffset,
+        Math.min(cit.endOffset + EXPAND, joinedSources.length),
+      );
+
+      const expandedText = (
+        <>
+          ...{before}
+          <strong>
+            <em>{text}</em>{' '}
+          </strong>
+          {after}...
+        </>
+      );
+
+      // `...${joinedSources.slice(
+      //   Math.max(cit.startOffset - EXPAND, 0),
+      //   Math.min(cit.endOffset + EXPAND, joinedSources.length),
+      // )}...`;
       const source = citedSources.find((cit) => cit.text.indexOf(text) > -1);
       return {
         ...cit,
         text,
+        expandedText,
         source_id: source?.id,
       };
     });
-  // console.log('snips', snippets);
-  //
-  // const sourcesIds = snippets.reduce(
-  //   (acc, cur) =>
-  //     cur.source_id && acc.indexOf(cur.source_id) === -1
-  //       ? [...acc, cur.source_id]
-  //       : acc,
-  //   [],
-  // );
 
-  // const x = <div>
-  //
-  //               {sources.map((source, i) => (
-  //                 <SourceDetails
-  //                   source={source}
-  //                   key={i}
-  //                   index={source.index}
-  //                 />
-  //               ))}
-  //
-  // </div>
+  const sourcesWithSnippets = citedSources
+    .map((source) => ({
+      ...source,
+      snippets: snippets.filter((s) => s.source_id === source.id),
+    }))
+    .filter((source) => source.snippets.length > 0)
+    .sort((sa, sb) => sa.index - sb.index);
 
+  // {snippets.map((snip, ix) => (
+  //   <p key={ix}>
+  //     <a href={snip.source_id}>Source</a> <small>{snip.text}</small>
+  //   </p>
+  // ))}
   return (
-    <div>
-      {snippets.map((snip, ix) => (
-        <p key={ix}>
-          <a href={snip.source_id}>Source</a> <small>{snip.text}</small>
-        </p>
+    <div className="chat-window">
+      {sourcesWithSnippets.map((source, i) => (
+        <>
+          {source.snippets.map((snip) => (
+            <div>
+              <small className="snippet">{snip.expandedText}</small>
+            </div>
+          ))}
+          <div className="sources" key={i}>
+            <SourceDetails source={source} index={source.index} />
+          </div>
+        </>
       ))}
     </div>
   );

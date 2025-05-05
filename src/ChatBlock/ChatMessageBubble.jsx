@@ -89,6 +89,31 @@ function printSlate(value, score) {
   return serializeNodes(value);
 }
 
+const VERIFY_CLAIM_MESSAGES = [
+  'Going through each claim and verify against the referenced documents...',
+  'Summarising claim verifications results...',
+  'Calculating scores...',
+];
+
+function VerifyClaims() {
+  const [message, setMessage] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (message < VERIFY_CLAIM_MESSAGES.length - 1) {
+        setMessage(message + 1);
+      }
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, [message]);
+  return (
+    <div>
+      <Spinner />
+      {VERIFY_CLAIM_MESSAGES[message]}
+    </div>
+  );
+}
+
 export function ChatMessageBubble(props) {
   const {
     message,
@@ -222,7 +247,9 @@ export function ChatMessageBubble(props) {
                   </Button>
                 )}
               {isLoadingHalloumi && (
-                <Message color="blue">Verifying AI claims...</Message>
+                <Message color="blue">
+                  <VerifyClaims />
+                </Message>
               )}
               {!!halloumiMessage && !!markers && (
                 <Message color={scoreColor} icon>

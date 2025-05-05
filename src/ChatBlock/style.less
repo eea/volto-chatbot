@@ -393,6 +393,7 @@
   50% {
     transform: rotate(180deg);
   }
+
   100% {
     transform: rotate(360deg);
   }
@@ -406,11 +407,11 @@
 }
 
 .spinner {
-  border: 6px solid @teal;
-  border-top: 6px solid @blue;
-  border-radius: 50%;
   width: 24px;
   height: 24px;
+  border: 6px solid @teal;
+  border-radius: 50%;
+  border-top: 6px solid @blue;
   animation: spin-rotate 1s infinite linear; // spin 2s linear infinite;
   animation-delay: 0.5s;
 }

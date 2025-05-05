@@ -384,3 +384,33 @@
     background-color: rgba(61, 82, 101, 0.2);
   }
 }
+
+@keyframes spin-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner-container {
+  // display: flex;
+  // justify-content: center;
+  // align-items: center;
+  // height: 100vh;
+}
+
+.spinner {
+  border: 6px solid @teal;
+  border-top: 6px solid @blue;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  animation: spin-rotate 1s infinite linear; // spin 2s linear infinite;
+  animation-delay: 0.5s;
+}

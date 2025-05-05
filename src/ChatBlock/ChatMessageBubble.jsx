@@ -1,11 +1,19 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Icon, Button, Message, MessageContent } from 'semantic-ui-react';
+import {
+  Icon,
+  Button,
+  Message,
+  MessageContent,
+  // Loader,
+  // Segment,
+} from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
 import useQualityMarkers from './useQualityMarkers';
+import Spinner from './Spinner';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 import { components } from './MarkdownComponents';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
@@ -58,7 +66,7 @@ function visitTextNodes(node, visitor) {
   } else if (node && typeof node === 'object') {
     if (node.text !== undefined) {
       // Process the text node value here
-      console.log(node.text);
+      // console.log(node.text);
       visitor(node);
     }
     if (node.children) {
@@ -94,6 +102,7 @@ export function ChatMessageBubble(props) {
     qualityCheck,
     qualityCheckStages,
     qualityCheckContext,
+    isFetchingRelatedQuestions,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
@@ -126,7 +135,7 @@ export function ChatMessageBubble(props) {
       ),
     };
   }, {});
-  console.log({ qualityCheckContext });
+  // console.log({ qualityCheckContext });
 
   const contextSources =
     qualityCheckContext === 'citations'
@@ -262,6 +271,13 @@ export function ChatMessageBubble(props) {
                 ))}
               </div>
             </>
+          )}
+
+          {isFetchingRelatedQuestions && (
+            <div style={{ display: 'flex' }}>
+              <Spinner />
+              Finding related questions...
+            </div>
           )}
 
           {message.relatedQuestions?.length > 0 && (

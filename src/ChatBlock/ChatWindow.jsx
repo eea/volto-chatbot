@@ -7,6 +7,7 @@ import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useScrollonStream } from './lib';
 import { useBackendChat } from './useBackendChat';
+import Spinner from './Spinner';
 
 import './style.less';
 
@@ -31,7 +32,13 @@ function ChatWindow({
     qualityCheckContext = 'citations',
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
-  const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
+  const {
+    onSubmit,
+    messages,
+    isStreaming,
+    isFetchingRelatedQuestions,
+    clearChat,
+  } = useBackendChat({
     persona,
     qgenAsistantId,
     enableQgen,
@@ -113,6 +120,7 @@ function ChatWindow({
                   }}
                   qualityCheckContext={qualityCheckContext}
                   showToolCalls={showToolCalls}
+                  isFetchingRelatedQuestions={isFetchingRelatedQuestions}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}

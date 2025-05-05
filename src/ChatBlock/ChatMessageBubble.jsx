@@ -1,13 +1,14 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Icon, Button, Message } from 'semantic-ui-react';
+import { Icon, Button, Message, MessageContent } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
 import useQualityMarkers from './useQualityMarkers';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 import { components } from './MarkdownComponents';
+import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
@@ -49,6 +50,35 @@ function addQualityMarkersPlugin() {
       }
     });
   };
+}
+
+function visitTextNodes(node, visitor) {
+  if (Array.isArray(node)) {
+    node.forEach((child) => visitTextNodes(child, visitor));
+  } else if (node && typeof node === 'object') {
+    if (node.text !== undefined) {
+      // Process the text node value here
+      console.log(node.text);
+      visitor(node);
+    }
+    if (node.children) {
+      visitTextNodes(node.children, visitor);
+    }
+  }
+}
+
+function printSlate(value, score) {
+  if (typeof value === 'string') {
+    return value.replaceAll('{score}', score);
+  }
+  function visitor(node) {
+    if (node.text.indexOf('{score}') > -1) {
+      node.text = node.text.replaceAll('{score}', score);
+    }
+  }
+
+  visitTextNodes(value, visitor);
+  return serializeNodes(value);
 }
 
 export function ChatMessageBubble(props) {
@@ -186,7 +216,16 @@ export function ChatMessageBubble(props) {
                 <Message color="blue">Verifying AI claims...</Message>
               )}
               {!!halloumiMessage && !!markers && (
-                <Message color={scoreColor}>{halloumiMessage}</Message>
+                <Message color={scoreColor} icon>
+                  {/* {!!scoreStage.icon && ( */}
+                  {/*   <Icon name={scoreStage.icon} color={scoreColor} /> */}
+                  {/* )} */}
+                  {/* <strong>{score}%</strong> */}
+
+                  <MessageContent>
+                    {printSlate(halloumiMessage, `${score}%`)}
+                  </MessageContent>
+                </Message>
               )}
             </>
           )}

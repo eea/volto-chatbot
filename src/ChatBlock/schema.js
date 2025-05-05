@@ -20,8 +20,15 @@ const ScoreRangeSchema = {
     },
     label: {
       title: 'Label',
-      description: 'Message to be shown to the users',
+      widget: 'slate',
+      description:
+        'Message to be shown to the users (rich text). If you include the {score} placeholder, it will be replaced with the score.',
     },
+    // icon: {
+    //   title: 'Icon name',
+    //   description: 'Semantic-ui Icon names',
+    //   default: 'exclamation',
+    // },
     color: {
       title: 'Message color',
       description: (

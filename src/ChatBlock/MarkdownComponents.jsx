@@ -69,7 +69,12 @@ const RenderClaimView = (props) => {
   // Push the remaining text.
   if (startIndex < currentInd) {
     allSpans.push(
-      <span key={currentKey}>{value.slice(startIndex, currentInd)}</span>,
+      <span key={currentKey}>
+        {value.slice(
+          startIndex - sourceStartIndex,
+          currentInd - sourceStartIndex,
+        )}
+      </span>,
     );
   }
 
@@ -113,7 +118,7 @@ export function ClaimCitations(props) {
   const spanRef = React.useRef();
 
   const panes = sourcesWithSnippets.map((source, i) => {
-    console.log({ source });
+    // console.log({ source });
     return {
       menuItem: () => (
         <button className="sources" key={i} onClick={() => setActiveTab(i)}>

@@ -44,8 +44,8 @@
   .citation-buttons {
     display: flex;
     flex-flow: wrap;
-    gap: 0.3em;
     margin-bottom: 1em;
+    gap: 0.3em;
 
     .ui.button {
       padding: 0.75em 1.25em 0.75em;
@@ -53,7 +53,7 @@
   }
 
   .ui.button.icon.claims-btn {
-    margin-bottom: 1em;;
+    margin-bottom: 1em;
   }
 
   .comment {
@@ -120,14 +120,14 @@
     .source-title {
       overflow: hidden;
       width: 140px;
+      padding-left: 0.2em;
       margin: 0 5px;
       font-size: 13px;
       font-weight: 600;
+      text-align: left;
       text-overflow: ellipsis;
       white-space: nowrap;
       word-break: break-all;
-      text-align: left;
-      padding-left: 0.2em;
     }
 
     .source-date span {
@@ -192,11 +192,11 @@
 .claim-modal {
   .ui.menu {
     .sources {
+      padding: 0;
       border: none !important;
       border-radius: 7px;
       margin-right: 0.5em;
       cursor: pointer;
-      padding: 0;
 
       &.active .source {
         background-color: #eeeff1;
@@ -204,7 +204,6 @@
 
       .source {
         background-color: #fbfbfb;
-        
       }
 
       .source-header {
@@ -212,9 +211,10 @@
       }
     }
   }
+
   .ui.tab {
-    padding-left: 0;
     padding-right: 0;
+    padding-left: 0;
   }
 }
 
@@ -225,8 +225,8 @@
 
 .related-questions-loader {
   display: flex;
-  gap: 0.5em;
   align-items: center;
+  gap: 0.5em;
 }
 
 .starter-messages-container {

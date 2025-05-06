@@ -41,6 +41,21 @@
     }
   }
 
+  .citation-buttons {
+    display: flex;
+    flex-flow: wrap;
+    gap: 0.3em;
+    margin-bottom: 1em;
+
+    .ui.button {
+      padding: 0.75em 1.25em 0.75em;
+    }
+  }
+
+  .ui.button.icon.claims-btn {
+    margin-bottom: 1em;;
+  }
+
   .comment {
     display: flex;
     margin-bottom: @marginBottom;
@@ -111,6 +126,8 @@
       text-overflow: ellipsis;
       white-space: nowrap;
       word-break: break-all;
+      text-align: left;
+      padding-left: 0.2em;
     }
 
     .source-date span {
@@ -170,6 +187,46 @@
       background-color: @grey;
     }
   }
+}
+
+.claim-modal {
+  .ui.menu {
+    .sources {
+      border: none !important;
+      border-radius: 7px;
+      margin-right: 0.5em;
+      cursor: pointer;
+      padding: 0;
+
+      &.active .source {
+        background-color: #eeeff1;
+      }
+
+      .source {
+        background-color: #fbfbfb;
+        
+      }
+
+      .source-header {
+        pointer-events: none;
+      }
+    }
+  }
+  .ui.tab {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+.verify-claims {
+  display: flex;
+  gap: 0.5em;
+}
+
+.related-questions-loader {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
 }
 
 .starter-messages-container {
@@ -399,12 +456,12 @@
   }
 }
 
-.spinner-container {
-  // display: flex;
-  // justify-content: center;
-  // align-items: center;
-  // height: 100vh;
-}
+// .spinner-container {
+//   // display: flex;
+//   // justify-content: center;
+//   // align-items: center;
+//   // height: 100vh;
+// }
 
 .spinner {
   width: 24px;

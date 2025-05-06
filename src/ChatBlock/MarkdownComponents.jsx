@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { convertToPercentage, transformEmailsToLinks } from './utils';
-import { Modal, ModalContent, Tab, TabPane } from 'semantic-ui-react';
+import { Modal, ModalContent, Tab, TabPane, Button } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 import { SourceDetails } from './Source';
@@ -118,28 +118,31 @@ export function ClaimCitations(props) {
   const spanRef = React.useRef();
 
   const panes = sourcesWithSnippets.map((source, i) => {
-    // console.log({ source });
     return {
       menuItem: () => (
-        <button className="sources" key={i} onClick={() => setActiveTab(i)}>
+        <button
+          key={i}
+          className={`sources ${activeTab === i ? 'active' : ''}`}
+          onClick={() => setActiveTab(i)}
+        >
           <SourceDetails source={source} index={source.index} />
         </button>
       ),
       render: () => (
         <TabPane>
-          <div style={{ display: 'flex' }}>
+          <div className="citation-buttons">
             {source?.snippets?.map(({ id }) => {
               return (
-                <div key={id}>
-                  <button
-                    onClick={() => {
-                      spanRef.current && spanRef.current.scrollIntoView();
-                      setVisibleCitation(id);
-                    }}
-                  >
-                    Line {id}
-                  </button>
-                </div>
+                <Button
+                  key={id}
+                  size="tiny"
+                  onClick={() => {
+                    spanRef.current && spanRef.current.scrollIntoView();
+                    setVisibleCitation(id);
+                  }}
+                >
+                  Line {id}
+                </Button>
               );
             })}
           </div>
@@ -158,9 +161,8 @@ export function ClaimCitations(props) {
 
   return (
     <div className="chat-window">
-      {visibleCitationId || ''}
       <Tab
-        menu={{ tabular: true, attached: true }}
+        menu={{ secondary: true, attached: true }}
         attached
         panes={panes}
         activeIndex={activeTab}
@@ -193,6 +195,7 @@ export function components(message, markers, citedSources) {
 
       return claim ? (
         <Modal
+          className="claim-modal"
           trigger={
             <span className={`claim ${getSupportedBgColor(claim.score)}`}>
               {rest.children}

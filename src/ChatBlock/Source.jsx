@@ -11,7 +11,6 @@ export const SourceDetails = ({ source, index }) => {
     blurb,
     updated_at,
     source_type,
-    // match_highlights,
     semantic_identifier = 'untitled document',
   } = source || {};
   const parsedDate = updated_at ? DateTime.fromISO(updated_at) : null;

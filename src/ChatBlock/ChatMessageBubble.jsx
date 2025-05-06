@@ -107,7 +107,7 @@ function VerifyClaims() {
     return () => clearTimeout(timer);
   }, [message]);
   return (
-    <div>
+    <div className="verify-claims">
       <Spinner />
       {VERIFY_CLAIM_MESSAGES[message]}
     </div>
@@ -242,7 +242,11 @@ export function ChatMessageBubble(props) {
                 !isLoading &&
                 qualityCheck === 'ondemand' &&
                 !markers && (
-                  <Button onClick={() => setForceHallomi(true)}>
+                  <Button
+                    onClick={() => setForceHallomi(true)}
+                    className="claims-btn"
+                    icon
+                  >
                     <i class="ri-spy-line"></i> Verify AI claims
                   </Button>
                 )}
@@ -301,7 +305,7 @@ export function ChatMessageBubble(props) {
           )}
 
           {isFetchingRelatedQuestions && (
-            <div style={{ display: 'flex' }}>
+            <div className="related-questions-loader">
               <Spinner />
               Finding related questions...
             </div>

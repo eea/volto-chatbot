@@ -7,7 +7,6 @@ import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useScrollonStream } from './lib';
 import { useBackendChat } from './useBackendChat';
-import Spinner from './Spinner';
 
 import './style.less';
 

@@ -15,9 +15,11 @@ const RenderClaimView = (props) => {
     contextText,
     value,
     visibleCitationId,
-    spanRef,
+    spanRefs,
     sourceStartIndex = 0,
+    citationContainerRef,
   } = props;
+
   const citations = props.citations || [];
   const sortedCitations = citations.sort(
     (a, b) => a.startOffset - b.startOffset,
@@ -27,7 +29,12 @@ const RenderClaimView = (props) => {
     const isSelectedCitation = citation.id === visibleCitationId;
     const Tag = isSelectedCitation ? 'mark' : 'span';
     return (
-      <span key={ind} ref={spanRef}>
+      <span
+        key={ind}
+        ref={(el) => {
+          if (el) spanRefs.current[citation.id] = el;
+        }}
+      >
         <Tag>
           {contextText.slice(citation.startOffset, citation.endOffset)}
           <sup>{citation.id}</sup>
@@ -78,7 +85,11 @@ const RenderClaimView = (props) => {
     );
   }
 
-  return <div className="citation-text">{allSpans}</div>;
+  return (
+    <div className="citation-text" ref={citationContainerRef}>
+      {allSpans}
+    </div>
+  );
 };
 
 export function ClaimCitations(props) {
@@ -113,51 +124,63 @@ export function ClaimCitations(props) {
     .sort((sa, sb) => sa.index - sb.index);
 
   const [activeTab, setActiveTab] = React.useState(0);
-
   const [visibleCitationId, setVisibleCitation] = React.useState();
-  const spanRef = React.useRef();
 
-  const panes = sourcesWithSnippets.map((source, i) => {
-    return {
-      menuItem: () => (
-        <button
-          key={i}
-          className={`sources ${activeTab === i ? 'active' : ''}`}
-          onClick={() => setActiveTab(i)}
-        >
-          <SourceDetails source={source} index={source.index} />
-        </button>
-      ),
-      render: () => (
-        <TabPane>
-          <div className="citation-buttons">
-            {source?.snippets?.map(({ id }) => {
-              return (
-                <Button
-                  key={id}
-                  size="tiny"
-                  onClick={() => {
-                    spanRef.current && spanRef.current.scrollIntoView();
-                    setVisibleCitation(id);
-                  }}
-                >
-                  Line {id}
-                </Button>
-              );
-            })}
-          </div>
-          <RenderClaimView
-            contextText={joinedSources}
-            value={source.text}
-            visibleCitationId={visibleCitationId}
-            citations={source.snippets}
-            spanRef={spanRef}
-            sourceStartIndex={source.startIndex}
-          />
-        </TabPane>
-      ),
-    };
-  });
+  const citationContainerRef = React.useRef(null);
+  const spanRefs = React.useRef({});
+
+  const panes = sourcesWithSnippets.map((source, i) => ({
+    menuItem: () => (
+      <button
+        key={i}
+        className={`sources ${activeTab === i ? 'active' : ''}`}
+        onClick={() => setActiveTab(i)}
+      >
+        <SourceDetails source={source} index={source.index} />
+      </button>
+    ),
+    render: () => (
+      <TabPane>
+        <div className="citation-buttons">
+          {source?.snippets?.map(({ id }) => (
+            <Button
+              key={id}
+              size="tiny"
+              onClick={() => {
+                const container = citationContainerRef.current;
+                const target = spanRefs.current[id];
+
+                if (container && target) {
+                  const containerTop = container.getBoundingClientRect().top;
+                  const targetTop = target.getBoundingClientRect().top;
+                  const scrollOffset =
+                    targetTop - containerTop + container.scrollTop;
+
+                  container.scrollTo({
+                    top: scrollOffset - 50,
+                    behavior: 'smooth',
+                  });
+                }
+
+                setVisibleCitation(id);
+              }}
+            >
+              Line {id}
+            </Button>
+          ))}
+        </div>
+        <RenderClaimView
+          contextText={joinedSources}
+          value={source.text}
+          visibleCitationId={visibleCitationId}
+          citations={source.snippets}
+          citationContainerRef={citationContainerRef}
+          spanRefs={spanRefs}
+          sourceStartIndex={source.startIndex}
+        />
+      </TabPane>
+    ),
+  }));
 
   return (
     <div className="chat-window">

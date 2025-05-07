@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
-import { Button, Form, Icon, Segment } from 'semantic-ui-react';
+import { Button, Form, Segment } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';

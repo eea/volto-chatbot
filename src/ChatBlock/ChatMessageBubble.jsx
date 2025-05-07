@@ -303,7 +303,7 @@ export function ChatMessageBubble(props) {
             </>
           )}
 
-          {isFetchingRelatedQuestions && (
+          {!isUser && isFetchingRelatedQuestions && (
             <div className="related-questions-loader">
               <Spinner />
               Finding related questions...

@@ -18,6 +18,34 @@
 .chat-window {
   margin: 1.5em 0;
 
+  .ui.button.clear-chat,
+  .ui.button.claims-btn {
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  h2, h3, h4, h5 {
+    margin: calc(2rem - .1em) 0 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+  h3 {
+    font-size: 1.625rem;
+  }
+  h4 {
+    font-size: 1.25rem;
+  }
+  h5 {
+    font-size: 1.125rem;
+  }
+
   .circle {
     display: flex;
     width: 30px;
@@ -38,16 +66,6 @@
 
     svg {
       margin: 0 auto;
-    }
-  }
-
-  .ui.button.clear-chat {
-    display: flex;
-    align-items: center;
-
-    svg {
-      width: 18px;
-      height: 18px;
     }
   }
 
@@ -200,6 +218,11 @@
 }
 
 .claim-modal {
+  .ui.attached.menu:not(.tabular) {
+    border: none;
+    border-bottom: 1px solid #D4D4D5;
+  }
+
   .ui.menu {
     .sources {
       padding: 0;
@@ -275,13 +298,29 @@
     gap: 0.5em;
   }
 
-  .ui.inverted.button {
-    background-color: #fff;
+  .ui.primary.button {
+    background-color: @grey !important;
+
+    &:hover {
+      background-color: #334555 !important;
+    }
+  }
+
+  .ui.inverted.primary.button {
+    background-color: #fff !important;
+    color: @grey;
+    box-shadow: 0px 0px 0px 2px @grey inset !important;
+
+    &:hover {
+      background-color: @grey !important;
+      color: #fff;
+      box-shadow: 0px 0px 0px 2px @grey inset !important;
+    }
   }
 }
 
 .message-actions {
-  margin: 0.5em 0;
+  margin: 0.8em 0;
 
   .ui.basic.button {
     padding: 6px 8px;
@@ -303,10 +342,6 @@
     &:hover {
       border-radius: 3px;
       background-color: #f9f9f9 !important;
-
-      svg {
-        stroke: #0a0a0a;
-      }
     }
   }
 
@@ -475,16 +510,10 @@
   }
 }
 
-// .spinner-container {
-//   // display: flex;
-//   // justify-content: center;
-//   // align-items: center;
-//   // height: 100vh;
-// }
 
 .spinner {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border: 6px solid @teal;
   border-radius: 50%;
   border-top: 6px solid @blue;

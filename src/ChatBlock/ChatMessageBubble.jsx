@@ -15,6 +15,7 @@ import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
 import CopyIcon from './../icons/copy.svg';
 import CheckIcon from './../icons/check.svg';
+import GlassesIcon from './../icons/glasses.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
@@ -240,9 +241,8 @@ export function ChatMessageBubble(props) {
                   <Button
                     onClick={() => setForceHallomi(true)}
                     className="claims-btn"
-                    icon
                   >
-                    <i class="ri-spy-line"></i> Verify AI claims
+                    <SVGIcon name={GlassesIcon} /> Verify AI claims
                   </Button>
                 )}
               {isLoadingHalloumi && (

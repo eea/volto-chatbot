@@ -41,6 +41,16 @@
     }
   }
 
+  .ui.button.clear-chat {
+    display: flex;
+    align-items: center;
+    svg {
+      height: 18px;
+      width: 18px;
+    }
+  
+  }
+
   .citation-buttons {
     display: flex;
     flex-flow: wrap;
@@ -264,11 +274,17 @@
     margin-bottom: @marginBottom;
     gap: 0.5em;
   }
+
+  .ui.inverted.button {
+    background-color: #fff;
+  }
 }
 
 .message-actions {
+  margin: 0.5em 0;
+  
   .ui.basic.button {
-    padding: 5px;
+    padding: 6px 8px;
     margin-right: 0.2em;
 
     &:active,
@@ -277,17 +293,20 @@
       outline: none;
     }
 
+    svg {
+      width: 15px;
+      height: 15px;
+      margin: 0 !important;
+      stroke: #0a0a0a;
+    }
+
     &:hover {
       border-radius: 3px;
       background-color: #f9f9f9 !important;
 
-      i.icon {
-        color: #0a0a0a;
+      svg {
+        stroke: #0a0a0a;
       }
-    }
-
-    i.icon {
-      color: #333;
     }
   }
 

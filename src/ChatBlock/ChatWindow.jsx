@@ -7,6 +7,8 @@ import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useScrollonStream } from './lib';
 import { useBackendChat } from './useBackendChat';
+import { SVGIcon } from './utils';
+import PenIcon from './../icons/square-pen.svg';
 
 import './style.less';
 
@@ -93,9 +95,10 @@ function ChatWindow({
               <Button
                 disabled={isStreaming}
                 onClick={handleClearChat}
-                className="right floated"
+                className="right floated clear-chat"
+                aria-label="Clear chat"
               >
-                <Icon name="edit outline" /> New chat
+                <SVGIcon name={PenIcon} /> New chat
               </Button>
             </Segment>
             <div

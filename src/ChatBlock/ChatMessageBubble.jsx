@@ -1,14 +1,7 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import {
-  Icon,
-  Button,
-  Message,
-  MessageContent,
-  // Loader,
-  // Segment,
-} from 'semantic-ui-react';
+import { Button, Message, MessageContent } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
@@ -20,6 +13,8 @@ import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
+import CopyIcon from './../icons/copy.svg';
+import CheckIcon from './../icons/check.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
@@ -278,7 +273,11 @@ export function ChatMessageBubble(props) {
                 aria-label="Copy"
                 disabled={copied}
               >
-                <Icon name={copied ? 'check' : 'copy outline'} />
+                {copied ? (
+                  <SVGIcon name={CheckIcon} />
+                ) : (
+                  <SVGIcon name={CopyIcon} />
+                )}
               </Button>
 
               {enableFeedback && (

@@ -1,14 +1,18 @@
 import React from 'react';
 
-import { convertToPercentage, transformEmailsToLinks } from './utils';
+import { convertToPercentage, transformEmailsToLinks, SVGIcon } from './utils';
 import { Modal, ModalContent, Tab, TabPane, Button } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 import { SourceDetails } from './Source';
 
+import PrevIcon from './../icons/chevron-left.svg';
+import NextIcon from './../icons/chevron-right.svg';
+
 import './colors.less';
 
 // const EXPAND = 100;
+const BUTTONS_PER_PAGE = 18;
 
 const RenderClaimView = (props) => {
   const {
@@ -96,7 +100,6 @@ export function ClaimCitations(props) {
   const { ids, citations, citedSources } = props;
 
   let joinedSources = '';
-
   citedSources.forEach((source) => {
     source.startIndex = joinedSources.length;
     joinedSources += source.text + '\n---\n';
@@ -125,62 +128,103 @@ export function ClaimCitations(props) {
 
   const [activeTab, setActiveTab] = React.useState(0);
   const [visibleCitationId, setVisibleCitation] = React.useState();
+  const [buttonPage, setButtonPage] = React.useState(0);
 
   const citationContainerRef = React.useRef(null);
   const spanRefs = React.useRef({});
 
-  const panes = sourcesWithSnippets.map((source, i) => ({
-    menuItem: () => (
-      <button
-        key={i}
-        className={`sources ${activeTab === i ? 'active' : ''}`}
-        onClick={() => setActiveTab(i)}
-      >
-        <SourceDetails source={source} index={source.index} />
-      </button>
-    ),
-    render: () => (
-      <TabPane>
-        <div className="citation-buttons">
-          {source?.snippets?.map(({ id }) => (
-            <Button
-              key={id}
-              size="tiny"
-              onClick={() => {
-                const container = citationContainerRef.current;
-                const target = spanRefs.current[id];
+  const panes = sourcesWithSnippets.map((source, i) => {
+    const snippetButtons = source.snippets || [];
+    const totalPages = Math.ceil(snippetButtons.length / BUTTONS_PER_PAGE);
 
-                if (container && target) {
-                  const containerTop = container.getBoundingClientRect().top;
-                  const targetTop = target.getBoundingClientRect().top;
-                  const scrollOffset =
-                    targetTop - containerTop + container.scrollTop;
+    const citationButtons = snippetButtons.slice(
+      buttonPage * BUTTONS_PER_PAGE,
+      (buttonPage + 1) * BUTTONS_PER_PAGE,
+    );
 
-                  container.scrollTo({
-                    top: scrollOffset - 50,
-                    behavior: 'smooth',
-                  });
-                }
+    return {
+      menuItem: () => (
+        <button
+          key={i}
+          className={`sources ${activeTab === i ? 'active' : ''}`}
+          onClick={() => {
+            setActiveTab(i);
+            setButtonPage(0);
+          }}
+        >
+          <SourceDetails source={source} index={source.index} />
+        </button>
+      ),
+      render: () => (
+        <TabPane>
+          <div
+            className={`citation-buttons ${
+              totalPages > 1 ? 'slider-active' : ''
+            }`}
+          >
+            <div className="citation-buttons-container">
+              {citationButtons.map(({ id }) => (
+                <Button
+                  key={id}
+                  size="tiny"
+                  onClick={() => {
+                    const container = citationContainerRef.current;
+                    const target = spanRefs.current[id];
+                    if (container && target) {
+                      const containerTop =
+                        container.getBoundingClientRect().top;
+                      const targetTop = target.getBoundingClientRect().top;
+                      const scrollOffset =
+                        targetTop - containerTop + container.scrollTop;
+                      container.scrollTo({
+                        top: scrollOffset - 50,
+                        behavior: 'smooth',
+                      });
+                    }
+                    setVisibleCitation(id);
+                  }}
+                >
+                  Line {id}
+                </Button>
+              ))}
+            </div>
 
-                setVisibleCitation(id);
-              }}
-            >
-              Line {id}
-            </Button>
-          ))}
-        </div>
-        <RenderClaimView
-          contextText={joinedSources}
-          value={source.text}
-          visibleCitationId={visibleCitationId}
-          citations={source.snippets}
-          citationContainerRef={citationContainerRef}
-          spanRefs={spanRefs}
-          sourceStartIndex={source.startIndex}
-        />
-      </TabPane>
-    ),
-  }));
+            <div className="slider-buttons">
+              {totalPages > 1 && (
+                <Button
+                  className="slider-button-prev"
+                  onClick={() => setButtonPage(Math.max(0, buttonPage - 1))}
+                  disabled={buttonPage === 0}
+                >
+                  <SVGIcon name={PrevIcon} />
+                </Button>
+              )}
+              {totalPages > 1 && (
+                <Button
+                  className="slider-button-next"
+                  onClick={() =>
+                    setButtonPage(Math.min(totalPages - 1, buttonPage + 1))
+                  }
+                  disabled={buttonPage >= totalPages - 1}
+                >
+                  <SVGIcon name={NextIcon} />
+                </Button>
+              )}
+            </div>
+          </div>
+          <RenderClaimView
+            contextText={joinedSources}
+            value={source.text}
+            visibleCitationId={visibleCitationId}
+            citations={source.snippets}
+            citationContainerRef={citationContainerRef}
+            spanRefs={spanRefs}
+            sourceStartIndex={source.startIndex}
+          />
+        </TabPane>
+      ),
+    };
+  });
 
   return (
     <div className="chat-window">

@@ -12,7 +12,7 @@ import NextIcon from './../icons/chevron-right.svg';
 import './colors.less';
 
 // const EXPAND = 100;
-const BUTTONS_PER_PAGE = 18;
+const BUTTONS_PER_PAGE = 30;
 
 const RenderClaimView = (props) => {
   const {

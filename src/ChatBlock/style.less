@@ -52,7 +52,9 @@
     font-size: 1.125rem;
   }
 
-  ol li, ul li, p {
+  ol li,
+  ul li,
+  p {
     font-size: inherit;
   }
 
@@ -95,13 +97,14 @@
     .slider-button-next {
       padding: 3px 5px;
       border-radius: 5px;
+
       svg {
-        height: 20px !important;
         width: 20px !important;
+        height: 20px !important;
         margin: 0 !important;
       }
     }
-    
+
     &.slider-active {
       display: flex;
       align-items: start;
@@ -109,22 +112,22 @@
     }
 
     .slider-buttons {
-      text-align: right;
       display: flex;
       flex-direction: column;
       gap: 0.2em;
+      text-align: right;
     }
 
     .citation-buttons-container {
       display: flex;
       flex-flow: wrap;
       gap: 0.3em;
-  
+
       .ui.button {
         padding: 0.75em 1.25em 0.75em;
-        background-color: #c9d7e3;
         border-radius: 5px;
-      }  
+        background-color: #c9d7e3;
+      }
     }
   }
 

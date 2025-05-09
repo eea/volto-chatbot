@@ -66,3 +66,10 @@ export const useCopyToClipboard = (text) => {
 
   return [copied, copy];
 };
+
+export function convertToPercentage(floatValue, digits = 2) {
+  if (floatValue < 0 || floatValue > 1) {
+    return 0;
+  }
+  return (floatValue * 100).toFixed(digits) + '%';
+}

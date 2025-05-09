@@ -73,7 +73,7 @@ const FeedbackModal = ({
       <Modal.Content>
         {!isPositiveFeedback && (
           <div className="reason-buttons">
-            {feedbackReasons.map((reason) => (
+            {feedbackReasons?.map((reason) => (
               <Button
                 primary
                 size="small"

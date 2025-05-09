@@ -10,8 +10,12 @@ const applyConfig = (config) => {
     middleware.use(express.urlencoded({ extended: true }));
 
     const proxyMiddleware = require('./middleware').default;
+    const halloumiMiddleware = require('./halloumi/middleware').default;
+
     middleware.all('**/_da/**', proxyMiddleware);
-    middleware.id = 'danswer';
+    middleware.all('**/_ha/**', halloumiMiddleware);
+
+    middleware.id = 'chatbot';
 
     config.settings.expressMiddleware = [
       ...config.settings.expressMiddleware,
@@ -23,6 +27,7 @@ const applyConfig = (config) => {
     ...config.settings.loadables,
     rehypePrism: loadable.lib(() => import('rehype-prism-plus')),
     remarkGfm: loadable.lib(() => import('remark-gfm')),
+    luxon: loadable.lib(() => import('luxon')),
 
     // highlightJs: loadable.lib(() => import('highlight.js')),
     // marked: loadable.lib(() => import('marked')),

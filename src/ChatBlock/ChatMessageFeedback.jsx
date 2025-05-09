@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import FeedbackModal from './FeedbackModal';
+import { SVGIcon } from './utils';
+import ThumbsUpIcon from './../icons/thumbs-up.svg';
+import ThumbsDownIcon from './../icons/thumbs-down.svg';
 
 const Toast = ({ message, type, isActive }) => (
   <div className={`feedback-toast ${type} ${isActive ? 'active' : ''}`}>
@@ -36,7 +39,7 @@ const ChatMessageFeedback = (props) => {
         title="Like"
         aria-label="Like"
       >
-        <Icon name="thumbs up outline" />
+        <SVGIcon name={ThumbsUpIcon} />
       </Button>
       <Button
         basic
@@ -44,7 +47,7 @@ const ChatMessageFeedback = (props) => {
         title="Dislike"
         aria-label="Dislike"
       >
-        <Icon name="thumbs down outline" />
+        <SVGIcon name={ThumbsDownIcon} />
       </Button>
 
       {toast && (

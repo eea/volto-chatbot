@@ -1,11 +1,13 @@
 import { Popup } from 'semantic-ui-react';
-import { DateTime } from 'luxon';
+// import { DateTime } from 'luxon';
 import { SVGIcon } from './utils';
 
 import FileIcon from './../icons/file.svg';
 import GlobeIcon from './../icons/globe.svg';
 
-export const SourceDetails = ({ source, index }) => {
+import { injectLazyLibs } from '@plone/volto/helpers/Loadable/Loadable';
+
+const SourceDetails_ = ({ source, index, luxon }) => {
   const {
     link,
     blurb,
@@ -13,7 +15,7 @@ export const SourceDetails = ({ source, index }) => {
     source_type,
     semantic_identifier = 'untitled document',
   } = source || {};
-  const parsedDate = updated_at ? DateTime.fromISO(updated_at) : null;
+  const parsedDate = updated_at ? luxon.DateTime.fromISO(updated_at) : null;
   const relativeTime = parsedDate?.toRelative();
   const isLinkType = source_type === 'web';
   const isDocumentType = source_type === 'file';
@@ -64,3 +66,5 @@ export const SourceDetails = ({ source, index }) => {
     </div>
   );
 };
+
+export const SourceDetails = injectLazyLibs(['luxon'])(SourceDetails_);

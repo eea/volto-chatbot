@@ -27,6 +27,7 @@ const applyConfig = (config) => {
     ...config.settings.loadables,
     rehypePrism: loadable.lib(() => import('rehype-prism-plus')),
     remarkGfm: loadable.lib(() => import('remark-gfm')),
+    luxon: loadable.lib(() => import('luxon')),
 
     // highlightJs: loadable.lib(() => import('highlight.js')),
     // marked: loadable.lib(() => import('marked')),

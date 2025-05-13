@@ -238,7 +238,7 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
-          {sources.length > 0 && (
+          {(isUser || sources.length > 0) && (
             <Markdown
               components={components(message, markers, stableContextSources)}
               remarkPlugins={[remarkGfm]}
@@ -248,10 +248,9 @@ export function ChatMessageBubble(props) {
             </Markdown>
           )}
 
-          {sources.length === 0 && serializeNodes(totalFailMessage)}
-
           {!isUser && (
             <>
+              {sources.length === 0 && serializeNodes(totalFailMessage)}
               {showVerifyClaimsButton && (
                 <Button
                   onClick={() => setForceHallomi(true)}

@@ -109,6 +109,7 @@ class SubmitHandler {
     chatTitle,
     qgenAsistantId,
     enableQgen,
+    setIsFetchingRelatedQuestions,
   }) {
     this.persona = persona;
     this.chatTitle = chatTitle;
@@ -122,6 +123,7 @@ class SubmitHandler {
     this.setCompleteMessageDetail = setCompleteMessageDetail;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
+    this.setIsFetchingRelatedQuestions = setIsFetchingRelatedQuestions;
 
     this.onSubmit = this.onSubmit.bind(this);
   }
@@ -350,6 +352,9 @@ class SubmitHandler {
               alternateAssistantID: null, // alternativeAssistant?.id,
             },
           ];
+          // if (finalMessage) {
+          //   console.log({ finalMessage });
+          // }
           const replacementsMap = finalMessage
             ? new Map([
                 [localMessages[0].messageId, TEMP_USER_MESSAGE_ID],
@@ -387,6 +392,7 @@ class SubmitHandler {
       if (lastMessage && userMessage) {
         const query = userMessage.message;
         const answer = lastMessage.message;
+        this.setIsFetchingRelatedQuestions(true);
         const relatedQuestionsText = await fetchRelatedQuestions(
           { query, answer },
           this.qgenAsistantId,
@@ -398,6 +404,7 @@ class SubmitHandler {
           ...newCompleteMessageDetail,
           messageMap,
         });
+        this.setIsFetchingRelatedQuestions(false);
       }
     }
     this.setIsStreaming(false);
@@ -419,6 +426,8 @@ function extractJSON(str) {
 
 export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
+  const [isFetchingRelatedQuestions, setIsFetchingRelatedQuestions] =
+    React.useState(false);
   const [isCancelled, setIsCancelled] = React.useState(false);
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);
@@ -447,6 +456,7 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     setIsStreaming,
     qgenAsistantId,
     enableQgen,
+    setIsFetchingRelatedQuestions,
   });
 
   const clearChat = () => {
@@ -465,5 +475,6 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     isStreaming,
     isCancelled,
     clearChat,
+    isFetchingRelatedQuestions,
   };
 }

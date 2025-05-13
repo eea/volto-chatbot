@@ -31,6 +31,8 @@ function ChatWindow({
     qualityCheck = 'disabled',
     qualityCheckStages = [],
     qualityCheckContext = 'citations',
+    noSupportDocumentsMessage,
+    totalFailMessage,
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const {
@@ -121,6 +123,8 @@ function ChatWindow({
                     onSubmit({ message });
                   }}
                   qualityCheckContext={qualityCheckContext}
+                  noSupportDocumentsMessage={noSupportDocumentsMessage}
+                  totalFailMessage={totalFailMessage}
                   showToolCalls={showToolCalls}
                   isFetchingRelatedQuestions={isFetchingRelatedQuestions}
                 />

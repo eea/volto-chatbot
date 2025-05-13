@@ -74,9 +74,14 @@ export function ChatBlockSchema({ assistants, data }) {
           'placeholderPrompt',
           'height',
           'enableQgen',
+          'totalFailMessage',
           'qualityCheck',
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
-            ? ['qualityCheckContext', 'qualityCheckStages']
+            ? [
+                'qualityCheckContext',
+                'qualityCheckStages',
+                'noSupportDocumentsMessage',
+              ]
             : []),
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
@@ -90,6 +95,34 @@ export function ChatBlockSchema({ assistants, data }) {
       },
     ],
     properties: {
+      totalFailMessage: {
+        title: "Message when there's no citations",
+        widget: 'slate',
+        default: [
+          {
+            type: 'p',
+            children: [
+              {
+                text:
+                  "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
+              },
+            ],
+          },
+        ],
+      },
+      noSupportDocumentsMessage: {
+        title: 'Total failure message',
+        description: 'This message will be shown instead of the sources',
+        widget: 'slate',
+        default: [
+          {
+            type: 'p',
+            children: [
+              { text: 'No supported information found in the documents' },
+            ],
+          },
+        ],
+      },
       assistant: {
         title: 'Assistant',
         choices: assistantChoices(),

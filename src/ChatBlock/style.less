@@ -18,6 +18,55 @@
 .chat-window {
   margin: 1.5em 0;
 
+  .ui.button.clear-chat,
+  .ui.button.claims-btn {
+    display: flex;
+    align-items: center;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  h2,
+  h3,
+  h4,
+  h5 {
+    margin: calc(2rem - 0.1em) 0 1rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+  }
+
+  h3 {
+    font-size: 1.625rem;
+  }
+
+  h4 {
+    font-size: 1.25rem;
+  }
+
+  h5 {
+    font-size: 1.125rem;
+  }
+
+  ol li,
+  ul li,
+  p {
+    font-size: inherit;
+  }
+
+  .messages ul {
+    margin-bottom: 0;
+  }
+
+  .citation-text {
+    overflow: auto;
+    max-height: 450px;
+  }
+
   .circle {
     display: flex;
     width: 30px;
@@ -39,6 +88,51 @@
     svg {
       margin: 0 auto;
     }
+  }
+
+  .citation-buttons {
+    margin-bottom: 1em;
+
+    .slider-button-prev,
+    .slider-button-next {
+      padding: 3px 5px;
+      border-radius: 5px;
+
+      svg {
+        width: 20px !important;
+        height: 20px !important;
+        margin: 0 !important;
+      }
+    }
+
+    &.slider-active {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+    }
+
+    .slider-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2em;
+      text-align: right;
+    }
+
+    .citation-buttons-container {
+      display: flex;
+      flex-flow: wrap;
+      gap: 0.3em;
+
+      .ui.button {
+        padding: 0.75em 1.25em 0.75em;
+        border-radius: 5px;
+        background-color: #c9d7e3;
+      }
+    }
+  }
+
+  .ui.button.icon.claims-btn {
+    margin-bottom: 1em;
   }
 
   .comment {
@@ -105,9 +199,11 @@
     .source-title {
       overflow: hidden;
       width: 140px;
+      padding-left: 0.2em;
       margin: 0 5px;
       font-size: 13px;
       font-weight: 600;
+      text-align: left;
       text-overflow: ellipsis;
       white-space: nowrap;
       word-break: break-all;
@@ -172,6 +268,63 @@
   }
 }
 
+.claim-modal {
+  .chat-window {
+    margin-bottom: 0;
+  }
+
+  .ui.attached.menu:not(.tabular) {
+    border: none;
+    border-bottom: 1px solid #d4d4d5;
+  }
+
+  .ui.segment.tab {
+    padding-bottom: 0;
+  }
+
+  .ui.menu {
+    &:before {
+      border-top: none !important;
+    }
+
+    .sources {
+      padding: 0;
+      border: none !important;
+      border-radius: 7px;
+      margin-right: 0.5em;
+      cursor: pointer;
+
+      &.active .source {
+        background-color: #eeeff1;
+      }
+
+      .source {
+        background-color: #fbfbfb;
+      }
+
+      .source-header {
+        pointer-events: none;
+      }
+    }
+  }
+
+  .ui.tab {
+    padding-right: 0;
+    padding-left: 0;
+  }
+}
+
+.verify-claims {
+  display: flex;
+  gap: 0.5em;
+}
+
+.related-questions-loader {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
 .starter-messages-container {
   display: grid;
   width: 100%;
@@ -207,11 +360,33 @@
     margin-bottom: @marginBottom;
     gap: 0.5em;
   }
+
+  .ui.primary.button {
+    background-color: @grey !important;
+
+    &:hover {
+      background-color: #334555 !important;
+    }
+  }
+
+  .ui.inverted.primary.button {
+    background-color: #fff !important;
+    box-shadow: 0px 0px 0px 2px @grey inset !important;
+    color: @grey;
+
+    &:hover {
+      background-color: @grey !important;
+      box-shadow: 0px 0px 0px 2px @grey inset !important;
+      color: #fff;
+    }
+  }
 }
 
 .message-actions {
+  margin: 0.8em 0;
+
   .ui.basic.button {
-    padding: 5px;
+    padding: 6px 8px;
     margin-right: 0.2em;
 
     &:active,
@@ -220,17 +395,16 @@
       outline: none;
     }
 
+    svg {
+      width: 15px;
+      height: 15px;
+      margin: 0 !important;
+      stroke: #0a0a0a;
+    }
+
     &:hover {
       border-radius: 3px;
       background-color: #f9f9f9 !important;
-
-      i.icon {
-        color: #0a0a0a;
-      }
-    }
-
-    i.icon {
-      color: #333;
     }
   }
 
@@ -383,4 +557,28 @@
   100% {
     background-color: rgba(61, 82, 101, 0.2);
   }
+}
+
+@keyframes spin-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.spinner {
+  width: 22px;
+  height: 22px;
+  border: 6px solid @teal;
+  border-radius: 50%;
+  border-top: 6px solid @blue;
+  animation: spin-rotate 1s infinite linear; // spin 2s linear infinite;
+  animation-delay: 0.5s;
 }

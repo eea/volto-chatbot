@@ -1,12 +1,14 @@
 import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
-import { Button, Form, Icon, Segment } from 'semantic-ui-react';
+import { Button, Form, Segment } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useScrollonStream } from './lib';
 import { useBackendChat } from './useBackendChat';
+import { SVGIcon } from './utils';
+import PenIcon from './../icons/square-pen.svg';
 
 import './style.less';
 
@@ -26,9 +28,18 @@ function ChatWindow({
     scrollToInput,
     showToolCalls,
     feedbackReasons,
+    qualityCheck = 'disabled',
+    qualityCheckStages = [],
+    qualityCheckContext = 'citations',
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
-  const { onSubmit, messages, isStreaming, clearChat } = useBackendChat({
+  const {
+    onSubmit,
+    messages,
+    isStreaming,
+    isFetchingRelatedQuestions,
+    clearChat,
+  } = useBackendChat({
     persona,
     qgenAsistantId,
     enableQgen,
@@ -84,9 +95,10 @@ function ChatWindow({
               <Button
                 disabled={isStreaming}
                 onClick={handleClearChat}
-                className="right floated"
+                className="right floated clear-chat"
+                aria-label="Clear chat"
               >
-                <Icon name="edit outline" /> New chat
+                <SVGIcon name={PenIcon} /> New chat
               </Button>
             </Segment>
             <div
@@ -103,17 +115,23 @@ function ChatWindow({
                   enableFeedback={enableFeedback}
                   feedbackReasons={feedbackReasons}
                   libs={libs}
+                  qualityCheck={qualityCheck}
+                  qualityCheckStages={qualityCheckStages}
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}
+                  qualityCheckContext={qualityCheckContext}
                   showToolCalls={showToolCalls}
+                  isFetchingRelatedQuestions={isFetchingRelatedQuestions}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}
             </div>
           </>
         )}
-        {isStreaming && <div className="loader"></div>}
+        {isStreaming && !isFetchingRelatedQuestions && (
+          <div className="loader" />
+        )}
       </div>
 
       <div className="chat-form">

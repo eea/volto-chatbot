@@ -123,6 +123,8 @@ export function ChatMessageBubble(props) {
     qualityCheck,
     qualityCheckStages,
     qualityCheckContext,
+    noSupportDocumentsMessage,
+    totalFailMessage,
     isFetchingRelatedQuestions,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
@@ -204,8 +206,20 @@ export function ChatMessageBubble(props) {
   const scoreStage = qualityCheckStages?.find(
     ({ start, end }) => start <= score && score <= end,
   );
+  const isFirstScoreStage =
+    qualityCheckStages?.reduce(
+      (acc, { start, end }, curIx) =>
+        start <= score && score <= end ? curIx : acc,
+      -1,
+    ) ?? -1;
   const scoreColor = scoreStage?.color || 'black';
   const halloumiMessage = (doQualityControl && scoreStage?.label) || '';
+  const showVerifyClaimsButton =
+    sources.length > 0 &&
+    qualityCheck === 'ondemand' &&
+    !isLoadingHalloumi &&
+    !isLoading &&
+    !markers;
 
   return (
     <div>
@@ -224,27 +238,27 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
-          <Markdown
-            components={components(message, markers, stableContextSources)}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[addQualityMarkersPlugin]}
-          >
-            {addCitations(message.message)}
-          </Markdown>
+          {(isUser || sources.length > 0) && (
+            <Markdown
+              components={components(message, markers, stableContextSources)}
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[addQualityMarkersPlugin]}
+            >
+              {addCitations(message.message)}
+            </Markdown>
+          )}
 
           {!isUser && (
             <>
-              {!isLoadingHalloumi &&
-                !isLoading &&
-                qualityCheck === 'ondemand' &&
-                !markers && (
-                  <Button
-                    onClick={() => setForceHallomi(true)}
-                    className="claims-btn"
-                  >
-                    <SVGIcon name={GlassesIcon} /> Verify AI claims
-                  </Button>
-                )}
+              {sources.length === 0 && serializeNodes(totalFailMessage)}
+              {showVerifyClaimsButton && (
+                <Button
+                  onClick={() => setForceHallomi(true)}
+                  className="claims-btn"
+                >
+                  <SVGIcon name={GlassesIcon} /> Verify AI claims
+                </Button>
+              )}
               {isLoadingHalloumi && (
                 <Message color="blue">
                   <VerifyClaims />
@@ -291,7 +305,7 @@ export function ChatMessageBubble(props) {
             </div>
           )}
 
-          {showSources && (
+          {isFirstScoreStage !== -1 && showSources && (
             <>
               <h5>Sources:</h5>
 
@@ -302,6 +316,8 @@ export function ChatMessageBubble(props) {
               </div>
             </>
           )}
+          {isFirstScoreStage === -1 &&
+            serializeNodes(noSupportDocumentsMessage)}
 
           {!isUser && isFetchingRelatedQuestions && (
             <div className="related-questions-loader">

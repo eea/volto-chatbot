@@ -33,6 +33,7 @@ function ChatWindow({
     qualityCheckContext = 'citations',
     noSupportDocumentsMessage,
     totalFailMessage,
+    enableShowTotalFailMessage,
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const {
@@ -124,6 +125,7 @@ function ChatWindow({
                   }}
                   qualityCheckContext={qualityCheckContext}
                   noSupportDocumentsMessage={noSupportDocumentsMessage}
+                  enableShowTotalFailMessage={enableShowTotalFailMessage}
                   totalFailMessage={totalFailMessage}
                   showToolCalls={showToolCalls}
                   isFetchingRelatedQuestions={isFetchingRelatedQuestions}

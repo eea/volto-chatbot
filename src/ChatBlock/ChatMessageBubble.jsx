@@ -21,6 +21,12 @@ const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
+const VERIFY_CLAIM_MESSAGES = [
+  'Going through each claim and verify against the referenced documents...',
+  'Summarising claim verifications results...',
+  'Calculating scores...',
+];
+
 // TODO: don't use this over the text like this, make it a rehype plugin
 function addCitations(text) {
   return text.replaceAll(CITATION_MATCH, (match) => {
@@ -85,12 +91,6 @@ function printSlate(value, score) {
   return serializeNodes(value);
 }
 
-const VERIFY_CLAIM_MESSAGES = [
-  'Going through each claim and verify against the referenced documents...',
-  'Summarising claim verifications results...',
-  'Calculating scores...',
-];
-
 function VerifyClaims() {
   const [message, setMessage] = React.useState(0);
 
@@ -102,6 +102,7 @@ function VerifyClaims() {
     }, 2000);
     return () => clearTimeout(timer);
   }, [message]);
+
   return (
     <div className="verify-claims">
       <Spinner />
@@ -126,6 +127,7 @@ export function ChatMessageBubble(props) {
     noSupportDocumentsMessage,
     totalFailMessage,
     isFetchingRelatedQuestions,
+    enableShowTotalFailMessage,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
@@ -213,13 +215,19 @@ export function ChatMessageBubble(props) {
       -1,
     ) ?? -1;
   const scoreColor = scoreStage?.color || 'black';
+
   const halloumiMessage = (doQualityControl && scoreStage?.label) || '';
+
   const showVerifyClaimsButton =
     sources.length > 0 &&
     qualityCheck === 'ondemand' &&
     !isLoadingHalloumi &&
     !isLoading &&
     !markers;
+
+  const isFetching = isLoadingHalloumi || isLoading;
+  const showTotalFailMessage =
+    sources.length === 0 && !isFetching && enableShowTotalFailMessage;
 
   return (
     <div>
@@ -238,19 +246,21 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
-          {(isUser || sources.length > 0) && (
-            <Markdown
-              components={components(message, markers, stableContextSources)}
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[addQualityMarkersPlugin]}
-            >
-              {addCitations(message.message)}
-            </Markdown>
+
+          <Markdown
+            components={components(message, markers, stableContextSources)}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[addQualityMarkersPlugin]}
+          >
+            {addCitations(message.message)}
+          </Markdown>
+
+          {!isUser && showTotalFailMessage && (
+            <Message color="red">{serializeNodes(totalFailMessage)}</Message>
           )}
 
           {!isUser && (
             <>
-              {sources.length === 0 && serializeNodes(totalFailMessage)}
               {showVerifyClaimsButton && (
                 <Button
                   onClick={() => setForceHallomi(true)}
@@ -259,18 +269,13 @@ export function ChatMessageBubble(props) {
                   <SVGIcon name={GlassesIcon} /> Verify AI claims
                 </Button>
               )}
-              {isLoadingHalloumi && (
+              {isLoadingHalloumi && sources.length > 0 && (
                 <Message color="blue">
                   <VerifyClaims />
                 </Message>
               )}
               {!!halloumiMessage && !!markers && (
                 <Message color={scoreColor} icon>
-                  {/* {!!scoreStage.icon && ( */}
-                  {/*   <Icon name={scoreStage.icon} color={scoreColor} /> */}
-                  {/* )} */}
-                  {/* <strong>{score}%</strong> */}
-
                   <MessageContent>
                     {printSlate(halloumiMessage, `${score}%`)}
                   </MessageContent>
@@ -349,3 +354,8 @@ export function ChatMessageBubble(props) {
     </div>
   );
 }
+
+// {/* {!!scoreStage.icon && ( */}
+// {/*   <Icon name={scoreStage.icon} color={scoreColor} /> */}
+// {/* )} */}
+// {/* <strong>{score}%</strong> */}

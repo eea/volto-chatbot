@@ -1,5 +1,8 @@
 import superagent from 'superagent';
 import fetch from 'node-fetch';
+import debug from 'debug';
+
+const log = debug('volto-chatbot');
 
 let cached_auth_cookie = null;
 let last_fetched = null;
@@ -58,6 +61,8 @@ async function check_credentials() {
       'Content-Type': 'application/json',
     },
   };
+
+  log(`Fetching ${reqUrl}`);
   return await fetch(reqUrl, options);
 }
 
@@ -85,6 +90,7 @@ async function send_danswer_request(req, res, { username, password, url }) {
     options.body = JSON.stringify(req.body);
   }
   try {
+    log(`Fetching ${url}`);
     const response = await fetch(url, options, req.body);
 
     if (response.headers.get('transfer-encoding') === 'chunked') {

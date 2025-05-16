@@ -99,7 +99,7 @@ function VerifyClaims() {
       if (message < VERIFY_CLAIM_MESSAGES.length - 1) {
         setMessage(message + 1);
       }
-    }, 2000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [message]);
 
@@ -121,12 +121,20 @@ function HalloumiFeedback({
   showVerifyClaimsButton,
   sources,
 }) {
+  const messageBySource =
+    'Please allow a few minutes for claim verification when many references are involved.';
+
   return (
     <>
       {showVerifyClaimsButton && (
-        <Button onClick={() => setForceHallomi(true)} className="claims-btn">
-          <SVGIcon name={GlassesIcon} /> Verify AI claims
-        </Button>
+        <div className="halloumi-feedback-button">
+          <Button onClick={() => setForceHallomi(true)} className="claims-btn">
+            <SVGIcon name={GlassesIcon} /> Verify AI claims
+          </Button>
+          <div>
+            <span>{messageBySource}</span>{' '}
+          </div>
+        </div>
       )}
       {isLoadingHalloumi && sources.length > 0 && (
         <Message color="blue">

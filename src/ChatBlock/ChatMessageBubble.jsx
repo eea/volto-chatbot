@@ -111,6 +111,70 @@ function VerifyClaims() {
   );
 }
 
+function HalloumiFeedback({
+  halloumiMessage,
+  isLoadingHalloumi,
+  markers,
+  score,
+  scoreColor,
+  setForceHallomi,
+  showVerifyClaimsButton,
+  sources,
+}) {
+  return (
+    <>
+      {showVerifyClaimsButton && (
+        <Button onClick={() => setForceHallomi(true)} className="claims-btn">
+          <SVGIcon name={GlassesIcon} /> Verify AI claims
+        </Button>
+      )}
+      {isLoadingHalloumi && sources.length > 0 && (
+        <Message color="blue">
+          <VerifyClaims />
+        </Message>
+      )}
+      {!!halloumiMessage && !!markers && (
+        <Message color={scoreColor} icon>
+          <MessageContent>
+            {printSlate(halloumiMessage, `${score}%`)}
+          </MessageContent>
+        </Message>
+      )}
+    </>
+  );
+}
+
+function UserActionsToolbar({
+  handleCopy,
+  copied,
+  enableFeedback,
+  message,
+  feedbackReasons,
+}) {
+  return (
+    <div className="message-actions">
+      <Button
+        basic
+        onClick={() => handleCopy()}
+        title="Copy"
+        aria-label="Copy"
+        disabled={copied}
+      >
+        {copied ? <SVGIcon name={CheckIcon} /> : <SVGIcon name={CopyIcon} />}
+      </Button>
+
+      {enableFeedback && (
+        <>
+          <ChatMessageFeedback
+            message={message}
+            feedbackReasons={feedbackReasons}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
 export function ChatMessageBubble(props) {
   const {
     message,
@@ -216,18 +280,17 @@ export function ChatMessageBubble(props) {
     ) ?? -1;
   const scoreColor = scoreStage?.color || 'black';
 
-  const halloumiMessage = (doQualityControl && scoreStage?.label) || '';
+  const isFetching = isLoadingHalloumi || isLoading;
+  const halloumiMessage = doQualityControl ? scoreStage?.label : '';
 
   const showVerifyClaimsButton =
     sources.length > 0 &&
     qualityCheck === 'ondemand' &&
-    !isLoadingHalloumi &&
-    !isLoading &&
+    !isFetching &&
     !markers;
-
-  const isFetching = isLoadingHalloumi || isLoading;
   const showTotalFailMessage =
     sources.length === 0 && !isFetching && enableShowTotalFailMessage;
+  const showRelatedQuestions = message.relatedQuestions?.length > 0;
 
   return (
     <div>
@@ -260,60 +323,31 @@ export function ChatMessageBubble(props) {
           )}
 
           {!isUser && (
-            <>
-              {showVerifyClaimsButton && (
-                <Button
-                  onClick={() => setForceHallomi(true)}
-                  className="claims-btn"
-                >
-                  <SVGIcon name={GlassesIcon} /> Verify AI claims
-                </Button>
-              )}
-              {isLoadingHalloumi && sources.length > 0 && (
-                <Message color="blue">
-                  <VerifyClaims />
-                </Message>
-              )}
-              {!!halloumiMessage && !!markers && (
-                <Message color={scoreColor} icon>
-                  <MessageContent>
-                    {printSlate(halloumiMessage, `${score}%`)}
-                  </MessageContent>
-                </Message>
-              )}
-            </>
+            <HalloumiFeedback
+              sources={sources}
+              halloumiMessage={halloumiMessage}
+              isLoadingHalloumi={isLoadingHalloumi}
+              markers={markers}
+              score={score}
+              scoreColor={scoreColor}
+              setForceHallomi={setForceHallomi}
+              showVerifyClaimsButton={showVerifyClaimsButton}
+            />
           )}
-          {!isUser && !isLoading && (
-            <div className="message-actions">
-              <Button
-                basic
-                onClick={() => handleCopy()}
-                title="Copy"
-                aria-label="Copy"
-                disabled={copied}
-              >
-                {copied ? (
-                  <SVGIcon name={CheckIcon} />
-                ) : (
-                  <SVGIcon name={CopyIcon} />
-                )}
-              </Button>
 
-              {enableFeedback && (
-                <>
-                  <ChatMessageFeedback
-                    message={message}
-                    feedbackReasons={feedbackReasons}
-                  />
-                </>
-              )}
-            </div>
+          {!isUser && !isLoading && (
+            <UserActionsToolbar
+              handleCopy={handleCopy}
+              copied={copied}
+              enableFeedback={enableFeedback}
+              message={message}
+              feedbackReasons={feedbackReasons}
+            />
           )}
 
           {isFirstScoreStage !== -1 && showSources && (
             <>
               <h5>Sources:</h5>
-
               <div className="sources">
                 {sources.map((source, i) => (
                   <SourceDetails source={source} key={i} index={source.index} />
@@ -321,6 +355,7 @@ export function ChatMessageBubble(props) {
               </div>
             </>
           )}
+
           {isFirstScoreStage === -1 &&
             serializeNodes(noSupportDocumentsMessage)}
 
@@ -331,7 +366,7 @@ export function ChatMessageBubble(props) {
             </div>
           )}
 
-          {message.relatedQuestions?.length > 0 && (
+          {showRelatedQuestions && (
             <>
               <h5>Related questions:</h5>
               <div className="chat-related-questions">

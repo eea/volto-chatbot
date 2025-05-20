@@ -21,6 +21,12 @@ const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
+const VERIFY_CLAIM_MESSAGES = [
+  'Going through each claim and verify against the referenced documents...',
+  'Summarising claim verifications results...',
+  'Calculating scores...',
+];
+
 // TODO: don't use this over the text like this, make it a rehype plugin
 function addCitations(text) {
   return text.replaceAll(CITATION_MATCH, (match) => {
@@ -85,12 +91,6 @@ function printSlate(value, score) {
   return serializeNodes(value);
 }
 
-const VERIFY_CLAIM_MESSAGES = [
-  'Going through each claim and verify against the referenced documents...',
-  'Summarising claim verifications results...',
-  'Calculating scores...',
-];
-
 function VerifyClaims() {
   const [message, setMessage] = React.useState(0);
 
@@ -99,13 +99,86 @@ function VerifyClaims() {
       if (message < VERIFY_CLAIM_MESSAGES.length - 1) {
         setMessage(message + 1);
       }
-    }, 2000);
+    }, 5000);
     return () => clearTimeout(timer);
   }, [message]);
+
   return (
     <div className="verify-claims">
       <Spinner />
       {VERIFY_CLAIM_MESSAGES[message]}
+    </div>
+  );
+}
+
+function HalloumiFeedback({
+  halloumiMessage,
+  isLoadingHalloumi,
+  markers,
+  score,
+  scoreColor,
+  setForceHallomi,
+  showVerifyClaimsButton,
+  sources,
+}) {
+  const messageBySource =
+    'Please allow a few minutes for claim verification when many references are involved.';
+
+  return (
+    <>
+      {showVerifyClaimsButton && (
+        <div className="halloumi-feedback-button">
+          <Button onClick={() => setForceHallomi(true)} className="claims-btn">
+            <SVGIcon name={GlassesIcon} /> Verify AI claims
+          </Button>
+          <div>
+            <span>{messageBySource}</span>{' '}
+          </div>
+        </div>
+      )}
+      {isLoadingHalloumi && sources.length > 0 && (
+        <Message color="blue">
+          <VerifyClaims />
+        </Message>
+      )}
+      {!!halloumiMessage && !!markers && (
+        <Message color={scoreColor} icon>
+          <MessageContent>
+            {printSlate(halloumiMessage, `${score}%`)}
+          </MessageContent>
+        </Message>
+      )}
+    </>
+  );
+}
+
+function UserActionsToolbar({
+  handleCopy,
+  copied,
+  enableFeedback,
+  message,
+  feedbackReasons,
+}) {
+  return (
+    <div className="message-actions">
+      <Button
+        basic
+        onClick={() => handleCopy()}
+        title="Copy"
+        aria-label="Copy"
+        disabled={copied}
+      >
+        {copied ? <SVGIcon name={CheckIcon} /> : <SVGIcon name={CopyIcon} />}
+      </Button>
+
+      {enableFeedback && (
+        <>
+          <ChatMessageFeedback
+            message={message}
+            feedbackReasons={feedbackReasons}
+          />
+        </>
+      )}
     </div>
   );
 }
@@ -126,6 +199,7 @@ export function ChatMessageBubble(props) {
     noSupportDocumentsMessage,
     totalFailMessage,
     isFetchingRelatedQuestions,
+    enableShowTotalFailMessage,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
@@ -213,13 +287,18 @@ export function ChatMessageBubble(props) {
       -1,
     ) ?? -1;
   const scoreColor = scoreStage?.color || 'black';
-  const halloumiMessage = (doQualityControl && scoreStage?.label) || '';
+
+  const isFetching = isLoadingHalloumi || isLoading;
+  const halloumiMessage = doQualityControl ? scoreStage?.label : '';
+
   const showVerifyClaimsButton =
     sources.length > 0 &&
     qualityCheck === 'ondemand' &&
-    !isLoadingHalloumi &&
-    !isLoading &&
+    !isFetching &&
     !markers;
+  const showTotalFailMessage =
+    sources.length === 0 && !isFetching && enableShowTotalFailMessage;
+  const showRelatedQuestions = message.relatedQuestions?.length > 0;
 
   return (
     <div>
@@ -238,77 +317,45 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
-          {(isUser || sources.length > 0) && (
-            <Markdown
-              components={components(message, markers, stableContextSources)}
-              remarkPlugins={[remarkGfm]}
-              rehypePlugins={[addQualityMarkersPlugin]}
-            >
-              {addCitations(message.message)}
-            </Markdown>
+
+          <Markdown
+            components={components(message, markers, stableContextSources)}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[addQualityMarkersPlugin]}
+          >
+            {addCitations(message.message)}
+          </Markdown>
+
+          {!isUser && showTotalFailMessage && (
+            <Message color="red">{serializeNodes(totalFailMessage)}</Message>
           )}
 
           {!isUser && (
-            <>
-              {sources.length === 0 && serializeNodes(totalFailMessage)}
-              {showVerifyClaimsButton && (
-                <Button
-                  onClick={() => setForceHallomi(true)}
-                  className="claims-btn"
-                >
-                  <SVGIcon name={GlassesIcon} /> Verify AI claims
-                </Button>
-              )}
-              {isLoadingHalloumi && (
-                <Message color="blue">
-                  <VerifyClaims />
-                </Message>
-              )}
-              {!!halloumiMessage && !!markers && (
-                <Message color={scoreColor} icon>
-                  {/* {!!scoreStage.icon && ( */}
-                  {/*   <Icon name={scoreStage.icon} color={scoreColor} /> */}
-                  {/* )} */}
-                  {/* <strong>{score}%</strong> */}
-
-                  <MessageContent>
-                    {printSlate(halloumiMessage, `${score}%`)}
-                  </MessageContent>
-                </Message>
-              )}
-            </>
+            <HalloumiFeedback
+              sources={sources}
+              halloumiMessage={halloumiMessage}
+              isLoadingHalloumi={isLoadingHalloumi}
+              markers={markers}
+              score={score}
+              scoreColor={scoreColor}
+              setForceHallomi={setForceHallomi}
+              showVerifyClaimsButton={showVerifyClaimsButton}
+            />
           )}
-          {!isUser && !isLoading && (
-            <div className="message-actions">
-              <Button
-                basic
-                onClick={() => handleCopy()}
-                title="Copy"
-                aria-label="Copy"
-                disabled={copied}
-              >
-                {copied ? (
-                  <SVGIcon name={CheckIcon} />
-                ) : (
-                  <SVGIcon name={CopyIcon} />
-                )}
-              </Button>
 
-              {enableFeedback && (
-                <>
-                  <ChatMessageFeedback
-                    message={message}
-                    feedbackReasons={feedbackReasons}
-                  />
-                </>
-              )}
-            </div>
+          {!isUser && !isLoading && (
+            <UserActionsToolbar
+              handleCopy={handleCopy}
+              copied={copied}
+              enableFeedback={enableFeedback}
+              message={message}
+              feedbackReasons={feedbackReasons}
+            />
           )}
 
           {isFirstScoreStage !== -1 && showSources && (
             <>
               <h5>Sources:</h5>
-
               <div className="sources">
                 {sources.map((source, i) => (
                   <SourceDetails source={source} key={i} index={source.index} />
@@ -316,6 +363,7 @@ export function ChatMessageBubble(props) {
               </div>
             </>
           )}
+
           {isFirstScoreStage === -1 &&
             serializeNodes(noSupportDocumentsMessage)}
 
@@ -326,7 +374,7 @@ export function ChatMessageBubble(props) {
             </div>
           )}
 
-          {message.relatedQuestions?.length > 0 && (
+          {showRelatedQuestions && (
             <>
               <h5>Related questions:</h5>
               <div className="chat-related-questions">
@@ -349,3 +397,8 @@ export function ChatMessageBubble(props) {
     </div>
   );
 }
+
+// {/* {!!scoreStage.icon && ( */}
+// {/*   <Icon name={scoreStage.icon} color={scoreColor} /> */}
+// {/* )} */}
+// {/* <strong>{score}%</strong> */}

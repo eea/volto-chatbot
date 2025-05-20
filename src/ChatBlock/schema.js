@@ -74,13 +74,14 @@ export function ChatBlockSchema({ assistants, data }) {
           'placeholderPrompt',
           'height',
           'enableQgen',
-          'totalFailMessage',
+          'enableShowTotalFailMessage',
+          ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
           'qualityCheck',
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
             ? [
+                'noSupportDocumentsMessage',
                 'qualityCheckContext',
                 'qualityCheckStages',
-                'noSupportDocumentsMessage',
               ]
             : []),
           'enableFeedback',
@@ -95,6 +96,11 @@ export function ChatBlockSchema({ assistants, data }) {
       },
     ],
     properties: {
+      enableShowTotalFailMessage: {
+        title: 'Show total failure message',
+        type: 'boolean',
+        default: false,
+      },
       totalFailMessage: {
         title: "Message when there's no citations",
         widget: 'slate',
@@ -110,7 +116,7 @@ export function ChatBlockSchema({ assistants, data }) {
         ],
       },
       noSupportDocumentsMessage: {
-        title: 'Total failure message',
+        title: 'No sources message',
         description: 'This message will be shown instead of the sources',
         widget: 'slate',
         default: [

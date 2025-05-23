@@ -274,6 +274,9 @@
   }
 
   .ui.attached.menu:not(.tabular) {
+    flex-flow: wrap;
+    gap: 0.5em;
+    padding-bottom: 1.5em;
     border: none;
     border-bottom: 1px solid #d4d4d5;
   }
@@ -291,7 +294,7 @@
       padding: 0;
       border: none !important;
       border-radius: 7px;
-      margin-right: 0.5em;
+      margin-bottom: 0;
       cursor: pointer;
 
       &.active .source {
@@ -300,6 +303,7 @@
 
       .source {
         background-color: #fbfbfb;
+        align-items: flex-start;
       }
 
       .source-header {

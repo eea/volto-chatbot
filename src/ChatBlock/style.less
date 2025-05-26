@@ -274,8 +274,11 @@
   }
 
   .ui.attached.menu:not(.tabular) {
+    flex-flow: wrap;
+    padding-bottom: 1.5em;
     border: none;
     border-bottom: 1px solid #d4d4d5;
+    gap: 0.5em;
   }
 
   .ui.segment.tab {
@@ -291,7 +294,7 @@
       padding: 0;
       border: none !important;
       border-radius: 7px;
-      margin-right: 0.5em;
+      margin-bottom: 0;
       cursor: pointer;
 
       &.active .source {
@@ -299,6 +302,7 @@
       }
 
       .source {
+        align-items: flex-start;
         background-color: #fbfbfb;
       }
 

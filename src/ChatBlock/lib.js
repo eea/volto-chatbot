@@ -118,14 +118,16 @@ export function buildLatestMessageChain(messageMap) {
   );
 
   let finalMessageList = [];
+  let seen = Set();
 
   if (rootMessage) {
     let currMessage = rootMessage;
     while (currMessage) {
       finalMessageList.push(currMessage);
       const childMessageNumber = currMessage.latestChildMessageId;
-      if (childMessageNumber && messageMap.has(childMessageNumber)) {
+      if (childMessageNumber && messageMap.has(childMessageNumber) && !seen.has(childMessageNumber)) {
         currMessage = messageMap.get(childMessageNumber);
+        seen.add(childMessageNumber); // Ensure we don't go into a loop
       } else {
         currMessage = null;
       }

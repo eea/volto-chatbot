@@ -344,7 +344,7 @@ class SubmitHandler {
               type: error ? 'error' : 'assistant',
               retrievalType,
               query: finalMessage?.rephrased_query || query,
-              documents: finalMessage?.context_docs?.top_documents || documents,
+              documents: finalMessage?.final_context_docs || documents,
               citations: finalMessage?.citations || {},
               files: finalMessage?.files || aiMessageImages || [],
               toolCalls: finalMessage?.tool_calls || toolCalls,

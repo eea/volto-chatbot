@@ -118,7 +118,7 @@ export function buildLatestMessageChain(messageMap) {
   );
 
   let finalMessageList = [];
-  let seen = Set();
+  let seen = new Set();
 
   if (rootMessage) {
     let currMessage = rootMessage;

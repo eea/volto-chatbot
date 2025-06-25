@@ -66,8 +66,12 @@ async function check_credentials() {
   return await fetch(reqUrl, options);
 }
 
-async function send_danswer_request(req, res, { username, password, api_key, url }) {
-  let headers = {}
+async function send_danswer_request(
+  req,
+  res,
+  { username, password, api_key, url },
+) {
+  let headers = {};
   if (!api_key) {
     await login(username, password);
 
@@ -82,18 +86,17 @@ async function send_danswer_request(req, res, { username, password, api_key, url
     headers = {
       Cookie: cached_auth_cookie,
       'Content-Type': 'application/json',
-    }
-  }
-  else{
+    };
+  } else {
     headers = {
-      'Authorization': "Bearer "+api_key,
+      Authorization: 'Bearer ' + api_key,
       'Content-Type': 'application/json',
-    }
+    };
   }
 
   const options = {
     method: req.method,
-    headers: headers
+    headers: headers,
   };
 
   if (req.body && req.method === 'POST') {
@@ -109,8 +112,7 @@ async function send_danswer_request(req, res, { username, password, api_key, url
       } else {
         res.set('Content-Type', 'application/json');
       }
-    }
-    else {
+    } else {
       res.set('Content-Type', response.headers.get('Content-Type'));
     }
 
@@ -129,13 +131,13 @@ export default async function middleware(req, res, next) {
   const password = process.env.DANSWER_PASSWORD;
 
   const api_key = process.env.DANSWER_API_KEY;
-  console.log("xxx")
-  console.log(username)
-  console.log(password)
-  console.log(api_key)
+  console.log('xxx');
+  console.log(username);
+  console.log(password);
+  console.log(api_key);
 
   if (!api_key || !(username && password)) {
-//  if (!(username && password)) {
+    //  if (!(username && password)) {
     res.send({
       error: MSG_INVALID_CONFIGURATION,
     });
@@ -143,7 +145,12 @@ export default async function middleware(req, res, next) {
   }
 
   try {
-    await send_danswer_request(req, res, { url: reqUrl, username: username, password: password, api_key: api_key });
+    await send_danswer_request(req, res, {
+      url: reqUrl,
+      username: username,
+      password: password,
+      api_key: api_key,
+    });
   } catch (error) {
     // eslint-disable-next-line
     console.error(MSG_ERROR_REQUEST, error?.response?.text);

@@ -117,8 +117,7 @@ export function ChatBlockSchema({ assistants, data }) {
             type: 'p',
             children: [
               {
-                text:
-                  "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
+                text: "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
               },
             ],
           },

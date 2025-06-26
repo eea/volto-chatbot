@@ -17,7 +17,7 @@ exports[`EmptyState should render the component 1`] = `
       <span
         className="starter-message-title"
       >
-        Nam at tortor in tellus
+        Curabitur at lacus ac velit
       </span>
     </button>
   </div>

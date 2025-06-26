@@ -117,7 +117,8 @@ export function ChatBlockSchema({ assistants, data }) {
             type: 'p',
             children: [
               {
-                text: "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
+                text:
+                  "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
               },
             ],
           },
@@ -259,14 +260,14 @@ range is from 0 to 100`,
         title: 'Enable starter prompts',
         type: 'boolean',
         default: true,
+        description:
+          'Define a list of example questions or prompts that users can click to send to the assistant.',
       },
       starterPrompts: {
         title: 'Starter prompts',
-        description:
-          'Define a list of example questions or prompts that users can click to send to the assistant.',
         widget: 'object_list',
         schema: {
-          title: 'Starter Prompt',
+          title: 'Prompt',
           fieldsets: [
             {
               id: 'default',
@@ -295,7 +296,7 @@ range is from 0 to 100`,
       starterPromptsHeading: {
         title: 'Starter Prompts Heading',
         type: 'string',
-        default: 'Try the following questions',
+        default: 'Try the following questions:',
       },
       showToolCalls: {
         title: 'Show query used in retriever',
@@ -320,6 +321,7 @@ range is from 0 to 100`,
         title: 'Show predefined prompts',
         type: 'boolean',
         default: true,
+        description: 'Display assistant-provided prompts.',
       },
       chatTitle: {
         title: 'Chat title',

@@ -90,14 +90,15 @@ function ChatWindow({
           <>
             {showAssistantTitle && <h2>{persona.name}</h2>}
             {showAssistantDescription && <p>{persona.description}</p>}
+
             {starterPromptsPosition === 'top' && (
               <EmptyState
+                {...data}
+                persona={persona}
                 onChoice={(message) => {
                   onSubmit({ message });
                   setShowLandingPage(false);
                 }}
-                persona={persona}
-                {...data}
               />
             )}
           </>
@@ -118,7 +119,7 @@ function ChatWindow({
               className={`conversation ${height ? 'include-scrollbar' : ''}`}
               style={{ maxHeight: height }}
             >
-              {messages.map((m, index) => (
+              {messages?.map((m, index) => (
                 <ChatMessageBubble
                   key={m.messageId}
                   message={m}
@@ -168,12 +169,12 @@ function ChatWindow({
 
       {showLandingPage && starterPromptsPosition === 'bottom' && (
         <EmptyState
+          {...data}
+          persona={persona}
           onChoice={(message) => {
             onSubmit({ message });
             setShowLandingPage(false);
           }}
-          persona={persona}
-          {...data}
         />
       )}
     </div>

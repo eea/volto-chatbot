@@ -2,6 +2,8 @@ import { Button } from 'semantic-ui-react';
 import { debounce } from './utils';
 
 function StarterMessage({ msg, onClick }) {
+  if (!(msg.name || msg.message)) return null;
+
   return (
     <Button
       onClick={onClick}
@@ -10,7 +12,7 @@ function StarterMessage({ msg, onClick }) {
       tabIndex={-1}
       className="starter-message"
     >
-      <span className="starter-message-title">{msg.message}</span>
+      <span className="starter-message-title">{msg.name || msg.message}</span>
       {/* <div className="starter-message-desc">{msg.description}</div> */}
     </Button>
   );
@@ -38,9 +40,9 @@ export default function EmptyState(props) {
 
       <div className="starter-messages-container">
         {enableStarterPrompts &&
-          starterPrompts?.map((msg) => (
+          starterPrompts.map((msg, idx) => (
             <StarterMessage
-              key={msg.name}
+              key={msg.name || `starter-${idx}`}
               msg={msg}
               onClick={() =>
                 debounce(
@@ -53,9 +55,9 @@ export default function EmptyState(props) {
           ))}
 
         {showAssistantPrompts &&
-          persona.starter_messages?.map((msg) => (
+          persona?.starter_messages?.map((msg, idx) => (
             <StarterMessage
-              key={msg.name}
+              key={msg.name || `assistant-${idx}`}
               msg={msg}
               onClick={() =>
                 debounce(

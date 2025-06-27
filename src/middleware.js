@@ -129,13 +129,7 @@ export default async function middleware(req, res, next) {
   const password = process.env.DANSWER_PASSWORD;
 
   const api_key = process.env.DANSWER_API_KEY;
-  console.log("xxx")
-  console.log(username)
-  console.log(password)
-  console.log(api_key)
-
-  if (!api_key || !(username && password)) {
-//  if (!(username && password)) {
+  if (!(api_key || (username && password))) {
     res.send({
       error: MSG_INVALID_CONFIGURATION,
     });

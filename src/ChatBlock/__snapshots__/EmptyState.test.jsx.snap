@@ -2,14 +2,8 @@
 
 exports[`EmptyState should render the component 1`] = `
 <div
-  className=""
+  className="empty-state"
 >
-  <h2>
-    In enim justo rhoncus ut
-  </h2>
-  <p>
-    Nullam dictum felis eu pede
-  </p>
   <div
     className="starter-messages-container"
   >
@@ -25,11 +19,6 @@ exports[`EmptyState should render the component 1`] = `
       >
         Curabitur at lacus ac velit
       </span>
-      <div
-        className="starter-message-desc"
-      >
-        Vestibulum purus quam scelerisque ut 
-      </div>
     </button>
   </div>
 </div>

@@ -73,6 +73,15 @@ export function ChatBlockSchema({ assistants, data }) {
           'qgenAsistantId',
           'placeholderPrompt',
           'height',
+          'enableStarterPrompts',
+          ...(data.enableStarterPrompts
+            ? [
+                'starterPrompts',
+                'starterPromptsHeading',
+                'starterPromptsPosition',
+              ]
+            : []),
+          'showAssistantPrompts',
           'enableQgen',
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
@@ -90,7 +99,6 @@ export function ChatBlockSchema({ assistants, data }) {
           'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
-          'showAssistantPrompts',
           'chatTitle',
         ],
       },
@@ -247,6 +255,48 @@ range is from 0 to 100`,
           'Too many follow-up questions needed',
         ],
       },
+      enableStarterPrompts: {
+        title: 'Enable starter prompts',
+        type: 'boolean',
+        default: true,
+        description:
+          'Define a list of example questions or prompts that users can click to send to the assistant.',
+      },
+      starterPrompts: {
+        title: 'Starter prompts',
+        widget: 'object_list',
+        schema: {
+          title: 'Prompt',
+          fieldsets: [
+            {
+              id: 'default',
+              title: 'Default',
+              fields: ['message'],
+            },
+          ],
+          properties: {
+            message: {
+              title: 'Prompt',
+              type: 'string',
+              description: 'Starter prompt shown on the button.',
+            },
+          },
+        },
+      },
+      starterPromptsPosition: {
+        title: 'Starter Prompts Position',
+        type: 'string',
+        choices: [
+          ['top', 'Top'],
+          ['bottom', 'Bottom'],
+        ],
+        default: 'top',
+      },
+      starterPromptsHeading: {
+        title: 'Starter Prompts Heading',
+        type: 'string',
+        default: 'Try the following questions:',
+      },
       showToolCalls: {
         title: 'Show query used in retriever',
         type: 'boolean',
@@ -270,6 +320,7 @@ range is from 0 to 100`,
         title: 'Show predefined prompts',
         type: 'boolean',
         default: true,
+        description: 'Display assistant-provided prompts.',
       },
       chatTitle: {
         title: 'Chat title',

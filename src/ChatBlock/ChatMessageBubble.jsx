@@ -311,7 +311,7 @@ export function ChatMessageBubble(props) {
   const {
     message,
     isLoading,
-    isMostRecent,
+    // isMostRecent,
     libs,
     onChoice,
     showToolCalls,

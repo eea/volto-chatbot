@@ -29,6 +29,45 @@ export async function createChatSession(personaId, description) {
   return chatSessionResponseJson.chat_session_id;
 }
 
+export async function createChatMessageFeedback({
+  chat_message_id,
+  feedback_text = '',
+  is_positive,
+  predefined_feedback = '',
+}) {
+  const payload = {
+    chat_message_id,
+    feedback_text,
+    is_positive,
+  };
+
+  if (!is_positive) {
+    payload.predefined_feedback = predefined_feedback;
+  }
+
+  const createChatMessageFeedbackResponse = await fetch(
+    '/_da/chat/create-chat-message-feedback',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!createChatMessageFeedbackResponse.ok) {
+    //eslint-disable-next-line no-console
+    console.log(
+      `Failed to submit feedback - ${createChatMessageFeedbackResponse.status}`,
+    );
+    throw Error(`Failed to submit feedback.`);
+  }
+
+  const createChatMessageFeedbackResponseJson = await createChatMessageFeedbackResponse.json();
+  return await createChatMessageFeedbackResponseJson;
+}
+
 export function updateParentChildren(
   message,
   completeMessageMap,
@@ -78,14 +117,20 @@ export function buildLatestMessageChain(messageMap) {
   );
 
   let finalMessageList = [];
+  let seen = new Set();
 
   if (rootMessage) {
     let currMessage = rootMessage;
     while (currMessage) {
       finalMessageList.push(currMessage);
       const childMessageNumber = currMessage.latestChildMessageId;
-      if (childMessageNumber && messageMap.has(childMessageNumber)) {
+      if (
+        childMessageNumber &&
+        messageMap.has(childMessageNumber) &&
+        !seen.has(childMessageNumber)
+      ) {
         currMessage = messageMap.get(childMessageNumber);
+        seen.add(childMessageNumber); // Ensure we don't go into a loop
       } else {
         currMessage = null;
       }
@@ -131,6 +176,8 @@ export async function* sendMessage({
       parent_message_id: parentMessageId,
       message: message,
       prompt_id: promptId,
+      regenerate: false,
+      use_agentic_search: false,
       search_doc_ids: documentsAreSelected ? selectedDocumentIds : null,
       file_descriptors: fileDescriptors,
       retrieval_options: !documentsAreSelected
@@ -338,7 +385,7 @@ export async function* updateCurrentMessageFIFO(
   }
 }
 
-export async function useScrollonStream({
+export function useScrollonStream({
   isStreaming,
   scrollableDivRef,
   scrollDist,

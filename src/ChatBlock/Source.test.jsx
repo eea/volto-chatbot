@@ -1,4 +1,3 @@
-import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import renderer from 'react-test-renderer';
@@ -8,6 +7,12 @@ import { Provider } from 'react-intl-redux';
 import { SourceDetails } from './Source';
 
 const mockStore = configureStore();
+
+jest.mock('@plone/volto/helpers/Loadable/Loadable', () => ({
+  injectLazyLibs: () => (Component) => (props) => (
+    <Component {...props} luxon={require('luxon')} />
+  ),
+}));
 
 describe('SourceDetails', () => {
   it('should render the component with link type', () => {
@@ -40,9 +45,7 @@ describe('SourceDetails', () => {
     const json = component.toJSON();
     expect(json).toMatchSnapshot();
   });
-});
 
-describe('SourceDetails', () => {
   it('should render the component with doc type', () => {
     const store = mockStore({
       userSession: { token: '1234' },

@@ -429,10 +429,8 @@ function extractJSON(str) {
 
 export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
-  const [
-    isFetchingRelatedQuestions,
-    setIsFetchingRelatedQuestions,
-  ] = React.useState(false);
+  const [isFetchingRelatedQuestions, setIsFetchingRelatedQuestions] =
+    React.useState(false);
   const [isCancelled, setIsCancelled] = React.useState(false);
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);

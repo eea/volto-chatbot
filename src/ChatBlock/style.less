@@ -108,7 +108,7 @@
 
     .source-date span {
       padding: 0.2em 0.4em;
-      border-radius: 5px;
+      border-radius: @borderRadius;
       background-color: #e5e7eb;
       font-size: 12px;
     }
@@ -251,7 +251,6 @@
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: space-between;
     padding: 0.6em 0.8em;
     border: 1px solid #e5e5e5;
     border-radius: @borderRadius;
@@ -269,6 +268,14 @@
       border: none !important;
       background: none !important;
       resize: none !important;
+
+      @media only screen and (min-width: 800px) {
+        width: 80% !important;
+      }
+    }
+
+    @media only screen and (max-width: 800px) {
+      flex-direction: column;
     }
   }
 
@@ -284,6 +291,69 @@
     svg {
       margin-top: 0.1em;
       color: @grey;
+    }
+  }
+}
+
+.ui.accordion.subquestion-accordion {
+  margin: 1em 0 2em 0;
+
+  .active.title {
+    background-color: #efefef;
+  }
+
+  .question-label-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .question-label {
+      padding: 4px 7px;
+      border-radius: @borderRadius;
+      background-color: #e3e3e3;
+      font-size: 13px;
+    }
+  }
+
+  .analyzing-toggle-btn {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    cursor: pointer;
+  }
+}
+
+.chat-right-actions {
+  display: flex;
+  margin-left: auto;
+}
+
+.deep-research-toggle {
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  gap: 1em;
+
+  .ui.toggle.checkbox {
+    width: 2.5rem !important;
+    min-height: 1rem;
+
+    input,
+    label:before {
+      width: 2.5rem;
+      height: 1rem;
+    }
+
+    label:after {
+      width: 1rem;
+      height: 1rem;
+    }
+
+    input:checked ~ label:after {
+      left: 1.5rem;
+    }
+
+    label {
+      min-height: 1rem;
     }
   }
 }

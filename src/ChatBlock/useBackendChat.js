@@ -344,7 +344,10 @@ class SubmitHandler {
               type: error ? 'error' : 'assistant',
               retrievalType,
               query: finalMessage?.rephrased_query || query,
-              documents: finalMessage?.final_context_docs || documents,
+              documents:
+                finalMessage?.context_docs?.top_documents ||
+                finalMessage?.final_context_docs ||
+                documents,
               citations: finalMessage?.citations || {},
               files: finalMessage?.files || aiMessageImages || [],
               toolCalls: finalMessage?.tool_calls || toolCalls,
@@ -426,8 +429,10 @@ function extractJSON(str) {
 
 export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
-  const [isFetchingRelatedQuestions, setIsFetchingRelatedQuestions] =
-    React.useState(false);
+  const [
+    isFetchingRelatedQuestions,
+    setIsFetchingRelatedQuestions,
+  ] = React.useState(false);
   const [isCancelled, setIsCancelled] = React.useState(false);
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);

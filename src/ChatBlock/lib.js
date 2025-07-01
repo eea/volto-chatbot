@@ -64,8 +64,7 @@ export async function createChatMessageFeedback({
     throw Error(`Failed to submit feedback.`);
   }
 
-  const createChatMessageFeedbackResponseJson =
-    await createChatMessageFeedbackResponse.json();
+  const createChatMessageFeedbackResponseJson = await createChatMessageFeedbackResponse.json();
   return await createChatMessageFeedbackResponseJson;
 }
 
@@ -176,6 +175,8 @@ export async function* sendMessage({
       parent_message_id: parentMessageId,
       message: message,
       prompt_id: promptId,
+      regenerate: false,
+      use_agentic_search: false,
       search_doc_ids: documentsAreSelected ? selectedDocumentIds : null,
       file_descriptors: fileDescriptors,
       retrieval_options: !documentsAreSelected

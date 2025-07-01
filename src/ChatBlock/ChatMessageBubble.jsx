@@ -1,58 +1,41 @@
-import loadable from '@loadable/component';
 import React from 'react';
+import visit from 'unist-util-visit';
+import loadable from '@loadable/component';
 import {
   Icon,
   Accordion,
   AccordionTitle,
   AccordionContent,
+  Button,
+  Message,
+  MessageContent,
 } from 'semantic-ui-react';
-import { Citation } from './Citation';
 import { SourceDetails } from './Source';
-import { SVGIcon, transformEmailsToLinks } from './utils';
+import { SVGIcon, useCopyToClipboard } from './utils';
+import ChatMessageFeedback from './ChatMessageFeedback';
+import useQualityMarkers from './useQualityMarkers';
+import Spinner from './Spinner';
+import { useDeepCompareMemoize } from './useDeepCompareMemoize';
+import { components } from './MarkdownComponents';
+import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
+import CopyIcon from './../icons/copy.svg';
+import CheckIcon from './../icons/check.svg';
+import GlassesIcon from './../icons/glasses.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
-const components = (message) => {
-  return {
-    a: (props) => {
-      const { node, ...rest } = props;
-      const value = rest.children;
+const VERIFY_CLAIM_MESSAGES = [
+  'Going through each claim and verify against the referenced documents...',
+  'Summarising claim verifications results...',
+  'Calculating scores...',
+];
 
-      if (value?.toString().startsWith('*')) {
-        return (
-          <div className="flex-none bg-background-800 inline-block rounded-full h-3 w-3 ml-2" />
-        );
-      } else {
-        return (
-          <Citation link={rest?.href} value={value} message={message}>
-            {rest.children}
-          </Citation>
-        );
-      }
-    },
-    p: ({ node, ...props }) => {
-      const children = props.children;
-      const text = React.Children.map(children, (child) => {
-        if (typeof child === 'string') {
-          return transformEmailsToLinks(child);
-        }
-        return child;
-      });
-
-      return (
-        <p {...props} className="text-default">
-          {text}
-        </p>
-      );
-    },
-  };
-};
-
+// TODO: don't use this over the text like this, make it a rehype plugin
 function addCitations(text) {
   return text.replaceAll(CITATION_MATCH, (match) => {
     const number = match.match(/\d+/)[0];
@@ -118,7 +101,7 @@ function Subquestion({ info, libs, index, activeIndex, setActiveIndex }) {
             <div className="question-label-wrapper">
               {info.context_docs?.top_documents?.map((doc, idx) => (
                 <div key={idx} className="question-label">
-                  <a href={doc?.link}>{doc.semantic_identifier}</a>
+                  <a href={doc?.link || '#'}>{doc.semantic_identifier}</a>
                 </div>
               ))}
             </div>
@@ -168,7 +151,7 @@ function AgentQuestions({ message, libs }) {
   if (!message.sub_questions || message.sub_questions?.length === 0)
     return null;
 
-  console.log('Agent questions', message.sub_questions);
+  // console.log('Agent questions', message.sub_questions);
 
   return (
     <Accordion className="subquestion-accordion">
@@ -188,104 +171,358 @@ function AgentQuestions({ message, libs }) {
   );
 }
 
-export function ChatMessageBubble(props) {
-  const { message, isLoading, isMostRecent, libs, onChoice, showToolCalls } =
-    props;
-  const { remarkGfm } = libs; // , rehypePrism
-  const { citations = {}, documents, type } = message;
-  const isUser = type === 'user';
+function addQualityMarkersPlugin() {
+  return function (tree) {
+    visit(tree, 'text', function (node, idx, parent) {
+      if (node.value?.trim()) {
+        const newNode = {
+          type: 'element',
+          tagName: 'span',
+          children: [node],
+        };
+        parent.children[idx] = newNode;
+      }
+    });
+  };
+}
 
-  const showLoader = isMostRecent && isLoading;
+function visitTextNodes(node, visitor) {
+  if (Array.isArray(node)) {
+    node.forEach((child) => visitTextNodes(child, visitor));
+  } else if (node && typeof node === 'object') {
+    if (node.text !== undefined) {
+      // Process the text node value here
+      // console.log(node.text);
+      visitor(node);
+    }
+    if (node.children) {
+      visitTextNodes(node.children, visitor);
+    }
+  }
+}
 
-  // TODO: these classes are not actually used, remove them
-  // const colorClassName = isUser ? 'bg-lime-300' : 'bg-slate-50';
-  // const alignmentClassName = isUser ? 'ml-auto' : 'mr-auto';
+function printSlate(value, score) {
+  if (typeof value === 'string') {
+    return value.replaceAll('{score}', score);
+  }
+  function visitor(node) {
+    if (node.text.indexOf('{score}') > -1) {
+      node.text = node.text.replaceAll('{score}', score);
+    }
+  }
 
-  const icon = isUser ? (
-    <div className="circle user">
-      <SVGIcon name={UserIcon} size="20" color="white" />
-    </div>
-  ) : (
-    <div className="circle assistant">
-      <SVGIcon name={BotIcon} size="20" color="white" />
+  visitTextNodes(value, visitor);
+  return serializeNodes(value);
+}
+
+function VerifyClaims() {
+  const [message, setMessage] = React.useState(0);
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      if (message < VERIFY_CLAIM_MESSAGES.length - 1) {
+        setMessage(message + 1);
+      }
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [message]);
+
+  return (
+    <div className="verify-claims">
+      <Spinner />
+      {VERIFY_CLAIM_MESSAGES[message]}
     </div>
   );
+}
 
-  // For some reason the list is shifted by one. It's all weird
-  // const sources = Object.keys(citations).map(
-  //   (index) => documents[(parseInt(index) - 1).toString()],
-  // );
+function HalloumiFeedback({
+  halloumiMessage,
+  isLoadingHalloumi,
+  markers,
+  score,
+  scoreColor,
+  setForceHallomi,
+  showVerifyClaimsButton,
+  sources,
+}) {
+  const messageBySource =
+    'Please allow a few minutes for claim verification when many references are involved.';
 
-  const sources = Object.values(citations).map((doc_id) =>
-    documents.find((doc) => doc.db_doc_id === doc_id),
+  return (
+    <>
+      {showVerifyClaimsButton && (
+        <div className="halloumi-feedback-button">
+          <Button onClick={() => setForceHallomi(true)} className="claims-btn">
+            <SVGIcon name={GlassesIcon} /> Verify AI claims
+          </Button>
+          <div>
+            <span>{messageBySource}</span>{' '}
+          </div>
+        </div>
+      )}
+      {isLoadingHalloumi && sources.length > 0 && (
+        <Message color="blue">
+          <VerifyClaims />
+        </Message>
+      )}
+      {!!halloumiMessage && !!markers && (
+        <Message color={scoreColor} icon>
+          <MessageContent>
+            {printSlate(halloumiMessage, `${score}%`)}
+          </MessageContent>
+        </Message>
+      )}
+    </>
+  );
+}
+
+function UserActionsToolbar({
+  handleCopy,
+  copied,
+  enableFeedback,
+  message,
+  feedbackReasons,
+}) {
+  return (
+    <div className="message-actions">
+      <Button
+        basic
+        onClick={() => handleCopy()}
+        title="Copy"
+        aria-label="Copy"
+        disabled={copied}
+      >
+        {copied ? <SVGIcon name={CheckIcon} /> : <SVGIcon name={CopyIcon} />}
+      </Button>
+
+      {enableFeedback && (
+        <>
+          <ChatMessageFeedback
+            message={message}
+            feedbackReasons={feedbackReasons}
+          />
+        </>
+      )}
+    </div>
+  );
+}
+
+export function ChatMessageBubble(props) {
+  const {
+    message,
+    isLoading,
+    // isMostRecent,
+    libs,
+    onChoice,
+    showToolCalls,
+    enableFeedback,
+    feedbackReasons,
+    qualityCheck,
+    qualityCheckStages,
+    qualityCheckContext,
+    noSupportDocumentsMessage,
+    totalFailMessage,
+    isFetchingRelatedQuestions,
+    enableShowTotalFailMessage,
+  } = props;
+  const { remarkGfm } = libs; // , rehypePrism
+  const { citations = {}, documents = [], type } = message;
+  const isUser = type === 'user';
+  const [copied, handleCopy] = useCopyToClipboard(message.message);
+  const [forceHalloumi, setForceHallomi] = React.useState(
+    qualityCheck === 'enabled' ? true : false,
   );
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
   }, {});
 
+  const sources = Object.values(citations).map((doc_id) => ({
+    ...(documents.find((doc) => doc.db_doc_id === doc_id) || {}),
+    index: inverseMap[doc_id],
+  }));
+  // const showLoader = isMostRecent && isLoading;
+  const showSources = sources.length > 0;
+
+  // TODO: maybe this should be just on the first tool call?
+  const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
+    return {
+      ...acc,
+      ...Object.assign(
+        {},
+        ...(cur.tool_result || []).map((doc) => ({
+          [doc.document_id]: doc.content,
+        })),
+      ),
+    };
+  }, {});
+  // console.log({ qualityCheckContext });
+
+  const contextSources =
+    qualityCheckContext === 'citations'
+      ? sources.map((doc) => ({
+          ...doc,
+          id: doc.document_id,
+          text: documentIdToText[doc.document_id] || '',
+        }))
+      : (message.toolCalls || []).reduce(
+          (acc, cur) => [
+            ...acc,
+            ...(cur.tool_result || []).map((doc) => ({
+              ...doc,
+              id: doc.document_id,
+              text: doc.content,
+            })),
+          ], // TODO: make sure we don't add multiple times the same doc
+          // TODO: this doesn't have the index for source
+          [],
+        );
+
+  const stableContextSources = useDeepCompareMemoize(contextSources);
+
+  const doQualityControl =
+    !isUser &&
+    qualityCheck &&
+    qualityCheck !== 'disabled' &&
+    forceHalloumi &&
+    showSources &&
+    message.messageId > -1;
+  const { markers, isLoadingHalloumi } = useQualityMarkers(
+    doQualityControl,
+    addCitations(message.message),
+    stableContextSources,
+  );
+  // console.log({ message, sources, documentIdToText, citedSources });
+
+  const claims = markers?.claims || [];
+  const score = (
+    (claims.length > 0
+      ? claims.reduce((acc, { score }) => acc + score, 0) / claims.length
+      : 1) * 100
+  ).toFixed(0);
+
+  const scoreStage = qualityCheckStages?.find(
+    ({ start, end }) => start <= score && score <= end,
+  );
+  const isFirstScoreStage =
+    qualityCheckStages?.reduce(
+      (acc, { start, end }, curIx) =>
+        start <= score && score <= end ? curIx : acc,
+      -1,
+    ) ?? -1;
+  const scoreColor = scoreStage?.color || 'black';
+
+  const isFetching = isLoadingHalloumi || isLoading;
+  const halloumiMessage = doQualityControl ? scoreStage?.label : '';
+
+  const showVerifyClaimsButton =
+    sources.length > 0 &&
+    qualityCheck === 'ondemand' &&
+    !isFetching &&
+    !markers;
+  const showTotalFailMessage =
+    sources.length === 0 && !isFetching && enableShowTotalFailMessage;
+  const showRelatedQuestions = message.relatedQuestions?.length > 0;
+
   return (
     <div>
       <div className="comment">
-        {icon}
-
+        {isUser ? (
+          <div className="circle user">
+            <SVGIcon name={UserIcon} size="20" color="white" />
+          </div>
+        ) : (
+          <div className="circle assistant">
+            <SVGIcon name={BotIcon} size="20" color="white" />
+          </div>
+        )}
         <div>
           {showToolCalls &&
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
           <AgentQuestions message={message} libs={libs} />
+
+          {showSources && (
+            <>
+              <h5>Sources:</h5>
+              <div className="sources">
+                {sources.map((source, i) => (
+                  <SourceDetails source={source} key={i} index={source.index} />
+                ))}
+              </div>
+            </>
+          )}
           <Markdown
-            components={components(message)}
+            components={components(message, markers, stableContextSources)}
             remarkPlugins={[remarkGfm]}
+            rehypePlugins={[addQualityMarkersPlugin]}
           >
             {addCitations(message.message)}
           </Markdown>
 
-          {!isUser && !showLoader && sources.length > 0 && (
-            <>
-              <h5>Sources:</h5>
-
-              <div className="sources">
-                {sources.map((source, i) => (
-                  <SourceDetails
-                    source={source}
-                    key={i}
-                    index={inverseMap[source.db_doc_id]}
-                  />
-                ))}
-              </div>
-            </>
+          {!isUser && showTotalFailMessage && (
+            <Message color="red">{serializeNodes(totalFailMessage)}</Message>
           )}
-          {!isUser && !showLoader && sources.length === 0 && (
-            <>
-              <h5>Sources:</h5>
 
-              <div className="sources">
-                {documents?.map((source, i) => (
-                  <SourceDetails source={source} key={i} index={i} />
-                ))}
-              </div>
-            </>
+          {!isUser && (
+            <HalloumiFeedback
+              sources={sources}
+              halloumiMessage={halloumiMessage}
+              isLoadingHalloumi={isLoadingHalloumi}
+              markers={markers}
+              score={score}
+              scoreColor={scoreColor}
+              setForceHallomi={setForceHallomi}
+              showVerifyClaimsButton={showVerifyClaimsButton}
+            />
           )}
-          {message.relatedQuestions?.length > 0 && (
-            <div className="chat-related-questions">
-              <h5>Related Questions:</h5>
-              {message.relatedQuestions?.map(({ question }) => (
-                <div
-                  className="relatedQuestionButton"
-                  role="button"
-                  onClick={() => !isLoading && onChoice(question)}
-                  onKeyDown={() => !isLoading && onChoice(question)}
-                  tabIndex="-1"
-                >
-                  {question}
-                </div>
-              ))}
+
+          {!isUser && !isLoading && (
+            <UserActionsToolbar
+              handleCopy={handleCopy}
+              copied={copied}
+              enableFeedback={enableFeedback}
+              message={message}
+              feedbackReasons={feedbackReasons}
+            />
+          )}
+
+          {isFirstScoreStage === -1 &&
+            serializeNodes(noSupportDocumentsMessage)}
+
+          {!isUser && isFetchingRelatedQuestions && (
+            <div className="related-questions-loader">
+              <Spinner />
+              Finding related questions...
             </div>
+          )}
+
+          {showRelatedQuestions && (
+            <>
+              <h5>Related questions:</h5>
+              <div className="chat-related-questions">
+                {message.relatedQuestions?.map(({ question }) => (
+                  <div
+                    className="relatedQuestionButton"
+                    role="button"
+                    onClick={() => !isLoading && onChoice(question)}
+                    onKeyDown={() => !isLoading && onChoice(question)}
+                    tabIndex="-1"
+                  >
+                    {question}
+                  </div>
+                ))}
+              </div>
+            </>
           )}
         </div>
       </div>
     </div>
   );
 }
+
+// {/* {!!scoreStage.icon && ( */}
+// {/*   <Icon name={scoreStage.icon} color={scoreColor} /> */}
+// {/* )} */}
+// {/* <strong>{score}%</strong> */}

@@ -3,7 +3,7 @@ import {
   buildLatestMessageChain,
   constructSubQuestions,
   createChatSession,
-  delay,
+  // delay,
   extractJSON,
   fetchRelatedQuestions,
   getLastSuccessfulMessageId,
@@ -186,6 +186,7 @@ export class SubmitHandler {
       queryOverride,
       forceSearch,
       useExistingUserMessage: isSeededChat,
+      use_agentic_search: false,
     };
     const promise = updateCurrentMessageFIFO(
       params,
@@ -213,7 +214,7 @@ export class SubmitHandler {
 
       if (!stack.isEmpty()) {
         const packet = stack.nextPacket();
-        console.log('packet', packet);
+        // console.log('packet', packet);
 
         if (packet) {
           // console.log('inside packagt', packet, {
@@ -420,7 +421,7 @@ export class SubmitHandler {
               ])
             : null;
           if (finalMessage) {
-            console.log('final', finalMessage, localMessages);
+            // console.log('final', finalMessage, localMessages);
           }
           const info = {
             chatSessionId: frozenSessionId,

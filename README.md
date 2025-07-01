@@ -39,6 +39,7 @@ The **Volto Chatbot** block allows the integration of an AI-powered chatbot into
 | `assistant`               | Choose from the list of available assistants configured in the application.                                | Dropdown          | -                           |
 | `qgenAsistantId`          | Select an assistant for generating related questions.                                                      | Dropdown          | -                           |
 | `enableQgen`              | Toggle the generation of related questions.                                                                | Boolean           | `false`                     |
+| `enableFeedback`          | Enable or disable thumbs up/down feedback for assistant responses.                                         | Boolean           | `true`                      |
 | `placeholderPrompt`       | Set placeholder text for the chat input field.                                                             | String            | `Ask a question`            |
 | `showAssistantTitle`      | Display or hide the assistant's title in the chat interface.                                               | Boolean           | `true`                      |
 | `showAssistantDescription`| Display or hide the assistant's description in the chat interface.                                         | Boolean           | `true`                      |

@@ -1,3 +1,5 @@
+import { useState, useCallback, useEffect } from 'react';
+
 export const EMAIL_REGEX = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
 
 // Convert text with email addresses to mailto links
@@ -42,4 +44,32 @@ export function debounce(callable, click_signal) {
     }, 1000);
     callable();
   }
+}
+
+export const useCopyToClipboard = (text) => {
+  const [copied, setCopied] = useState(false);
+
+  const copy = useCallback(() => {
+    navigator.clipboard.writeText(text).then(
+      () => setCopied(true),
+      () => setCopied(false),
+    );
+  }, [text]);
+
+  useEffect(() => {
+    if (!copied) return;
+
+    const timeout = setTimeout(() => setCopied(false), 2000);
+
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  return [copied, copy];
+};
+
+export function convertToPercentage(floatValue, digits = 2) {
+  if (floatValue < 0 || floatValue > 1) {
+    return 0;
+  }
+  return (floatValue * 100).toFixed(digits) + '%';
 }

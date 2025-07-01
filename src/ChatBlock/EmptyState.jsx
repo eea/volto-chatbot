@@ -12,8 +12,8 @@ function StarterMessage({ msg, onClick }) {
       tabIndex={-1}
       className="starter-message"
     >
-      <span className="starter-message-title">{msg.name || msg.message}</span>
-      {/* <div className="starter-message-desc">{msg.description}</div> */}
+      <span className="starter-message-title">{msg.name}</span>
+      <div className="starter-message-desc">{msg.description}</div>
     </Button>
   );
 }
@@ -32,9 +32,8 @@ export default function EmptyState(props) {
 
   return (
     <div className="empty-state">
-      {enableStarterPrompts &&
-        starterPrompts.length > 0 &&
-        starterPromptsHeading && (
+      {starterPromptsHeading &&
+        (showAssistantPrompts || enableStarterPrompts) && (
           <h4 className="starter-message-heading">{starterPromptsHeading}</h4>
         )}
 
@@ -55,6 +54,7 @@ export default function EmptyState(props) {
           ))}
 
         {showAssistantPrompts &&
+          !enableStarterPrompts &&
           persona?.starter_messages?.map((msg, idx) => (
             <StarterMessage
               key={msg.name || `assistant-${idx}`}

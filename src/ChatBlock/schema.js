@@ -74,13 +74,9 @@ export function ChatBlockSchema({ assistants, data }) {
           'placeholderPrompt',
           'height',
           'enableStarterPrompts',
-          ...(data.enableStarterPrompts
-            ? [
-                'starterPrompts',
-                'starterPromptsHeading',
-                'starterPromptsPosition',
-              ]
-            : []),
+          ...(data.enableStarterPrompts ? ['starterPrompts'] : []),
+          'starterPromptsHeading',
+          'starterPromptsPosition',
           'showAssistantPrompts',
           'enableQgen',
           'enableShowTotalFailMessage',
@@ -117,7 +113,8 @@ export function ChatBlockSchema({ assistants, data }) {
             type: 'p',
             children: [
               {
-                text: "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
+                text:
+                  "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
               },
             ],
           },
@@ -151,7 +148,7 @@ export function ChatBlockSchema({ assistants, data }) {
         default: false,
       },
       enableFeedback: {
-        title: 'Enable Feedback',
+        title: 'Enable feedback',
         type: 'boolean',
         default: true,
       },
@@ -256,11 +253,11 @@ range is from 0 to 100`,
         ],
       },
       enableStarterPrompts: {
-        title: 'Enable starter prompts',
+        title: 'Enable custom starter prompts',
         type: 'boolean',
-        default: true,
+        default: false,
         description:
-          'Define a list of example questions or prompts that users can click to send to the assistant.',
+          'Define custom clickable messages to initiate a chat with the assistant.',
       },
       starterPrompts: {
         title: 'Starter prompts',
@@ -271,20 +268,30 @@ range is from 0 to 100`,
             {
               id: 'default',
               title: 'Default',
-              fields: ['message'],
+              fields: ['name', 'description', 'message'],
             },
           ],
           properties: {
+            name: {
+              title: 'Title',
+              description: 'Starter prompt title shown on the button.',
+            },
+            description: {
+              title: 'Description',
+              description: 'Starter prompt description shown on the button.',
+            },
             message: {
-              title: 'Prompt',
+              title: 'Message',
               type: 'string',
-              description: 'Starter prompt shown on the button.',
+              description:
+                'Message sent to the assistant when the button is clicked.',
             },
           },
+          required: ['message', 'name'],
         },
       },
       starterPromptsPosition: {
-        title: 'Starter Prompts Position',
+        title: 'Prompts Position',
         type: 'string',
         choices: [
           ['top', 'Top'],
@@ -293,9 +300,10 @@ range is from 0 to 100`,
         default: 'top',
       },
       starterPromptsHeading: {
-        title: 'Starter Prompts Heading',
+        title: 'Prompts Heading',
         type: 'string',
-        default: 'Try the following questions:',
+        description:
+          'Heading shown above the starter prompts (e.g. "Try the following questions")',
       },
       showToolCalls: {
         title: 'Show query used in retriever',

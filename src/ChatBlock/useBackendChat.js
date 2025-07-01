@@ -3,7 +3,12 @@ import { buildLatestMessageChain } from './lib';
 import { SubmitHandler } from './submitHandler';
 import useWhyDidYouUpdate from './useWhyDidYouUpdate';
 
-export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
+export function useBackendChat({
+  persona,
+  qgenAsistantId,
+  enableQgen,
+  deepResearch,
+}) {
   const [isStreaming, setIsStreaming] = React.useState(false);
   const [isFetchingRelatedQuestions] = React.useState(false); // , setIsFetchingRelatedQuestions
   const [isCancelled, setIsCancelled] = React.useState(false);
@@ -11,6 +16,10 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);
 
   const [, setChatState] = useState(new Map([[null, 'input']])); // chatState
+
+  const [isDeepResearchEnabled, setIsDeepResearchEnabled] = React.useState(
+    deepResearch === 'always_on' || deepResearch === 'user_on',
+  );
 
   const updateChatState = (newState, sessionId) => {
     setChatState((prevState) => {
@@ -62,9 +71,16 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
         enableQgen,
         setAgenticGenerating,
         updateChatState,
+        isDeepResearchEnabled,
       }),
     // eslint-disable-next-line
-    [persona, qgenAsistantId, enableQgen, currChatSessionId],
+    [
+      persona,
+      qgenAsistantId,
+      enableQgen,
+      currChatSessionId,
+      isDeepResearchEnabled,
+    ],
   );
 
   const clearChat = () => {
@@ -86,5 +102,7 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     isCancelled,
     clearChat,
     isFetchingRelatedQuestions,
+    isDeepResearchEnabled,
+    setIsDeepResearchEnabled,
   };
 }

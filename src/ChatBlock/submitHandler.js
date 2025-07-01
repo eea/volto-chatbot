@@ -34,6 +34,7 @@ export class SubmitHandler {
     enableQgen,
     setAgenticGenerating,
     updateChatState,
+    isDeepResearchEnabled,
   }) {
     this.persona = persona;
     this.chatTitle = chatTitle;
@@ -47,6 +48,7 @@ export class SubmitHandler {
     this.setCompleteMessageDetail = setCompleteMessageDetail;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
+    this.isDeepResearchEnabled = isDeepResearchEnabled;
 
     this.agenticDocs = null;
     this.secondLevelMessageId = null;
@@ -186,7 +188,7 @@ export class SubmitHandler {
       queryOverride,
       forceSearch,
       useExistingUserMessage: isSeededChat,
-      use_agentic_search: false,
+      use_agentic_search: !!this.isDeepResearchEnabled,
     };
     const promise = updateCurrentMessageFIFO(
       params,

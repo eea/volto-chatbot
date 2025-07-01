@@ -6,20 +6,17 @@ import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
-  const { onSubmit, isStreaming, deepResearch, ...rest } = props;
+  const {
+    onSubmit,
+    isStreaming,
+    deepResearch,
+    isDeepResearchEnabled,
+    setIsDeepResearchEnabled,
+    ...rest
+  } = props;
   const showDeepResearchToggle =
     deepResearch === 'user_on' || deepResearch === 'user_off';
   const [input, setInput] = React.useState('');
-  const [isDeepResearchEnabled, setIsDeepResearchEnabled] =
-    React.useState(false);
-
-  React.useEffect(() => {
-    if (deepResearch === 'user_on') {
-      setIsDeepResearchEnabled(true);
-    } else if (deepResearch === 'user_off') {
-      setIsDeepResearchEnabled(false);
-    }
-  }, [deepResearch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -57,6 +54,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
             Deep research
           </div>
         )}
+        {deepResearch === 'always_on' && <small>Agent search on</small>}
 
         <Button
           className="submit-btn"

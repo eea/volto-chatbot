@@ -69,11 +69,13 @@ export function ChatBlockSchema({ assistants, data }) {
         id: 'default',
         title: 'Default',
         fields: [
+          'chatTitle',
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
           'height',
           'enableQgen',
+          'deepResearch',
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
           'qualityCheck',
@@ -88,11 +90,9 @@ export function ChatBlockSchema({ assistants, data }) {
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
           'scrollToInput',
           'showToolCalls',
-          'deepResearch',
           'showAssistantTitle',
           'showAssistantDescription',
           'showAssistantPrompts',
-          'chatTitle',
         ],
       },
     ],
@@ -110,7 +110,8 @@ export function ChatBlockSchema({ assistants, data }) {
             type: 'p',
             children: [
               {
-                text: "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
+                text:
+                  "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
               },
             ],
           },

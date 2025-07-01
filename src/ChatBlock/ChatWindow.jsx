@@ -34,6 +34,7 @@ function ChatWindow({
     noSupportDocumentsMessage,
     totalFailMessage,
     enableShowTotalFailMessage,
+    deepResearch,
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const {
@@ -42,10 +43,13 @@ function ChatWindow({
     isStreaming,
     isFetchingRelatedQuestions,
     clearChat,
+    setIsDeepResearchEnabled,
+    isDeepResearchEnabled,
   } = useBackendChat({
     persona,
     qgenAsistantId,
     enableQgen,
+    deepResearch,
   });
   const [showLandingPage, setShowLandingPage] = React.useState(false);
 
@@ -152,6 +156,9 @@ function ChatWindow({
               }
               isStreaming={isStreaming}
               onSubmit={onSubmit}
+              deepResearch={deepResearch}
+              setIsDeepResearchEnabled={setIsDeepResearchEnabled}
+              isDeepResearchEnabled={isDeepResearchEnabled}
             />
           </div>
         </Form>

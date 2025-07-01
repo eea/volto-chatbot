@@ -186,6 +186,7 @@ export class SubmitHandler {
       queryOverride,
       forceSearch,
       useExistingUserMessage: isSeededChat,
+      use_agentic_search: false,
     };
     const promise = updateCurrentMessageFIFO(
       params,

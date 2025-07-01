@@ -1,8 +1,11 @@
 import superagent from 'superagent';
 import fetch from 'node-fetch';
-import readline from 'readline';
 import fs from 'fs';
 import path from 'path';
+import debug from 'debug';
+
+const log = debug('volto-chatbot');
+// import readline from 'readline';
 
 let cached_auth_cookie = null;
 let last_fetched = null;
@@ -153,13 +156,13 @@ function mock_llm_call(res) {
 
   // Handle stream errors
   readStream.on('error', (err) => {
-    console.error('Error reading file:', err);
+    log('Error reading file:', err);
     res.status(500).send('Internal Server Error');
   });
 
   // Handle stream end
   readStream.on('end', () => {
-    console.log('File stream ended');
+    log('File stream ended');
     res.end();
   });
 }

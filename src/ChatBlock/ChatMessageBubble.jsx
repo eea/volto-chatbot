@@ -6,6 +6,9 @@ import {
   Accordion,
   AccordionTitle,
   AccordionContent,
+  Button,
+  Message,
+  MessageContent,
 } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import { SVGIcon, useCopyToClipboard } from './utils';
@@ -338,7 +341,7 @@ export function ChatMessageBubble(props) {
     ...(documents.find((doc) => doc.db_doc_id === doc_id) || {}),
     index: inverseMap[doc_id],
   }));
-  const showLoader = isMostRecent && isLoading;
+  // const showLoader = isMostRecent && isLoading;
   const showSources = sources.length > 0;
 
   // TODO: maybe this should be just on the first tool call?

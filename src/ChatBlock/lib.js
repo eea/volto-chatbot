@@ -178,7 +178,6 @@ export async function* sendMessage({
       message: message,
       prompt_id: promptId,
       regenerate: false,
-      use_agentic_search: false,
       search_doc_ids: documentsAreSelected ? selectedDocumentIds : null,
       file_descriptors: fileDescriptors,
       retrieval_options: !documentsAreSelected

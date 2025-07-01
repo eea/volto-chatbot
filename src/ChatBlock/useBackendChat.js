@@ -5,13 +5,12 @@ import useWhyDidYouUpdate from './useWhyDidYouUpdate';
 
 export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const [isStreaming, setIsStreaming] = React.useState(false);
-  const [isFetchingRelatedQuestions, setIsFetchingRelatedQuestions] =
-    React.useState(false);
+  const [isFetchingRelatedQuestions] = React.useState(false); // , setIsFetchingRelatedQuestions
   const [isCancelled, setIsCancelled] = React.useState(false);
   const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);
 
-  const [chatState, setChatState] = useState(new Map([[null, 'input']]));
+  const [, setChatState] = useState(new Map([[null, 'input']])); // chatState
 
   const updateChatState = (newState, sessionId) => {
     setChatState((prevState) => {
@@ -24,16 +23,16 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     });
   };
 
-  const currentChatState = () => {
-    return chatState.get(currChatSessionId()) || 'input';
-  };
+  // const currentChatState = () => {
+  //   return chatState.get(currChatSessionId()) || 'input';
+  // };
 
   // const [chatState, setChatState] = useState(
   //   new Map([[chatSessionIdRef.current, firstMessage ? "loading" : "input"]])
   // );
 
   // TODO: tweak is scrolling enabled if agentic generating
-  const [agenticGenerating, setAgenticGenerating] = React.useState(false);
+  const [, setAgenticGenerating] = React.useState(false); // agenticGenerating
 
   React.useEffect(() => {
     isCancelledRef.current = isCancelled;
@@ -64,6 +63,7 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
         setAgenticGenerating,
         updateChatState,
       }),
+    // eslint-disable-next-line
     [persona, qgenAsistantId, enableQgen, currChatSessionId],
   );
 

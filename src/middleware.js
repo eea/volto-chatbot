@@ -149,21 +149,47 @@ function mock_llm_call(res) {
     __dirname,
     '../src/addons/volto-chatbot/dummy.jsonl',
   );
+  const DELAY = 200; // miliseconds
   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+  let buffer = '';
+  let isFirstLine = true;
 
-  // Pipe the read stream to the response object
-  readStream.pipe(res);
+  readStream.on('data', (chunk) => {
+    buffer += chunk;
+    let lines = buffer.split('\n');
 
-  // Handle stream errors
+    // Keep the last incomplete line in the buffer
+    buffer = lines.pop();
+
+    lines.forEach((line) => {
+      if (line.trim() !== '') {
+        if (!isFirstLine) {
+          setTimeout(() => {
+            res.write(line + '\n');
+          }, DELAY);
+        } else {
+          res.write(line + '\n');
+          isFirstLine = false;
+        }
+      }
+    });
+  });
+
+  readStream.on('end', () => {
+    // Send the last line if there's any remaining in the buffer
+    if (buffer.trim() !== '') {
+      setTimeout(() => {
+        res.write(buffer);
+        res.end();
+      }, DELAY);
+    } else {
+      res.end();
+    }
+  });
+
   readStream.on('error', (err) => {
     log('Error reading file:', err);
     res.status(500).send('Internal Server Error');
-  });
-
-  // Handle stream end
-  readStream.on('end', () => {
-    log('File stream ended');
-    res.end();
   });
 }
 

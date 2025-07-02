@@ -37,7 +37,7 @@ function ChatWindow({
     deepResearch,
     showAssistantTitle,
     showAssistantDescription,
-    starterPromptsPosition,
+    starterPromptsPosition = 'top',
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const {

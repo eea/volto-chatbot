@@ -218,7 +218,7 @@ export function ChatMessageBubble(props) {
     index: inverseMap[doc_id],
   }));
   const showLoader = isMostRecent && isLoading;
-  const showSources = !showLoader && sources.length > 0;
+  const showSources = sources.length > 0;
 
   // TODO: maybe this should be just on the first tool call?
   const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
@@ -318,6 +318,17 @@ export function ChatMessageBubble(props) {
               <ToolCall key={index} {...info} />
             ))}
 
+          {showSources && (
+            <>
+              <h5>Sources:</h5>
+              <div className="sources">
+                {sources.map((source, i) => (
+                  <SourceDetails source={source} key={i} index={source.index} />
+                ))}
+              </div>
+            </>
+          )}
+
           <Markdown
             components={components(message, markers, stableContextSources)}
             remarkPlugins={[remarkGfm]}
@@ -351,17 +362,6 @@ export function ChatMessageBubble(props) {
               message={message}
               feedbackReasons={feedbackReasons}
             />
-          )}
-
-          {isFirstScoreStage !== -1 && showSources && (
-            <>
-              <h5>Sources:</h5>
-              <div className="sources">
-                {sources.map((source, i) => (
-                  <SourceDetails source={source} key={i} index={source.index} />
-                ))}
-              </div>
-            </>
           )}
 
           {isFirstScoreStage === -1 &&

@@ -118,14 +118,20 @@ export function buildLatestMessageChain(messageMap) {
   );
 
   let finalMessageList = [];
+  let seen = new Set();
 
   if (rootMessage) {
     let currMessage = rootMessage;
     while (currMessage) {
       finalMessageList.push(currMessage);
       const childMessageNumber = currMessage.latestChildMessageId;
-      if (childMessageNumber && messageMap.has(childMessageNumber)) {
+      if (
+        childMessageNumber &&
+        messageMap.has(childMessageNumber) &&
+        !seen.has(childMessageNumber)
+      ) {
         currMessage = messageMap.get(childMessageNumber);
+        seen.add(childMessageNumber); // Ensure we don't go into a loop
       } else {
         currMessage = null;
       }
@@ -170,6 +176,8 @@ export async function* sendMessage({
       parent_message_id: parentMessageId,
       message: message,
       prompt_id: promptId,
+      regenerate: false,
+      use_agentic_search: false,
       search_doc_ids: documentsAreSelected ? selectedDocumentIds : null,
       file_descriptors: fileDescriptors,
       retrieval_options: !documentsAreSelected

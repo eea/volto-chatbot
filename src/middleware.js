@@ -66,24 +66,37 @@ async function check_credentials() {
   return await fetch(reqUrl, options);
 }
 
-async function send_danswer_request(req, res, { username, password, url }) {
-  await login(username, password);
+async function send_danswer_request(
+  req,
+  res,
+  { username, password, api_key, url },
+) {
+  let headers = {};
+  if (!api_key) {
+    await login(username, password);
 
-  try {
-    const resp = await check_credentials();
-    if (resp.status !== 200) {
+    try {
+      const resp = await check_credentials();
+      if (resp.status !== 200) {
+        await getAuthCookie(username, password);
+      }
+    } catch (error) {
       await getAuthCookie(username, password);
     }
-  } catch (error) {
-    await getAuthCookie(username, password);
+    headers = {
+      Cookie: cached_auth_cookie,
+      'Content-Type': 'application/json',
+    };
+  } else {
+    headers = {
+      Authorization: 'Bearer ' + api_key,
+      'Content-Type': 'application/json',
+    };
   }
 
   const options = {
     method: req.method,
-    headers: {
-      Cookie: cached_auth_cookie,
-      'Content-Type': 'application/json',
-    },
+    headers: headers,
   };
 
   if (req.body && req.method === 'POST') {
@@ -93,10 +106,14 @@ async function send_danswer_request(req, res, { username, password, url }) {
     log(`Fetching ${url}`);
     const response = await fetch(url, options, req.body);
 
-    if (response.headers.get('transfer-encoding') === 'chunked') {
-      res.set('Content-Type', 'text/event-stream');
+    if (!api_key) {
+      if (response.headers.get('transfer-encoding') === 'chunked') {
+        res.set('Content-Type', 'text/event-stream');
+      } else {
+        res.set('Content-Type', 'application/json');
+      }
     } else {
-      res.set('Content-Type', 'application/json');
+      res.set('Content-Type', response.headers.get('Content-Type'));
     }
 
     response.body.pipe(res);
@@ -113,7 +130,8 @@ export default async function middleware(req, res, next) {
   const username = process.env.DANSWER_USERNAME;
   const password = process.env.DANSWER_PASSWORD;
 
-  if (!(username && password)) {
+  const api_key = process.env.DANSWER_API_KEY;
+  if (!(api_key || (username && password))) {
     res.send({
       error: MSG_INVALID_CONFIGURATION,
     });
@@ -121,7 +139,12 @@ export default async function middleware(req, res, next) {
   }
 
   try {
-    await send_danswer_request(req, res, { url: reqUrl, username, password });
+    await send_danswer_request(req, res, {
+      url: reqUrl,
+      username: username,
+      password: password,
+      api_key: api_key,
+    });
   } catch (error) {
     // eslint-disable-next-line
     console.error(MSG_ERROR_REQUEST, error?.response?.text);

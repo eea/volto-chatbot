@@ -73,6 +73,11 @@ export function ChatBlockSchema({ assistants, data }) {
           'qgenAsistantId',
           'placeholderPrompt',
           'height',
+          'enableStarterPrompts',
+          ...(data.enableStarterPrompts ? ['starterPrompts'] : []),
+          'starterPromptsHeading',
+          'starterPromptsPosition',
+          'showAssistantPrompts',
           'enableQgen',
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
@@ -90,7 +95,6 @@ export function ChatBlockSchema({ assistants, data }) {
           'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
-          'showAssistantPrompts',
           'chatTitle',
         ],
       },
@@ -143,7 +147,7 @@ export function ChatBlockSchema({ assistants, data }) {
         default: false,
       },
       enableFeedback: {
-        title: 'Enable Feedback',
+        title: 'Enable feedback',
         type: 'boolean',
         default: true,
       },
@@ -247,6 +251,59 @@ range is from 0 to 100`,
           'Too many follow-up questions needed',
         ],
       },
+      enableStarterPrompts: {
+        title: 'Enable custom starter prompts',
+        type: 'boolean',
+        default: false,
+        description:
+          'Define custom clickable messages to initiate a chat with the assistant.',
+      },
+      starterPrompts: {
+        title: 'Starter prompts',
+        widget: 'object_list',
+        schema: {
+          title: 'Prompt',
+          fieldsets: [
+            {
+              id: 'default',
+              title: 'Default',
+              fields: ['name', 'description', 'message'],
+            },
+          ],
+          properties: {
+            name: {
+              title: 'Title',
+              description: 'Starter prompt title shown on the button.',
+            },
+            description: {
+              title: 'Description',
+              description: 'Starter prompt description shown on the button.',
+            },
+            message: {
+              title: 'Message',
+              type: 'string',
+              description:
+                'Message sent to the assistant when the button is clicked.',
+            },
+          },
+          required: ['message', 'name'],
+        },
+      },
+      starterPromptsPosition: {
+        title: 'Prompts Position',
+        type: 'string',
+        choices: [
+          ['top', 'Top'],
+          ['bottom', 'Bottom'],
+        ],
+        default: 'top',
+      },
+      starterPromptsHeading: {
+        title: 'Prompts Heading',
+        type: 'string',
+        description:
+          'Heading shown above the starter prompts (e.g. "Try the following questions")',
+      },
       showToolCalls: {
         title: 'Show query used in retriever',
         type: 'boolean',
@@ -270,6 +327,7 @@ range is from 0 to 100`,
         title: 'Show predefined prompts',
         type: 'boolean',
         default: true,
+        description: 'Display assistant-provided prompts.',
       },
       chatTitle: {
         title: 'Chat title',

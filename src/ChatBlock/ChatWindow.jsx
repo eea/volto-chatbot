@@ -35,6 +35,9 @@ function ChatWindow({
     totalFailMessage,
     enableShowTotalFailMessage,
     deepResearch,
+    showAssistantTitle,
+    showAssistantDescription,
+    starterPromptsPosition,
   } = data;
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const {
@@ -88,14 +91,21 @@ function ChatWindow({
     <div className="chat-window">
       <div className="messages">
         {showLandingPage ? (
-          <EmptyState
-            onChoice={(message) => {
-              onSubmit({ message });
-              setShowLandingPage(false);
-            }}
-            persona={persona}
-            {...data}
-          />
+          <>
+            {showAssistantTitle && <h2>{persona.name}</h2>}
+            {showAssistantDescription && <p>{persona.description}</p>}
+
+            {starterPromptsPosition === 'top' && (
+              <EmptyState
+                {...data}
+                persona={persona}
+                onChoice={(message) => {
+                  onSubmit({ message });
+                  setShowLandingPage(false);
+                }}
+              />
+            )}
+          </>
         ) : (
           <>
             <Segment clearing basic>
@@ -113,7 +123,7 @@ function ChatWindow({
               className={`conversation ${height ? 'include-scrollbar' : ''}`}
               style={{ maxHeight: height }}
             >
-              {messages.map((m, index) => (
+              {messages?.map((m, index) => (
                 <ChatMessageBubble
                   key={m.messageId}
                   message={m}
@@ -163,6 +173,17 @@ function ChatWindow({
           </div>
         </Form>
       </div>
+
+      {showLandingPage && starterPromptsPosition === 'bottom' && (
+        <EmptyState
+          {...data}
+          persona={persona}
+          onChoice={(message) => {
+            onSubmit({ message });
+            setShowLandingPage(false);
+          }}
+        />
+      )}
     </div>
   );
 }

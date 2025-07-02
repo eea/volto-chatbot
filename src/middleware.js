@@ -144,47 +144,145 @@ async function check_credentials() {
 //   });
 // }
 
+// const { once } = require('events');
+//
+// async function* readLines(filePath) {
+//   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+//   let buffer = '';
+//
+//   readStream.on('data', (chunk) => {
+//     buffer += chunk;
+//     let lines = buffer.split('\n');
+//     buffer = lines.pop(); // Keep the last incomplete line in the buffer
+//
+//     for (const line of lines) {
+//       if (line.trim() !== '') {
+//         readStream.pause();
+//         readStream.resume(); // Resume immediately to allow pausing again for delay
+//         setTimeout(() => readStream.resume(), 1000); // Add delay
+//         yield line;
+//       }
+//     }
+//   });
+//
+//   await once(readStream, 'end');
+//   if (buffer.trim() !== '') {
+//     yield buffer;
+//   }
+// }
+
+// function mock_llm_call(res) {
+//   // res.set('Content-Type', 'text/event-stream');
+//   // res.setHeader('Cache-Control', 'no-cache');
+//   // res.setHeader('Connection', 'keep-alive');
+//   res.writeHead(200, {
+//     'Content-Type': 'text/event-stream; charset=utf-8',
+//     'Cache-Control': 'no-cache',
+//     Connection: 'keep-alive',
+//     'Transfer-Encoding': 'chunked',
+//   });
+//
+//   const filePath = path.join(
+//     __dirname,
+//     '../src/addons/volto-chatbot/dummy.jsonl',
+//   );
+//   const DELAY = 200; // miliseconds
+//   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+//   let buffer = '';
+//   let isFirstLine = true;
+//
+//   readStream.on('data', (chunk) => {
+//     buffer += chunk;
+//     let lines = buffer.split('\n');
+//
+//     // Keep the last incomplete line in the buffer
+//     buffer = lines.pop();
+//
+//     lines.forEach((line) => {
+//       if (line.trim() !== '') {
+//         if (!isFirstLine) {
+//           setTimeout(() => {
+//             console.log(`Write line ${line}`);
+//             res.write(line + '\n');
+//           }, DELAY);
+//         } else {
+//           res.write(line + '\n');
+//           isFirstLine = false;
+//         }
+//       }
+//     });
+//   });
+//
+//   readStream.on('end', () => {
+//     // Send the last line if there's any remaining in the buffer
+//     if (buffer.trim() !== '') {
+//       setTimeout(() => {
+//         console.log(`End write line ${buffer}`);
+//         res.write(buffer);
+//         res.end();
+//       }, DELAY);
+//     } else {
+//       res.end();
+//     }
+//   });
+//
+//   readStream.on('error', (err) => {
+//     log('Error reading file:', err);
+//     res.status(500).send('Internal Server Error');
+//   });
+// }
+
 function mock_llm_call(res) {
   const filePath = path.join(
     __dirname,
     '../src/addons/volto-chatbot/dummy.jsonl',
   );
-  const DELAY = 200; // miliseconds
   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
+
   let buffer = '';
-  let isFirstLine = true;
+  let lineIndex = 0;
+  const DELAY = 10;
+
+  // Set appropriate headers for streaming
+  res.setHeader('Content-Type', 'text/plain');
+  res.setHeader('Transfer-Encoding', 'chunked');
+
+  const sendLineWithDelay = (line, index) => {
+    setTimeout(() => {
+      res.write(line + '\n');
+      log(`Sent line ${index + 1}: ${line.substring(0, 50)}...`);
+    }, index * DELAY); // 1 second delay between each line
+  };
 
   readStream.on('data', (chunk) => {
     buffer += chunk;
-    let lines = buffer.split('\n');
+    const lines = buffer.split('\n');
 
-    // Keep the last incomplete line in the buffer
-    buffer = lines.pop();
+    // Keep the last incomplete line in buffer
+    buffer = lines.pop() || '';
 
+    // Process complete lines
     lines.forEach((line) => {
-      if (line.trim() !== '') {
-        if (!isFirstLine) {
-          setTimeout(() => {
-            res.write(line + '\n');
-          }, DELAY);
-        } else {
-          res.write(line + '\n');
-          isFirstLine = false;
-        }
+      if (line.trim()) {
+        // Only send non-empty lines
+        sendLineWithDelay(line.trim(), lineIndex);
+        lineIndex++;
       }
     });
   });
 
   readStream.on('end', () => {
-    // Send the last line if there's any remaining in the buffer
-    if (buffer.trim() !== '') {
-      setTimeout(() => {
-        res.write(buffer);
-        res.end();
-      }, DELAY);
-    } else {
-      res.end();
+    // Handle any remaining content in buffer
+    if (buffer.trim()) {
+      sendLineWithDelay(buffer.trim(), lineIndex);
+      lineIndex++;
     }
+
+    // End the response after all lines are sent
+    setTimeout(() => {
+      res.end();
+      log('File stream ended - all lines sent');
+    }, lineIndex * DELAY);
   });
 
   readStream.on('error', (err) => {
@@ -231,9 +329,6 @@ async function send_danswer_request(
   }
 
   if (req.url.endsWith('send-message') && process.env.MOCK_LLM_CALL) {
-    res.set('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
     mock_llm_call(res);
     return;
   }

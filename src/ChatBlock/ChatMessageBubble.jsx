@@ -187,7 +187,7 @@ export function ChatMessageBubble(props) {
   const {
     message,
     isLoading,
-    isMostRecent,
+    // isMostRecent,
     libs,
     onChoice,
     showToolCalls,
@@ -217,7 +217,7 @@ export function ChatMessageBubble(props) {
     ...(documents.find((doc) => doc.db_doc_id === doc_id) || {}),
     index: inverseMap[doc_id],
   }));
-  const showLoader = isMostRecent && isLoading;
+  // const showLoader = isMostRecent && isLoading;
   const showSources = sources.length > 0;
 
   // TODO: maybe this should be just on the first tool call?

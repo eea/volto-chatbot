@@ -1,7 +1,6 @@
 import {
   CurrentMessageFIFO,
   buildLatestMessageChain,
-  constructSubQuestions,
   createChatSession,
   // delay,
   extractJSON,
@@ -9,15 +8,11 @@ import {
   getLastSuccessfulMessageId,
   updateCurrentMessageFIFO,
 } from './lib';
-import {
-  ChatFileType,
-  RetrievalType,
-  SYSTEM_MESSAGE_ID,
-  TEMP_ASSISTANT_MESSAGE_ID,
-  TEMP_USER_MESSAGE_ID,
-} from './constants';
-import { upsertToCompleteMessageMap } from './upsetToCompleteMessageMap';
+import { SYSTEM_MESSAGE_ID, TEMP_USER_MESSAGE_ID } from './constants';
+import { upsertToMessageStore } from './upsetToCompleteMessageMap';
 import { FeedParser } from './feedparser';
+
+const gLSM = getLastSuccessfulMessageId;
 
 export class SubmitHandler {
   constructor({
@@ -25,11 +20,11 @@ export class SubmitHandler {
     setIsStreaming,
     isCancelledRef,
     setIsCancelled,
-    messageHistory,
-    completeMessageDetail,
+    messageStore,
     currChatSessionId,
     setCurrChatSessionId,
-    setCompleteMessageDetail,
+    messageHistory, // used for interacting with useBackendChat
+    setMessageStore, // used for interacting with useBackendChat
     chatTitle,
     qgenAsistantId,
     enableQgen,
@@ -43,10 +38,10 @@ export class SubmitHandler {
     this.isCancelledRef = isCancelledRef;
     this.setIsCancelled = setIsCancelled;
     this.messageHistory = messageHistory;
-    this.completeMessageDetail = completeMessageDetail;
+    this.messageStore = messageStore;
     this.currChatSessionId = currChatSessionId;
     this.setCurrChatSessionId = setCurrChatSessionId;
-    this.setCompleteMessageDetail = setCompleteMessageDetail;
+    this.setMessageStore = setMessageStore;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
     this.isDeepResearchEnabled = isDeepResearchEnabled;
@@ -83,14 +78,13 @@ export class SubmitHandler {
       this.setCurrChatSessionId(this.currChatSessionId);
     }
 
-    const parser = new FeedParser();
-    let newCompleteMessageDetail = {};
+    let newMessageStore = {};
 
     const messageToResend = this.messageHistory.find(
       (message) => message.messageId === messageIdToResend,
     );
 
-    const messageMap = this.completeMessageDetail.messageMap;
+    const messageMap = this.messageStore.messageMap;
     const messageToResendParent =
       messageToResend?.parentMessageId !== null &&
       messageToResend?.parentMessageId !== undefined
@@ -146,15 +140,13 @@ export class SubmitHandler {
       });
     }
 
-    const msgMapParams = {
+    const _store = upsertToMessageStore({
       messages: messageUpdates,
       chatSessionId: this.currChatSessionId,
-      completeMessageDetail: this.completeMessageDetail,
-      setCompleteMessageDetail: this.setCompleteMessageDetail,
-    };
-
-    const _res = upsertToCompleteMessageMap(msgMapParams);
-    const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = _res;
+      messageStore: this.messageStore,
+      setMessageStore: this.setMessageStore,
+    });
+    const { messageMap: frozenMessageMap, sessionId: frozenSessionId } = _store;
 
     // on initial message send, we insert a dummy system message
     // set this as the parent here if no parent is set
@@ -164,44 +156,36 @@ export class SubmitHandler {
 
     const currentAssistantId = this.persona.id;
 
-    this.setIsStreaming(true);
-
-    let answer = '';
-    let query = null;
-    let retrievalType = RetrievalType.None;
-    let documents = []; // selectedDocuments;
-    let aiMessageImages = null;
-    let error = null;
-    let finalMessage = null;
-    let toolCalls = [];
-
-    const glsm = getLastSuccessfulMessageId;
-    const lastSuccessfulMessageId = glsm(currMessageHistory);
-
     const stack = new CurrentMessageFIFO();
-    // here is the problem
-    const params = {
-      message: currMessage,
-      alternateAssistantId: currentAssistantId,
-      fileDescriptors: [],
-      parentMessageId: lastSuccessfulMessageId,
-      chatSessionId: this.currChatSessionId,
-      promptId: 0,
-      filters: {},
-      selectedDocumentIds: [],
-      queryOverride,
-      forceSearch,
-      useExistingUserMessage: isSeededChat,
-      use_agentic_search: !!this.isDeepResearchEnabled,
-    };
+
     const promise = updateCurrentMessageFIFO(
-      params,
+      {
+        message: currMessage,
+        alternateAssistantId: currentAssistantId,
+        fileDescriptors: [],
+        parentMessageId: gLSM(currMessageHistory),
+        chatSessionId: this.currChatSessionId,
+        promptId: 0,
+        filters: {},
+        selectedDocumentIds: [],
+        queryOverride,
+        forceSearch,
+        useExistingUserMessage: isSeededChat,
+        use_agentic_search: !!this.isDeepResearchEnabled,
+      },
       this.isCancelledRef,
       this.setIsCancelled,
     );
 
-    // await delay(1);
+    const parser = new FeedParser({
+      frozenSessionId,
+      frozenMessageMap,
+      parentMessage,
+      currMessage,
+      setMessageStore: this.setMessageStore,
+    });
 
+    this.setIsStreaming(true);
     for await (const bit of promise) {
       if (bit.error) {
         stack.error = bit.error;
@@ -212,18 +196,15 @@ export class SubmitHandler {
       }
 
       if (stack.isComplete || stack.isEmpty()) {
-        // console.log('breaking', stack.isComplete, stack.isEmpty(), stack.stack);
         break;
       }
 
-      // await delay(2);
-
       if (!stack.isEmpty()) {
         const packet = stack.nextPacket();
-        // console.log('packet', packet);
 
         if (packet) {
           parser.read(packet);
+          newMessageStore = parser.getCompleteMessageStore();
         }
 
         if (this.isCancelledRef.current) {
@@ -236,10 +217,10 @@ export class SubmitHandler {
     if (
       this.enableQgen &&
       typeof this.qgenAsistantId !== 'undefined' &&
-      newCompleteMessageDetail.messageMap
+      newMessageStore.messageMap
     ) {
       // check if last message comes from assistant
-      const { messageMap } = newCompleteMessageDetail;
+      const { messageMap } = newMessageStore;
       const messageList = buildLatestMessageChain(messageMap).reverse();
 
       const lastMessage = messageList.find((m) => m.type === 'assistant');
@@ -254,12 +235,13 @@ export class SubmitHandler {
 
         lastMessage.relatedQuestions = extractJSON(relatedQuestionsText);
 
-        this.setCompleteMessageDetail({
-          ...newCompleteMessageDetail,
+        this.setMessageStore({
+          ...newMessageStore,
           messageMap,
         });
       }
     }
+
     this.setIsStreaming(false);
   }
 }

@@ -47,23 +47,22 @@ export function useBackendChat({
     isCancelledRef.current = isCancelled;
   }, [isCancelled]);
 
-  const [completeMessageDetail, setCompleteMessageDetail] = useState({
+  // TODO: use debounced state
+  const [messageStore, setMessageStore] = useState({
     sessionId: null,
     messageMap: new Map(),
   });
 
-  const messageHistory = buildLatestMessageChain(
-    completeMessageDetail.messageMap,
-  );
+  const messageHistory = buildLatestMessageChain(messageStore.messageMap);
   const submitHandler = React.useMemo(
     () =>
       new SubmitHandler({
-        completeMessageDetail,
+        messageStore,
+        setMessageStore,
         currChatSessionId,
         isCancelledRef,
         messageHistory, // needed to resend last message. Should be parrentMessage.messageId, also currMessage
         persona,
-        setCompleteMessageDetail,
         setCurrChatSessionId,
         setIsCancelled,
         setIsStreaming,
@@ -84,7 +83,7 @@ export function useBackendChat({
   );
 
   const clearChat = () => {
-    setCompleteMessageDetail({
+    setMessageStore({
       sessionId: null,
       messageMap: new Map(),
     });

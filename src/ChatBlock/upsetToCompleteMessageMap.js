@@ -5,18 +5,20 @@ import {
 } from './lib';
 import { SYSTEM_MESSAGE_ID } from './constants';
 
-export function upsertToCompleteMessageMap({
+export function upsertToMessageStore({
   chatSessionId,
-  completeMessageDetail,
   completeMessageMapOverride,
   makeLatestChildMessage = false,
   messages,
   replacementsMap = null,
-  setCompleteMessageDetail,
+
+  // TODO: we should not call setMessageStore from here?
+  messageStore,
+  setMessageStore,
 }) {
   // deep copy
   const frozenCompleteMessageMap =
-    completeMessageMapOverride || completeMessageDetail.messageMap;
+    completeMessageMapOverride || messageStore.messageMap;
 
   // eslint is old, structuredClone is builtin
   // eslint-disable-next-line no-undef
@@ -65,10 +67,10 @@ export function upsertToCompleteMessageMap({
         messages[0].messageId;
     }
   }
-  const newCompleteMessageDetail = {
-    sessionId: chatSessionId || completeMessageDetail.sessionId,
+  const newMessageStore = {
+    sessionId: chatSessionId || messageStore.sessionId,
     messageMap: newCompleteMessageMap,
   };
-  setCompleteMessageDetail(newCompleteMessageDetail);
-  return newCompleteMessageDetail;
+  setMessageStore(newMessageStore);
+  return newMessageStore;
 }

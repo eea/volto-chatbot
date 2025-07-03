@@ -315,7 +315,7 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
   const { query, answer } = message;
   const chatSessionId = await createChatSession(qgenAsistantId, `Q: ${query}`);
 
-  const params = {
+  const onyxChatParams = {
     message: `Question: ${query}\nAnswer:\n${answer}`,
     alternateAssistantId: qgenAsistantId,
     fileDescriptors: [],
@@ -326,7 +326,7 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
     selectedDocumentIds: [],
     use_agentic_search: false,
   };
-  const promise = updateCurrentMessageFIFO(params, {}, () => {});
+  const promise = updateCurrentMessageFIFO(onyxChatParams, {}, () => {});
 
   let result = '';
 
@@ -361,11 +361,11 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
 }
 
 export async function* updateCurrentMessageFIFO(
-  params,
+  onyxChatParams,
   isCancelledRef,
   setIsCancelled,
 ) {
-  const promise = sendMessage(params);
+  const promise = sendMessage(onyxChatParams);
 
   try {
     for await (const packetBunch of promise) {

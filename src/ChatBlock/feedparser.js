@@ -1,3 +1,15 @@
+import { upsertToMessageStore } from './upsetToCompleteMessageMap';
+import {
+  CurrentMessageFIFO,
+  buildLatestMessageChain,
+  constructSubQuestions,
+  createChatSession,
+  // delay,
+  extractJSON,
+  fetchRelatedQuestions,
+  getLastSuccessfulMessageId,
+  updateCurrentMessageFIFO,
+} from './lib';
 import {
   ChatFileType,
   RetrievalType,
@@ -7,20 +19,51 @@ import {
 } from './constants';
 
 export class FeedParser {
-  constructor() {
+  constructor({
+    frozenSessionId,
+    frozenMessageMap,
+    parentMessage,
+    currMessage,
+    setCompleteMessageDetail,
+  }) {
+    this.frozenSessionId = frozenSessionId;
+    this.parentMessage = parentMessage;
+    this.currMessage = currMessage;
+    this.frozenMessageMap = frozenMessageMap;
+    this.setCompleteMessageDetail = setCompleteMessageDetail;
+
     this.answer = '';
     this.query = null;
     this.retrievalType = RetrievalType.None;
     this.documents = []; // selectedDocuments;
-    this.aiMessageImages = null;
+    this.aiMessageImages = null; // shouldn't be needed
     this.error = null;
     this.finalMessage = null;
     this.toolCalls = [];
-    this.signals = ['agentic_message_ids'];
-  }
+    this.secondLevelMessageId = null;
+    this.includeAgentic = false;
+    this.is_generating = false;
+    this.isStreamingQuestions = false;
+    this.second_level_generating = false;
+    this.sub_questions = [];
+    this.agenticDocs = [];
 
-  handle_agentic_message_ids(packet) {
-    this.isAgentic = packet.is_agentic;
+    this.signals = [
+      'agentic_message_ids',
+      'level',
+      'is_agentic',
+      'refined_answer_improvement',
+      'stream_type',
+      'stop_reason',
+      'sub_question',
+      'sub_query',
+      'answer_piece',
+      'top_documents',
+      'tool_name',
+      'file_ids',
+      'error',
+      'message_id',
+    ];
   }
 
   read(packet) {
@@ -31,221 +74,198 @@ export class FeedParser {
       }
     });
   }
+
+  handle_agentic_message_ids(packet) {
+    const msg_ids = packet.agentic_message_ids;
+    const msg_id = msg_ids.find((item) => item.level === 1)?.message_id;
+    if (msg_id) {
+      this.secondLevelMessageId = msg_id;
+      this.includeAgentic = true;
+    }
+  }
+
+  handle_level(packet) {
+    if (packet.level === 1) {
+      this.second_level_generating = true;
+    }
+  }
+
+  handle_is_agentic(packet) {
+    this.isAgentic = packet.is_agentic;
+  }
+
+  handle_refined_answer_improvement(packet) {
+    this.isImprovement = packet.refined_answer_improvement;
+  }
+
+  handle_stream_type(packet) {
+    if (packet.stream_type === 'main_answer') {
+      this.is_generating = false;
+      this.second_level_generating = true;
+    }
+  }
+
+  handle_stop_reason(packet) {
+    if (Object.hasOwn(packet, 'level_question_num')) {
+      if (
+        packet.stream_type === 'sub_questions' &&
+        (packet.level_question_num === undefined ||
+          packet.level_question_num === null)
+      ) {
+        this.isStreamingQuestions = false;
+      }
+      this.sub_questions = constructSubQuestions(this.sub_questions, packet);
+    }
+  }
+
+  handle_sub_question(packet) {
+    // TODO
+    // this.updateChatState('toolBuilding', frozenSessionId);
+    this.is_generating = true;
+    this.sub_questions = constructSubQuestions(this.sub_questions, packet);
+    // TODO
+    // this.setAgenticGenerating(true);
+  }
+
+  handle_sub_query(packet) {
+    this.sub_questions = constructSubQuestions(this.sub_questions, packet);
+  }
+
+  handle_answer_piece(packet) {
+    if (
+      Object.hasOwn(packet, 'answer_type') &&
+      packet.answer_type === 'agent_sub_answer'
+    ) {
+      this.sub_questions = constructSubQuestions(this.sub_questions, packet);
+    } else {
+      // answer += packet.answer_piece;
+
+      this.sub_questions = this.sub_questions.map((subQ) => ({
+        ...subQ,
+        is_generating: false,
+      }));
+
+      if (Object.hasOwn(packet, 'level') && packet.level === 1) {
+        this.second_level_answer += packet.answer_piece;
+      } else {
+        this.answer += packet.answer_piece;
+      }
+    }
+  }
+
+  handle_top_documents(packet) {
+    this.sub_questions = constructSubQuestions(this.sub_questions, packet);
+
+    if (packet.level_question_num === 0 && packet.level === 0) {
+      this.documents = packet.top_documents;
+    } else if (packet.level_question_num === 0 && packet.level === 1) {
+      this.agenticDocs = packet.top_documents;
+    } else {
+      this.documents = packet.top_documents;
+      this.query = packet.rephrased_query;
+      this.retrievalType = RetrievalType.Search;
+      if (this.documents && this.documents.length > 0) {
+        // point to the latest message (we don't know the messageId yet, which is why
+        // we have to use -1)
+        // setSelectedMessageForDocDisplay(TEMP_USER_MESSAGE_ID);
+      }
+    }
+  }
+
+  handle_tool_name(packet) {
+    this.toolCalls = [
+      {
+        tool_name: packet.tool_name,
+        tool_args: packet.tool_args,
+        tool_result: packet.tool_result,
+      },
+    ];
+
+    // if (!toolCall.tool_name.includes("agent")) {
+    //   if (
+    //     !toolCall.tool_result ||
+    //     toolCall.tool_result == undefined
+    //   ) {
+    //     updateChatState("toolBuilding", frozenSessionId);
+    //   } else {
+    //     updateChatState("streaming", frozenSessionId);
+    //   }
+    //
+    //   // This will be consolidated in upcoming tool calls udpate,
+    //   // but for now, we need to set query as early as possible
+    //   if (toolCall.tool_name == SEARCH_TOOL_NAME) {
+    //     query = toolCall.tool_args["query"];
+    //   }
+    // } else {
+    //   toolCall = null;
+    // }
+  }
+
+  handle_file_ids(packet) {
+    this.aiMessageImages = packet.file_ids.map((fileId) => {
+      return {
+        id: fileId,
+        type: ChatFileType.IMAGE,
+      };
+    });
+  }
+
+  handle_error(packet) {
+    this.error = packet.error;
+  }
+
+  handle_message_id(packet) {
+    this.finalMessage = packet;
+  }
+
+  getCompleteMessageStore() {
+    const newUserMessageId =
+      this.finalMessage?.parent_message || TEMP_USER_MESSAGE_ID;
+    const newAssistantMessageId =
+      this.finalMessage?.message_id || TEMP_ASSISTANT_MESSAGE_ID;
+
+    const localMessages = [
+      {
+        messageId: newUserMessageId,
+        message: this.currMessage,
+        type: 'user',
+        files: [],
+        toolCalls: [],
+        parentMessageId: this.parentMessage?.messageId || null,
+        childrenMessageIds: [newAssistantMessageId],
+        latestChildMessageId: newAssistantMessageId,
+      },
+      {
+        ...this.finalMessage,
+        messageId: newAssistantMessageId,
+        message: this.error || this.answer,
+        type: this.error ? 'error' : 'assistant',
+        retrievalType: this.retrievalType,
+        query: this.finalMessage?.rephrased_query || this.query,
+        documents:
+          this.finalMessage?.context_docs?.top_documents || this.documents,
+        citations: this.finalMessage?.citations || {},
+        sub_questions: this.finalMessage?.sub_questions || this.sub_questions,
+        files: this.finalMessage?.files || this.aiMessageImages || [],
+        toolCalls: this.finalMessage?.tool_calls || this.toolCalls,
+        parentMessageId: newUserMessageId,
+        alternateAssistantID: null, // alternativeAssistant?.id,
+      },
+    ];
+    const replacementsMap = this.finalMessage
+      ? new Map([
+          [localMessages[0].messageId, TEMP_USER_MESSAGE_ID],
+          [localMessages[1].messageId, TEMP_ASSISTANT_MESSAGE_ID],
+        ])
+      : null;
+    const params = {
+      chatSessionId: this.frozenSessionId,
+      completeMessageMapOverride: this.frozenMessageMap,
+      messages: localMessages,
+      replacementsMap,
+      setCompleteMessageDetail: this.setCompleteMessageDetail,
+    };
+    const messageStore = upsertToMessageStore(params);
+    return messageStore;
+  }
 }
-// // console.log('inside packagt', packet, {
-//           //   has_message_id: Object.hasOwn(packet, 'message_id'),
-//           //   has_answer_piece: Object.hasOwn(packet, 'answer_piece'),
-//           //   has_top_docs: Object.hasOwn(packet, 'top_documents'),
-//           //   has_tool_name: Object.hasOwn(packet, 'tool_name'),
-//           //   has_file_ids: Object.hasOwn(packet, 'file_ids'),
-//           //   has_error: Object.hasOwn(packet, 'error'),
-//           // });
-//
-//           if (Object.hasOwn(packet, 'agentic_message_ids')) {
-//             const agenticMessageIds = packet.agentic_message_ids;
-//             const level1MessageId = agenticMessageIds.find(
-//               (item) => item.level === 1,
-//             )?.message_id;
-//             if (level1MessageId) {
-//               this.secondLevelMessageId = level1MessageId;
-//               this.includeAgentic = true;
-//             }
-//           }
-//
-//           if (Object.hasOwn(packet, 'level')) {
-//             if (packet.level === 1) {
-//               this.second_level_generating = true;
-//             }
-//           }
-//           if (Object.hasOwn(packet, 'is_agentic')) {
-//             this.isAgentic = packet.is_agentic;
-//           }
-//
-//           if (Object.hasOwn(packet, 'refined_answer_improvement')) {
-//             this.isImprovement = packet.refined_answer_improvement;
-//           }
-//
-//           if (Object.hasOwn(packet, 'stream_type')) {
-//             if (packet.stream_type === 'main_answer') {
-//               this.is_generating = false;
-//               this.second_level_generating = true;
-//             }
-//           }
-//
-//           // // Continuously refine the sub_questions based on the packets that we receive
-//           if (
-//             Object.hasOwn(packet, 'stop_reason') &&
-//             Object.hasOwn(packet, 'level_question_num')
-//           ) {
-//             // TODO
-//             // if (packet.stream_type === 'main_answer') {
-//             //   this.updateChatState('streaming', frozenSessionId);
-//             // }
-//             if (
-//               packet.stream_type === 'sub_questions' &&
-//               packet.level_question_num === undefined
-//             ) {
-//               this.isStreamingQuestions = false;
-//             }
-//             this.sub_questions = constructSubQuestions(
-//               this.sub_questions,
-//               packet,
-//             );
-//           } else if (Object.hasOwn(packet, 'sub_question')) {
-//             // TODO
-//             // this.updateChatState('toolBuilding', frozenSessionId);
-//             this.is_generating = true;
-//             this.sub_questions = constructSubQuestions(
-//               this.sub_questions,
-//               packet,
-//             );
-//             // TODO
-//             // this.setAgenticGenerating(true);
-//           } else if (Object.hasOwn(packet, 'sub_query')) {
-//             this.sub_questions = constructSubQuestions(
-//               this.sub_questions,
-//               packet,
-//             );
-//           } else if (
-//             Object.hasOwn(packet, 'answer_piece') &&
-//             Object.hasOwn(packet, 'answer_type') &&
-//             packet.answer_type === 'agent_sub_answer'
-//           ) {
-//             this.sub_questions = constructSubQuestions(
-//               this.sub_questions,
-//               packet,
-//             );
-//           } else if (Object.hasOwn(packet, 'answer_piece')) {
-//             // answer += packet.answer_piece;
-//
-//             this.sub_questions = this.sub_questions.map((subQ) => ({
-//               ...subQ,
-//               is_generating: false,
-//             }));
-//
-//             if (Object.hasOwn(packet, 'level') && packet.level === 1) {
-//               this.second_level_answer += packet.answer_piece;
-//             } else {
-//               answer += packet.answer_piece;
-//             }
-//           } else if (
-//             Object.hasOwn(packet, 'top_documents') &&
-//             Object.hasOwn(packet, 'level_question_num') &&
-//             packet.level_question_num !== undefined
-//           ) {
-//             const documentsResponse = packet;
-//             this.sub_questions = constructSubQuestions(
-//               this.sub_questions,
-//               documentsResponse,
-//             );
-//
-//             if (
-//               documentsResponse.level_question_num === 0 &&
-//               documentsResponse.level === 0
-//             ) {
-//               documents = packet.top_documents;
-//             } else if (
-//               documentsResponse.level_question_num === 0 &&
-//               documentsResponse.level === 1
-//             ) {
-//               this.agenticDocs = packet.top_documents;
-//             }
-//           } else if (Object.hasOwn(packet, 'top_documents')) {
-//             documents = packet.top_documents;
-//             query = packet.rephrased_query;
-//             retrievalType = RetrievalType.Search;
-//             if (documents && documents.length > 0) {
-//               // point to the latest message (we don't know the messageId yet, which is why
-//               // we have to use -1)
-//               // setSelectedMessageForDocDisplay(TEMP_USER_MESSAGE_ID);
-//             }
-//           } else if (Object.hasOwn(packet, 'tool_name')) {
-//             toolCalls = [
-//               {
-//                 tool_name: packet.tool_name,
-//                 tool_args: packet.tool_args,
-//                 tool_result: packet.tool_result,
-//               },
-//             ];
-//
-//             // if (!toolCall.tool_name.includes("agent")) {
-//             //   if (
-//             //     !toolCall.tool_result ||
-//             //     toolCall.tool_result == undefined
-//             //   ) {
-//             //     updateChatState("toolBuilding", frozenSessionId);
-//             //   } else {
-//             //     updateChatState("streaming", frozenSessionId);
-//             //   }
-//             //
-//             //   // This will be consolidated in upcoming tool calls udpate,
-//             //   // but for now, we need to set query as early as possible
-//             //   if (toolCall.tool_name == SEARCH_TOOL_NAME) {
-//             //     query = toolCall.tool_args["query"];
-//             //   }
-//             // } else {
-//             //   toolCall = null;
-//             // }
-//           } else if (Object.hasOwn(packet, 'file_ids')) {
-//             aiMessageImages = packet.file_ids.map((fileId) => {
-//               return {
-//                 id: fileId,
-//                 type: ChatFileType.IMAGE,
-//               };
-//             });
-//           } else if (packet.error) {
-//             // TODO: add more on errors and stop reason from original code
-//             error = packet.error;
-//           } else if (Object.hasOwn(packet, 'message_id')) {
-//             finalMessage = packet;
-//           }
-//
-//           const newUserMessageId =
-//             finalMessage?.parent_message || TEMP_USER_MESSAGE_ID;
-//           const newAssistantMessageId =
-//             finalMessage?.message_id || TEMP_ASSISTANT_MESSAGE_ID;
-//
-//           const localMessages = [
-//             {
-//               messageId: newUserMessageId,
-//               message: currMessage,
-//               type: 'user',
-//               files: [],
-//               toolCalls: [],
-//               parentMessageId: parentMessage?.messageId || null,
-//               childrenMessageIds: [newAssistantMessageId],
-//               latestChildMessageId: newAssistantMessageId,
-//             },
-//             {
-//               ...finalMessage,
-//               messageId: newAssistantMessageId,
-//               message: error || answer,
-//               type: error ? 'error' : 'assistant',
-//               retrievalType,
-//               query: finalMessage?.rephrased_query || query,
-//               documents: finalMessage?.context_docs?.top_documents || documents,
-//               citations: finalMessage?.citations || {},
-//               sub_questions: finalMessage?.sub_questions || this.sub_questions,
-//               files: finalMessage?.files || aiMessageImages || [],
-//               toolCalls: finalMessage?.tool_calls || toolCalls,
-//               parentMessageId: newUserMessageId,
-//               alternateAssistantID: null, // alternativeAssistant?.id,
-//             },
-//           ];
-//           const replacementsMap = finalMessage
-//             ? new Map([
-//                 [localMessages[0].messageId, TEMP_USER_MESSAGE_ID],
-//                 [localMessages[1].messageId, TEMP_ASSISTANT_MESSAGE_ID],
-//               ])
-//             : null;
-//           if (finalMessage) {
-//             // console.log('final', finalMessage, localMessages);
-//           }
-//           const params = {
-//             chatSessionId: frozenSessionId,
-//             completeMessageMapOverride: frozenMessageMap,
-//             messages: localMessages,
-//             replacementsMap,
-//             setCompleteMessageDetail: this.setCompleteMessageDetail,
-//           };
-//           newCompleteMessageDetail = upsertToCompleteMessageMap(params);

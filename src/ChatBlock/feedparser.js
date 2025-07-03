@@ -24,13 +24,13 @@ export class FeedParser {
     frozenMessageMap,
     parentMessage,
     currMessage,
-    setCompleteMessageDetail,
+    setMessageStore,
   }) {
     this.frozenSessionId = frozenSessionId;
     this.parentMessage = parentMessage;
     this.currMessage = currMessage;
     this.frozenMessageMap = frozenMessageMap;
-    this.setCompleteMessageDetail = setCompleteMessageDetail;
+    this.setMessageStore = setMessageStore;
 
     this.answer = '';
     this.query = null;
@@ -66,46 +66,46 @@ export class FeedParser {
     ];
   }
 
-  read(packet) {
+  read = (packet) => {
     this.signals.forEach((name) => {
       if (Object.hasOwn(packet, name)) {
         const handler = this[`handle_${name}`];
         handler(packet);
       }
     });
-  }
+  };
 
-  handle_agentic_message_ids(packet) {
+  handle_agentic_message_ids = (packet) => {
     const msg_ids = packet.agentic_message_ids;
     const msg_id = msg_ids.find((item) => item.level === 1)?.message_id;
     if (msg_id) {
       this.secondLevelMessageId = msg_id;
       this.includeAgentic = true;
     }
-  }
+  };
 
-  handle_level(packet) {
+  handle_level = (packet) => {
     if (packet.level === 1) {
       this.second_level_generating = true;
     }
-  }
+  };
 
-  handle_is_agentic(packet) {
+  handle_is_agentic = (packet) => {
     this.isAgentic = packet.is_agentic;
-  }
+  };
 
-  handle_refined_answer_improvement(packet) {
+  handle_refined_answer_improvement = (packet) => {
     this.isImprovement = packet.refined_answer_improvement;
-  }
+  };
 
-  handle_stream_type(packet) {
+  handle_stream_type = (packet) => {
     if (packet.stream_type === 'main_answer') {
       this.is_generating = false;
       this.second_level_generating = true;
     }
-  }
+  };
 
-  handle_stop_reason(packet) {
+  handle_stop_reason = (packet) => {
     if (Object.hasOwn(packet, 'level_question_num')) {
       if (
         packet.stream_type === 'sub_questions' &&
@@ -116,22 +116,22 @@ export class FeedParser {
       }
       this.sub_questions = constructSubQuestions(this.sub_questions, packet);
     }
-  }
+  };
 
-  handle_sub_question(packet) {
+  handle_sub_question = (packet) => {
     // TODO
     // this.updateChatState('toolBuilding', frozenSessionId);
     this.is_generating = true;
     this.sub_questions = constructSubQuestions(this.sub_questions, packet);
     // TODO
     // this.setAgenticGenerating(true);
-  }
+  };
 
-  handle_sub_query(packet) {
+  handle_sub_query = (packet) => {
     this.sub_questions = constructSubQuestions(this.sub_questions, packet);
-  }
+  };
 
-  handle_answer_piece(packet) {
+  handle_answer_piece = (packet) => {
     if (
       Object.hasOwn(packet, 'answer_type') &&
       packet.answer_type === 'agent_sub_answer'
@@ -151,9 +151,9 @@ export class FeedParser {
         this.answer += packet.answer_piece;
       }
     }
-  }
+  };
 
-  handle_top_documents(packet) {
+  handle_top_documents = (packet) => {
     this.sub_questions = constructSubQuestions(this.sub_questions, packet);
 
     if (packet.level_question_num === 0 && packet.level === 0) {
@@ -170,9 +170,9 @@ export class FeedParser {
         // setSelectedMessageForDocDisplay(TEMP_USER_MESSAGE_ID);
       }
     }
-  }
+  };
 
-  handle_tool_name(packet) {
+  handle_tool_name = (packet) => {
     this.toolCalls = [
       {
         tool_name: packet.tool_name,
@@ -199,26 +199,26 @@ export class FeedParser {
     // } else {
     //   toolCall = null;
     // }
-  }
+  };
 
-  handle_file_ids(packet) {
+  handle_file_ids = (packet) => {
     this.aiMessageImages = packet.file_ids.map((fileId) => {
       return {
         id: fileId,
         type: ChatFileType.IMAGE,
       };
     });
-  }
+  };
 
-  handle_error(packet) {
+  handle_error = (packet) => {
     this.error = packet.error;
-  }
+  };
 
-  handle_message_id(packet) {
+  handle_message_id = (packet) => {
     this.finalMessage = packet;
-  }
+  };
 
-  getCompleteMessageStore() {
+  getCompleteMessageStore = () => {
     const newUserMessageId =
       this.finalMessage?.parent_message || TEMP_USER_MESSAGE_ID;
     const newAssistantMessageId =
@@ -263,9 +263,9 @@ export class FeedParser {
       completeMessageMapOverride: this.frozenMessageMap,
       messages: localMessages,
       replacementsMap,
-      setCompleteMessageDetail: this.setCompleteMessageDetail,
+      setMessageStore: this.setMessageStore,
     };
     const messageStore = upsertToMessageStore(params);
     return messageStore;
-  }
+  };
 }

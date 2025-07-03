@@ -16,6 +16,8 @@ const MSG_INVALID_CONFIGURATION =
 const MSG_FETCH_COOKIE = 'Error while fetching authentication cookie';
 const MSG_ERROR_REQUEST = 'Error in processing request to Danswer';
 
+const MOCK_STREAM_DELAY = 1;
+
 async function get_login_cookie(username, password) {
   const url = `${process.env.DANSWER_URL}/api/auth/login`;
   const data = {
@@ -69,170 +71,14 @@ async function check_credentials() {
   return await fetch(reqUrl, options);
 }
 
-// function mock_llm_call(res) {
-//   // Set appropriate headers for SSE
-//   res.setHeader('Content-Type', 'text/event-stream');
-//   res.setHeader('Cache-Control', 'no-cache');
-//   res.setHeader('Connection', 'keep-alive');
-//
-//   const filePath = path.join(
-//     __dirname,
-//     '../src/addons/volto-chatbot/dummy.jsonl',
-//   );
-//
-//   // Make sure the file exists
-//   if (!fs.existsSync(filePath)) {
-//     console.error('File not found:', filePath);
-//     res.status(404).send('File not found');
-//     return;
-//   }
-//
-//   const fileStream = fs.createReadStream(filePath, { encoding: 'utf8' });
-//   const rl = readline.createInterface({
-//     input: fileStream,
-//     crlfDelay: Infinity,
-//   });
-//
-//   // Keep track of pending timeouts
-//   const pendingTimeouts = [];
-//
-//   // Function to send a line with a delay
-//   const sendLineWithDelay = (line) => {
-//     const timeout = setTimeout(() => {
-//       res.write(`${line}\n`); // data:
-//       // Remove this timeout from the pending list
-//       const index = pendingTimeouts.indexOf(timeout);
-//       if (index > -1) {
-//         pendingTimeouts.splice(index, 1);
-//       }
-//
-//       // If there are no more pending timeouts and the stream is closed, end the response
-//       if (pendingTimeouts.length === 0 && streamClosed) {
-//         res.end();
-//       }
-//     }, 300);
-//
-//     pendingTimeouts.push(timeout);
-//   };
-//
-//   let streamClosed = false;
-//
-//   // Read the file line by line
-//   rl.on('line', (line) => {
-//     console.log('Sending line:', line);
-//     sendLineWithDelay(line);
-//   });
-//
-//   // Handle stream errors
-//   rl.on('error', (err) => {
-//     console.error('Error reading file:', err);
-//     // Clean up any pending timeouts
-//     pendingTimeouts.forEach(clearTimeout);
-//     res.status(500).send('Internal Server Error');
-//   });
-//
-//   // Handle stream end
-//   rl.on('close', () => {
-//     console.log('File stream ended');
-//     streamClosed = true;
-//
-//     // Only end the response if all pending timeouts have completed
-//     if (pendingTimeouts.length === 0) {
-//       res.end();
-//     }
-//     // Otherwise, the response will be ended when the last timeout completes
-//   });
-// }
+function mock_create_chat(res) {
+  res.setHeader('Content-Type', 'text/plain');
+  res.setHeader('Transfer-Encoding', 'chunked');
+  res.write(`{"chat_session_id":"46277749-db60-44f2-9de1-c5dca2eb68fa"}`);
+  res.end();
+}
 
-// const { once } = require('events');
-//
-// async function* readLines(filePath) {
-//   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
-//   let buffer = '';
-//
-//   readStream.on('data', (chunk) => {
-//     buffer += chunk;
-//     let lines = buffer.split('\n');
-//     buffer = lines.pop(); // Keep the last incomplete line in the buffer
-//
-//     for (const line of lines) {
-//       if (line.trim() !== '') {
-//         readStream.pause();
-//         readStream.resume(); // Resume immediately to allow pausing again for delay
-//         setTimeout(() => readStream.resume(), 1000); // Add delay
-//         yield line;
-//       }
-//     }
-//   });
-//
-//   await once(readStream, 'end');
-//   if (buffer.trim() !== '') {
-//     yield buffer;
-//   }
-// }
-
-// function mock_llm_call(res) {
-//   // res.set('Content-Type', 'text/event-stream');
-//   // res.setHeader('Cache-Control', 'no-cache');
-//   // res.setHeader('Connection', 'keep-alive');
-//   res.writeHead(200, {
-//     'Content-Type': 'text/event-stream; charset=utf-8',
-//     'Cache-Control': 'no-cache',
-//     Connection: 'keep-alive',
-//     'Transfer-Encoding': 'chunked',
-//   });
-//
-//   const filePath = path.join(
-//     __dirname,
-//     '../src/addons/volto-chatbot/dummy.jsonl',
-//   );
-//   const DELAY = 200; // miliseconds
-//   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
-//   let buffer = '';
-//   let isFirstLine = true;
-//
-//   readStream.on('data', (chunk) => {
-//     buffer += chunk;
-//     let lines = buffer.split('\n');
-//
-//     // Keep the last incomplete line in the buffer
-//     buffer = lines.pop();
-//
-//     lines.forEach((line) => {
-//       if (line.trim() !== '') {
-//         if (!isFirstLine) {
-//           setTimeout(() => {
-//             console.log(`Write line ${line}`);
-//             res.write(line + '\n');
-//           }, DELAY);
-//         } else {
-//           res.write(line + '\n');
-//           isFirstLine = false;
-//         }
-//       }
-//     });
-//   });
-//
-//   readStream.on('end', () => {
-//     // Send the last line if there's any remaining in the buffer
-//     if (buffer.trim() !== '') {
-//       setTimeout(() => {
-//         console.log(`End write line ${buffer}`);
-//         res.write(buffer);
-//         res.end();
-//       }, DELAY);
-//     } else {
-//       res.end();
-//     }
-//   });
-//
-//   readStream.on('error', (err) => {
-//     log('Error reading file:', err);
-//     res.status(500).send('Internal Server Error');
-//   });
-// }
-
-function mock_llm_call(res) {
+function mock_send_message(res) {
   const filePath = path.join(
     __dirname,
     '../src/addons/volto-chatbot/dummy.jsonl',
@@ -241,7 +87,6 @@ function mock_llm_call(res) {
 
   let buffer = '';
   let lineIndex = 0;
-  const DELAY = 10;
 
   // Set appropriate headers for streaming
   res.setHeader('Content-Type', 'text/plain');
@@ -251,7 +96,7 @@ function mock_llm_call(res) {
     setTimeout(() => {
       res.write(line + '\n');
       log(`Sent line ${index + 1}: ${line.substring(0, 50)}...`);
-    }, index * DELAY); // 1 second delay between each line
+    }, index * MOCK_STREAM_DELAY);
   };
 
   readStream.on('data', (chunk) => {
@@ -282,7 +127,7 @@ function mock_llm_call(res) {
     setTimeout(() => {
       res.end();
       log('File stream ended - all lines sent');
-    }, lineIndex * DELAY);
+    }, lineIndex * MOCK_STREAM_DELAY);
   });
 
   readStream.on('error', (err) => {
@@ -328,10 +173,17 @@ async function send_danswer_request(
     options.body = JSON.stringify(req.body);
   }
 
-  if (req.url.endsWith('send-message') && process.env.MOCK_LLM_CALL) {
-    mock_llm_call(res);
-    return;
+  if (process.env.MOCK_LLM_CALL) {
+    if (req.url.endsWith('send-message')) {
+      mock_send_message(res);
+      return;
+    }
+    if (req.url.endsWith('create-chat-session')) {
+      mock_create_chat(res);
+      return;
+    }
   }
+
   try {
     log(`Fetching ${url}`);
     const response = await fetch(url, options, req.body);

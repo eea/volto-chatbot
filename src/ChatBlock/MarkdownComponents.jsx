@@ -171,8 +171,8 @@ export function ClaimCitations(props) {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
                     if (container && target) {
-                      const containerTop =
-                        container.getBoundingClientRect().top;
+                      const containerTop = container.getBoundingClientRect()
+                        .top;
                       const targetTop = target.getBoundingClientRect().top;
                       const scrollOffset =
                         targetTop - containerTop + container.scrollTop;
@@ -260,7 +260,9 @@ export function components(message, markers, citedSources) {
         );
       }
 
-      return claim ? (
+      return !claim || claim?.score === null ? (
+        rest.children || []
+      ) : (
         <Modal
           className="claim-modal"
           trigger={
@@ -285,8 +287,6 @@ export function components(message, markers, citedSources) {
             />
           </ModalContent>
         </Modal>
-      ) : (
-        rest.children || []
       );
     },
     a: (props) => {

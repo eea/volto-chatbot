@@ -69,6 +69,7 @@ export function ChatBlockSchema({ assistants, data }) {
         id: 'default',
         title: 'Default',
         fields: [
+          'chatTitle',
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
@@ -79,6 +80,7 @@ export function ChatBlockSchema({ assistants, data }) {
           'starterPromptsPosition',
           'showAssistantPrompts',
           'enableQgen',
+          'deepResearch',
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
           'qualityCheck',
@@ -95,7 +97,7 @@ export function ChatBlockSchema({ assistants, data }) {
           'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
-          'chatTitle',
+          'showAssistantPrompts',
         ],
       },
     ],
@@ -130,6 +132,15 @@ export function ChatBlockSchema({ assistants, data }) {
               { text: 'No supported information found in the documents' },
             ],
           },
+        ],
+      },
+      deepResearch: {
+        title: 'Deep research',
+        choices: [
+          ['always_on', 'Always on'],
+          ['unavailable', 'Unavailable'],
+          ['user_on', 'User choice, on by default'],
+          ['user_off', 'User choice, off by default'],
         ],
       },
       assistant: {

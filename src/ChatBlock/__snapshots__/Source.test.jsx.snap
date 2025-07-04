@@ -19,6 +19,7 @@ exports[`SourceDetails should render the component with doc type 1`] = `
     </span>
     <div
       className="source-title"
+      title="Nam at tortor in tellus"
     >
       Nam at tortor in tellus
     </div>
@@ -66,6 +67,7 @@ exports[`SourceDetails should render the component with link type 1`] = `
       </span>
       <div
         className="source-title"
+        title="Nam at tortor in tellus"
       >
         Nam at tortor in tellus
       </div>

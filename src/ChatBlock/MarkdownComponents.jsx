@@ -12,13 +12,10 @@ import {
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
-import PrevIcon from './../icons/chevron-left.svg';
-import NextIcon from './../icons/chevron-right.svg';
-
 import './colors.less';
 
 // const EXPAND = 100;
-const BUTTONS_PER_PAGE = 45;
+const VISIBLE_CITATIONS = 45; // Number of citations to show by default
 
 const RenderClaimView = (props) => {
   const {
@@ -134,19 +131,17 @@ export function ClaimCitations(props) {
 
   const [activeTab, setActiveTab] = React.useState(0);
   const [visibleCitationId, setVisibleCitation] = React.useState();
-  const [buttonPage, setButtonPage] = React.useState(0);
+  const [showAllButtons, setShowAllButtons] = React.useState(false);
 
   const citationContainerRef = React.useRef(null);
   const spanRefs = React.useRef({});
 
   const panes = sourcesWithSnippets.map((source, i) => {
     const snippetButtons = source.snippets || [];
-    const totalPages = Math.ceil(snippetButtons.length / BUTTONS_PER_PAGE);
 
-    const citationButtons = snippetButtons.slice(
-      buttonPage * BUTTONS_PER_PAGE,
-      (buttonPage + 1) * BUTTONS_PER_PAGE,
-    );
+    const citationButtons = showAllButtons
+      ? snippetButtons
+      : snippetButtons.slice(0, VISIBLE_CITATIONS);
 
     return {
       // menuItem: () => (
@@ -168,7 +163,6 @@ export function ClaimCitations(props) {
           className={`${activeTab === i ? 'active' : ''}`}
           onClick={() => {
             setActiveTab(i);
-            setButtonPage(0);
           }}
         >
           <span title={source?.semantic_identifier}>
@@ -178,11 +172,8 @@ export function ClaimCitations(props) {
       ),
       render: () => (
         <TabPane>
-          <div
-            className={`citation-buttons ${
-              totalPages > 1 ? 'slider-active' : ''
-            }`}
-          >
+          <div className="citation-buttons">
+            <h5 className="citations-header">Citations:</h5>
             <div className="citation-buttons-container">
               {citationButtons.map(({ id }) => (
                 <Button
@@ -191,8 +182,8 @@ export function ClaimCitations(props) {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
                     if (container && target) {
-                      const containerTop =
-                        container.getBoundingClientRect().top;
+                      const containerTop = container.getBoundingClientRect()
+                        .top;
                       const targetTop = target.getBoundingClientRect().top;
                       const scrollOffset =
                         targetTop - containerTop + container.scrollTop;
@@ -207,27 +198,15 @@ export function ClaimCitations(props) {
                   Line {id}
                 </Button>
               ))}
-            </div>
 
-            <div className="slider-buttons">
-              {totalPages > 1 && (
+              {snippetButtons.length > VISIBLE_CITATIONS && (
                 <Button
-                  className="slider-button-prev"
-                  onClick={() => setButtonPage(Math.max(0, buttonPage - 1))}
-                  disabled={buttonPage === 0}
+                  className="toggle-text"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setShowAllButtons(!showAllButtons)}
                 >
-                  <SVGIcon name={PrevIcon} />
-                </Button>
-              )}
-              {totalPages > 1 && (
-                <Button
-                  className="slider-button-next"
-                  onClick={() =>
-                    setButtonPage(Math.min(totalPages - 1, buttonPage + 1))
-                  }
-                  disabled={buttonPage >= totalPages - 1}
-                >
-                  <SVGIcon name={NextIcon} />
+                  {showAllButtons ? 'Less' : '... More'}
                 </Button>
               )}
             </div>

@@ -129,8 +129,12 @@
 
       .ui.button {
         padding: 0.75em 1.25em 0.75em;
-        border-radius: 5px;
-        background-color: #c9d7e3;
+        color: #3b82f6;
+        font-weight: normal;
+        font-size: 14px;
+        text-decoration-line: underline;
+        padding: 0;
+        background-color: transparent;
       }
     }
   }
@@ -228,6 +232,7 @@
       -webkit-line-clamp: 3;
       line-clamp: 3;
       word-break: break-all;
+      text-align: left;
     }
   }
 
@@ -277,23 +282,28 @@
     margin-bottom: 0;
   }
 
-  .ui.attached.menu:not(.tabular) {
-    flex-flow: wrap;
-    padding-bottom: 1.5em;
-    border: none;
-    border-bottom: 1px solid #d4d4d5;
-    gap: 0.5em;
-  }
+  .ui.attached.menu {
+    .item {
+      max-width: 200px;
+      padding: 0.8em 1em;
+      height: 60px;
+      
+      span {
+        font-size: 16px;
+        font-weight: bold;
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        word-break: break-all;
+        text-align: left;
+      }
 
-  .ui.segment.tab {
-    padding-bottom: 0;
+    }
   }
 
   .ui.menu {
-    &:before {
-      border-top: none !important;
-    }
-
     .sources {
       padding: 0;
       border: none !important;
@@ -418,6 +428,28 @@
 
   .ui.basic.button:hover {
     box-shadow: none;
+  }
+}
+
+.claim-text {
+  font-style: italic;
+  font-weight: bold;
+}
+
+.claim-rationale {
+  font-size: 14px;
+}
+
+.claim-source {
+  font-size: 16px;
+  margin: 1em 0;
+  border: 1px solid #e5e7eb;
+  border-radius: @borderRadius;
+  padding: 0.5em 0.8em;
+  
+  .claim-score {
+    font-weight: bold;
+    font-size: 18px;
   }
 }
 

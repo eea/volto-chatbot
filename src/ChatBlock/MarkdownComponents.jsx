@@ -1,10 +1,16 @@
 import React from 'react';
 
 import { convertToPercentage, transformEmailsToLinks, SVGIcon } from './utils';
-import { Modal, ModalContent, Tab, TabPane, Button } from 'semantic-ui-react';
+import {
+  Modal,
+  ModalContent,
+  Tab,
+  TabPane,
+  Button,
+  Menu,
+} from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
-import { SourceDetails } from './Source';
 
 import PrevIcon from './../icons/chevron-left.svg';
 import NextIcon from './../icons/chevron-right.svg';
@@ -12,7 +18,7 @@ import NextIcon from './../icons/chevron-right.svg';
 import './colors.less';
 
 // const EXPAND = 100;
-const BUTTONS_PER_PAGE = 25;
+const BUTTONS_PER_PAGE = 45;
 
 const RenderClaimView = (props) => {
   const {
@@ -143,17 +149,32 @@ export function ClaimCitations(props) {
     );
 
     return {
+      // menuItem: () => (
+      //   <button
+      //     key={i}
+      //     className={`sources ${activeTab === i ? 'active' : ''}`}
+      //     onClick={() => {
+      //       setActiveTab(i);
+      //       setButtonPage(0);
+      //     }}
+      //   >
+      //     {/* <SourceDetails source={source} index={source.index} /> */}
+      //     {source.semantic_identifier || 'Untitled Document'}
+      //   </button>
+      // ),
       menuItem: () => (
-        <button
+        <Menu.Item
           key={i}
-          className={`sources ${activeTab === i ? 'active' : ''}`}
+          className={`${activeTab === i ? 'active' : ''}`}
           onClick={() => {
             setActiveTab(i);
             setButtonPage(0);
           }}
         >
-          <SourceDetails source={source} index={source.index} />
-        </button>
+          <span title={source?.semantic_identifier}>
+            {source?.semantic_identifier || 'Untitled Document'}
+          </span>
+        </Menu.Item>
       ),
       render: () => (
         <TabPane>
@@ -166,7 +187,6 @@ export function ClaimCitations(props) {
               {citationButtons.map(({ id }) => (
                 <Button
                   key={id}
-                  size="tiny"
                   onClick={() => {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
@@ -229,7 +249,7 @@ export function ClaimCitations(props) {
   return (
     <div className="chat-window">
       <Tab
-        menu={{ secondary: true, attached: true }}
+        menu={{ secondary: true, attached: true, pointing: true, fluid: true }}
         attached
         panes={panes}
         activeIndex={activeTab}
@@ -272,13 +292,24 @@ export function components(message, markers, citedSources) {
           }
         >
           <ModalContent>
-            <h2>
-              Supported by citations:{' '}
-              <span className={getSupportedTextColor(claim.score)}>
-                {convertToPercentage(claim.score)}
-              </span>
-            </h2>
-            <p>{claim.rationale}</p>
+            <h5
+              className={`claim claim-text ${getSupportedBgColor(claim.score)}`}
+            >
+              &ldquo;{rest.children}&rdquo;
+            </h5>
+            <div className="claim-source">
+              <p className="claim-score">
+                Supported by citations:{' '}
+                <span className={getSupportedTextColor(claim.score)}>
+                  {convertToPercentage(claim.score)}
+                </span>
+              </p>
+
+              <p className="claim-rationale">
+                <strong>Rationale: </strong>
+                {claim.rationale}
+              </p>
+            </div>
 
             <ClaimCitations
               ids={claim.citationIds}

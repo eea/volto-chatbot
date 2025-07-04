@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { convertToPercentage, transformEmailsToLinks, SVGIcon } from './utils';
+import { convertToPercentage, transformEmailsToLinks } from './utils';
 import {
   Modal,
   ModalContent,

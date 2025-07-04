@@ -172,6 +172,7 @@ export function ClaimCitations(props) {
       ),
       render: () => (
         <TabPane>
+          <h4 className="claim-source-title">{source?.semantic_identifier}</h4>
           <div className="citation-buttons">
             <h5 className="citations-header">Citations:</h5>
             <div className="citation-buttons-container">
@@ -182,8 +183,8 @@ export function ClaimCitations(props) {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
                     if (container && target) {
-                      const containerTop =
-                        container.getBoundingClientRect().top;
+                      const containerTop = container.getBoundingClientRect()
+                        .top;
                       const targetTop = target.getBoundingClientRect().top;
                       const scrollOffset =
                         targetTop - containerTop + container.scrollTop;

@@ -15,6 +15,7 @@ import { SVGIcon } from './utils';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
 import BotIcon from './../icons/bot.svg';
+import LinkIcon from './../icons/external-link.svg';
 import './colors.less';
 
 // const EXPAND = 100;
@@ -142,26 +143,11 @@ export function ClaimCitations(props) {
   const panes = sourcesWithSnippets.map((source, i) => {
     const snippetButtons = source.snippets || [];
 
-    console.log('source', source);
-
     const citationButtons = showAllButtons
       ? snippetButtons
       : snippetButtons.slice(0, VISIBLE_CITATIONS);
 
     return {
-      // menuItem: () => (
-      //   <button
-      //     key={i}
-      //     className={`sources ${activeTab === i ? 'active' : ''}`}
-      //     onClick={() => {
-      //       setActiveTab(i);
-      //       setButtonPage(0);
-      //     }}
-      //   >
-      //     {/* <SourceDetails source={source} index={source.index} /> */}
-      //     {source.semantic_identifier || 'Untitled Document'}
-      //   </button>
-      // ),
       menuItem: () => (
         <Menu.Item
           key={i}
@@ -171,13 +157,34 @@ export function ClaimCitations(props) {
           }}
         >
           <span title={source?.semantic_identifier}>
-            {source?.semantic_identifier || 'Untitled Document'}
+            {source?.semantic_identifier}
           </span>
         </Menu.Item>
       ),
       render: () => (
         <TabPane>
-          <h4 className="claim-source-title">{source?.semantic_identifier}</h4>
+          <div className="claim-source-header">
+            {source?.link ? (
+              <a
+                href={source.link}
+                rel="noreferrer"
+                target="_blank"
+                className="claim-source-link"
+              >
+                <h5 className="claim-source-title">
+                  {source.semantic_identifier}
+                </h5>
+                <SVGIcon name={LinkIcon} size="20" />
+              </a>
+            ) : (
+              <div className="claim-source-link">
+                <h5 className="claim-source-title">
+                  {source?.semantic_identifier}
+                </h5>
+                <SVGIcon name={LinkIcon} size="20" />
+              </div>
+            )}
+          </div>
           <div className="citation-buttons">
             <h5 className="citations-header">Citations:</h5>
             <div className="citation-buttons-container">
@@ -188,8 +195,8 @@ export function ClaimCitations(props) {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
                     if (container && target) {
-                      const containerTop =
-                        container.getBoundingClientRect().top;
+                      const containerTop = container.getBoundingClientRect()
+                        .top;
                       const targetTop = target.getBoundingClientRect().top;
                       const scrollOffset =
                         targetTop - containerTop + container.scrollTop;

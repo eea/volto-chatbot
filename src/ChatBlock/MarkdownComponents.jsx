@@ -4,14 +4,17 @@ import { convertToPercentage, transformEmailsToLinks } from './utils';
 import {
   Modal,
   ModalContent,
+  ModalHeader,
   Tab,
   TabPane,
   Button,
   Menu,
 } from 'semantic-ui-react';
 import { Citation } from './Citation';
+import { SVGIcon } from './utils';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
+import BotIcon from './../icons/bot.svg';
 import './colors.less';
 
 // const EXPAND = 100;
@@ -138,6 +141,8 @@ export function ClaimCitations(props) {
 
   const panes = sourcesWithSnippets.map((source, i) => {
     const snippetButtons = source.snippets || [];
+
+    console.log('source', source);
 
     const citationButtons = showAllButtons
       ? snippetButtons
@@ -271,12 +276,17 @@ export function components(message, markers, citedSources) {
             </span>
           }
         >
-          <ModalContent>
+          <ModalHeader>
+            <div className="circle assistant">
+              <SVGIcon name={BotIcon} size="20" color="white" />
+            </div>
             <h5
               className={`claim claim-text ${getSupportedBgColor(claim.score)}`}
             >
               &ldquo;{rest.children}&rdquo;
             </h5>
+          </ModalHeader>
+          <ModalContent>
             <div className="claim-source">
               <p className="claim-score">
                 Supported by citations:{' '}

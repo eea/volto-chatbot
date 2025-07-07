@@ -245,6 +245,7 @@ function HalloumiFeedback({
   showVerifyClaimsButton,
   sources,
 }) {
+  const noClaimsScore = markers?.claims[0]?.score === null;
   const messageBySource =
     'Please allow a few minutes for claim verification when many references are involved.';
 
@@ -260,12 +261,18 @@ function HalloumiFeedback({
           </div>
         </div>
       )}
+
       {isLoadingHalloumi && sources.length > 0 && (
         <Message color="blue">
           <VerifyClaims />
         </Message>
       )}
-      {!!halloumiMessage && !!markers && (
+
+      {noClaimsScore && (
+        <Message color="red">{markers?.claims?.[0].rationale}</Message>
+      )}
+
+      {!!halloumiMessage && !!markers && !noClaimsScore && (
         <Message color={scoreColor} icon>
           <MessageContent>
             {printSlate(halloumiMessage, `${score}%`)}

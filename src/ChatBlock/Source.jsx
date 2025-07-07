@@ -1,5 +1,4 @@
 import { Popup } from 'semantic-ui-react';
-// import { DateTime } from 'luxon';
 import { SVGIcon } from './utils';
 
 import FileIcon from './../icons/file.svg';
@@ -36,7 +35,9 @@ const SourceDetails_ = ({ source, index, luxon }) => {
         {isLinkType ? (
           <a href={link} rel="noreferrer" target="_blank">
             <span className="chat-citation">{index}</span>
-            <div className="source-title">{semantic_identifier}</div>
+            <div className="source-title" title={semantic_identifier}>
+              {semantic_identifier}
+            </div>
             {renderIcon()}
           </a>
         ) : (
@@ -48,7 +49,9 @@ const SourceDetails_ = ({ source, index, luxon }) => {
               trigger={<span className="chat-citation">{index}</span>}
               popper={{ id: 'chat-citation-popup' }}
             />
-            <div className="source-title">{semantic_identifier}</div>
+            <div className="source-title" title={semantic_identifier}>
+              {semantic_identifier}
+            </div>
             {renderIcon()}
           </>
         )}

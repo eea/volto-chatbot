@@ -1,18 +1,25 @@
 import React from 'react';
 
-import { convertToPercentage, transformEmailsToLinks, SVGIcon } from './utils';
-import { Modal, ModalContent, Tab, TabPane, Button } from 'semantic-ui-react';
+import { convertToPercentage, transformEmailsToLinks } from './utils';
+import {
+  Modal,
+  ModalContent,
+  ModalHeader,
+  Tab,
+  TabPane,
+  Button,
+  Menu,
+} from 'semantic-ui-react';
 import { Citation } from './Citation';
+import { SVGIcon } from './utils';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
-import { SourceDetails } from './Source';
 
-import PrevIcon from './../icons/chevron-left.svg';
-import NextIcon from './../icons/chevron-right.svg';
-
+import BotIcon from './../icons/bot.svg';
+import LinkIcon from './../icons/external-link.svg';
 import './colors.less';
 
 // const EXPAND = 100;
-const BUTTONS_PER_PAGE = 25;
+const VISIBLE_CITATIONS = 50; // Number of citations to show by default
 
 const RenderClaimView = (props) => {
   const {
@@ -128,45 +135,62 @@ export function ClaimCitations(props) {
 
   const [activeTab, setActiveTab] = React.useState(0);
   const [visibleCitationId, setVisibleCitation] = React.useState();
-  const [buttonPage, setButtonPage] = React.useState(0);
+  const [showAllButtons, setShowAllButtons] = React.useState(false);
 
   const citationContainerRef = React.useRef(null);
   const spanRefs = React.useRef({});
 
   const panes = sourcesWithSnippets.map((source, i) => {
     const snippetButtons = source.snippets || [];
-    const totalPages = Math.ceil(snippetButtons.length / BUTTONS_PER_PAGE);
 
-    const citationButtons = snippetButtons.slice(
-      buttonPage * BUTTONS_PER_PAGE,
-      (buttonPage + 1) * BUTTONS_PER_PAGE,
-    );
+    const citationButtons = showAllButtons
+      ? snippetButtons
+      : snippetButtons.slice(0, VISIBLE_CITATIONS);
 
     return {
       menuItem: () => (
-        <button
+        <Menu.Item
           key={i}
-          className={`sources ${activeTab === i ? 'active' : ''}`}
+          className={`${activeTab === i ? 'active' : ''}`}
           onClick={() => {
             setActiveTab(i);
-            setButtonPage(0);
           }}
         >
-          <SourceDetails source={source} index={source.index} />
-        </button>
+          <span title={source?.semantic_identifier}>
+            {source?.semantic_identifier}
+          </span>
+        </Menu.Item>
       ),
       render: () => (
         <TabPane>
-          <div
-            className={`citation-buttons ${
-              totalPages > 1 ? 'slider-active' : ''
-            }`}
-          >
+          <div className="claim-source-header">
+            {source?.link ? (
+              <a
+                href={source.link}
+                rel="noreferrer"
+                target="_blank"
+                className="claim-source-link"
+              >
+                <h5 className="claim-source-title">
+                  {source.semantic_identifier}
+                  <SVGIcon name={LinkIcon} size="20" />
+                </h5>
+              </a>
+            ) : (
+              <div className="claim-source-link">
+                <h5 className="claim-source-title">
+                  {source?.semantic_identifier}
+                  <SVGIcon name={LinkIcon} size="20" />
+                </h5>
+              </div>
+            )}
+          </div>
+          <div className="citation-buttons">
+            <h5 className="citations-header">Citations:</h5>
             <div className="citation-buttons-container">
               {citationButtons.map(({ id }) => (
                 <Button
                   key={id}
-                  size="tiny"
                   onClick={() => {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
@@ -187,27 +211,15 @@ export function ClaimCitations(props) {
                   Line {id}
                 </Button>
               ))}
-            </div>
 
-            <div className="slider-buttons">
-              {totalPages > 1 && (
+              {snippetButtons.length > VISIBLE_CITATIONS && (
                 <Button
-                  className="slider-button-prev"
-                  onClick={() => setButtonPage(Math.max(0, buttonPage - 1))}
-                  disabled={buttonPage === 0}
+                  className="toggle-text"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => setShowAllButtons(!showAllButtons)}
                 >
-                  <SVGIcon name={PrevIcon} />
-                </Button>
-              )}
-              {totalPages > 1 && (
-                <Button
-                  className="slider-button-next"
-                  onClick={() =>
-                    setButtonPage(Math.min(totalPages - 1, buttonPage + 1))
-                  }
-                  disabled={buttonPage >= totalPages - 1}
-                >
-                  <SVGIcon name={NextIcon} />
+                  {showAllButtons ? 'Less' : '... More'}
                 </Button>
               )}
             </div>
@@ -229,7 +241,7 @@ export function ClaimCitations(props) {
   return (
     <div className="chat-window">
       <Tab
-        menu={{ secondary: true, attached: true }}
+        menu={{ secondary: true, attached: true, pointing: true, fluid: true }}
         attached
         panes={panes}
         activeIndex={activeTab}
@@ -260,7 +272,9 @@ export function components(message, markers, citedSources) {
         );
       }
 
-      return claim ? (
+      return !claim || claim?.score === null ? (
+        rest.children || []
+      ) : (
         <Modal
           className="claim-modal"
           trigger={
@@ -269,14 +283,30 @@ export function components(message, markers, citedSources) {
             </span>
           }
         >
+          <ModalHeader>
+            <div className="circle assistant">
+              <SVGIcon name={BotIcon} size="20" color="white" />
+            </div>
+            <h5
+              className={`claim claim-text ${getSupportedBgColor(claim.score)}`}
+            >
+              &ldquo;{rest.children}&rdquo;
+            </h5>
+          </ModalHeader>
           <ModalContent>
-            <h2>
-              Supported by citations:{' '}
-              <span className={getSupportedTextColor(claim.score)}>
-                {convertToPercentage(claim.score)}
-              </span>
-            </h2>
-            <p>{claim.rationale}</p>
+            <div className="claim-source">
+              <p className="claim-score">
+                Supported by citations:{' '}
+                <span className={getSupportedTextColor(claim.score)}>
+                  {convertToPercentage(claim.score)}
+                </span>
+              </p>
+
+              <p className="claim-rationale">
+                <strong>Rationale: </strong>
+                {claim.rationale}
+              </p>
+            </div>
 
             <ClaimCitations
               ids={claim.citationIds}
@@ -285,8 +315,6 @@ export function components(message, markers, citedSources) {
             />
           </ModalContent>
         </Modal>
-      ) : (
-        rest.children || []
       );
     },
     a: (props) => {

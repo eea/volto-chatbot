@@ -6,29 +6,18 @@
 @borderRadius: 0.4rem;
 @marginBottom: 1.6em;
 
-.mr-auto {
-  margin: 2em 0;
-}
-
 .include-scrollbar {
   overflow: auto;
   scrollbar-width: thin;
 }
 
-.chat-window {
-  margin: 1.5em 0;
+mark {
+  background-color: #ff0;
+  color: #000;
+}
 
-  .ui.button.clear-chat,
-  .ui.button.claims-btn {
-    display: flex;
-    align-items: center;
-
-    svg {
-      width: 18px;
-      height: 18px;
-    }
-  }
-
+.chat-window,
+.claim-modal {
   h2,
   h3,
   h4,
@@ -57,6 +46,22 @@
   p {
     font-size: inherit;
   }
+}
+
+.chat-window {
+  margin: 1.5em 0;
+
+  .ui.button.clear-chat,
+  .ui.button.claims-btn {
+    display: flex;
+    align-items: center;
+    margin: 0;
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
 
   .messages ul {
     margin-bottom: 0;
@@ -67,60 +72,21 @@
     max-height: 450px;
   }
 
-  .circle {
-    display: flex;
-    width: 30px;
-    height: 30px;
-    flex: none;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 50%;
-    text-align: center;
-
-    &.user {
-      background-color: @teal;
-    }
-
-    &.assistant {
-      background-color: @grey;
-    }
-
-    svg {
-      margin: 0 auto;
-    }
-  }
-
   .empty-state {
     margin-top: 2em;
   }
 
+  .citations-header {
+    margin-bottom: 0.5em;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
   .citation-buttons {
+    padding: 0.5em 0.8em;
+    border-radius: @borderRadius;
     margin-bottom: 1em;
-
-    .slider-button-prev,
-    .slider-button-next {
-      padding: 3px 5px;
-      border-radius: 5px;
-
-      svg {
-        width: 20px !important;
-        height: 20px !important;
-        margin: 0 !important;
-      }
-    }
-
-    &.slider-active {
-      display: flex;
-      align-items: start;
-      justify-content: space-between;
-    }
-
-    .slider-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2em;
-      text-align: right;
-    }
+    background-color: #f9f9f9;
 
     .citation-buttons-container {
       display: flex;
@@ -128,15 +94,19 @@
       gap: 0.3em;
 
       .ui.button {
-        padding: 0.75em 1.25em 0.75em;
-        border-radius: 5px;
-        background-color: #c9d7e3;
+        padding: 0;
+        background-color: transparent;
+        color: #3b82f6;
+        font-size: 14px;
+        font-weight: normal;
+        text-decoration-line: underline;
+      }
+
+      .ui.button.toggle-text {
+        font-weight: bold;
+        text-decoration: none;
       }
     }
-  }
-
-  .ui.button.icon.claims-btn {
-    margin-bottom: 1em;
   }
 
   .comment {
@@ -145,7 +115,7 @@
     gap: 0.8em;
 
     i.inverted.circular.grey.icon {
-      background-color: #3d5265 !important;
+      background-color: @grey !important;
     }
 
     i.icon,
@@ -197,7 +167,7 @@
       display: flex;
       width: 100%;
       align-items: center;
-      color: #3d5265;
+      color: @grey;
     }
 
     .source-title {
@@ -227,6 +197,7 @@
       font-size: 12px;
       -webkit-line-clamp: 3;
       line-clamp: 3;
+      text-align: left;
       word-break: break-all;
     }
   }
@@ -272,53 +243,116 @@
   }
 }
 
-.claim-modal {
+.circle {
+  display: flex;
+  width: 30px;
+  height: 30px;
+  flex: none;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 50%;
+  text-align: center;
+
+  &.user {
+    background-color: @teal;
+  }
+
+  &.assistant {
+    background-color: @grey;
+  }
+
+  svg {
+    margin: 0 auto;
+  }
+}
+
+.ui.modal.claim-modal {
   .chat-window {
     margin-bottom: 0;
   }
 
-  .ui.attached.menu:not(.tabular) {
-    flex-flow: wrap;
-    padding-bottom: 1.5em;
-    border: none;
-    border-bottom: 1px solid #d4d4d5;
+  .header {
+    display: flex;
+    padding-bottom: 0;
+    border-bottom: none;
     gap: 0.5em;
   }
 
-  .ui.segment.tab {
-    padding-bottom: 0;
+  .claim-text {
+    margin-top: 0;
+    color: @grey !important;
+    font-style: italic;
+    font-weight: bold;
   }
 
-  .ui.menu {
-    &:before {
-      border-top: none !important;
+  .claim-rationale {
+    font-size: 14px;
+  }
+
+  .claim-source-link {
+    color: inherit;
+  }
+
+  .claim-source-title {
+    margin-bottom: 1.5em;
+
+    &:hover {
+      opacity: 0.8;
     }
 
-    .sources {
-      padding: 0;
-      border: none !important;
-      border-radius: 7px;
-      margin-bottom: 0;
-      cursor: pointer;
-
-      &.active .source {
-        background-color: #eeeff1;
-      }
-
-      .source {
-        align-items: flex-start;
-        background-color: #fbfbfb;
-      }
-
-      .source-header {
-        pointer-events: none;
-      }
+    svg {
+      position: relative;
+      top: 2px;
+      left: 5px;
     }
   }
 
-  .ui.tab {
-    padding-right: 0;
-    padding-left: 0;
+  .claim-source {
+    padding: 0.5em 0.8em;
+    border: 1px solid #e5e7eb;
+    border-radius: @borderRadius;
+    font-size: 16px;
+
+    .claim-score {
+      font-size: 18px;
+      font-weight: bold;
+    }
+  }
+
+  .ui.attached.menu {
+    border: none;
+    border-bottom: 1px solid #d4d4d5;
+
+    .item {
+      max-width: 200px;
+      height: 60px;
+      padding: 0.8em 1em !important;
+      color: @grey;
+
+      &.active {
+        border-color: @grey;
+      }
+
+      span {
+        display: -webkit-box;
+        overflow: hidden;
+        -webkit-box-orient: vertical;
+        font-size: 16px;
+        font-weight: bold;
+        -webkit-line-clamp: 2;
+        line-clamp: 2;
+        text-align: left;
+        word-break: break-all;
+      }
+    }
+  }
+
+  .ui.menu[class*='ary']:not(.vertical):before {
+    border: none !important;
+  }
+
+  @media only screen and (min-width: 1200px) {
+    width: 1100px;
   }
 }
 
@@ -455,7 +489,7 @@
   border: 1px solid #dbd9d9;
   border-radius: 3em;
   background-color: @citationCircleColor;
-  color: #3d5265;
+  color: @grey;
   cursor: pointer;
   font-size: 11px;
   font-weight: bold;
@@ -492,10 +526,6 @@
     border: 1px solid #e5e5e5;
     border-radius: @borderRadius;
     background-color: #fbfbfb;
-
-    // &:focus-within {
-    //   box-shadow: 0 0 0 0.1rem rgba(229, 229, 229, 0.3);
-    // }
 
     textarea {
       max-width: none;
@@ -595,14 +625,6 @@
 
 .halloumi-feedback-button {
   display: flex;
-
-  div {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    // height: 100%;
-    span {
-      padding-left: 0.6em;
-    }
-  }
+  align-items: center;
+  gap: 0.5em;
 }

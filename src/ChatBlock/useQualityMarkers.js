@@ -11,7 +11,9 @@ async function fetchHalloumi(answer, sources) {
   return halloumiResponse;
 }
 
-const FAILURE_RATIONALE = `Answer cannot the verified due to empty sources`;
+const FAILURE_RATIONALE = 'Answer cannot be verified due to empty sources.';
+const TIMEOUT_RATIONALE =
+  'Verification failed: Halloumi service is unreachable or timed out.';
 
 export default function useQualityMarkers(doQualityControl, message, sources) {
   const [halloumiResponse, setHalloumiResponse] = React.useState(null);
@@ -34,12 +36,44 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
         });
         return;
       }
+
       setIsLoading(true);
-      const feedback = await fetchHalloumi(message, textSources);
-      const body = await feedback.json();
-      // console.log({ message, sources, body });
-      setHalloumiResponse(body);
-      setIsLoading(false);
+
+      try {
+        const feedback = await fetchHalloumi(message, textSources);
+        const body = await feedback.json();
+        // console.log({ message, sources, body });
+
+        if (body.error) {
+          setHalloumiResponse({
+            claims: [
+              {
+                startOffset: 0,
+                endOffset: message.length,
+                score: null,
+                rationale: TIMEOUT_RATIONALE,
+              },
+            ],
+            citations: {},
+          });
+        } else {
+          setHalloumiResponse(body);
+        }
+      } catch {
+        setHalloumiResponse({
+          claims: [
+            {
+              startOffset: 0,
+              endOffset: message.length,
+              score: null,
+              rationale: TIMEOUT_RATIONALE,
+            },
+          ],
+          citations: {},
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
 
     if (doQualityControl && !halloumiResponse) {

@@ -173,15 +173,15 @@ export function ClaimCitations(props) {
               >
                 <h5 className="claim-source-title">
                   {source.semantic_identifier}
+                  <SVGIcon name={LinkIcon} size="20" />
                 </h5>
-                <SVGIcon name={LinkIcon} size="20" />
               </a>
             ) : (
               <div className="claim-source-link">
                 <h5 className="claim-source-title">
                   {source?.semantic_identifier}
+                  <SVGIcon name={LinkIcon} size="20" />
                 </h5>
-                <SVGIcon name={LinkIcon} size="20" />
               </div>
             )}
           </div>
@@ -195,8 +195,8 @@ export function ClaimCitations(props) {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
                     if (container && target) {
-                      const containerTop =
-                        container.getBoundingClientRect().top;
+                      const containerTop = container.getBoundingClientRect()
+                        .top;
                       const targetTop = target.getBoundingClientRect().top;
                       const scrollOffset =
                         targetTop - containerTop + container.scrollTop;

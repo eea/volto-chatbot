@@ -290,10 +290,21 @@ mark {
   }
 
   .claim-source-link {
-    display: flex;
-    padding-bottom: 0;
     color: inherit;
-    gap: 0.5em;
+  }
+
+  .claim-source-title {
+    margin-bottom: 1.5em;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    svg {
+      position: relative;
+      top: 2px;
+      left: 5px;
+    }
   }
 
   .claim-source {
@@ -315,7 +326,12 @@ mark {
     .item {
       max-width: 200px;
       height: 60px;
-      padding: 0.8em 1em;
+      padding: 0.8em 1em !important;
+      color: @grey;
+
+      &.active {
+        border-color: @grey;
+      }
 
       span {
         display: -webkit-box;

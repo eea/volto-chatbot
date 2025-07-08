@@ -320,13 +320,13 @@ mark {
   }
 
   .ui.pointing.menu {
-    border: none;
-    box-shadow: none;
     position: relative;
-    overflow-x: auto;
-    overflow-y: hidden;
+    border: none;
     border-bottom: none;
     margin: 0;
+    box-shadow: none;
+    overflow-x: auto;
+    overflow-y: hidden;
 
     &::-webkit-scrollbar {
       height: 4px;
@@ -336,21 +336,21 @@ mark {
       position: absolute;
       z-index: 0;
       right: 0;
-      bottom: .0625rem;
-      border-top: 1px solid #bcbec0;
-      content: " ";
+      bottom: 0.0625rem;
       width: 100%;
+      border-top: 1px solid #bcbec0;
+      content: ' ';
     }
 
     .item {
       max-width: 200px;
       padding: 0.8em 1em !important;
-      color: @grey;
       margin: 0;
+      color: @grey;
 
       &.active {
-        border-color: @grey;
         border-width: 3px;
+        border-color: @grey;
       }
 
       span {

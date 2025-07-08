@@ -319,18 +319,38 @@ mark {
     }
   }
 
-  .ui.attached.menu {
+  .ui.pointing.menu {
     border: none;
-    border-bottom: 1px solid #d4d4d5;
+    box-shadow: none;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
+    border-bottom: none;
+    margin: 0;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+
+    &::before {
+      position: absolute;
+      z-index: 0;
+      right: 0;
+      bottom: .0625rem;
+      border-top: 1px solid #bcbec0;
+      content: " ";
+      width: 100%;
+    }
 
     .item {
       max-width: 200px;
-      height: 60px;
       padding: 0.8em 1em !important;
       color: @grey;
+      margin: 0;
 
       &.active {
         border-color: @grey;
+        border-width: 3px;
       }
 
       span {
@@ -345,10 +365,6 @@ mark {
         word-break: break-all;
       }
     }
-  }
-
-  .ui.menu[class*='ary']:not(.vertical):before {
-    border: none !important;
   }
 
   @media only screen and (min-width: 1200px) {

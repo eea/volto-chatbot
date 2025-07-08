@@ -195,8 +195,8 @@ export function ClaimCitations(props) {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
                     if (container && target) {
-                      const containerTop =
-                        container.getBoundingClientRect().top;
+                      const containerTop = container.getBoundingClientRect()
+                        .top;
                       const targetTop = target.getBoundingClientRect().top;
                       const scrollOffset =
                         targetTop - containerTop + container.scrollTop;
@@ -241,7 +241,7 @@ export function ClaimCitations(props) {
   return (
     <div className="chat-window">
       <Tab
-        menu={{ secondary: true, attached: true, pointing: true, fluid: true }}
+        menu={{ secondary: true, pointing: true }}
         attached
         panes={panes}
         activeIndex={activeTab}

@@ -1,7 +1,15 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Button, Message, MessageContent } from 'semantic-ui-react';
+import {
+  Icon,
+  Accordion,
+  AccordionTitle,
+  AccordionContent,
+  Button,
+  Message,
+  MessageContent,
+} from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
@@ -35,16 +43,132 @@ function addCitations(text) {
   });
 }
 
-export function ToolCall({ tool_args, tool_name }) {
-  // , tool_result
-  if (tool_name === 'run_search') {
-    return (
-      <div className="tool_info">
-        Searched for: <em>{tool_args?.query || ''}</em>
-      </div>
-    );
-  }
-  return null;
+export function ToolCall({ tool_args, tool_name, tool_result }) {
+  // eslint-disable-next-line no-console
+  // console.log('tool call', { tool_args, tool_name, tool_result });
+  return (
+    <div className="tool_info">
+      Searched for: <em>{tool_args?.query || ''}</em>
+    </div>
+  );
+}
+
+function Subquestion({ info, libs, index, activeIndex, setActiveIndex }) {
+  const message = { documents: info.context_docs?.top_documents };
+  const { remarkGfm } = libs; // , rehypePrism
+
+  const [isAnalyzingOpen, setIsAnalyzingOpen] = React.useState(false);
+  const handleAccordionClick = () => {
+    setActiveIndex(activeIndex === index ? -1 : index);
+  };
+
+  return (
+    <>
+      <AccordionTitle
+        active={activeIndex === index}
+        onClick={handleAccordionClick}
+      >
+        <Icon
+          className={
+            activeIndex === index
+              ? 'ri-arrow-up-s-line'
+              : 'ri-arrow-down-s-line'
+          }
+        />
+        <span>{info?.question}</span>
+      </AccordionTitle>
+
+      <AccordionContent active={activeIndex === index}>
+        {info.sub_queries.length > 0 && (
+          <>
+            <h5>Searching</h5>
+            <div className="question-label-wrapper">
+              {info.sub_queries
+                .filter((q) => q.query !== info.question)
+                .map((sq, idx) => (
+                  <div key={idx} className="question-label">
+                    <Icon name="search" />
+                    {sq.query}
+                  </div>
+                ))}
+            </div>
+          </>
+        )}
+
+        {info.context_docs?.top_documents.length > 0 && (
+          <>
+            <h5>Reading</h5>
+            <div className="question-label-wrapper">
+              {info.context_docs?.top_documents?.map((doc, idx) => (
+                <div key={idx} className="question-label">
+                  <a href={doc?.link || '#'}>{doc.semantic_identifier}</a>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        <div
+          role="button"
+          tabIndex="0"
+          onClick={() => setIsAnalyzingOpen(!isAnalyzingOpen)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setIsAnalyzingOpen(!isAnalyzingOpen);
+            }
+          }}
+          aria-expanded={isAnalyzingOpen}
+          className="analyzing-toggle-btn"
+        >
+          <h5>
+            Analyzing{' '}
+            <Icon
+              className={
+                isAnalyzingOpen ? 'ri-arrow-up-s-line' : 'ri-arrow-down-s-line'
+              }
+            />
+          </h5>
+        </div>
+
+        {isAnalyzingOpen && (
+          <div>
+            <Markdown
+              components={components(message)}
+              remarkPlugins={[remarkGfm]}
+            >
+              {addCitations(info.answer)}
+            </Markdown>
+          </div>
+        )}
+      </AccordionContent>
+    </>
+  );
+}
+
+function AgentQuestions({ message, libs }) {
+  const [activeIndex, setActiveIndex] = React.useState(-1);
+
+  if (!message.sub_questions || message.sub_questions?.length === 0)
+    return null;
+
+  // console.log('Agent questions', message.sub_questions);
+
+  return (
+    <Accordion className="subquestion-accordion">
+      {message.sub_questions
+        ?.filter((sq) => sq.level === 0)
+        .map((sq, index) => (
+          <Subquestion
+            key={index}
+            info={sq}
+            libs={libs}
+            index={index}
+            activeIndex={activeIndex}
+            setActiveIndex={setActiveIndex}
+          />
+        ))}
+    </Accordion>
+  );
 }
 
 function addQualityMarkersPlugin() {
@@ -324,6 +448,7 @@ export function ChatMessageBubble(props) {
             message.toolCalls?.map((info, index) => (
               <ToolCall key={index} {...info} />
             ))}
+          <AgentQuestions message={message} libs={libs} />
 
           {showSources && (
             <>
@@ -335,7 +460,6 @@ export function ChatMessageBubble(props) {
               </div>
             </>
           )}
-
           <Markdown
             components={components(message, markers, stableContextSources)}
             remarkPlugins={[remarkGfm]}

@@ -21,6 +21,7 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
 
   React.useEffect(() => {
     async function handler() {
+      // const textSources = sources.map(({ halloumiContext }) => halloumiContext);
       const textSources = sources.map(({ text }) => text);
       if (sources.length === 0) {
         setHalloumiResponse({

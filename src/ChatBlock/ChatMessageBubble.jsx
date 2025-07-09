@@ -190,6 +190,10 @@ function UserActionsToolbar({
   );
 }
 
+function addHalloumiContext(doc, text) {
+  return `${doc.title}\n${text}`;
+}
+
 export function ChatMessageBubble(props) {
   const {
     message,
@@ -247,6 +251,10 @@ export function ChatMessageBubble(props) {
           ...doc,
           id: doc.document_id,
           text: documentIdToText[doc.document_id] || '',
+          halloumiContext: addHalloumiContext(
+            doc,
+            documentIdToText[doc.document_id] || '',
+          ),
         }))
       : (message.toolCalls || []).reduce(
           (acc, cur) => [
@@ -255,6 +263,7 @@ export function ChatMessageBubble(props) {
               ...doc,
               id: doc.document_id,
               text: doc.content,
+              halloumiContext: addHalloumiContext(doc, doc.content),
             })),
           ], // TODO: make sure we don't add multiple times the same doc
           // TODO: this doesn't have the index for source

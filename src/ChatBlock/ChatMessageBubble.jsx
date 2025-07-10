@@ -35,6 +35,10 @@ function addCitations(text) {
   });
 }
 
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function ToolCall({ tool_args, tool_name }) {
   // , tool_result
   if (tool_name === 'run_search') {
@@ -190,6 +194,31 @@ function UserActionsToolbar({
   );
 }
 
+function addHalloumiContext(doc, text) {
+  const updatedDate = doc.updated_at
+    ? new Date(doc.updated_at).toLocaleString('en-GB', {
+        year: 'numeric',
+        month: 'long',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    : '';
+
+  const docIndex = doc.index ? `DOCUMENT ${doc.index}: ` : '';
+
+  const sourceType = doc.source_type
+    ? { web: 'Website', file: 'File' }[doc.source_type] ||
+      capitalize(doc.source_type)
+    : '';
+
+  const header = `${docIndex}${doc.semantic_identifier}${
+    sourceType ? `\nSource: ${sourceType}` : ''
+  }${updatedDate ? `\nUpdated: ${updatedDate}` : ''}`;
+
+  return `${header}\n${text}`;
+}
+
 export function ChatMessageBubble(props) {
   const {
     message,
@@ -247,6 +276,10 @@ export function ChatMessageBubble(props) {
           ...doc,
           id: doc.document_id,
           text: documentIdToText[doc.document_id] || '',
+          halloumiContext: addHalloumiContext(
+            doc,
+            documentIdToText[doc.document_id] || '',
+          ),
         }))
       : (message.toolCalls || []).reduce(
           (acc, cur) => [
@@ -255,6 +288,7 @@ export function ChatMessageBubble(props) {
               ...doc,
               id: doc.document_id,
               text: doc.content,
+              halloumiContext: addHalloumiContext(doc, doc.content),
             })),
           ], // TODO: make sure we don't add multiple times the same doc
           // TODO: this doesn't have the index for source

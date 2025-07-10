@@ -26,8 +26,6 @@ exports[`EmptyState renders with enableStarterPrompts and starterPrompts 1`] = `
       className="ui button starter-message"
       onClick={[Function]}
       onKeyDown={[Function]}
-      role="button"
-      tabIndex={-1}
     >
       <span
         className="starter-message-title"
@@ -60,8 +58,6 @@ exports[`EmptyState renders with showAssistantPrompts and persona starter messag
       className="ui button starter-message"
       onClick={[Function]}
       onKeyDown={[Function]}
-      role="button"
-      tabIndex={-1}
     >
       <span
         className="starter-message-title"
@@ -89,8 +85,6 @@ exports[`EmptyState renders without starterPromptsHeading 1`] = `
       className="ui button starter-message"
       onClick={[Function]}
       onKeyDown={[Function]}
-      role="button"
-      tabIndex={-1}
     >
       <span
         className="starter-message-title"

@@ -112,7 +112,6 @@ export function ClaimCitations(props) {
     source.startIndex = joinedSources.length;
     joinedSources += source.halloumiContext + '\n---\n';
   });
-  // console.log({ citedSources });
 
   const snippets = (ids || [])
     .map((id) => citations[id])
@@ -148,8 +147,6 @@ export function ClaimCitations(props) {
     const citationButtons = showAllButtons
       ? snippetButtons
       : snippetButtons.slice(0, VISIBLE_CITATIONS);
-
-    console.log('source', source);
 
     return {
       menuItem: () => (

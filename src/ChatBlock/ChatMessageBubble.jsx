@@ -194,7 +194,7 @@ function UserActionsToolbar({
   );
 }
 
-function addHalloumiContext(doc, text) {
+export function addHalloumiContext(doc, text) {
   const updatedDate = doc.updated_at
     ? new Date(doc.updated_at).toLocaleString('en-GB', {
         year: 'numeric',

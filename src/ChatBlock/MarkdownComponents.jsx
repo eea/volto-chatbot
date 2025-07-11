@@ -109,7 +109,7 @@ export function ClaimCitations(props) {
   let joinedSources = '';
   citedSources.forEach((source) => {
     source.startIndex = joinedSources.length;
-    joinedSources += source.text + '\n---\n';
+    joinedSources += source.halloumiContext + '\n---\n';
   });
 
   const snippets = (ids || [])
@@ -226,7 +226,8 @@ export function ClaimCitations(props) {
           </div>
           <RenderClaimView
             contextText={joinedSources}
-            value={source.text}
+            value={source.halloumiContext}
+            // value={source.text}
             visibleCitationId={visibleCitationId}
             citations={source.snippets}
             citationContainerRef={citationContainerRef}
@@ -349,27 +350,3 @@ export function components(message, markers, citedSources) {
     },
   };
 }
-
-// const before = joinedSources.slice(
-//   Math.max(cit.startOffset - EXPAND, 0),
-//   cit.startOffset,
-// );
-// const after = joinedSources.slice(
-//   cit.endOffset,
-//   Math.min(cit.endOffset + EXPAND, joinedSources.length),
-// );
-
-// const expandedText = (
-//   <>
-//     ...{before}
-//     <strong>
-//       <em>{text}</em>{' '}
-//     </strong>
-//     {after}...
-//   </>
-// );
-
-// `...${joinedSources.slice(
-//   Math.max(cit.startOffset - EXPAND, 0),
-//   Math.min(cit.endOffset + EXPAND, joinedSources.length),
-// )}...`;

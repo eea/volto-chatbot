@@ -13,7 +13,6 @@ import {
 import { Citation } from './Citation';
 import { SVGIcon } from './utils';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
-import { addHalloumiContext } from './ChatMessageBubble';
 
 import BotIcon from './../icons/bot.svg';
 import LinkIcon from './../icons/external-link.svg';
@@ -196,8 +195,8 @@ export function ClaimCitations(props) {
                     const container = citationContainerRef.current;
                     const target = spanRefs.current[id];
                     if (container && target) {
-                      const containerTop =
-                        container.getBoundingClientRect().top;
+                      const containerTop = container.getBoundingClientRect()
+                        .top;
                       const targetTop = target.getBoundingClientRect().top;
                       const scrollOffset =
                         targetTop - containerTop + container.scrollTop;

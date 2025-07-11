@@ -216,7 +216,6 @@ export function addHalloumiContext(doc, text) {
     sourceType ? `\nSource: ${sourceType}` : ''
   }${updatedDate ? `\nUpdated: ${updatedDate}` : ''}`;
 
-  // return `${header}\n${text}`.replace(/\n/g, '. ');
   return `${header}\n${text}`;
 }
 

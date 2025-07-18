@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Form, Segment, Checkbox } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
@@ -38,6 +38,7 @@ function ChatWindow({
     showAssistantDescription,
     starterPromptsPosition = 'top',
   } = data;
+  const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(true);
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const {
     onSubmit,
@@ -130,6 +131,8 @@ function ChatWindow({
                   libs={libs}
                   qualityCheck={qualityCheck}
                   qualityCheckStages={qualityCheckStages}
+                  qualityCheckEnabled={qualityCheckEnabled}
+                  qualityCheckMode={qualityCheck}
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}
@@ -165,6 +168,17 @@ function ChatWindow({
             />
           </div>
         </Form>
+
+        {qualityCheck === 'ondemand_toggle' && (
+          <div className="quality-check-toggle">
+            <Checkbox
+              toggle
+              label="Fact-check AI answer"
+              checked={qualityCheckEnabled}
+              onChange={() => setQualityCheckEnabled((v) => !v)}
+            />
+          </div>
+        )}
       </div>
 
       {showLandingPage && starterPromptsPosition === 'bottom' && (

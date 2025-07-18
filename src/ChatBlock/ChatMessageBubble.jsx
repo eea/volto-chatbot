@@ -232,6 +232,7 @@ export function ChatMessageBubble(props) {
     qualityCheck,
     qualityCheckStages,
     qualityCheckContext,
+    qualityCheckEnabled,
     noSupportDocumentsMessage,
     totalFailMessage,
     isFetchingRelatedQuestions,
@@ -242,8 +243,14 @@ export function ChatMessageBubble(props) {
   const isUser = type === 'user';
   const [copied, handleCopy] = useCopyToClipboard(message.message);
   const [forceHalloumi, setForceHallomi] = React.useState(
-    qualityCheck === 'enabled' ? true : false,
+    qualityCheck === 'enabled',
   );
+
+  React.useEffect(() => {
+    if (qualityCheck === 'ondemand_toggle' && qualityCheckEnabled) {
+      setForceHallomi(true);
+    }
+  }, [qualityCheck, qualityCheckEnabled]);
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -303,6 +310,7 @@ export function ChatMessageBubble(props) {
     qualityCheck !== 'disabled' &&
     forceHalloumi &&
     showSources &&
+    qualityCheckEnabled &&
     message.messageId > -1;
   const { markers, isLoadingHalloumi } = useQualityMarkers(
     doQualityControl,
@@ -438,8 +446,3 @@ export function ChatMessageBubble(props) {
     </div>
   );
 }
-
-// {/* {!!scoreStage.icon && ( */}
-// {/*   <Icon name={scoreStage.icon} color={scoreColor} /> */}
-// {/* )} */}
-// {/* <strong>{score}%</strong> */}

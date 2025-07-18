@@ -113,7 +113,8 @@ export function ChatBlockSchema({ assistants, data }) {
             type: 'p',
             children: [
               {
-                text: "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
+                text:
+                  "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
               },
             ],
           },
@@ -157,6 +158,7 @@ export function ChatBlockSchema({ assistants, data }) {
           ['disabled', 'Disabled'],
           ['enabled', 'Enabled'],
           ['ondemand', 'On demand'],
+          ['ondemand_toggle', 'On demand (show toggle on input)'],
         ],
         default: 'disabled',
         description: 'Show Halloumi-based automated quality check',

@@ -172,6 +172,7 @@ function ChatWindow({
         {qualityCheck === 'ondemand_toggle' && (
           <div className="quality-check-toggle">
             <Checkbox
+              id="fact-check-toggle"
               toggle
               label="Fact-check AI answer"
               checked={qualityCheckEnabled}

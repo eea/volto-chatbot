@@ -146,15 +146,15 @@ mark {
     flex-wrap: wrap;
     margin-bottom: @marginBottom;
     gap: 0.8em;
-    
+
     @media only screen and (max-width: 800px) {
       display: inline-flex;
       flex-direction: column;
     }
-    
+
     .source-link:hover {
       .source {
-        background-color:#f1f1f1;
+        background-color: #f1f1f1;
       }
     }
 
@@ -189,12 +189,11 @@ mark {
       word-break: break-all;
     }
 
-
     .chat-citation {
       &:hover {
-        color: @grey;
         border: 1px solid #dbd9d9;
         background-color: #e6e7e8;
+        color: @grey;
       }
     }
 
@@ -202,20 +201,20 @@ mark {
       padding: 0.2em 0.4em;
       border-radius: 5px;
       background-color: #e5e7eb;
-      font-size: 11px;
       color: @grey;
+      font-size: 11px;
     }
 
     .source-desc {
       display: -webkit-box;
       overflow: hidden;
       -webkit-box-orient: vertical;
+      color: @grey;
       font-size: 12px;
       -webkit-line-clamp: 3;
       line-clamp: 3;
       text-align: left;
       word-break: break-all;
-      color: @grey;
     }
   }
 
@@ -288,8 +287,8 @@ mark {
 }
 
 .quality-check-popup.ui.popup {
-    padding: 0.6em 0.9em;
-    font-size: 14px;
+  padding: 0.6em 0.9em;
+  font-size: 14px;
 }
 
 .ui.modal.claim-modal {

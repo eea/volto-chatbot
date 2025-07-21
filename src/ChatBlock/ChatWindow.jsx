@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
-import { Button, Form, Segment, Checkbox } from 'semantic-ui-react';
+import { Button, Form, Segment, Checkbox, Popup } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
@@ -171,12 +171,23 @@ function ChatWindow({
 
         {qualityCheck === 'ondemand_toggle' && (
           <div className="quality-check-toggle">
-            <Checkbox
-              id="fact-check-toggle"
-              toggle
-              label="Fact-check AI answer"
-              checked={qualityCheckEnabled}
-              onChange={() => setQualityCheckEnabled((v) => !v)}
+            <Popup
+              wide
+              basic
+              className="quality-check-popup"
+              content="Checks the AI's statements against cited sources to highlight possible inaccuracies and hallucinations."
+              trigger={
+                <Checkbox
+                  id="fact-check-toggle"
+                  toggle
+                  label={{
+                    children: 'Fact-check AI answer',
+                    htmlFor: 'fact-check-toggle',
+                  }}
+                  checked={qualityCheckEnabled}
+                  onChange={() => setQualityCheckEnabled((v) => !v)}
+                />
+              }
             />
           </div>
         )}

@@ -284,6 +284,19 @@ mark {
 
 .quality-check-toggle {
   margin-top: 1em;
+
+  .ui.toggle.checkbox {
+    input:checked ~ label {
+      color: @grey !important;
+    }
+
+    label {
+      color: @grey;
+      &:before {
+        border: none !important;
+      }
+    }
+  }
 }
 
 .quality-check-popup.ui.popup {

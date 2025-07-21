@@ -49,16 +49,17 @@ exports[`SourceDetails should render the component with doc type 1`] = `
 `;
 
 exports[`SourceDetails should render the component with link type 1`] = `
-<div
-  className="source"
+<a
+  className="source-link"
+  href="https://www.example.com"
+  rel="noreferrer"
+  target="_blank"
 >
   <div
-    className="source-header"
+    className="source"
   >
-    <a
-      href="https://www.example.com"
-      rel="noreferrer"
-      target="_blank"
+    <div
+      className="source-header"
     >
       <span
         className="chat-citation"
@@ -85,14 +86,14 @@ exports[`SourceDetails should render the component with link type 1`] = `
         width="15"
         xmlns=""
       />
-    </a>
+    </div>
+    <div
+      className="source-desc"
+    >
+      <span>
+        Vestibulum purus quam scelerisque ut
+      </span>
+    </div>
   </div>
-  <div
-    className="source-desc"
-  >
-    <span>
-      Vestibulum purus quam scelerisque ut
-    </span>
-  </div>
-</div>
+</a>
 `;

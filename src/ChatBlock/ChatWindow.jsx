@@ -132,7 +132,6 @@ function ChatWindow({
                   qualityCheck={qualityCheck}
                   qualityCheckStages={qualityCheckStages}
                   qualityCheckEnabled={qualityCheckEnabled}
-                  qualityCheckMode={qualityCheck}
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}

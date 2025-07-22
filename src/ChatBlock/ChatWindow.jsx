@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Form, Segment, Checkbox, Popup } from 'semantic-ui-react';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
@@ -38,6 +38,7 @@ function ChatWindow({
     showAssistantDescription,
     starterPromptsPosition = 'top',
   } = data;
+  const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(true);
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
   const {
     onSubmit,
@@ -130,6 +131,7 @@ function ChatWindow({
                   libs={libs}
                   qualityCheck={qualityCheck}
                   qualityCheckStages={qualityCheckStages}
+                  qualityCheckEnabled={qualityCheckEnabled}
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}
@@ -165,6 +167,29 @@ function ChatWindow({
             />
           </div>
         </Form>
+
+        {qualityCheck === 'ondemand_toggle' && (
+          <div className="quality-check-toggle">
+            <Popup
+              wide
+              basic
+              className="quality-check-popup"
+              content="Checks the AI's statements against cited sources to highlight possible inaccuracies and hallucinations."
+              trigger={
+                <Checkbox
+                  id="fact-check-toggle"
+                  toggle
+                  label={{
+                    children: 'Fact-check AI answer',
+                    htmlFor: 'fact-check-toggle',
+                  }}
+                  checked={qualityCheckEnabled}
+                  onChange={() => setQualityCheckEnabled((v) => !v)}
+                />
+              }
+            />
+          </div>
+        )}
       </div>
 
       {showLandingPage && starterPromptsPosition === 'bottom' && (

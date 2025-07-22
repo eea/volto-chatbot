@@ -29,19 +29,39 @@ const SourceDetails_ = ({ source, index, luxon }) => {
     return null;
   };
 
+  const sourceContent = (
+    <>
+      {updated_at && (
+        <div className="source-date">
+          <span>{relativeTime}</span>
+        </div>
+      )}
+      {blurb && (
+        <div className="source-desc">
+          <span>{blurb}</span>
+        </div>
+      )}
+    </>
+  );
+
   return (
-    <div className="source">
-      <div className="source-header">
-        {isLinkType ? (
-          <a href={link} rel="noreferrer" target="_blank">
-            <span className="chat-citation">{index}</span>
-            <div className="source-title" title={semantic_identifier}>
-              {semantic_identifier}
+    <>
+      {isLinkType ? (
+        <a href={link} rel="noreferrer" target="_blank" className="source-link">
+          <div className="source">
+            <div className="source-header">
+              <span className="chat-citation">{index}</span>
+              <div className="source-title" title={semantic_identifier}>
+                {semantic_identifier}
+              </div>
+              {renderIcon()}
             </div>
-            {renderIcon()}
-          </a>
-        ) : (
-          <>
+            {sourceContent}
+          </div>
+        </a>
+      ) : (
+        <div className="source">
+          <div className="source-header">
             <Popup
               on="click"
               wide="very"
@@ -53,20 +73,11 @@ const SourceDetails_ = ({ source, index, luxon }) => {
               {semantic_identifier}
             </div>
             {renderIcon()}
-          </>
-        )}
-      </div>
-      {updated_at && (
-        <div className="source-date">
-          <span>{relativeTime}</span>
+          </div>
+          {sourceContent}
         </div>
       )}
-      {blurb && (
-        <div className="source-desc">
-          <span>{blurb}</span>
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 

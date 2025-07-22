@@ -152,6 +152,12 @@ mark {
       flex-direction: column;
     }
 
+    .source-link:hover {
+      .source {
+        background-color: #f1f1f1;
+      }
+    }
+
     .source {
       display: flex;
       width: 200px;
@@ -183,10 +189,19 @@ mark {
       word-break: break-all;
     }
 
+    .chat-citation {
+      &:hover {
+        border: 1px solid #dbd9d9;
+        background-color: #e6e7e8;
+        color: @grey;
+      }
+    }
+
     .source-date span {
       padding: 0.2em 0.4em;
       border-radius: 5px;
       background-color: #e5e7eb;
+      color: @grey;
       font-size: 11px;
     }
 
@@ -194,6 +209,7 @@ mark {
       display: -webkit-box;
       overflow: hidden;
       -webkit-box-orient: vertical;
+      color: @grey;
       font-size: 12px;
       -webkit-line-clamp: 3;
       line-clamp: 3;
@@ -264,6 +280,29 @@ mark {
   svg {
     margin: 0 auto;
   }
+}
+
+.quality-check-toggle {
+  margin-top: 1em;
+
+  .ui.toggle.checkbox {
+    input:checked ~ label {
+      color: @grey !important;
+    }
+
+    label {
+      color: @grey;
+
+      &:before {
+        border: none !important;
+      }
+    }
+  }
+}
+
+.quality-check-popup.ui.popup {
+  padding: 0.6em 0.9em;
+  font-size: 14px;
 }
 
 .ui.modal.claim-modal {

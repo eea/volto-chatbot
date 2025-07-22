@@ -157,6 +157,7 @@ export function ChatBlockSchema({ assistants, data }) {
           ['disabled', 'Disabled'],
           ['enabled', 'Enabled'],
           ['ondemand', 'On demand'],
+          ['ondemand_toggle', 'On demand (show toggle on input)'],
         ],
         default: 'disabled',
         description: 'Show Halloumi-based automated quality check',

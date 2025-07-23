@@ -332,20 +332,22 @@ mark {
 
   .claim-source-link {
     color: inherit;
+
+    .claim-source-title {
+      &:hover {
+        opacity: 0.8;
+      }
+
+      svg {
+        position: relative;
+        top: 2px;
+        left: 5px;
+      }
+    }
   }
 
   .claim-source-title {
     margin-bottom: 1em;
-
-    &:hover {
-      opacity: 0.8;
-    }
-
-    svg {
-      position: relative;
-      top: 2px;
-      left: 5px;
-    }
   }
 
   .claim-source {
@@ -506,11 +508,8 @@ mark {
     &:hover {
       border-radius: 3px;
       background-color: #f9f9f9 !important;
+      box-shadow: none;
     }
-  }
-
-  .ui.basic.button:hover {
-    box-shadow: none;
   }
 }
 

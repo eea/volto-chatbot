@@ -2,6 +2,7 @@ import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
 import { Button, Message, MessageContent } from 'semantic-ui-react';
+import { trackEvent } from '@eeacms/volto-matomo/utils';
 import { SourceDetails } from './Source';
 import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
@@ -164,11 +165,12 @@ function HalloumiFeedback({
 }
 
 function UserActionsToolbar({
-  handleCopy,
   copied,
-  enableFeedback,
   message,
+  handleCopy,
+  enableFeedback,
   feedbackReasons,
+  enableMatomoTracking,
 }) {
   return (
     <div className="message-actions">
@@ -187,6 +189,7 @@ function UserActionsToolbar({
           <ChatMessageFeedback
             message={message}
             feedbackReasons={feedbackReasons}
+            enableMatomoTracking={enableMatomoTracking}
           />
         </>
       )}
@@ -237,6 +240,7 @@ export function ChatMessageBubble(props) {
     totalFailMessage,
     isFetchingRelatedQuestions,
     enableShowTotalFailMessage,
+    enableMatomoTracking,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
@@ -349,6 +353,19 @@ export function ChatMessageBubble(props) {
     sources.length === 0 && !isFetching && enableShowTotalFailMessage;
   const showRelatedQuestions = message.relatedQuestions?.length > 0;
 
+  const handleRelatedQuestionClick = (question) => {
+    if (!isLoading) {
+      if (enableMatomoTracking) {
+        trackEvent({
+          category: 'Chatbot',
+          action: 'Related question click',
+          name: question,
+        });
+      }
+      onChoice(question);
+    }
+  };
+
   return (
     <div>
       <div className="comment">
@@ -410,6 +427,7 @@ export function ChatMessageBubble(props) {
               enableFeedback={enableFeedback}
               message={message}
               feedbackReasons={feedbackReasons}
+              enableMatomoTracking={enableMatomoTracking}
             />
           )}
 
@@ -431,8 +449,8 @@ export function ChatMessageBubble(props) {
                   <div
                     className="relatedQuestionButton"
                     role="button"
-                    onClick={() => !isLoading && onChoice(question)}
-                    onKeyDown={() => !isLoading && onChoice(question)}
+                    onClick={() => handleRelatedQuestionClick(question)}
+                    onKeyDown={() => handleRelatedQuestionClick(question)}
                     tabIndex="-1"
                   >
                     {question}

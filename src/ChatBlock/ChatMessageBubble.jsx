@@ -171,6 +171,7 @@ function UserActionsToolbar({
   enableFeedback,
   feedbackReasons,
   enableMatomoTracking,
+  persona,
 }) {
   return (
     <div className="message-actions">
@@ -190,6 +191,7 @@ function UserActionsToolbar({
             message={message}
             feedbackReasons={feedbackReasons}
             enableMatomoTracking={enableMatomoTracking}
+            persona={persona}
           />
         </>
       )}
@@ -241,6 +243,7 @@ export function ChatMessageBubble(props) {
     isFetchingRelatedQuestions,
     enableShowTotalFailMessage,
     enableMatomoTracking,
+    persona,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
@@ -357,7 +360,7 @@ export function ChatMessageBubble(props) {
     if (!isLoading) {
       if (enableMatomoTracking) {
         trackEvent({
-          category: 'Chatbot',
+          category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
           action: 'Related question click',
           name: question,
         });
@@ -428,6 +431,7 @@ export function ChatMessageBubble(props) {
               message={message}
               feedbackReasons={feedbackReasons}
               enableMatomoTracking={enableMatomoTracking}
+              persona={persona}
             />
           )}
 

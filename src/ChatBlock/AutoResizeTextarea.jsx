@@ -7,7 +7,8 @@ import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
-  const { onSubmit, isStreaming, enableMatomoTracking, ...rest } = props;
+  const { onSubmit, isStreaming, enableMatomoTracking, persona, ...rest } =
+    props;
   const [input, setInput] = React.useState('');
 
   const handleSubmit = (e) => {
@@ -16,7 +17,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
     if (trimmedInput) {
       if (enableMatomoTracking) {
         trackEvent({
-          category: 'Chatbot',
+          category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
           action: 'Submitted question',
           name: input,
         });

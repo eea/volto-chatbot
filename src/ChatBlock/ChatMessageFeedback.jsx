@@ -13,7 +13,7 @@ const Toast = ({ message, type, isActive }) => (
 );
 
 const ChatMessageFeedback = (props) => {
-  const { message, feedbackReasons, enableMatomoTracking } = props;
+  const { message, feedbackReasons, enableMatomoTracking, persona } = props;
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState(null);
   const [isPositive, setIsPositive] = useState(null);
@@ -68,6 +68,7 @@ const ChatMessageFeedback = (props) => {
         setIsToastActive={setIsToastActive}
         feedbackReasons={feedbackReasons}
         enableMatomoTracking={enableMatomoTracking}
+        persona={persona}
       />
     </>
   );

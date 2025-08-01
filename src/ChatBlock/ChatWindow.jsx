@@ -89,7 +89,7 @@ function ChatWindow({
   const handleStarterPromptChoice = (message) => {
     if (enableMatomoTracking) {
       trackEvent({
-        category: 'Chatbot',
+        category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
         action: 'Starter prompt click',
         name: message,
       });
@@ -153,6 +153,7 @@ function ChatWindow({
                   showToolCalls={showToolCalls}
                   isFetchingRelatedQuestions={isFetchingRelatedQuestions}
                   enableMatomoTracking={enableMatomoTracking}
+                  persona={persona}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}
@@ -176,6 +177,7 @@ function ChatWindow({
               }
               isStreaming={isStreaming}
               enableMatomoTracking={enableMatomoTracking}
+              persona={persona}
               onSubmit={onSubmit}
             />
           </div>

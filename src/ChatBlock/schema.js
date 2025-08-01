@@ -310,7 +310,7 @@ range is from 0 to 100`,
         type: 'boolean',
         title: 'Enable Matomo tracking',
         configPath: 'enableMatomoTracking',
-        default: false,
+        default: true,
         description:
           'Enable tracking of user interactions via Matomo Analytics. When enabled, the chatbot will send events for: ' +
           'starter prompt clicks, user-submitted questions, clicks on related questions, and feedback on answers (positive/negative).',

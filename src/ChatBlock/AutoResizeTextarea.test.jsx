@@ -2,6 +2,10 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import AutoResizeTextarea from './AutoResizeTextarea';
 
+jest.mock('@eeacms/volto-matomo/utils', () => ({
+  trackEvent: jest.fn(),
+}));
+
 describe('AutoResizeTextarea', () => {
   it('renders textarea and button', () => {
     const { getByRole, getByLabelText } = render(

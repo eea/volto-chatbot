@@ -91,6 +91,7 @@ export function ChatBlockSchema({ assistants, data }) {
             : []),
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
+          'enableMatomoTracking',
           'scrollToInput',
           'showToolCalls',
           'showAssistantTitle',
@@ -304,6 +305,15 @@ range is from 0 to 100`,
         type: 'string',
         description:
           'Heading shown above the starter prompts (e.g. "Try the following questions")',
+      },
+      enableMatomoTracking: {
+        type: 'boolean',
+        title: 'Enable Matomo tracking',
+        configPath: 'enableMatomoTracking',
+        default: true,
+        description:
+          'Enable tracking of user interactions via Matomo Analytics. When enabled, the chatbot will send events for: ' +
+          'starter prompt clicks, user-submitted questions, clicks on related questions, and feedback on answers (positive/negative).',
       },
       showToolCalls: {
         title: 'Show query used in retriever',

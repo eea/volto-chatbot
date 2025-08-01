@@ -8,6 +8,10 @@ import { ToolCall } from './ChatMessageBubble';
 
 const mockStore = configureStore();
 
+jest.mock('@eeacms/volto-matomo/utils', () => ({
+  trackEvent: jest.fn(),
+}));
+
 describe('ToolCall', () => {
   it('should render the component', () => {
     const store = mockStore({

@@ -1,6 +1,7 @@
 import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import { Button, Form, Segment, Checkbox, Popup } from 'semantic-ui-react';
+import { trackEvent } from '@eeacms/volto-matomo/utils';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
@@ -37,6 +38,7 @@ function ChatWindow({
     showAssistantTitle,
     showAssistantDescription,
     starterPromptsPosition = 'top',
+    enableMatomoTracking,
   } = data;
   const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(true);
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
@@ -84,6 +86,18 @@ function ChatWindow({
     debounce: 100, // time for debouncing
   });
 
+  const handleStarterPromptChoice = (message) => {
+    if (enableMatomoTracking) {
+      trackEvent({
+        category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
+        action: 'Chatbot: Starter prompt click',
+        name: 'Message submitted',
+      });
+    }
+    onSubmit({ message });
+    setShowLandingPage(false);
+  };
+
   return (
     <div className="chat-window">
       <div className="messages">
@@ -96,10 +110,7 @@ function ChatWindow({
               <EmptyState
                 {...data}
                 persona={persona}
-                onChoice={(message) => {
-                  onSubmit({ message });
-                  setShowLandingPage(false);
-                }}
+                onChoice={handleStarterPromptChoice}
               />
             )}
           </>
@@ -141,6 +152,8 @@ function ChatWindow({
                   totalFailMessage={totalFailMessage}
                   showToolCalls={showToolCalls}
                   isFetchingRelatedQuestions={isFetchingRelatedQuestions}
+                  enableMatomoTracking={enableMatomoTracking}
+                  persona={persona}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}
@@ -163,6 +176,8 @@ function ChatWindow({
                 messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
               }
               isStreaming={isStreaming}
+              enableMatomoTracking={enableMatomoTracking}
+              persona={persona}
               onSubmit={onSubmit}
             />
           </div>
@@ -196,10 +211,7 @@ function ChatWindow({
         <EmptyState
           {...data}
           persona={persona}
-          onChoice={(message) => {
-            onSubmit({ message });
-            setShowLandingPage(false);
-          }}
+          onChoice={handleStarterPromptChoice}
         />
       )}
     </div>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { trackEvent } from '@eeacms/volto-matomo/utils';
 import { Modal, Button, TextArea, Form, Icon } from 'semantic-ui-react';
 import { createChatMessageFeedback } from './lib';
 
@@ -11,6 +12,8 @@ const FeedbackModal = ({
   message,
   setIsToastActive,
   feedbackReasons,
+  enableMatomoTracking,
+  persona,
 }) => {
   const [feedbackText, setFeedbackText] = useState('');
   const [selectedReason, setSelectedReason] = useState('');
@@ -34,6 +37,15 @@ const FeedbackModal = ({
         is_positive: isPositive,
         predefined_feedback: selectedReason,
       });
+      if (enableMatomoTracking) {
+        trackEvent({
+          category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
+          action: isPositive
+            ? 'Chatbot: Positive feedback submitted'
+            : 'Chatbot: Negative feedback submitted',
+          name: 'Feedback submitted',
+        });
+      }
       setIsToastActive(true);
       onToast('Thanks for your feedback!', 'success');
     } catch (error) {

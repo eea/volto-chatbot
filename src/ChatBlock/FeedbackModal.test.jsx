@@ -6,6 +6,10 @@ import * as lib from './lib';
 
 jest.mock('./lib');
 
+jest.mock('@eeacms/volto-matomo/utils', () => ({
+  trackEvent: jest.fn(),
+}));
+
 beforeEach(() => {
   jest.clearAllMocks();
 });

@@ -1,6 +1,4 @@
 import React from 'react';
-
-import { convertToPercentage, transformEmailsToLinks } from './utils';
 import {
   Modal,
   ModalContent,
@@ -11,7 +9,7 @@ import {
   Menu,
 } from 'semantic-ui-react';
 import { Citation } from './Citation';
-import { SVGIcon } from './utils';
+import { convertToPercentage, transformEmailsToLinks, SVGIcon } from './utils';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 
 import BotIcon from './../icons/bot.svg';
@@ -177,12 +175,9 @@ export function ClaimCitations(props) {
                 </h5>
               </a>
             ) : (
-              <div className="claim-source-link">
-                <h5 className="claim-source-title">
-                  {source?.semantic_identifier}
-                  <SVGIcon name={LinkIcon} size="20" />
-                </h5>
-              </div>
+              <h5 className="claim-source-title">
+                {source?.semantic_identifier}
+              </h5>
             )}
           </div>
           <div className="citation-buttons">
@@ -227,7 +222,6 @@ export function ClaimCitations(props) {
           <RenderClaimView
             contextText={joinedSources}
             value={source.halloumiContext}
-            // value={source.text}
             visibleCitationId={visibleCitationId}
             citations={source.snippets}
             citationContainerRef={citationContainerRef}

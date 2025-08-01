@@ -29,17 +29,15 @@ export function SidebarEntrypoint({ content }) {
   // TODO: Hide the start button until we've checked we support the dialog element and JS is loaded
   return (
     <>
-      <div className="fab">
-        <ChatbotStartButton
-          onClick={() => {
-            isSidebarOpen.set(true);
-          }}
-          title={
-            config.settings["volto-chatbot"]?.sidebar?.startButtonTitle ||
-            "Start assistant chat"
-          }
-        />
-      </div>
+      <ChatbotStartButton
+        onClick={() => {
+          isSidebarOpen.set(true);
+        }}
+        title={
+          config.settings["volto-chatbot"]?.sidebar?.startButtonTitle ||
+          "Start assistant chat"
+        }
+      />
       <SidebarDisplay content={content} ref={sidebarRef} />
     </>
   );

@@ -92,13 +92,20 @@ export function ChatBlockSchema({ assistants, data }) {
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
           'enableMatomoTracking',
+        ],
+      },
+      {
+        id: 'displaySettings',
+        title: 'Display settings',
+        fields: [
           'scrollToInput',
           'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
           'chatTitle',
-        ],
-      },
+          'showInSidebar',
+        ]
+      }
     ],
     properties: {
       enableShowTotalFailMessage: {
@@ -363,6 +370,10 @@ range is from 0 to 100`,
         title: 'Scroll the page to focus on the chat input',
         type: 'boolean',
       },
+      showInSidebar: {
+        title: 'Show in sidebar',
+        type: 'boolean'
+      }
     },
     required: [],
   };

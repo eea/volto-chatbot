@@ -3,8 +3,14 @@ import withDanswerData from './withDanswerData';
 import ChatWindow from './ChatWindow';
 import superagent from 'superagent';
 
+import { SidebarChatbotStartButton } from "@eeacms/volto-chatbot/sidebar/components/SidebarChatbotStartButton";
+
 function ChatBlockView(props) {
   const { assistantData, data, isEditMode } = props;
+
+  if (data.globalMode) {
+    return <SidebarChatbotStartButton />;
+  }
 
   return assistantData ? (
     <ChatWindow persona={assistantData} isEditMode={isEditMode} {...data} />

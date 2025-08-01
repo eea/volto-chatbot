@@ -37,6 +37,15 @@ export const SidebarDisplay = forwardRef(function SidebarDisplay(
   { content },
   ref,
 ) {
+  const blocksFieldname = getBlocksFieldname(content) || "blocks";
+  const isGlobalModeEnabled = !!Object.values(content[blocksFieldname]).find(
+    (block) => block["@type"] === "danswerChat" && block.globalMode === true,
+  );
+
+  if (!isGlobalModeEnabled) {
+    return false;
+  }
+
   const sidebarTitle =
     config.settings["volto-chatbot"]?.sidebar?.sidebarTitle ||
     "Help using this site";

@@ -40,8 +40,9 @@ const FeedbackModal = ({
       if (enableMatomoTracking) {
         trackEvent({
           category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
-          action: 'Chatbot - Feedback submitted',
-          name: isPositive ? 'Positive feedback' : 'Negative feedback',
+          action: isPositive
+            ? 'Chatbot: Positive feedback submitted'
+            : 'Chatbot: Negative feedback submitted',
         });
       }
       setIsToastActive(true);

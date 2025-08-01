@@ -90,7 +90,7 @@ function ChatWindow({
     if (enableMatomoTracking) {
       trackEvent({
         category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
-        action: 'Chatbot - Starter prompt click',
+        action: 'Chatbot: Starter prompt click',
       });
     }
     onSubmit({ message });

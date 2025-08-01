@@ -361,8 +361,7 @@ export function ChatMessageBubble(props) {
       if (enableMatomoTracking) {
         trackEvent({
           category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
-          action: 'Chatbot - Related question click',
-          name: question,
+          action: 'Chatbot: Related question click',
         });
       }
       onChoice(question);

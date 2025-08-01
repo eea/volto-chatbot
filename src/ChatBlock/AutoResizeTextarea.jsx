@@ -19,6 +19,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
         trackEvent({
           category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
           action: 'Chatbot: Type a question',
+          name: 'Message submitted',
         });
       }
       onSubmit({ message: input });

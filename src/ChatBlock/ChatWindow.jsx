@@ -91,6 +91,7 @@ function ChatWindow({
       trackEvent({
         category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
         action: 'Chatbot: Starter prompt click',
+        name: 'Message submitted',
       });
     }
     onSubmit({ message });

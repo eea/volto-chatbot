@@ -43,6 +43,7 @@ const FeedbackModal = ({
           action: isPositive
             ? 'Chatbot: Positive feedback submitted'
             : 'Chatbot: Negative feedback submitted',
+          name: 'Feedback submitted',
         });
       }
       setIsToastActive(true);

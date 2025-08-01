@@ -362,6 +362,7 @@ export function ChatMessageBubble(props) {
         trackEvent({
           category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
           action: 'Chatbot: Related question click',
+          name: 'Message submitted',
         });
       }
       onChoice(question);

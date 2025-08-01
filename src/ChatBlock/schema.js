@@ -103,7 +103,7 @@ export function ChatBlockSchema({ assistants, data }) {
           'showAssistantTitle',
           'showAssistantDescription',
           'chatTitle',
-          'showInSidebar',
+          'globalMode',
         ]
       }
     ],
@@ -370,8 +370,9 @@ range is from 0 to 100`,
         title: 'Scroll the page to focus on the chat input',
         type: 'boolean',
       },
-      showInSidebar: {
-        title: 'Show in sidebar',
+      globalMode: {
+        title: 'Global mode',
+        description: 'Render the chatbot within a sidebar which can be shown by clicking a button.',
         type: 'boolean'
       }
     },

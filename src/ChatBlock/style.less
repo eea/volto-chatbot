@@ -147,11 +147,6 @@ mark {
     margin-bottom: @marginBottom;
     gap: 0.8em;
 
-    @media only screen and (max-width: 800px) {
-      display: inline-flex;
-      flex-direction: column;
-    }
-
     .source-link:hover {
       .source {
         background-color: #f1f1f1;
@@ -167,6 +162,30 @@ mark {
       border-radius: @borderRadius;
       background-color: #f9f9f9;
       gap: 0.3em;
+
+      @media screen and (max-width: 800px) {
+        width: calc(50% - 0.4em);
+      }
+
+      @media screen and (max-width: 500px) {
+        width: 100%;
+      }
+    }
+
+    .source-header {
+      @media screen and (max-width: 500px) {
+        display: block !important;
+
+        .source-title {
+          display: inline;
+          width: 100%;
+        }
+
+        svg.icon {
+          top: 2px;
+          position: relative;
+        }
+      }
     }
 
     .source-header,
@@ -178,16 +197,18 @@ mark {
     }
 
     .source-title {
-      overflow: hidden;
-      width: 140px;
       padding-left: 0.2em;
       margin: 0 5px;
       font-size: 13px;
       font-weight: 600;
-      text-align: left;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      word-break: break-all;
+      @media screen and (min-width: 500px) {
+        overflow: hidden;
+        width: 140px;
+        text-align: left;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        word-break: break-all;
+      }
     }
 
     .chat-citation {

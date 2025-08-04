@@ -135,7 +135,7 @@ function HalloumiFeedback({
       {showVerifyClaimsButton && (
         <div className="halloumi-feedback-button">
           <Button onClick={() => setForceHallomi(true)} className="claims-btn">
-            <SVGIcon name={GlassesIcon} /> Verify AI claims
+            <SVGIcon name={GlassesIcon} /> Fact-check AI answer
           </Button>
           <div>
             <span>{messageBySource}</span>{' '}
@@ -406,6 +406,18 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
+          {!isUser && !isLoading && (
+            <UserActionsToolbar
+              handleCopy={handleCopy}
+              copied={copied}
+              enableFeedback={enableFeedback}
+              message={message}
+              feedbackReasons={feedbackReasons}
+              enableMatomoTracking={enableMatomoTracking}
+              persona={persona}
+            />
+          )}
+
           {!isUser && showTotalFailMessage && (
             <Message color="red">{serializeNodes(totalFailMessage)}</Message>
           )}
@@ -420,18 +432,6 @@ export function ChatMessageBubble(props) {
               scoreColor={scoreColor}
               setForceHallomi={setForceHallomi}
               showVerifyClaimsButton={showVerifyClaimsButton}
-            />
-          )}
-
-          {!isUser && !isLoading && (
-            <UserActionsToolbar
-              handleCopy={handleCopy}
-              copied={copied}
-              enableFeedback={enableFeedback}
-              message={message}
-              feedbackReasons={feedbackReasons}
-              enableMatomoTracking={enableMatomoTracking}
-              persona={persona}
             />
           )}
 

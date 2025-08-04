@@ -47,17 +47,20 @@ const SourceDetails_ = ({ source, index, luxon }) => {
   return (
     <>
       {isLinkType ? (
-        <a href={link} rel="noreferrer" target="_blank" className="source-link">
-          <div className="source">
-            <div className="source-header">
-              <span className="chat-citation">{index}</span>
-              <div className="source-title" title={semantic_identifier}>
-                {semantic_identifier}
-              </div>
-              {renderIcon()}
+        <a
+          href={link}
+          rel="noreferrer"
+          target="_blank"
+          className="source source-link"
+        >
+          <div className="source-header">
+            <span className="chat-citation">{index}</span>
+            <div className="source-title" title={semantic_identifier}>
+              {semantic_identifier}
             </div>
-            {sourceContent}
+            {renderIcon()}
           </div>
+          {sourceContent}
         </a>
       ) : (
         <div className="source">

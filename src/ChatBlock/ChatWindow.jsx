@@ -38,7 +38,7 @@ function ChatWindow({
     showAssistantTitle,
     showAssistantDescription,
     starterPromptsPosition = 'top',
-    enableMatomoTracking,
+    enableMatomoTracking = true,
   } = data;
   const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(true);
   const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm

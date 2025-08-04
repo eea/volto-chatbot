@@ -261,9 +261,8 @@ export function ChatMessageBubble(props) {
     }
   }, [qualityCheck, qualityCheckEnabled]);
 
-  const [verificationTriggered, setVerificationTriggered] = React.useState(
-    false,
-  );
+  const [verificationTriggered, setVerificationTriggered] =
+    React.useState(false);
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };

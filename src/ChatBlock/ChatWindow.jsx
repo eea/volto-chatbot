@@ -43,9 +43,8 @@ function ChatWindow({
     onDemandInputToggle = true,
   } = data;
 
-  const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(
-    onDemandInputToggle,
-  );
+  const [qualityCheckEnabled, setQualityCheckEnabled] =
+    React.useState(onDemandInputToggle);
 
   React.useEffect(() => {
     if (qualityCheck === 'ondemand_toggle') {

@@ -50,50 +50,46 @@ exports[`SourceDetails should render the component with doc type 1`] = `
 
 exports[`SourceDetails should render the component with link type 1`] = `
 <a
-  className="source-link"
+  className="source source-link"
   href="https://www.example.com"
   rel="noreferrer"
   target="_blank"
 >
   <div
-    className="source"
+    className="source-header"
   >
-    <div
-      className="source-header"
+    <span
+      className="chat-citation"
     >
-      <span
-        className="chat-citation"
-      >
-        1
-      </span>
-      <div
-        className="source-title"
-        title="Nam at tortor in tellus"
-      >
-        Nam at tortor in tellus
-      </div>
-      <svg
-        className="icon"
-        dangerouslySetInnerHTML={
-          Object {
-            "__html": undefined,
-          }
+      1
+    </span>
+    <div
+      className="source-title"
+      title="Nam at tortor in tellus"
+    >
+      Nam at tortor in tellus
+    </div>
+    <svg
+      className="icon"
+      dangerouslySetInnerHTML={
+        Object {
+          "__html": undefined,
         }
-        fill="currentColor"
-        height="15"
-        stroke="currentColor"
-        viewBox=""
-        width="15"
-        xmlns=""
-      />
-    </div>
-    <div
-      className="source-desc"
-    >
-      <span>
-        Vestibulum purus quam scelerisque ut
-      </span>
-    </div>
+      }
+      fill="currentColor"
+      height="15"
+      stroke="currentColor"
+      viewBox=""
+      width="15"
+      xmlns=""
+    />
+  </div>
+  <div
+    className="source-desc"
+  >
+    <span>
+      Vestibulum purus quam scelerisque ut
+    </span>
   </div>
 </a>
 `;

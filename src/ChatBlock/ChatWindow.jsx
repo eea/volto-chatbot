@@ -42,16 +42,15 @@ function ChatWindow({
     enableMatomoTracking = true,
     onDemandInputToggle = true,
   } = data;
-
-  const [qualityCheckEnabled, setQualityCheckEnabled] =
-    React.useState(onDemandInputToggle);
+  const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(
+    onDemandInputToggle ?? true,
+  );
 
   React.useEffect(() => {
-    if (qualityCheck === 'ondemand_toggle') {
-      setQualityCheckEnabled(onDemandInputToggle);
+    if (isEditMode && qualityCheck === 'ondemand_toggle') {
+      setQualityCheckEnabled(onDemandInputToggle ?? true);
     }
-  }, [onDemandInputToggle, qualityCheck]);
-
+  }, [onDemandInputToggle, qualityCheck, isEditMode]);
   const libs = { rehypePrism, remarkGfm };
   const {
     onSubmit,
@@ -196,6 +195,7 @@ function ChatWindow({
 
         {qualityCheck === 'ondemand_toggle' && (
           <QualityCheckToggle
+            isEditMode={isEditMode}
             enabled={qualityCheckEnabled}
             setEnabled={setQualityCheckEnabled}
           />

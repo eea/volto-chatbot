@@ -122,7 +122,7 @@ function HalloumiFeedback({
   markers,
   score,
   scoreColor,
-  setForceHallomi,
+  onManualVerify,
   showVerifyClaimsButton,
   sources,
 }) {
@@ -134,7 +134,7 @@ function HalloumiFeedback({
     <>
       {showVerifyClaimsButton && (
         <div className="halloumi-feedback-button">
-          <Button onClick={() => setForceHallomi(true)} className="claims-btn">
+          <Button onClick={onManualVerify} className="claims-btn">
             <SVGIcon name={GlassesIcon} /> Fact-check AI answer
           </Button>
           <div>
@@ -256,8 +256,14 @@ export function ChatMessageBubble(props) {
   React.useEffect(() => {
     if (qualityCheck === 'ondemand_toggle' && qualityCheckEnabled) {
       setForceHallomi(true);
+    } else {
+      setForceHallomi(false);
     }
   }, [qualityCheck, qualityCheckEnabled]);
+
+  const [verificationTriggered, setVerificationTriggered] = React.useState(
+    false,
+  );
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -317,7 +323,7 @@ export function ChatMessageBubble(props) {
     qualityCheck !== 'disabled' &&
     forceHalloumi &&
     showSources &&
-    qualityCheckEnabled &&
+    (qualityCheckEnabled || verificationTriggered) &&
     message.messageId > -1;
   const { markers, isLoadingHalloumi } = useQualityMarkers(
     doQualityControl,
@@ -349,9 +355,10 @@ export function ChatMessageBubble(props) {
 
   const showVerifyClaimsButton =
     sources.length > 0 &&
-    qualityCheck === 'ondemand' &&
-    !isFetching &&
-    !markers;
+    ((qualityCheck === 'ondemand' && !isFetching && !markers) ||
+      (qualityCheck === 'ondemand_toggle' &&
+        !qualityCheckEnabled &&
+        !isFetching));
   const showTotalFailMessage =
     sources.length === 0 && !isFetching && enableShowTotalFailMessage;
   const showRelatedQuestions = message.relatedQuestions?.length > 0;
@@ -406,18 +413,6 @@ export function ChatMessageBubble(props) {
             {addCitations(message.message)}
           </Markdown>
 
-          {!isUser && !isLoading && (
-            <UserActionsToolbar
-              handleCopy={handleCopy}
-              copied={copied}
-              enableFeedback={enableFeedback}
-              message={message}
-              feedbackReasons={feedbackReasons}
-              enableMatomoTracking={enableMatomoTracking}
-              persona={persona}
-            />
-          )}
-
           {!isUser && showTotalFailMessage && (
             <Message color="red">{serializeNodes(totalFailMessage)}</Message>
           )}
@@ -430,8 +425,23 @@ export function ChatMessageBubble(props) {
               markers={markers}
               score={score}
               scoreColor={scoreColor}
-              setForceHallomi={setForceHallomi}
+              onManualVerify={() => {
+                setForceHallomi(true);
+                setVerificationTriggered(true);
+              }}
               showVerifyClaimsButton={showVerifyClaimsButton}
+            />
+          )}
+
+          {!isUser && !isLoading && (
+            <UserActionsToolbar
+              handleCopy={handleCopy}
+              copied={copied}
+              enableFeedback={enableFeedback}
+              message={message}
+              feedbackReasons={feedbackReasons}
+              enableMatomoTracking={enableMatomoTracking}
+              persona={persona}
             />
           )}
 

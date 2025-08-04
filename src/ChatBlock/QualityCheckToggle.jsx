@@ -1,6 +1,6 @@
 import { Checkbox, Popup } from 'semantic-ui-react';
 
-const QualityCheckToggle = ({ enabled, setEnabled }) => {
+const QualityCheckToggle = ({ isEditMode, enabled, setEnabled }) => {
   return (
     <div className="quality-check-toggle">
       <Popup
@@ -16,6 +16,7 @@ const QualityCheckToggle = ({ enabled, setEnabled }) => {
               children: 'Fact-check AI answer',
               htmlFor: 'fact-check-toggle',
             }}
+            disabled={isEditMode}
             checked={enabled}
             onChange={() => setEnabled((v) => !v)}
           />

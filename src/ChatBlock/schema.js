@@ -82,6 +82,9 @@ export function ChatBlockSchema({ assistants, data }) {
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
           'qualityCheck',
+          ...(data.qualityCheck && data.qualityCheck === 'ondemand_toggle'
+            ? ['onDemandInputToggle']
+            : []),
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
             ? [
                 'noSupportDocumentsMessage',
@@ -114,7 +117,8 @@ export function ChatBlockSchema({ assistants, data }) {
             type: 'p',
             children: [
               {
-                text: "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
+                text:
+                  "The AI provided answer doesn't include citations. For safety reasons we will not show it.",
               },
             ],
           },
@@ -162,6 +166,13 @@ export function ChatBlockSchema({ assistants, data }) {
         ],
         default: 'disabled',
         description: 'Show Halloumi-based automated quality check',
+      },
+      onDemandInputToggle: {
+        title: 'Quality check toggle default state',
+        type: 'boolean',
+        default: true,
+        description:
+          'Sets the default state of the quality check toggle. When enabled, quality checks run automatically; when disabled, users must enable them manually.',
       },
       qualityCheckContext: {
         title: 'Context documents',

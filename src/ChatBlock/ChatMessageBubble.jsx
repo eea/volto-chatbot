@@ -2,12 +2,12 @@ import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
 import { Button, Message, MessageContent } from 'semantic-ui-react';
-import { trackEvent } from '@eeacms/volto-matomo/utils';
 import { SourceDetails } from './Source';
 import { SVGIcon, useCopyToClipboard } from './utils';
 import ChatMessageFeedback from './ChatMessageFeedback';
 import useQualityMarkers from './useQualityMarkers';
 import Spinner from './Spinner';
+import RelatedQuestions from './RelatedQuestions';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 import { components } from './MarkdownComponents';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
@@ -263,6 +263,7 @@ export function ChatMessageBubble(props) {
 
   const [verificationTriggered, setVerificationTriggered] =
     React.useState(false);
+  const [isMessageVerified, setIsMessageVerified] = React.useState(false);
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -350,30 +351,24 @@ export function ChatMessageBubble(props) {
   const scoreColor = scoreStage?.color || 'black';
 
   const isFetching = isLoadingHalloumi || isLoading;
-  const halloumiMessage = doQualityControl ? scoreStage?.label : '';
+  const halloumiMessage =
+    isMessageVerified || doQualityControl ? scoreStage?.label : '';
 
   const showVerifyClaimsButton =
     sources.length > 0 &&
-    ((qualityCheck === 'ondemand' && !isFetching && !markers) ||
-      (qualityCheck === 'ondemand_toggle' &&
-        !qualityCheckEnabled &&
-        !isFetching));
+    !isFetching &&
+    !markers &&
+    (qualityCheck === 'ondemand' ||
+      (qualityCheck === 'ondemand_toggle' && !qualityCheckEnabled));
+
   const showTotalFailMessage =
     sources.length === 0 && !isFetching && enableShowTotalFailMessage;
-  const showRelatedQuestions = message.relatedQuestions?.length > 0;
 
-  const handleRelatedQuestionClick = (question) => {
-    if (!isLoading) {
-      if (enableMatomoTracking) {
-        trackEvent({
-          category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
-          action: 'Chatbot: Related question click',
-          name: 'Message submitted',
-        });
-      }
-      onChoice(question);
+  React.useEffect(() => {
+    if (markers && markers.claims && markers.claims.length > 0) {
+      setIsMessageVerified(true);
     }
-  };
+  }, [markers]);
 
   return (
     <div>
@@ -454,24 +449,13 @@ export function ChatMessageBubble(props) {
             </div>
           )}
 
-          {showRelatedQuestions && (
-            <>
-              <h5>Related questions:</h5>
-              <div className="chat-related-questions">
-                {message.relatedQuestions?.map(({ question }) => (
-                  <div
-                    className="relatedQuestionButton"
-                    role="button"
-                    onClick={() => handleRelatedQuestionClick(question)}
-                    onKeyDown={() => handleRelatedQuestionClick(question)}
-                    tabIndex="-1"
-                  >
-                    {question}
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+          <RelatedQuestions
+            persona={persona}
+            message={message}
+            isLoading={isLoading}
+            onChoice={onChoice}
+            enableMatomoTracking={enableMatomoTracking}
+          />
         </div>
       </div>
     </div>

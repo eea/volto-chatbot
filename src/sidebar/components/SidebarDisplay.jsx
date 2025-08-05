@@ -1,44 +1,41 @@
-import { isSidebarOpen } from "#stores/sidebarStore";
+import { selectedSidebarChatbot } from "#stores/sidebarStore";
+import ChatWindow from "@eeacms/volto-chatbot/ChatBlock/ChatWindow";
+import { useStore } from "@nanostores/react";
 import Icon from "@plone/volto/components/theme/Icon/Icon";
-import { forwardRef } from "react";
 import { Button } from "semantic-ui-react";
 
 // ChatBlock
-import RenderBlocks from "@plone/volto/components/theme/View/RenderBlocks";
-import {
-  getBlocksFieldname,
-  getBlocksLayoutFieldname,
-} from "@plone/volto/helpers";
+import { getBlocksFieldname } from "@plone/volto/helpers";
 import clearSVG from "@plone/volto/icons/clear.svg";
+import { forwardRef } from "react";
+import superagent from "superagent";
+import withDanswerData from "../../ChatBlock/withDanswerData";
 
 import config from "@plone/registry";
 
-function ChatBlock({ content }) {
-  const blocksFieldname = getBlocksFieldname(content) || "blocks";
-  const blocksLayoutFieldname =
-    getBlocksLayoutFieldname(content) || "blocks_layout";
-
-  const existingChatBlock = Object.values(
-    content?.[blocksFieldname] || {},
-  ).find((block) => block["@type"] === "danswerChat");
-
-  const blockContent = {};
-  blockContent[blocksFieldname] = {
-    "00000000-0000-0000-0000-000000000000": existingChatBlock,
-  };
-  blockContent[blocksLayoutFieldname] = {
-    items: ["00000000-0000-0000-0000-000000000000"],
-  };
-
-  return <RenderBlocks content={blockContent} path="/" />;
-}
+const ChatBlockDisplay = withDanswerData(({ assistant }) => [
+  "assistantData",
+  typeof assistant !== "undefined" && assistant !== null
+    ? superagent.get(`/_da/persona/${assistant}`).type("json")
+    : null,
+  assistant,
+])(function ChatBlockDisplay({ data, assistantData }) {
+  if (!assistantData) {
+    return null;
+  }
+  return <ChatWindow persona={assistantData} {...data} />;
+});
 
 export const SidebarDisplay = forwardRef(function SidebarDisplay(
   { content },
   ref,
 ) {
+  const $selectedSidebarChatbot = useStore(selectedSidebarChatbot);
+
   const blocksFieldname = getBlocksFieldname(content) || "blocks";
-  const isGlobalModeEnabled = !!Object.values(content[blocksFieldname]).find(
+  const isGlobalModeEnabled = !!Object.values(
+    content?.[blocksFieldname] || {},
+  ).find(
     (block) => block["@type"] === "danswerChat" && block.globalMode === true,
   );
 
@@ -49,6 +46,11 @@ export const SidebarDisplay = forwardRef(function SidebarDisplay(
   const sidebarTitle =
     config.settings["volto-chatbot"]?.sidebar?.sidebarTitle ||
     "Help using this site";
+  const sidebarBlockData = Object.values(content?.[blocksFieldname] || {}).find(
+    (block) =>
+      block["@type"] === "danswerChat" &&
+      block.assistant == $selectedSidebarChatbot,
+  );
 
   return (
     <>
@@ -66,14 +68,17 @@ export const SidebarDisplay = forwardRef(function SidebarDisplay(
                 basic
                 aria-label={"Close"}
                 onClick={() => {
-                  isSidebarOpen.set(false);
+                  selectedSidebarChatbot.set(null);
                 }}
               >
                 <Icon circled name={clearSVG} size="48px" />
               </Button>
               <h2 id="dialog_heading">{sidebarTitle}</h2>
             </div>
-            <ChatBlock content={content} />
+            <ChatBlockDisplay
+              assistant={$selectedSidebarChatbot}
+              data={sidebarBlockData}
+            />
           </div>
         </dialog>
       </div>

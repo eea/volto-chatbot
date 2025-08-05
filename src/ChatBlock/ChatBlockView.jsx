@@ -1,28 +1,39 @@
-import React from 'react';
-import withDanswerData from './withDanswerData';
-import ChatWindow from './ChatWindow';
-import superagent from 'superagent';
+import React from "react";
+import superagent from "superagent";
+import ChatWindow from "./ChatWindow";
+import withDanswerData from "./withDanswerData";
 
 import { SidebarChatbotStartButton } from "@eeacms/volto-chatbot/sidebar/components/SidebarChatbotStartButton";
 
-function ChatBlockView(props) {
+const OnPageChat = withDanswerData((props) => [
+  "assistantData",
+  typeof props.data?.assistant !== "undefined"
+    ? superagent.get(`/_da/persona/${props.data.assistant}`).type("json")
+    : null,
+  props.data?.assistant,
+])(function OnPageChat(props) {
   const { assistantData, data, isEditMode } = props;
-
-  if (data.globalMode) {
-    return <SidebarChatbotStartButton />;
-  }
 
   return assistantData ? (
     <ChatWindow persona={assistantData} isEditMode={isEditMode} {...data} />
   ) : (
     <div>Chatbot</div>
   );
-}
+});
 
-export default withDanswerData((props) => [
-  'assistantData',
-  typeof props.data?.assistant !== 'undefined'
-    ? superagent.get(`/_da/persona/${props.data.assistant}`).type('json')
-    : null,
-  props.data?.assistant,
-])(ChatBlockView);
+export default function ChatBlockView(props) {
+  const { data, isEditMode } = props;
+
+  if (data.globalMode) {
+    if (isEditMode) {
+      return (
+        <div inert="">
+          <SidebarChatbotStartButton assistant={data.assistant} />
+        </div>
+      );
+    }
+    return <SidebarChatbotStartButton assistant={data.assistant} />;
+  }
+
+  return <OnPageChat {...props} />;
+}

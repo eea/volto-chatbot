@@ -1,3 +1,3 @@
 import { atom } from "nanostores";
 
-export const isSidebarOpen = atom(false);
+export const selectedSidebarChatbot = atom(null);

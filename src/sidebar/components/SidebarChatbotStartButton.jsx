@@ -1,8 +1,8 @@
-import { isSidebarOpen } from "#stores/sidebarStore";
+import { selectedSidebarChatbot } from "#stores/sidebarStore";
 import config from "@plone/registry";
 import { DefaultChatbotStartButton } from "./DefaultChatbotStartButton";
 
-export function SidebarChatbotStartButton() {
+export function SidebarChatbotStartButton({ assistant }) {
   const ChatbotStartButton =
     config.getComponent("ChatbotStartButton")?.component ||
     DefaultChatbotStartButton;
@@ -11,7 +11,7 @@ export function SidebarChatbotStartButton() {
   return (
     <ChatbotStartButton
       onClick={() => {
-        isSidebarOpen.set(true);
+        selectedSidebarChatbot.set(assistant);
       }}
       title={
         config.settings["volto-chatbot"]?.sidebar?.startButtonTitle ||

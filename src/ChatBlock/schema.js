@@ -72,11 +72,8 @@ export function ChatBlockSchema({ assistants, data }) {
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
-          'height',
           'enableStarterPrompts',
           ...(data.enableStarterPrompts ? ['starterPrompts'] : []),
-          'starterPromptsHeading',
-          'starterPromptsPosition',
           'showAssistantPrompts',
           'enableQgen',
           'enableShowTotalFailMessage',
@@ -98,6 +95,9 @@ export function ChatBlockSchema({ assistants, data }) {
         id: 'displaySettings',
         title: 'Display settings',
         fields: [
+          'height',
+          'starterPromptsHeading',
+          'starterPromptsPosition',
           'scrollToInput',
           'showToolCalls',
           'showAssistantTitle',
@@ -372,7 +372,7 @@ range is from 0 to 100`,
       },
       globalMode: {
         title: 'Global mode',
-        description: 'Render the chatbot within a sidebar which can be shown by clicking a button.',
+        description: 'Render the chatbot within a sidebar which can be shown by clicking a button. First block on the page has the controls.',
         type: 'boolean'
       }
     },

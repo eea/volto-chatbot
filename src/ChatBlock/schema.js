@@ -167,11 +167,11 @@ export function ChatBlockSchema({ assistants, data }) {
         description: 'Show Halloumi-based automated quality check',
       },
       onDemandInputToggle: {
-        title: 'Quality check toggle default state',
+        title: 'Fact-check AI toggle default state',
         type: 'boolean',
         default: true,
         description:
-          'Sets the default state of the quality check toggle. When enabled, quality checks run automatically; when disabled, users must enable them manually.',
+          'Sets the default state of the fact-check AI toggle. When enabled, quality checks run automatically; when disabled, users must enable them manually.',
       },
       qualityCheckContext: {
         title: 'Context documents',

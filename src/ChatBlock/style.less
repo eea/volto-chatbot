@@ -447,6 +447,7 @@ mark {
 .related-questions-loader {
   display: flex;
   align-items: center;
+  padding: 0.5em 1.5em;
   gap: 0.5em;
 }
 
@@ -632,6 +633,10 @@ mark {
       color: @grey;
     }
   }
+}
+
+#fact-check-toggle[disabled] ~ label {
+  opacity: 1;
 }
 
 .feedback-toast {

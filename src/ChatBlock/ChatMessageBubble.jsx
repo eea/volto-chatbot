@@ -3,19 +3,17 @@ import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
 import { Button, Message, MessageContent } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
-import { SVGIcon, useCopyToClipboard } from './utils';
-import ChatMessageFeedback from './ChatMessageFeedback';
-import useQualityMarkers from './useQualityMarkers';
 import Spinner from './Spinner';
+import UserActionsToolbar from './UserActionsToolbar';
 import RelatedQuestions from './RelatedQuestions';
+import useQualityMarkers from './useQualityMarkers';
+import { SVGIcon } from './utils';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 import { components } from './MarkdownComponents';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
-import CopyIcon from './../icons/copy.svg';
-import CheckIcon from './../icons/check.svg';
 import GlassesIcon from './../icons/glasses.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
@@ -164,41 +162,6 @@ function HalloumiFeedback({
   );
 }
 
-function UserActionsToolbar({
-  copied,
-  message,
-  handleCopy,
-  enableFeedback,
-  feedbackReasons,
-  enableMatomoTracking,
-  persona,
-}) {
-  return (
-    <div className="message-actions">
-      <Button
-        basic
-        onClick={() => handleCopy()}
-        title="Copy"
-        aria-label="Copy"
-        disabled={copied}
-      >
-        {copied ? <SVGIcon name={CheckIcon} /> : <SVGIcon name={CopyIcon} />}
-      </Button>
-
-      {enableFeedback && (
-        <>
-          <ChatMessageFeedback
-            message={message}
-            feedbackReasons={feedbackReasons}
-            enableMatomoTracking={enableMatomoTracking}
-            persona={persona}
-          />
-        </>
-      )}
-    </div>
-  );
-}
-
 export function addHalloumiContext(doc, text) {
   const updatedDate = doc.updated_at
     ? new Date(doc.updated_at).toLocaleString('en-GB', {
@@ -248,7 +211,6 @@ export function ChatMessageBubble(props) {
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
   const isUser = type === 'user';
-  const [copied, handleCopy] = useCopyToClipboard(message.message);
   const [forceHalloumi, setForceHallomi] = React.useState(
     qualityCheck === 'enabled',
   );
@@ -429,10 +391,8 @@ export function ChatMessageBubble(props) {
 
           {!isUser && !isLoading && (
             <UserActionsToolbar
-              handleCopy={handleCopy}
-              copied={copied}
-              enableFeedback={enableFeedback}
               message={message}
+              enableFeedback={enableFeedback}
               feedbackReasons={feedbackReasons}
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}

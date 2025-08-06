@@ -2,20 +2,18 @@ import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
 import { Button, Message, MessageContent } from 'semantic-ui-react';
-import { trackEvent } from '@eeacms/volto-matomo/utils';
 import { SourceDetails } from './Source';
-import { SVGIcon, useCopyToClipboard } from './utils';
-import ChatMessageFeedback from './ChatMessageFeedback';
-import useQualityMarkers from './useQualityMarkers';
 import Spinner from './Spinner';
+import UserActionsToolbar from './UserActionsToolbar';
+import RelatedQuestions from './RelatedQuestions';
+import useQualityMarkers from './useQualityMarkers';
+import { SVGIcon } from './utils';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
 import { components } from './MarkdownComponents';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
-import CopyIcon from './../icons/copy.svg';
-import CheckIcon from './../icons/check.svg';
 import GlassesIcon from './../icons/glasses.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
@@ -122,7 +120,7 @@ function HalloumiFeedback({
   markers,
   score,
   scoreColor,
-  setForceHallomi,
+  onManualVerify,
   showVerifyClaimsButton,
   sources,
 }) {
@@ -134,8 +132,8 @@ function HalloumiFeedback({
     <>
       {showVerifyClaimsButton && (
         <div className="halloumi-feedback-button">
-          <Button onClick={() => setForceHallomi(true)} className="claims-btn">
-            <SVGIcon name={GlassesIcon} /> Verify AI claims
+          <Button onClick={onManualVerify} className="claims-btn">
+            <SVGIcon name={GlassesIcon} /> Fact-check AI answer
           </Button>
           <div>
             <span>{messageBySource}</span>{' '}
@@ -161,41 +159,6 @@ function HalloumiFeedback({
         </Message>
       )}
     </>
-  );
-}
-
-function UserActionsToolbar({
-  copied,
-  message,
-  handleCopy,
-  enableFeedback,
-  feedbackReasons,
-  enableMatomoTracking,
-  persona,
-}) {
-  return (
-    <div className="message-actions">
-      <Button
-        basic
-        onClick={() => handleCopy()}
-        title="Copy"
-        aria-label="Copy"
-        disabled={copied}
-      >
-        {copied ? <SVGIcon name={CheckIcon} /> : <SVGIcon name={CopyIcon} />}
-      </Button>
-
-      {enableFeedback && (
-        <>
-          <ChatMessageFeedback
-            message={message}
-            feedbackReasons={feedbackReasons}
-            enableMatomoTracking={enableMatomoTracking}
-            persona={persona}
-          />
-        </>
-      )}
-    </div>
   );
 }
 
@@ -248,7 +211,6 @@ export function ChatMessageBubble(props) {
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
   const isUser = type === 'user';
-  const [copied, handleCopy] = useCopyToClipboard(message.message);
   const [forceHalloumi, setForceHallomi] = React.useState(
     qualityCheck === 'enabled',
   );
@@ -256,8 +218,14 @@ export function ChatMessageBubble(props) {
   React.useEffect(() => {
     if (qualityCheck === 'ondemand_toggle' && qualityCheckEnabled) {
       setForceHallomi(true);
+    } else {
+      setForceHallomi(false);
     }
   }, [qualityCheck, qualityCheckEnabled]);
+
+  const [verificationTriggered, setVerificationTriggered] =
+    React.useState(false);
+  const [isMessageVerified, setIsMessageVerified] = React.useState(false);
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -317,7 +285,7 @@ export function ChatMessageBubble(props) {
     qualityCheck !== 'disabled' &&
     forceHalloumi &&
     showSources &&
-    qualityCheckEnabled &&
+    (qualityCheckEnabled || verificationTriggered) &&
     message.messageId > -1;
   const { markers, isLoadingHalloumi } = useQualityMarkers(
     doQualityControl,
@@ -345,29 +313,24 @@ export function ChatMessageBubble(props) {
   const scoreColor = scoreStage?.color || 'black';
 
   const isFetching = isLoadingHalloumi || isLoading;
-  const halloumiMessage = doQualityControl ? scoreStage?.label : '';
+  const halloumiMessage =
+    isMessageVerified || doQualityControl ? scoreStage?.label : '';
 
   const showVerifyClaimsButton =
     sources.length > 0 &&
-    qualityCheck === 'ondemand' &&
     !isFetching &&
-    !markers;
+    !markers &&
+    (qualityCheck === 'ondemand' ||
+      (qualityCheck === 'ondemand_toggle' && !qualityCheckEnabled));
+
   const showTotalFailMessage =
     sources.length === 0 && !isFetching && enableShowTotalFailMessage;
-  const showRelatedQuestions = message.relatedQuestions?.length > 0;
 
-  const handleRelatedQuestionClick = (question) => {
-    if (!isLoading) {
-      if (enableMatomoTracking) {
-        trackEvent({
-          category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
-          action: 'Chatbot: Related question click',
-          name: 'Message submitted',
-        });
-      }
-      onChoice(question);
+  React.useEffect(() => {
+    if (markers && markers.claims && markers.claims.length > 0) {
+      setIsMessageVerified(true);
     }
-  };
+  }, [markers]);
 
   return (
     <div>
@@ -418,17 +381,18 @@ export function ChatMessageBubble(props) {
               markers={markers}
               score={score}
               scoreColor={scoreColor}
-              setForceHallomi={setForceHallomi}
+              onManualVerify={() => {
+                setForceHallomi(true);
+                setVerificationTriggered(true);
+              }}
               showVerifyClaimsButton={showVerifyClaimsButton}
             />
           )}
 
           {!isUser && !isLoading && (
             <UserActionsToolbar
-              handleCopy={handleCopy}
-              copied={copied}
-              enableFeedback={enableFeedback}
               message={message}
+              enableFeedback={enableFeedback}
               feedbackReasons={feedbackReasons}
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
@@ -445,24 +409,13 @@ export function ChatMessageBubble(props) {
             </div>
           )}
 
-          {showRelatedQuestions && (
-            <>
-              <h5>Related questions:</h5>
-              <div className="chat-related-questions">
-                {message.relatedQuestions?.map(({ question }) => (
-                  <div
-                    className="relatedQuestionButton"
-                    role="button"
-                    onClick={() => handleRelatedQuestionClick(question)}
-                    onKeyDown={() => handleRelatedQuestionClick(question)}
-                    tabIndex="-1"
-                  >
-                    {question}
-                  </div>
-                ))}
-              </div>
-            </>
-          )}
+          <RelatedQuestions
+            persona={persona}
+            message={message}
+            isLoading={isLoading}
+            onChoice={onChoice}
+            enableMatomoTracking={enableMatomoTracking}
+          />
         </div>
       </div>
     </div>

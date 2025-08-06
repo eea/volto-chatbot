@@ -82,6 +82,9 @@ export function ChatBlockSchema({ assistants, data }) {
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
           'qualityCheck',
+          ...(data.qualityCheck && data.qualityCheck === 'ondemand_toggle'
+            ? ['onDemandInputToggle']
+            : []),
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
             ? [
                 'noSupportDocumentsMessage',
@@ -162,6 +165,13 @@ export function ChatBlockSchema({ assistants, data }) {
         ],
         default: 'disabled',
         description: 'Show Halloumi-based automated quality check',
+      },
+      onDemandInputToggle: {
+        title: 'Fact-check AI toggle default state',
+        type: 'boolean',
+        default: true,
+        description:
+          'Sets the default state of the fact-check AI toggle. When enabled, quality checks run automatically; when disabled, users must enable them manually.',
       },
       qualityCheckContext: {
         title: 'Context documents',

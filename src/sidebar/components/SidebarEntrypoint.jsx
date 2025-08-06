@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 import { useSelector } from "react-redux";
 import { SidebarDisplay } from "./SidebarDisplay";
 
-import "./SidebarEntrypoint.scss";
+import './SidebarEntrypoint.scss';
 
 export function SidebarEntrypoint() {
   const sidebarRef = useRef();

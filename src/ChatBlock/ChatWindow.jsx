@@ -22,11 +22,9 @@ function useIsAwake() {
     if (!isAwake) {
       return;
     }
-    console.log("STARTING AWAKE RESET");
     const rewakeDelayInMs =
       config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
     const timeout = setTimeout(() => {
-      console.log("AWAKE RESET");
       setIsAwake(false);
     }, rewakeDelayInMs);
     return () => clearTimeout(timeout);

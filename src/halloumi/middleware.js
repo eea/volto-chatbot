@@ -42,8 +42,10 @@ export default async function middleware(req, res, next) {
   };
   const body = req.body;
 
-  // eslint-disable-next-line no-console
-  console.log('Halloumi body', body);
+  if (process.env.DEBUG_HALLUMI) {
+    // eslint-disable-next-line no-console
+    console.log('Halloumi body', body);
+  }
   const { sources, answer } = body;
 
   res.set('Content-Type', 'application/json');

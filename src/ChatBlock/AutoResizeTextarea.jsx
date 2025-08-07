@@ -7,7 +7,7 @@ import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
-  const { onSubmit, isStreaming, enableMatomoTracking, persona, ...rest } =
+  const { onSubmit, onFocus, isStreaming, enableMatomoTracking, persona, ...rest } =
     props;
   const [input, setInput] = React.useState('');
 
@@ -31,6 +31,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
     <>
       <TextareaAutosize
         value={input}
+        onFocus={onFocus}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey) {

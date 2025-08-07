@@ -4,6 +4,48 @@ export const delay = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
+// GET Request to DANSWER_URL/api/health to wake it up before starting.
+//   Will retry 3 times over 90 seconds and throw if no response received or unhealthy status is returned.
+export async function wakeApi() {
+  let timeout = 15000;
+
+  function fetchWithRetry(url, retries, abortController) {
+    return fetch(url, {
+      signal: abortController,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }).catch((error) => {
+      if ("connection" in navigator && navigator.connection.saveData === true) {
+        throw error;
+      }
+      if (retries > 0 && error.message !== "Request timed out") {
+        // Add 5 seconds to the timeout each retry
+        timeout += 5000;
+        return fetchWithRetry(url, retries - 1, AbortSignal.timeout(timeout));
+      } else {
+        throw error;
+      }
+    });
+  }
+  const healthResponse = await fetchWithRetry(
+    "/_da/health",
+    3,
+    AbortSignal.timeout(timeout),
+  );
+
+  if (!healthResponse.ok) {
+    throw Error("FAILED TO WAKE");
+  }
+
+  const result = await healthResponse.json();
+
+  if (!result.success) {
+    throw Error("CHAT AI UNHEALTHY");
+  }
+  return result.success;
+}
+
 export async function createChatSession(personaId, description) {
   const createChatSessionResponse = await fetch(
     '/_da/chat/create-chat-session',

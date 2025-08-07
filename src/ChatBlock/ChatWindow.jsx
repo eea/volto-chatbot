@@ -6,12 +6,27 @@ import { trackEvent } from '@eeacms/volto-matomo/utils';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
-import { useScrollonStream } from './lib';
+import { useScrollonStream, wakeApi as wakeApiLib } from './lib';
 import { useBackendChat } from './useBackendChat';
 import { SVGIcon } from './utils';
 import PenIcon from './../icons/square-pen.svg';
 
 import './style.less';
+
+function useWakeApi() {
+  const [isAwake, setAwake] = React.useReducer(() => true, false);
+  function wakeApi() {
+    if (isAwake) {
+      return;
+    }
+    const didWake = wakeApiLib();
+    if (didWake) {
+      setAwake();
+    }
+  }
+
+  return wakeApi;
+}
 
 function ChatWindow({
   persona,
@@ -54,6 +69,7 @@ function ChatWindow({
     enableQgen,
   });
   const [showLandingPage, setShowLandingPage] = React.useState(false);
+  const wakeApi = useWakeApi();
 
   const textareaRef = React.useRef(null);
   const conversationRef = React.useRef(null);
@@ -179,6 +195,7 @@ function ChatWindow({
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}
+              onFocus={wakeApi}
             />
           </div>
         </Form>

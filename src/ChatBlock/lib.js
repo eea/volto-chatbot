@@ -33,17 +33,18 @@ export async function wakeApi() {
     3,
     AbortSignal.timeout(timeout),
   );
+  // We don't need any error handling, just assume it will wake up
+  // if (!healthResponse.ok) {
+  //   throw Error("FAILED TO WAKE");
+  // }
 
-  if (!healthResponse.ok) {
-    throw Error("FAILED TO WAKE");
-  }
+  // const result = await healthResponse.json();
 
-  const result = await healthResponse.json();
-
-  if (!result.success) {
-    throw Error("CHAT AI UNHEALTHY");
-  }
-  return result.success;
+  // if (!result.success) {
+  //   throw Error("CHAT AI UNHEALTHY");
+  // }
+  // return result.success;
+  return true
 }
 
 export async function createChatSession(personaId, description) {

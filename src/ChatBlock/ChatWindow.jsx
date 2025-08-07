@@ -6,26 +6,39 @@ import { trackEvent } from '@eeacms/volto-matomo/utils';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
-import { useScrollonStream, wakeApi as wakeApiLib } from './lib';
+import { useScrollonStream, wakeApi } from "./lib";
 import { useBackendChat } from './useBackendChat';
 import { SVGIcon } from './utils';
 import PenIcon from './../icons/square-pen.svg';
 
 import './style.less';
 
-function useWakeApi() {
-  const [isAwake, setAwake] = React.useReducer(() => true, false);
-  function wakeApi() {
-    if (isAwake) {
+
+import config from "@plone/registry";
+
+function useIsAwake() {
+  const [isAwake, setIsAwake] = React.useState(false);
+  React.useEffect(() => {
+    if (!isAwake) {
       return;
     }
-    const didWake = wakeApiLib();
-    if (didWake) {
-      setAwake();
-    }
+    console.log("STARTING AWAKE RESET");
+    const rewakeDelayInMs =
+      config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
+    const timeout = setTimeout(() => {
+      console.log("AWAKE RESET");
+      setIsAwake(false);
+    }, rewakeDelayInMs);
+    return () => clearTimeout(timeout);
+  }, [isAwake]);
+
+  function setAwake() {
+    wakeApi();
+    setIsAwake(true);
+    localStorage.setItem("chat-last-awake", Date.now());
   }
 
-  return wakeApi;
+  return [isAwake, setAwake];
 }
 
 function ChatWindow({
@@ -69,7 +82,7 @@ function ChatWindow({
     enableQgen,
   });
   const [showLandingPage, setShowLandingPage] = React.useState(false);
-  const wakeApi = useWakeApi();
+  const [isAwake, setAwake] = useIsAwake();
 
   const textareaRef = React.useRef(null);
   const conversationRef = React.useRef(null);
@@ -195,7 +208,25 @@ function ChatWindow({
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}
-              onFocus={wakeApi}
+              onFocus={() => {
+                if (isAwake) {
+                  return;
+                }
+                setAwake(true);
+              }}
+              onChange={() => {
+                if (isAwake) {
+                  return;
+                }
+                const rewakeDelayInMs =
+                  config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
+                if (
+                  Date.now() - rewakeDelayInMs >
+                  localStorage.getItem("chat-last-awake")
+                ) {
+                  setAwake(true);
+                }
+              }}
             />
           </div>
         </Form>

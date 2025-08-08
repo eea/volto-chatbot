@@ -72,6 +72,7 @@ export function ChatBlockSchema({ assistants, data }) {
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
+          'starterPromptsHeading',
           'enableStarterPrompts',
           ...(data.enableStarterPrompts ? ['starterPrompts'] : []),
           'showAssistantPrompts',
@@ -96,7 +97,6 @@ export function ChatBlockSchema({ assistants, data }) {
         title: 'Display settings',
         fields: [
           'height',
-          'starterPromptsHeading',
           'starterPromptsPosition',
           'scrollToInput',
           'showToolCalls',

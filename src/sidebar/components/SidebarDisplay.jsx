@@ -34,14 +34,17 @@ export const SidebarDisplay = forwardRef(function SidebarDisplay(
 
   const blocksFieldname = getBlocksFieldname(content) || "blocks";
 
-  const sidebarTitle =
-    config.settings["volto-chatbot"]?.sidebar?.sidebarTitle ||
-    "Help using this site";
   const sidebarBlockData = Object.values(content?.[blocksFieldname] || {}).find(
     (block) =>
       block["@type"] === "danswerChat" &&
-      block.assistant == $selectedSidebarChatbot,
+    block.assistant == $selectedSidebarChatbot,
   );
+  const sidebarTitle =
+    sidebarBlockData?.starterPromptsHeading ||
+    config.settings["volto-chatbot"]?.sidebar?.sidebarTitle ||
+    "Help using this site";
+
+  
 
   return (
     <>

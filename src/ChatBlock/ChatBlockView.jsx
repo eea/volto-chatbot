@@ -24,15 +24,24 @@ const OnPageChat = withDanswerData((props) => [
 export default function ChatBlockView(props) {
   const { data, isEditMode } = props;
 
-  if (data.showInSidebar) {
+
+  if (data.displayMode === 'sidebar') {
     if (isEditMode) {
       return (
         <div inert="">
-          <SidebarChatbotStartButton assistant={data.assistant} />
+          <SidebarChatbotStartButton
+            assistant={data.assistant}
+            title={data.sidebarStartButtonText || 'Start assistant chat'}
+          />
         </div>
       );
     }
-    return <SidebarChatbotStartButton assistant={data.assistant} />;
+    return (
+      <SidebarChatbotStartButton
+        assistant={data.assistant}
+        title={data.sidebarStartButtonText || 'Start assistant chat'}
+      />
+    );
   }
 
   return <OnPageChat {...props} />;

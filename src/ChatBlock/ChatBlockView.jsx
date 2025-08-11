@@ -31,7 +31,7 @@ export default function ChatBlockView(props) {
         <div inert="">
           <SidebarChatbotStartButton
             assistant={data.assistant}
-            title={data.sidebarStartButtonText || 'Start assistant chat'}
+            title={data.sidebarStartButtonText}
           />
         </div>
       );
@@ -39,7 +39,7 @@ export default function ChatBlockView(props) {
     return (
       <SidebarChatbotStartButton
         assistant={data.assistant}
-        title={data.sidebarStartButtonText || 'Start assistant chat'}
+        title={data.sidebarStartButtonText}
       />
     );
   }

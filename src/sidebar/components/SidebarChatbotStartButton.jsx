@@ -12,11 +12,13 @@ export function SidebarChatbotStartButton({
 
   // TODO: Hide the start button until we've checked we support the dialog element and JS is loaded
   return (
-    <ChatbotStartButton
-      onClick={() => {
-        selectedSidebarChatbot.set(assistant);
-      }}
-      title={title || 'Start assistant chat'}
-    />
+    <div className="block danswerChat">
+      <ChatbotStartButton
+        onClick={() => {
+          selectedSidebarChatbot.set(assistant);
+        }}
+        title={title || 'Start assistant chat'}
+      />
+    </div>
   );
 }

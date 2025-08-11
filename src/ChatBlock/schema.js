@@ -72,11 +72,9 @@ export function ChatBlockSchema({ assistants, data }) {
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
-          'height',
+          'starterPromptsHeading',
           'enableStarterPrompts',
           ...(data.enableStarterPrompts ? ['starterPrompts'] : []),
-          'starterPromptsHeading',
-          'starterPromptsPosition',
           'showAssistantPrompts',
           'enableQgen',
           'enableShowTotalFailMessage',
@@ -95,13 +93,23 @@ export function ChatBlockSchema({ assistants, data }) {
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
           'enableMatomoTracking',
+        ],
+      },
+      {
+        id: 'displaySettings',
+        title: 'Display settings',
+        fields: [
+          'height',
+          'starterPromptsPosition',
           'scrollToInput',
           'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
           'chatTitle',
-        ],
-      },
+          'displayMode',
+          ...(data.displayMode === "sidebar" ? ['sidebarStartButtonText'] : []),
+        ]
+      }
     ],
     properties: {
       enableShowTotalFailMessage: {
@@ -311,7 +319,7 @@ range is from 0 to 100`,
         default: 'top',
       },
       starterPromptsHeading: {
-        title: 'Prompts Heading',
+        title: data.displayMode === 'sidebar' ? 'Sidebar title' : 'Prompts Heading',
         type: 'string',
         description:
           'Heading shown above the starter prompts (e.g. "Try the following questions")',
@@ -373,6 +381,27 @@ range is from 0 to 100`,
         title: 'Scroll the page to focus on the chat input',
         type: 'boolean',
       },
+      displayMode: {
+        title: 'Display',
+        type: 'string',
+        factory: 'Choice',
+        choices: [
+          ['page', 'On page'],
+          ['sidebar', 'In sidebar'],
+        ],
+        // Simulate default value without actually setting it so it isn't saved in data.
+        placeholder: 'above',
+        noValueOption: false,
+      },
+      sidebarStartButtonText: {
+        title: 'Start button text',
+        type: 'string'
+      }
+      // showInSidebar: {
+      //   title: 'Global mode',
+      //   description: 'Render the chatbot within a sidebar which can be shown by clicking a button. First block on the page has the controls.',
+      //   type: 'boolean'
+      // }
     },
     required: [],
   };

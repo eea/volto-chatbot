@@ -123,9 +123,10 @@ async function send_danswer_request(
 }
 
 export default async function middleware(req, res, next) {
-  const path = req.url.replace('/_da/', '/');
-  path.replace('/freshwater/', '/');
-  path.replace('/marine/', '/');
+  const path = req.url
+    .replace('/_da/', '/')
+    .replace('/freshwater/', '/')
+    .replace('/marine/', '/');
 
   const reqUrl = `${process.env.DANSWER_URL}/api${path}`;
 

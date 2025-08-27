@@ -18,6 +18,8 @@ import config from "@plone/registry";
 
 function useIsAwake() {
   const [isAwake, setIsAwake] = React.useState(false);
+  const [error, setError] = React.useState(false);
+
   React.useEffect(() => {
     if (!isAwake) {
       return;
@@ -30,13 +32,21 @@ function useIsAwake() {
     return () => clearTimeout(timeout);
   }, [isAwake]);
 
-  function setAwake() {
-    wakeApi();
-    setIsAwake(true);
-    localStorage.setItem("chat-last-awake", Date.now());
+  async function wake() {
+    try {
+      const wakeResult = await wakeApi();
+      setIsAwake(wakeResult);
+      localStorage.setItem("chat-last-awake", Date.now());
+    }
+    catch (err) {
+      setIsAwake(false);
+      setError(err.message);
+    }
   }
 
-  return [isAwake, setAwake];
+  return {
+    isAwake, wake, setIsAwake, error: error
+  };
 }
 
 function ChatWindow({
@@ -80,7 +90,34 @@ function ChatWindow({
     enableQgen,
   });
   const [showLandingPage, setShowLandingPage] = React.useState(false);
-  const [isAwake, setAwake] = useIsAwake();
+  const { isAwake, wake, setIsAwake, error: wakeError } = useIsAwake();
+  const [canSubmit, setCanSubmit] = React.useState(isAwake && !isStreaming);
+
+  // Update whether we can ask a question based on health check and streaming state
+  React.useEffect(() => {
+    if (canSubmit) {
+      if (isStreaming) {
+        setCanSubmit(false);
+      } else {
+        setIsAwake(true);
+        setCanSubmit(true);
+      }
+      if (!isAwake) {
+        setCanSubmit(false);
+      }
+      return;
+    }
+    if (isStreaming) {
+      wake();
+      setCanSubmit(false);
+      return;
+    }
+
+    if (isAwake) {
+      setCanSubmit(true);
+      return;
+    }
+  }, [isAwake, isStreaming]);
 
   const textareaRef = React.useRef(null);
   const conversationRef = React.useRef(null);
@@ -194,15 +231,24 @@ function ChatWindow({
 
       <div className="chat-form">
         <Form>
+          {wakeError ? (
+            <p
+              id="chat-wake-error-message"
+              aria-live="polite"
+              className="ui red basic label form-error-label"
+            >
+              {wakeError}
+            </p>
+          ) : null}
           <div className="textarea-wrapper">
             <AutoResizeTextarea
               maxRows={8}
               minRows={1}
               ref={textareaRef}
               placeholder={
-                messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
+                messages.length > 0 ? "Ask follow-up..." : placeholderPrompt
               }
-              isStreaming={isStreaming}
+              disableSubmit={!canSubmit}
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}
@@ -210,10 +256,12 @@ function ChatWindow({
                 if (isAwake) {
                   return;
                 }
-                setAwake(true);
+                wake();
               }}
               onChange={() => {
                 if (isAwake) {
+                  // TODO: Debouce this a little to improve performance when typing quickly
+                  localStorage.setItem("chat-last-awake", Date.now());
                   return;
                 }
                 const rewakeDelayInMs =
@@ -222,7 +270,7 @@ function ChatWindow({
                   Date.now() - rewakeDelayInMs >
                   localStorage.getItem("chat-last-awake")
                 ) {
-                  setAwake(true);
+                  wake();
                 }
               }}
             />

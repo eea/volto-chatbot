@@ -1,5 +1,7 @@
 import { useRef, useEffect } from 'react';
 
+import config from "@plone/registry";
+
 export const delay = (ms) => {
   return new Promise((resolve) => setTimeout(resolve, ms));
 };
@@ -28,23 +30,31 @@ export async function wakeApi() {
       }
     });
   }
-  const healthResponse = await fetchWithRetry(
-    "/_da/health",
-    3,
-    AbortSignal.timeout(timeout),
-  );
-  // We don't need any error handling, just assume it will wake up
-  // if (!healthResponse.ok) {
-  //   throw Error("FAILED TO WAKE");
-  // }
+  let healthResponse = undefined;
+  const healthCheckUrl = config.settings["volto-chatbot"].rewakeUrl;
+  try {
+    healthResponse = await fetchWithRetry(
+      healthCheckUrl,
+      3,
+      AbortSignal.timeout(timeout),
+    );
+  } catch (err) {
+    // Timeout reached
+    if (err.name === "TimeoutError") {
+      throw Error("Failed to start a chat session at this time. Please try again later");
+    }
+    // Fetch request cancelled
+    else if (err.name === "AbortError") {
+      throw Error(`Chat session startup cancelled. Reason: ${err.message}`)
+    } else {
+      throw Error(`Unknown Error: type: ${err.name}, message: ${err.message}`)
+    }
+  }
+  if (!healthResponse?.ok) {
+    return false;
+  }
 
-  // const result = await healthResponse.json();
-
-  // if (!result.success) {
-  //   throw Error("CHAT AI UNHEALTHY");
-  // }
-  // return result.success;
-  return true
+  return true;
 }
 
 export async function createChatSession(personaId, description) {

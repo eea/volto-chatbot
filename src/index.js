@@ -52,12 +52,16 @@ const applyConfig = (config) => {
 
   config.settings["volto-chatbot"] = {
     ...(config.settings["volto-chatbot"] || {}),
+    rewakeUrl:
+      process.env["RAZZLE_REWAKE_URL"] ||
+      (typeof window !== "undefined" && window.env["RAZZLE_REWAKE_URL"]) ||
+      "/_da/health",
     rewakeDelay:
       Number(
         process.env["RAZZLE_MINUTES_BEFORE_CHAT_REWAKE"] ||
           (typeof window !== "undefined" &&
             window.env["RAZZLE_MINUTES_BEFORE_CHAT_REWAKE"]),
-      ) || 60,
+      ) || 1,
     sidebar: {
       startButtonTitle: "Start assistant chat",
       sidebarTitle: "Help using this site",

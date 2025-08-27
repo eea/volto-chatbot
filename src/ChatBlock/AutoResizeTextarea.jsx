@@ -12,7 +12,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
     onSubmit,
     onFocus,
     onChange = () => {},
-    isStreaming,
+    disableSubmit,
     enableMatomoTracking,
     persona,
     ...rest
@@ -20,6 +20,9 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (disableSubmit) {
+      return
+    }
     const trimmedInput = input.trim();
     if (trimmedInput) {
       if (enableMatomoTracking) {
@@ -37,6 +40,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
   return (
     <>
       <TextareaAutosize
+        aria-describedby="chat-wake-error-message"
         value={input}
         onFocus={onFocus}
         onChange={(e) => {
@@ -57,7 +61,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
 
       <Button
         className="submit-btn"
-        disabled={isStreaming}
+        disabled={disableSubmit}
         type="submit"
         aria-label="Send"
         onKeyDown={(e) => {

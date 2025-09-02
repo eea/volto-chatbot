@@ -198,6 +198,11 @@ export function buildLatestMessageChain(messageMap) {
   return finalMessageList; // .concat(additionalMessagesOnMainline);
 }
 
+/**
+ * 
+ * @param {Object} options
+ * @param {AbortSignal} signal
+ */
 export async function* sendMessage({
   message,
   fileDescriptors,
@@ -214,7 +219,7 @@ export async function* sendMessage({
   systemPromptOverride,
   useExistingUserMessage,
   alternateAssistantId,
-}) {
+}, signal) {
   const documentsAreSelected =
     selectedDocumentIds && selectedDocumentIds.length > 0;
 
@@ -223,6 +228,7 @@ export async function* sendMessage({
     headers: {
       'Content-Type': 'application/json',
     },
+    signal,
     body: JSON.stringify({
       alternate_assistant_id: alternateAssistantId,
       chat_session_id: chatSessionId,
@@ -411,22 +417,21 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
   return result;
 }
 
+/**
+ * 
+ * @param {Object} params 
+ * @param {AbortSignal} signal 
+ */
 export async function* updateCurrentMessageFIFO(
   params,
-  isCancelledRef,
-  setIsCancelled,
+  signal
 ) {
-  const promise = sendMessage(params);
+  const promise = sendMessage(params, signal);
 
   try {
     for await (const packetBunch of promise) {
       for (const packet of packetBunch) {
         yield { packet };
-      }
-
-      if (isCancelledRef.current) {
-        setIsCancelled(false);
-        break;
       }
     }
   } catch (error) {

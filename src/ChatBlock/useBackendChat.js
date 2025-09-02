@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   buildLatestMessageChain,
   createChatSession,
@@ -9,7 +9,10 @@ import {
   removeMessage,
   updateCurrentMessageFIFO,
   updateParentChildren,
+  wakeApi,
 } from './lib';
+
+import config from "@plone/registry";
 
 const TEMP_USER_MESSAGE_ID = -1;
 const TEMP_ASSISTANT_MESSAGE_ID = -2;
@@ -26,6 +29,14 @@ export const ChatFileType = {
   DOCUMENT: 'document',
   PLAIN_TEXT: 'plain_text',
 };
+
+export const ChatState = Object.freeze({
+  ASLEEP: 'asleep',
+  READY: 'ready',
+  STREAMING: 'awake',
+  FETCHING_RELATED: 'fetchingRelated',
+  ERRORED: 'error',
+});
 
 function upsertToCompleteMessageMap({
   chatSessionId,
@@ -96,11 +107,13 @@ function upsertToCompleteMessageMap({
 }
 
 class SubmitHandler {
+  /**
+   * @param {Object} options 
+   * @param {AbortSignal=} options.signal  Optional parameter for additional control of the abort signal. E.g. stopping the fetch from a button press.
+   */
   constructor({
     persona,
-    setIsStreaming,
-    isCancelledRef,
-    setIsCancelled,
+    setChatState,
     messageHistory,
     completeMessageDetail,
     currChatSessionId,
@@ -109,13 +122,11 @@ class SubmitHandler {
     chatTitle,
     qgenAsistantId,
     enableQgen,
-    setIsFetchingRelatedQuestions,
+    signal
   }) {
     this.persona = persona;
     this.chatTitle = chatTitle;
-    this.setIsStreaming = setIsStreaming;
-    this.isCancelledRef = isCancelledRef;
-    this.setIsCancelled = setIsCancelled;
+    this.setChatState = setChatState;
     this.messageHistory = messageHistory;
     this.completeMessageDetail = completeMessageDetail;
     this.currChatSessionId = currChatSessionId;
@@ -123,9 +134,9 @@ class SubmitHandler {
     this.setCompleteMessageDetail = setCompleteMessageDetail;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
-    this.setIsFetchingRelatedQuestions = setIsFetchingRelatedQuestions;
 
     this.onSubmit = this.onSubmit.bind(this);
+    this.abortSignal = signal || null;
   }
 
   async onSubmit({
@@ -224,7 +235,7 @@ class SubmitHandler {
 
     const currentAssistantId = this.persona.id;
 
-    this.setIsStreaming(true);
+    this.setChatState(ChatState.STREAMING);
 
     let answer = '';
     let query = null;
@@ -255,8 +266,7 @@ class SubmitHandler {
     };
     const promise = updateCurrentMessageFIFO(
       params,
-      this.isCancelledRef,
-      this.setIsCancelled,
+      this.abortSignal,
     );
 
     await delay(50);
@@ -373,11 +383,6 @@ class SubmitHandler {
           };
           newCompleteMessageDetail = upsertToCompleteMessageMap(info);
         }
-
-        if (this.isCancelledRef.current) {
-          this.setIsCancelled(false);
-          break;
-        }
       }
     }
 
@@ -395,7 +400,7 @@ class SubmitHandler {
       if (lastMessage && userMessage) {
         const query = userMessage.message;
         const answer = lastMessage.message;
-        this.setIsFetchingRelatedQuestions(true);
+        this.setChatState(ChatState.FETCHING_RELATED);
         const relatedQuestionsText = await fetchRelatedQuestions(
           { query, answer },
           this.qgenAsistantId,
@@ -407,10 +412,9 @@ class SubmitHandler {
           ...newCompleteMessageDetail,
           messageMap,
         });
-        this.setIsFetchingRelatedQuestions(false);
       }
     }
-    this.setIsStreaming(false);
+    this.setChatState(ChatState.READY);
   }
 }
 
@@ -427,19 +431,55 @@ function extractJSON(str) {
   }
 }
 
-export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
-  const [isStreaming, setIsStreaming] = React.useState(false);
-  const [isFetchingRelatedQuestions, setIsFetchingRelatedQuestions] =
-    React.useState(false);
-  const [isCancelled, setIsCancelled] = React.useState(false);
-  const isCancelledRef = React.useRef(isCancelled); // scroll is cancelled
+export function useBackendChat({
+  persona,
+  qgenAsistantId,
+  enableQgen,
+  signal,
+}) {
+  const [error, setError] = React.useState('');
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);
+  const [chatState, setChatState] = React.useState(ChatState.ASLEEP);
 
+  const rewakeDelayInMs = config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
+
+  /** Try to wake up the API. Will early return if already awake */
+  async function wake() {
+    const readyForWaking =
+      Date.now() - rewakeDelayInMs < localStorage.getItem("chat-last-awake");
+
+    if (chatState !== ChatState.ASLEEP) {
+      if (readyForWaking) {
+        localStorage.setItem("chat-last-awake", Date.now());
+      }
+      return
+    }
+
+    try {
+      const wakeResult = await wakeApi();
+      if (!!wakeResult) {
+        setChatState(ChatState.READY);
+        localStorage.setItem("chat-last-awake", Date.now());
+      }
+    }
+    catch (err) {
+      setChatState(ChatState.ERRORED);
+      setError(err.message);
+    }
+  }
   React.useEffect(() => {
-    isCancelledRef.current = isCancelled;
-  }, [isCancelled]);
+    if (chatState === ChatState.ASLEEP) {
+      return;
+    }
+    const timeout = setTimeout(() => {
+      if (chatState === ChatState.READY) {
+        setChatState(ChatState.ASLEEP);
+      }
+    }, rewakeDelayInMs);
+    return () => clearTimeout(timeout);
+  }, [chatState]);
 
-  const [completeMessageDetail, setCompleteMessageDetail] = useState({
+  const [completeMessageDetail, setCompleteMessageDetail] = React.useState({
     sessionId: null,
     messageMap: new Map(),
   });
@@ -447,19 +487,37 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
   const messageHistory = buildLatestMessageChain(
     completeMessageDetail.messageMap,
   );
+
+  // Stub from experiment. Remove and replace with wake logic
+  const timeoutSignal = new AbortController().signal;
+  
+  const submitSignal = React.useRef(
+    signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal
+  );
+  
+  React.useEffect(() => {
+    function handleAbortEvent(event) {
+      const reason = event.target.reason;
+      const errorMessage = Error.isError(reason) ? reason.message : error;
+      setError(errorMessage);
+    }
+    submitSignal.current.addEventListener('abort', handleAbortEvent);
+    return () => {
+      submitSignal.current.removeEventListener("abort", handleAbortEvent);
+    };
+  }, []);
+  
   const submitHandler = new SubmitHandler({
     completeMessageDetail,
     currChatSessionId,
-    isCancelledRef,
     messageHistory,
     persona,
     setCompleteMessageDetail,
     setCurrChatSessionId,
-    setIsCancelled,
-    setIsStreaming,
+    setChatState,
     qgenAsistantId,
     enableQgen,
-    setIsFetchingRelatedQuestions,
+    signal: signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal
   });
 
   const clearChat = () => {
@@ -470,14 +528,17 @@ export function useBackendChat({ persona, qgenAsistantId, enableQgen }) {
     setCurrChatSessionId(null);
   };
 
-  // console.log('history', messageHistory);
+  const onSubmit = React.useCallback((message) => {
+    wake();
+    submitHandler.onSubmit(message)
+  }, []);
 
   return {
     messages: messageHistory,
-    onSubmit: submitHandler.onSubmit,
-    isStreaming,
-    isCancelled,
+    onSubmit: onSubmit,
+    chatState,
+    error,
     clearChat,
-    isFetchingRelatedQuestions,
+    wake,
   };
 }

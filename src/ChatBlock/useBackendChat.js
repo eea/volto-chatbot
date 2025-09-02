@@ -263,6 +263,7 @@ class SubmitHandler {
       queryOverride,
       forceSearch,
       useExistingUserMessage: isSeededChat,
+      signal: this.abortSignal
     };
     const promise = updateCurrentMessageFIFO(
       params,
@@ -403,7 +404,7 @@ class SubmitHandler {
         this.setChatState(ChatState.FETCHING_RELATED);
         const relatedQuestionsText = await fetchRelatedQuestions(
           { query, answer },
-          this.qgenAsistantId,
+          { qgenAsistantId: this.qgenAsistantId }
         );
 
         lastMessage.relatedQuestions = extractJSON(relatedQuestionsText);

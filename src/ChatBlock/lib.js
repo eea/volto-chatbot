@@ -219,7 +219,8 @@ export async function* sendMessage({
   systemPromptOverride,
   useExistingUserMessage,
   alternateAssistantId,
-}, signal) {
+  signal,
+}) {
   const documentsAreSelected =
     selectedDocumentIds && selectedDocumentIds.length > 0;
 
@@ -369,7 +370,7 @@ export class CurrentMessageFIFO {
   }
 }
 
-export async function fetchRelatedQuestions(message, qgenAsistantId) {
+export async function fetchRelatedQuestions(message, { qgenAsistantId, signal }) {
   const { query, answer } = message;
   const chatSessionId = await createChatSession(qgenAsistantId, `Q: ${query}`);
 
@@ -382,6 +383,7 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
     promptId: 0,
     filters: {},
     selectedDocumentIds: [],
+    signal: signal,
   };
   const promise = updateCurrentMessageFIFO(params, {}, () => {});
 
@@ -420,13 +422,10 @@ export async function fetchRelatedQuestions(message, qgenAsistantId) {
 /**
  * 
  * @param {Object} params 
- * @param {AbortSignal} signal 
+ * @param {AbortSignal} params.signal 
  */
-export async function* updateCurrentMessageFIFO(
-  params,
-  signal
-) {
-  const promise = sendMessage(params, signal);
+export async function* updateCurrentMessageFIFO(params) {
+  const promise = sendMessage(params);
 
   try {
     for await (const packetBunch of promise) {

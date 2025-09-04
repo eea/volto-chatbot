@@ -108,9 +108,6 @@ function ChatWindow({
 
   return (
     <div className="chat-window">
-      <button onClick={() => {
-        abortController.current.abort("I clicked cancel")
-      }}>Cancel current stream</button>
       <div className="messages">
         {showLandingPage ? (
           <>

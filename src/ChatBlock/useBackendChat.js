@@ -108,13 +108,13 @@ function upsertToCompleteMessageMap({
 
 class SubmitHandler {
   /**
-   * @param {Object} options 
+   * @param {Object} options
    * @param {AbortSignal=} options.signal  Optional parameter for additional control of the abort signal. E.g. stopping the fetch from a button press.
    */
   constructor({
     persona,
     setChatState,
-    messageHistory,
+    onMessageHistoryChange,
     completeMessageDetail,
     currChatSessionId,
     setCurrChatSessionId,
@@ -122,12 +122,12 @@ class SubmitHandler {
     chatTitle,
     qgenAsistantId,
     enableQgen,
-    signal
+    signal,
   }) {
     this.persona = persona;
     this.chatTitle = chatTitle;
     this.setChatState = setChatState;
-    this.messageHistory = messageHistory;
+    this.onMessageHistoryChange = onMessageHistoryChange;
     this.completeMessageDetail = completeMessageDetail;
     this.currChatSessionId = currChatSessionId;
     this.setCurrChatSessionId = setCurrChatSessionId;
@@ -137,6 +137,14 @@ class SubmitHandler {
 
     this.onSubmit = this.onSubmit.bind(this);
     this.abortSignal = signal || null;
+  }
+
+  set messageHistory(history) {
+    this._messageHistory = history;
+    this.onMessageHistoryChange(history);
+  }
+  get messageHistory() {
+    return this._messageHistory || [];
   }
 
   async onSubmit({
@@ -380,6 +388,9 @@ class SubmitHandler {
             setCompleteMessageDetail: this.setCompleteMessageDetail,
           };
           newCompleteMessageDetail = upsertToCompleteMessageMap(info);
+          this.messageHistory = buildLatestMessageChain(
+            newCompleteMessageDetail.messageMap,
+          );
         }
       }
     }
@@ -412,6 +423,12 @@ class SubmitHandler {
         });
       }
     }
+
+    // Update internal state ready for follow up messages.
+    this.messageHistory = buildLatestMessageChain(
+      newCompleteMessageDetail.messageMap,
+    );
+    this.completeMessageDetail = newCompleteMessageDetail;
     this.setChatState(ChatState.READY);
   }
 }
@@ -438,8 +455,10 @@ export function useBackendChat({
   const [error, setError] = React.useState('');
   const [currChatSessionId, setCurrChatSessionId] = React.useState(null);
   const [chatState, setChatState] = React.useState(ChatState.ASLEEP);
+  const [messageHistory, setMessageHistory] = React.useState([]);
 
-  const rewakeDelayInMs = config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
+  const rewakeDelayInMs =
+    config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
 
   /** Try to wake up the API. Will early return if already awake */
   async function wake() {
@@ -450,7 +469,7 @@ export function useBackendChat({
       if (readyForWaking) {
         localStorage.setItem("chat-last-awake", Date.now());
       }
-      return
+      return;
     }
 
     try {
@@ -459,8 +478,7 @@ export function useBackendChat({
         setChatState(ChatState.READY);
         localStorage.setItem("chat-last-awake", Date.now());
       }
-    }
-    catch (err) {
+    } catch (err) {
       setChatState(ChatState.ERRORED);
       setError(err.message);
     }
@@ -482,41 +500,25 @@ export function useBackendChat({
     messageMap: new Map(),
   });
 
-  const messageHistory = buildLatestMessageChain(
-    completeMessageDetail.messageMap,
-  );
-
-  // Stub from experiment. Remove and replace with wake logic
-  const timeoutSignal = new AbortController().signal;
-  
-  const submitSignal = React.useRef(
-    signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal
-  );
-  
+  // Hold the submit handler to efficiently keep message history across re-renders
+  const submitHandler = React.useRef(null);
   React.useEffect(() => {
-    function handleAbortEvent(event) {
-      const reason = event.target.reason;
-      const errorMessage = Error.isError(reason) ? reason.message : error;
-      setError(errorMessage);
+    if (submitHandler.current) {
+      return
     }
-    submitSignal.current.addEventListener('abort', handleAbortEvent);
-    return () => {
-      submitSignal.current.removeEventListener("abort", handleAbortEvent);
-    };
-  }, []);
-  
-  const submitHandler = new SubmitHandler({
-    completeMessageDetail,
-    currChatSessionId,
-    messageHistory,
-    persona,
-    setCompleteMessageDetail,
-    setCurrChatSessionId,
-    setChatState,
-    qgenAsistantId,
-    enableQgen,
-    signal: signal ? AbortSignal.any([signal, timeoutSignal]) : timeoutSignal
-  });
+    submitHandler.current = new SubmitHandler({
+      completeMessageDetail,
+      currChatSessionId,
+      messageHistory,
+      persona,
+      setCompleteMessageDetail,
+      setCurrChatSessionId,
+      setChatState,
+      qgenAsistantId,
+      enableQgen,
+      onMessageHistoryChange: setMessageHistory
+    })
+  }, [chatState])
 
   const clearChat = () => {
     setCompleteMessageDetail({
@@ -526,14 +528,9 @@ export function useBackendChat({
     setCurrChatSessionId(null);
   };
 
-  const onSubmit = React.useCallback((message) => {
-    wake();
-    submitHandler.onSubmit(message)
-  }, []);
-
   return {
     messages: messageHistory,
-    onSubmit: onSubmit,
+    onSubmit: submitHandler.current?.onSubmit,
     chatState,
     error,
     clearChat,

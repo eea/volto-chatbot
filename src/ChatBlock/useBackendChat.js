@@ -280,6 +280,7 @@ class SubmitHandler {
     for await (const bit of promise) {
       if (bit.error) {
         stack.error = bit.error;
+        throw bit.error
       } else if (bit.isComplete) {
         stack.isComplete = true;
       } else {

@@ -263,12 +263,9 @@ class SubmitHandler {
       queryOverride,
       forceSearch,
       useExistingUserMessage: isSeededChat,
-      signal: this.abortSignal
+      signal: this.abortSignal,
     };
-    const promise = updateCurrentMessageFIFO(
-      params,
-      this.abortSignal,
-    );
+    const promise = updateCurrentMessageFIFO(params);
 
     await delay(50);
 

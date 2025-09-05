@@ -168,7 +168,7 @@ function ChatWindow({
             </div>
           </>
         )}
-        {isStreaming && !isFetchingRelatedQuestions && (
+        {[ChatState.ASLEEP || ChatState.STREAMING].includes(chatState) && (
           <div className="loader" />
         )}
       </div>

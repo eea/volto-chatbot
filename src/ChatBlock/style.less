@@ -158,10 +158,10 @@ mark {
         display: flex;
         width: 200px;
         height: 100%;
+        min-height: 110px;
         flex-direction: column;
         padding: 0.6em 0.7em;
         border-radius: @borderRadius;
-        min-height: 110px;
         background-color: #f9f9f9;
         gap: 0.3em;
 
@@ -233,6 +233,7 @@ mark {
     .source-desc {
       display: -webkit-box;
       overflow: hidden;
+      padding-top: 2px;
       -webkit-box-orient: vertical;
       color: @grey;
       font-size: 12px;
@@ -240,7 +241,6 @@ mark {
       line-clamp: 2;
       text-align: left;
       word-break: break-all;
-      padding-top: 2px;
     }
   }
 
@@ -446,15 +446,15 @@ mark {
 .comment-tabs {
   .ui.secondary.pointing.menu {
     .item {
-      font-size: 16px;
       color: #6c8295;
+      font-size: 16px;
       font-weight: 500;
 
       &.active,
       &:hover {
-        font-weight: 500;
-        color: @grey !important;
         border-color: @grey !important;
+        color: @grey !important;
+        font-weight: 500;
       }
     }
   }
@@ -599,6 +599,7 @@ mark {
   height: 1.8em;
   border: 1px solid #dbd9d9;
   border-radius: 3em;
+  margin-right: 3px;
   background-color: @citationCircleColor;
   color: @grey;
   cursor: pointer;
@@ -606,7 +607,6 @@ mark {
   font-weight: bold;
   line-height: 1.8em;
   text-align: center;
-  margin-right: 3px;
 
   &:hover {
     border: 1px solid @citationCircleHoverColor;
@@ -667,7 +667,7 @@ mark {
 }
 
 .tool_info.loading-text {
-  font-size: 1rem;
+  animation: shimmer 2.5s linear infinite;
   background: linear-gradient(
     -90deg,
     #5c5c5c,
@@ -675,11 +675,11 @@ mark {
     #5c5c5c 40%,
     #5c5c5c
   );
-  background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
+  background-size: 200% 100%;
+  font-size: 1rem;
   -webkit-text-fill-color: transparent;
-  animation: shimmer 2.5s linear infinite;
 }
 
 #fact-check-toggle[disabled] ~ label {
@@ -749,6 +749,7 @@ mark {
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }

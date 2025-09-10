@@ -507,9 +507,10 @@ export function useBackendChat({
   // Hold the submit handler to efficiently keep message history across re-renders
   const submitHandler = React.useRef(null);
   React.useEffect(() => {
-    if (submitHandler.current) {
+    if (submitHandler.current && submitHandler.chatId === chatId) {
       return
     }
+    clearChat()
     submitHandler.current = new SubmitHandler({
       completeMessageDetail,
       currChatSessionId,
@@ -522,7 +523,7 @@ export function useBackendChat({
       enableQgen,
       onMessageHistoryChange: setMessageHistory
     })
-  }, [chatState])
+  }, [chatState, chatId])
 
   const clearChat = () => {
     setCompleteMessageDetail({

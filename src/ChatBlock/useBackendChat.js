@@ -117,8 +117,6 @@ class SubmitHandler {
     setChatState,
     onMessageHistoryChange,
     completeMessageDetail,
-    currChatSessionId,
-    setCurrChatSessionId,
     setCompleteMessageDetail,
     chatTitle,
     qgenAsistantId,
@@ -130,8 +128,6 @@ class SubmitHandler {
     this.setChatState = setChatState;
     this.onMessageHistoryChange = onMessageHistoryChange;
     this.completeMessageDetail = completeMessageDetail;
-    this.currChatSessionId = currChatSessionId;
-    this.setCurrChatSessionId = setCurrChatSessionId;
     this.setCompleteMessageDetail = setCompleteMessageDetail;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
@@ -148,6 +144,8 @@ class SubmitHandler {
     return this._messageHistory || [];
   }
 
+  currChatSessionId = null;
+
   async onSubmit({
     messageIdToResend,
     messageOverride,
@@ -161,7 +159,6 @@ class SubmitHandler {
         this.persona.id,
         this.chatTitle,
       );
-      this.setCurrChatSessionId(this.currChatSessionId);
     }
 
     let newCompleteMessageDetail = {};
@@ -455,7 +452,6 @@ export function useBackendChat({
   signal,
 }) {
   const [error, setError] = React.useState('');
-  const [currChatSessionId, setCurrChatSessionId] = React.useState(null);
   const [chatState, setChatState] = React.useState(ChatState.AWAITING_START);
   const [messageHistory, setMessageHistory] = React.useState([]);
 
@@ -507,30 +503,31 @@ export function useBackendChat({
   // Hold the submit handler to efficiently keep message history across re-renders
   const submitHandler = React.useRef(null);
   React.useEffect(() => {
-    if (submitHandler.current && submitHandler.chatId === chatId) {
+    if (submitHandler.current && submitHandler.persona === persona) {
       return
     }
     clearChat()
     submitHandler.current = new SubmitHandler({
       completeMessageDetail,
-      currChatSessionId,
       messageHistory,
       persona,
       setCompleteMessageDetail,
-      setCurrChatSessionId,
       setChatState,
       qgenAsistantId,
       enableQgen,
       onMessageHistoryChange: setMessageHistory
     })
-  }, [chatState, chatId])
+  }, [chatState, persona])
 
   const clearChat = () => {
     setCompleteMessageDetail({
       sessionId: null,
       messageMap: new Map(),
     });
-    setCurrChatSessionId(null);
+    if (submitHandler.current) {
+      submitHandler.current.currChatSessionId = null;
+      submitHandler.current.messageHistory = [];
+    }
   };
 
   return {

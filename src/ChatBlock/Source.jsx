@@ -31,14 +31,14 @@ const SourceDetails_ = ({ source, index, luxon }) => {
 
   const sourceContent = (
     <>
-      {updated_at && (
-        <div className="source-date">
-          <span>{relativeTime}</span>
-        </div>
-      )}
       {blurb && (
         <div className="source-desc">
           <span>{blurb}</span>
+        </div>
+      )}
+      {updated_at && (
+        <div className="source-date">
+          <span>{relativeTime}</span>
         </div>
       )}
     </>

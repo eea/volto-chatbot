@@ -1,7 +1,7 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Button, Message, MessageContent } from 'semantic-ui-react';
+import { Button, Message, MessageContent, Tab } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import Spinner from './Spinner';
 import UserActionsToolbar from './UserActionsToolbar';
@@ -38,12 +38,11 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function ToolCall({ tool_args, tool_name }) {
-  // , tool_result
+export function ToolCall({ tool_args, tool_name, showShimmer }) {
   if (tool_name === 'run_search') {
     return (
-      <div className="tool_info">
-        Searched for: <em>{tool_args?.query || ''}</em>
+      <div className={`tool_info ${showShimmer ? 'loading-text' : ''}`}>
+        Searched for: Searched for: <em>{tool_args?.query || ''}</em>
       </div>
     );
   }
@@ -250,7 +249,6 @@ export function ChatMessageBubble(props) {
       ),
     };
   }, {});
-  // console.log({ qualityCheckContext });
 
   const contextSources =
     qualityCheckContext === 'citations'
@@ -292,7 +290,6 @@ export function ChatMessageBubble(props) {
     addCitations(message.message),
     stableContextSources,
   );
-  // console.log({ message, sources, documentIdToText, citedSources });
 
   const claims = markers?.claims || [];
   const score = (
@@ -332,6 +329,112 @@ export function ChatMessageBubble(props) {
     }
   }, [markers]);
 
+  const [showShimmer, setShowShimmer] = React.useState(true);
+
+  React.useEffect(() => {
+    if (!isUser) {
+      if (message.message && message.message.length > 0) {
+        setShowShimmer(false);
+      } else {
+        setShowShimmer(true);
+      }
+    }
+  }, [message.message, isUser]);
+
+  const answerTab = (
+    <div className="answer-tab">
+      {showSources && (
+        <div className="sources">
+          {sources.slice(0, 4).map((source, i) => (
+            <SourceDetails source={source} key={i} index={source.index} />
+          ))}
+        </div>
+      )}
+
+      <Markdown
+        components={components(message, markers, stableContextSources)}
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[addQualityMarkersPlugin]}
+      >
+        {addCitations(message.message)}
+      </Markdown>
+
+      {!isUser && showTotalFailMessage && (
+        <Message color="red">{serializeNodes(totalFailMessage)}</Message>
+      )}
+
+      {!isUser && (
+        <HalloumiFeedback
+          sources={sources}
+          halloumiMessage={halloumiMessage}
+          isLoadingHalloumi={isLoadingHalloumi}
+          markers={markers}
+          score={score}
+          scoreColor={scoreColor}
+          onManualVerify={() => {
+            setForceHallomi(true);
+            setVerificationTriggered(true);
+          }}
+          showVerifyClaimsButton={showVerifyClaimsButton}
+        />
+      )}
+
+      {!isUser && !isLoading && (
+        <UserActionsToolbar
+          message={message}
+          enableFeedback={enableFeedback}
+          feedbackReasons={feedbackReasons}
+          enableMatomoTracking={enableMatomoTracking}
+          persona={persona}
+        />
+      )}
+
+      {isFirstScoreStage === -1 && serializeNodes(noSupportDocumentsMessage)}
+
+      {!isUser && isFetchingRelatedQuestions && (
+        <div className="related-questions-loader">
+          <Spinner />
+          Finding related questions...
+        </div>
+      )}
+
+      <RelatedQuestions
+        persona={persona}
+        message={message}
+        isLoading={isLoading}
+        onChoice={onChoice}
+        enableMatomoTracking={enableMatomoTracking}
+      />
+    </div>
+  );
+
+  const sourcesTab = (
+    <div className="sources-tab">
+      {showSources && sources.length > 0 && (
+        <div className="sources">
+          {sources.map((source, i) => (
+            <SourceDetails source={source} key={i} index={source.index} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const panes = [
+    { menuItem: 'Answer', render: () => <Tab.Pane>{answerTab}</Tab.Pane> },
+    {
+      menuItem: {
+        key: 'sources',
+        content: (
+          <span>
+            Sources <span className="sources-count">({sources.length})</span>
+          </span>
+        ),
+      },
+      render: () => <Tab.Pane>{sourcesTab}</Tab.Pane>,
+    },
+  ];
+
   return (
     <div>
       <div className="comment">
@@ -344,78 +447,33 @@ export function ChatMessageBubble(props) {
             <SVGIcon name={BotIcon} size="20" color="white" />
           </div>
         )}
+
         <div>
           {showToolCalls &&
             message.toolCalls?.map((info, index) => (
-              <ToolCall key={index} {...info} />
+              <ToolCall key={index} {...info} showShimmer={showShimmer} />
             ))}
 
-          {showSources && (
-            <>
-              <h5>Sources:</h5>
-              <div className="sources">
-                {sources.map((source, i) => (
-                  <SourceDetails source={source} key={i} index={source.index} />
-                ))}
-              </div>
-            </>
-          )}
-
-          <Markdown
-            components={components(message, markers, stableContextSources)}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[addQualityMarkersPlugin]}
-          >
-            {addCitations(message.message)}
-          </Markdown>
-
-          {!isUser && showTotalFailMessage && (
-            <Message color="red">{serializeNodes(totalFailMessage)}</Message>
-          )}
-
-          {!isUser && (
-            <HalloumiFeedback
-              sources={sources}
-              halloumiMessage={halloumiMessage}
-              isLoadingHalloumi={isLoadingHalloumi}
-              markers={markers}
-              score={score}
-              scoreColor={scoreColor}
-              onManualVerify={() => {
-                setForceHallomi(true);
-                setVerificationTriggered(true);
-              }}
-              showVerifyClaimsButton={showVerifyClaimsButton}
-            />
-          )}
-
-          {!isUser && !isLoading && (
-            <UserActionsToolbar
-              message={message}
-              enableFeedback={enableFeedback}
-              feedbackReasons={feedbackReasons}
-              enableMatomoTracking={enableMatomoTracking}
-              persona={persona}
-            />
-          )}
-
-          {isFirstScoreStage === -1 &&
-            serializeNodes(noSupportDocumentsMessage)}
-
-          {!isUser && isFetchingRelatedQuestions && (
-            <div className="related-questions-loader">
-              <Spinner />
-              Finding related questions...
+          {!isUser ? (
+            <div className="comment-tabs">
+              {sources.length > 4 ? (
+                <Tab
+                  menu={{ secondary: true, pointing: true, fluid: true }}
+                  panes={panes}
+                />
+              ) : (
+                answerTab
+              )}
             </div>
+          ) : (
+            <Markdown
+              components={components(message, markers, stableContextSources)}
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[addQualityMarkersPlugin]}
+            >
+              {addCitations(message.message)}
+            </Markdown>
           )}
-
-          <RelatedQuestions
-            persona={persona}
-            message={message}
-            isLoading={isLoading}
-            onChoice={onChoice}
-            enableMatomoTracking={enableMatomoTracking}
-          />
         </div>
       </div>
     </div>

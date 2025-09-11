@@ -1,11 +1,12 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Button, Message, MessageContent, Tab } from 'semantic-ui-react';
+import { Button, Message, Tab } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import Spinner from './Spinner';
 import UserActionsToolbar from './UserActionsToolbar';
 import RelatedQuestions from './RelatedQuestions';
+import HalloumiFeedback from './HalloumiFeedback';
 import useQualityMarkers from './useQualityMarkers';
 import { SVGIcon } from './utils';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
@@ -14,17 +15,10 @@ import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
-import GlassesIcon from './../icons/glasses.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
-
-const VERIFY_CLAIM_MESSAGES = [
-  'Going through each claim and verify against the referenced documents...',
-  'Summarising claim verifications results...',
-  'Calculating scores...',
-];
 
 // TODO: don't use this over the text like this, make it a rehype plugin
 function addCitations(text) {
@@ -64,103 +58,6 @@ function addQualityMarkersPlugin() {
   };
 }
 
-function visitTextNodes(node, visitor) {
-  if (Array.isArray(node)) {
-    node.forEach((child) => visitTextNodes(child, visitor));
-  } else if (node && typeof node === 'object') {
-    if (node.text !== undefined) {
-      // Process the text node value here
-      // console.log(node.text);
-      visitor(node);
-    }
-    if (node.children) {
-      visitTextNodes(node.children, visitor);
-    }
-  }
-}
-
-function printSlate(value, score) {
-  if (typeof value === 'string') {
-    return value.replaceAll('{score}', score);
-  }
-  function visitor(node) {
-    if (node.text.indexOf('{score}') > -1) {
-      node.text = node.text.replaceAll('{score}', score);
-    }
-  }
-
-  visitTextNodes(value, visitor);
-  return serializeNodes(value);
-}
-
-function VerifyClaims() {
-  const [message, setMessage] = React.useState(0);
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (message < VERIFY_CLAIM_MESSAGES.length - 1) {
-        setMessage(message + 1);
-      }
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [message]);
-
-  return (
-    <div className="verify-claims">
-      <Spinner />
-      {VERIFY_CLAIM_MESSAGES[message]}
-    </div>
-  );
-}
-
-function HalloumiFeedback({
-  halloumiMessage,
-  isLoadingHalloumi,
-  markers,
-  score,
-  scoreColor,
-  onManualVerify,
-  showVerifyClaimsButton,
-  sources,
-}) {
-  const noClaimsScore = markers?.claims[0]?.score === null;
-  const messageBySource =
-    'Please allow a few minutes for claim verification when many references are involved.';
-
-  return (
-    <>
-      {showVerifyClaimsButton && (
-        <div className="halloumi-feedback-button">
-          <Button onClick={onManualVerify} className="claims-btn">
-            <SVGIcon name={GlassesIcon} /> Fact-check AI answer
-          </Button>
-          <div>
-            <span>{messageBySource}</span>{' '}
-          </div>
-        </div>
-      )}
-
-      {isLoadingHalloumi && sources.length > 0 && (
-        <Message color="blue">
-          <VerifyClaims />
-        </Message>
-      )}
-
-      {noClaimsScore && (
-        <Message color="red">{markers?.claims?.[0].rationale}</Message>
-      )}
-
-      {!!halloumiMessage && !!markers && !noClaimsScore && (
-        <Message color={scoreColor} icon>
-          <MessageContent>
-            {printSlate(halloumiMessage, `${score}%`)}
-          </MessageContent>
-        </Message>
-      )}
-    </>
-  );
-}
-
 export function addHalloumiContext(doc, text) {
   const updatedDate = doc.updated_at
     ? new Date(doc.updated_at).toLocaleString('en-GB', {
@@ -190,7 +87,6 @@ export function ChatMessageBubble(props) {
   const {
     message,
     isLoading,
-    // isMostRecent,
     libs,
     onChoice,
     showToolCalls,

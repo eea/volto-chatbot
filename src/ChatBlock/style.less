@@ -251,10 +251,10 @@ mark {
   .sources-tab {
     .source {
       &:not(:first-child) {
-        border-top: 1px solid #eee;
-        padding-top: 1em;
-        margin-top: 1em;
         display: inline-block;
+        padding-top: 1em;
+        border-top: 1px solid #eee;
+        margin-top: 1em;
       }
 
       &:hover {
@@ -267,10 +267,11 @@ mark {
         }
       }
     }
+
     .source-header {
-      font-size: 16px;
       margin-bottom: 0.5em;
       color: @grey;
+      font-size: 16px;
       font-weight: 500;
 
       .source-title {
@@ -283,9 +284,9 @@ mark {
         top: -1px;
 
         &:hover {
+          border: 1px solid #dbd9d9;
           background-color: #e6e7e8;
           color: #3d5265;
-          border: 1px solid #dbd9d9;
         }
       }
 
@@ -296,17 +297,17 @@ mark {
     }
 
     .source-desc {
-      color: @grey;
       display: -webkit-box;
       overflow: hidden;
+      padding-top: 2px;
       -webkit-box-orient: vertical;
+      color: @grey;
       color: @grey;
       font-size: 14px;
       -webkit-line-clamp: 3;
       line-clamp: 3;
       text-align: left;
       word-break: break-all;
-      padding-top: 2px;
     }
 
     .source-date {
@@ -547,15 +548,16 @@ mark {
 .ui.button.show-all-sources-btn {
   width: 200px;
   height: 100%;
+  min-height: 110px;
   padding: 0.6em 0.7em;
   border-radius: 0.4rem;
-  min-height: 110px;
   background-color: #f9f9f9;
   gap: 0.3em;
 
   &:hover {
     background-color: #f1f1f1;
   }
+
   .source-header {
     display: flex;
     flex-flow: wrap;
@@ -563,8 +565,8 @@ mark {
   }
 
   .chat-citation {
-    height: 1em;
     width: 1em;
+    height: 1em;
   }
 
   .source-title {

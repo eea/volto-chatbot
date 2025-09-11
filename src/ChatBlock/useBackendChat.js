@@ -34,6 +34,7 @@ export const ChatState = Object.freeze({
   AWAITING_START: 'awaitingStart',
   ASLEEP: 'asleep',
   READY: 'ready',
+  SUBMITTING: 'submitting',
   STREAMING: 'awake',
   FETCHING_RELATED: 'fetchingRelated',
   ERRORED: 'error',
@@ -472,7 +473,7 @@ export function useBackendChat({
       if (readyForWaking) {
         localStorage.setItem("chat-last-awake", Date.now());
       }
-      return;
+      return true;
     }
 
     setChatState(ChatState.ASLEEP);
@@ -482,11 +483,13 @@ export function useBackendChat({
       if (!!wakeResult) {
         setChatState(ChatState.READY);
         localStorage.setItem("chat-last-awake", Date.now());
+        return true
       }
     } catch (err) {
       setChatState(ChatState.ERRORED);
       setError(err.message);
     }
+    return false
   }
   React.useEffect(() => {
     if (chatState === ChatState.ASLEEP) {
@@ -528,9 +531,30 @@ export function useBackendChat({
     }
   };
 
+  // wakeApi
+  const handleSubmit = React.useCallback(function handleSubmit(input) {
+    const onSubmit = submitHandler.current?.onSubmit;
+
+    if (!onSubmit) {
+      throw new Error("TESTING: NO SUBMISSION HANDLER")
+    }
+
+    setChatState(ChatState.SUBMITTING);
+
+    wake().then((isAwake) => {
+      if (isAwake) {
+        onSubmit(input)
+      }
+    }).catch((errorReason) => {
+      setChatState(ChatState.ERRORED);
+      setError(errorReason);
+    })
+  }, [])
+
   return {
     messages: messageHistory,
-    onSubmit: submitHandler.current?.onSubmit,
+    // onSubmit: submitHandler.current?.onSubmit,
+    onSubmit: handleSubmit,
     chatState,
     error,
     clearChat,

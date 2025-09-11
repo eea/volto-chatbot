@@ -168,7 +168,7 @@ function ChatWindow({
             </div>
           </>
         )}
-        {[ChatState.STREAMING].includes(chatState) && (
+        {[ChatState.STREAMING, ChatState.SUBMITTING].includes(chatState) && (
           <div className="loader" />
         )}
       </div>
@@ -192,7 +192,8 @@ function ChatWindow({
               placeholder={
                 messages.length > 0 ? "Ask follow-up..." : placeholderPrompt
               }
-              disableSubmit={chatState !== ChatState.READY}
+              // disableSubmit={chatState !== ChatState.READY}
+              disableSubmit={false}
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}

@@ -246,27 +246,30 @@ export function ChatMessageBubble(props) {
           {sources.slice(0, 3).map((source, i) => (
             <SourceDetails source={source} key={i} index={source.index} />
           ))}
-          <Button
-            className="show-all-sources-btn"
-            onClick={() => setShowSourcesSidebar(true)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                setShowSourcesSidebar(true);
-              }
-              if (e.key === 'Escape') {
-                setShowSourcesSidebar(false);
-              }
-            }}
-          >
-            <div className="source-header">
-              <div>
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <span key={i} className="chat-citation"></span>
-                ))}
+
+          {sources.length > 3 && (
+            <Button
+              className="source show-all-sources-btn"
+              onClick={() => setShowSourcesSidebar(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setShowSourcesSidebar(true);
+                }
+                if (e.key === 'Escape') {
+                  setShowSourcesSidebar(false);
+                }
+              }}
+            >
+              <div className="source-header">
+                <div>
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <span key={i} className="chat-citation"></span>
+                  ))}
+                </div>
+                <div className="source-title">See all sources</div>
               </div>
-              <div className="source-title">See all</div>
-            </div>
-          </Button>
+            </Button>
+          )}
         </div>
       )}
 
@@ -394,7 +397,7 @@ export function ChatMessageBubble(props) {
                     onHide={() => setShowSourcesSidebar(false)}
                   >
                     <div className="sources-sidebar-heading">
-                      <h4>Sources: </h4>
+                      <h4>Sources</h4>
                       <Button
                         basic
                         onClick={() => {
@@ -406,7 +409,7 @@ export function ChatMessageBubble(props) {
                           }
                         }}
                       >
-                        <SVGIcon name={ClearIcon} size="20" />
+                        <SVGIcon name={ClearIcon} size="24" />
                       </Button>
                     </div>
                     <div className="sources-listing">

@@ -51,6 +51,39 @@ mark {
 .chat-window {
   margin: 1.5em 0;
 
+  .sources-sidebar {
+    background-color: #fff;
+    box-shadow: -4px 0 4px rgba(0, 0, 0, 0.25) !important;
+    padding: 1em;
+
+    .sources-sidebar-heading {
+      justify-content: space-between;
+      margin-bottom: 1em;
+      display: flex;
+      align-items: center;
+      padding-bottom: 1em;
+      border-bottom: 1px solid @grey;
+
+      h4 {
+        margin: 0;
+      }
+    }
+
+    .source-header {
+      display: flex;
+      align-items: center;
+    }
+
+    .source-title {
+      overflow: hidden;
+      width: 250px;
+      text-align: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: inline-block !important;
+    }
+  }
+
   .ui.button.clear-chat,
   .ui.button.claims-btn {
     display: flex;
@@ -248,7 +281,7 @@ mark {
     }
   }
 
-  .sources-tab {
+  .sources-listing {
     .source {
       &:not(:first-child) {
         display: inline-block;
@@ -271,7 +304,7 @@ mark {
     .source-header {
       margin-bottom: 0.5em;
       color: @grey;
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 500;
 
       .source-title {
@@ -545,6 +578,10 @@ mark {
   }
 }
 
+.source-date {
+  line-height: normal;
+}
+
 .ui.button.show-all-sources-btn {
   width: 200px;
   height: 100%;
@@ -554,7 +591,8 @@ mark {
   background-color: #f9f9f9;
   gap: 0.3em;
 
-  &:hover {
+  &:hover,
+  &:active {
     background-color: #f1f1f1;
   }
 

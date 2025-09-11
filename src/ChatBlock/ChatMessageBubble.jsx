@@ -1,7 +1,7 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Button, Message, Tab } from 'semantic-ui-react';
+import { Button, Message, Tab, Sidebar } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import Spinner from './Spinner';
 import UserActionsToolbar from './UserActionsToolbar';
@@ -15,6 +15,7 @@ import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
+import ClearIcon from './../icons/clear.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
@@ -121,6 +122,9 @@ export function ChatMessageBubble(props) {
   const [verificationTriggered, setVerificationTriggered] =
     React.useState(false);
   const [isMessageVerified, setIsMessageVerified] = React.useState(false);
+  const [showShimmer, setShowShimmer] = React.useState(true);
+  const [activeTab, setActiveTab] = React.useState(0);
+  const [showSourcesSidebar, setShowSourcesSidebar] = React.useState(false);
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -225,9 +229,6 @@ export function ChatMessageBubble(props) {
     }
   }, [markers]);
 
-  const [showShimmer, setShowShimmer] = React.useState(true);
-  const [activeTab, setActiveTab] = React.useState(0);
-
   React.useEffect(() => {
     if (!isUser) {
       if (message.message && message.message.length > 0) {
@@ -247,7 +248,15 @@ export function ChatMessageBubble(props) {
           ))}
           <Button
             className="show-all-sources-btn"
-            onClick={() => setActiveTab(1)}
+            onClick={() => setShowSourcesSidebar(true)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                setShowSourcesSidebar(true);
+              }
+              if (e.key === 'Escape') {
+                setShowSourcesSidebar(false);
+              }
+            }}
           >
             <div className="source-header">
               <div>
@@ -319,7 +328,7 @@ export function ChatMessageBubble(props) {
   );
 
   const sourcesTab = (
-    <div className="sources-tab">
+    <div className="sources-listing">
       {showSources && sources.length > 0 && (
         <div className="sources">
           {sources.map((source, i) => (
@@ -367,12 +376,54 @@ export function ChatMessageBubble(props) {
           {!isUser ? (
             <div className="comment-tabs">
               {sources.length > 3 ? (
-                <Tab
-                  activeIndex={activeTab}
-                  onTabChange={(_, data) => setActiveTab(data.activeIndex)}
-                  menu={{ secondary: true, pointing: true, fluid: true }}
-                  panes={panes}
-                />
+                <>
+                  <Tab
+                    activeIndex={activeTab}
+                    onTabChange={(_, data) => setActiveTab(data.activeIndex)}
+                    menu={{ secondary: true, pointing: true, fluid: true }}
+                    panes={panes}
+                  />
+
+                  <Sidebar
+                    visible={showSourcesSidebar}
+                    animation="overlay"
+                    icon="labeled"
+                    width="wide"
+                    direction="right"
+                    className="sources-sidebar"
+                    onHide={() => setShowSourcesSidebar(false)}
+                  >
+                    <div className="sources-sidebar-heading">
+                      <h4>Sources: </h4>
+                      <Button
+                        basic
+                        onClick={() => {
+                          setShowSourcesSidebar(false);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setShowSourcesSidebar(false);
+                          }
+                        }}
+                      >
+                        <SVGIcon name={ClearIcon} size="20" />
+                      </Button>
+                    </div>
+                    <div className="sources-listing">
+                      {showSources && sources.length > 0 && (
+                        <div className="sources">
+                          {sources.map((source, i) => (
+                            <SourceDetails
+                              source={source}
+                              key={i}
+                              index={source.index}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Sidebar>
+                </>
               ) : (
                 answerTab
               )}

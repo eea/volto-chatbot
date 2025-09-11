@@ -181,7 +181,7 @@ function ChatWindow({
               aria-live="polite"
               className="ui red basic label form-error-label"
             >
-              AbortError: {error}
+              {error}
             </p>
           ) : null}
           <div className="textarea-wrapper">

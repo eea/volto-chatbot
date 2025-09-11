@@ -42,7 +42,7 @@ export function ToolCall({ tool_args, tool_name, showShimmer }) {
   if (tool_name === 'run_search') {
     return (
       <div className={`tool_info ${showShimmer ? 'loading-text' : ''}`}>
-        Searched for: Searched for: <em>{tool_args?.query || ''}</em>
+        Searched for: <em>{tool_args?.query || ''}</em>
       </div>
     );
   }
@@ -330,6 +330,7 @@ export function ChatMessageBubble(props) {
   }, [markers]);
 
   const [showShimmer, setShowShimmer] = React.useState(true);
+  const [activeTab, setActiveTab] = React.useState(0);
 
   React.useEffect(() => {
     if (!isUser) {
@@ -345,9 +346,22 @@ export function ChatMessageBubble(props) {
     <div className="answer-tab">
       {showSources && (
         <div className="sources">
-          {sources.slice(0, 4).map((source, i) => (
+          {sources.slice(0, 3).map((source, i) => (
             <SourceDetails source={source} key={i} index={source.index} />
           ))}
+          <Button
+            className="show-all-sources-btn"
+            onClick={() => setActiveTab(1)}
+          >
+            <div className="source-header">
+              <div>
+                {Array.from({ length: 3 }).map((_, i) => (
+                  <span key={i} className="chat-citation"></span>
+                ))}
+              </div>
+              <div className="source-title">See all</div>
+            </div>
+          </Button>
         </div>
       )}
 
@@ -456,8 +470,10 @@ export function ChatMessageBubble(props) {
 
           {!isUser ? (
             <div className="comment-tabs">
-              {sources.length > 4 ? (
+              {sources.length > 3 ? (
                 <Tab
+                  activeIndex={activeTab}
+                  onTabChange={(_, data) => setActiveTab(data.activeIndex)}
                   menu={{ secondary: true, pointing: true, fluid: true }}
                   panes={panes}
                 />

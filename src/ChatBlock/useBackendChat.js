@@ -46,7 +46,7 @@ function upsertToCompleteMessageMap({
   makeLatestChildMessage = false,
   messages,
   replacementsMap = null,
-  setCompleteMessageDetail,
+  // setCompleteMessageDetail,
 }) {
   // deep copy
   const frozenCompleteMessageMap =
@@ -103,7 +103,7 @@ function upsertToCompleteMessageMap({
     sessionId: chatSessionId || completeMessageDetail?.sessionId || null,  // TODO: sessionid can be null because it was an initial error. what should happen?
     messageMap: newCompleteMessageMap,
   };
-  setCompleteMessageDetail(newCompleteMessageDetail);
+  // setCompleteMessageDetail(newCompleteMessageDetail);
   return newCompleteMessageDetail;
 }
 
@@ -116,8 +116,6 @@ class SubmitHandler {
     persona,
     setChatState,
     onMessageHistoryChange,
-    completeMessageDetail,
-    setCompleteMessageDetail,
     chatTitle,
     qgenAsistantId,
     enableQgen,
@@ -127,8 +125,6 @@ class SubmitHandler {
     this.chatTitle = chatTitle;
     this.setChatState = setChatState;
     this.onMessageHistoryChange = onMessageHistoryChange;
-    this.completeMessageDetail = completeMessageDetail;
-    this.setCompleteMessageDetail = setCompleteMessageDetail;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
 
@@ -139,12 +135,23 @@ class SubmitHandler {
   set messageHistory(history) {
     this._messageHistory = history;
     this.onMessageHistoryChange(history);
+
+    if (history.length === 0) {
+      this.completeMessageDetail = ({
+        sessionId: null,
+        messageMap: new Map(),
+      });
+    }
   }
   get messageHistory() {
     return this._messageHistory || [];
   }
 
   currChatSessionId = null;
+  completeMessageDetail = {
+      sessionId: null,
+      messageMap: new Map(),
+    }
 
   async onSubmit({
     messageIdToResend,
@@ -227,7 +234,6 @@ class SubmitHandler {
       messages: messageUpdates,
       chatSessionId: this.currChatSessionId,
       completeMessageDetail: this.completeMessageDetail,
-      setCompleteMessageDetail: this.setCompleteMessageDetail,
     };
 
     const _res = upsertToCompleteMessageMap(info);
@@ -384,7 +390,6 @@ class SubmitHandler {
             completeMessageMapOverride: frozenMessageMap,
             messages: localMessages,
             replacementsMap: replacementsMap,
-            setCompleteMessageDetail: this.setCompleteMessageDetail,
           };
           newCompleteMessageDetail = upsertToCompleteMessageMap(info);
           this.messageHistory = buildLatestMessageChain(
@@ -416,7 +421,7 @@ class SubmitHandler {
 
         lastMessage.relatedQuestions = extractJSON(relatedQuestionsText);
 
-        this.setCompleteMessageDetail({
+        this.completeMessageDetail({
           ...newCompleteMessageDetail,
           messageMap,
         });
@@ -495,23 +500,19 @@ export function useBackendChat({
     return () => clearTimeout(timeout);
   }, [chatState]);
 
-  const [completeMessageDetail, setCompleteMessageDetail] = React.useState({
-    sessionId: null,
-    messageMap: new Map(),
-  });
-
   // Hold the submit handler to efficiently keep message history across re-renders
   const submitHandler = React.useRef(null);
   React.useEffect(() => {
-    if (submitHandler.current && submitHandler.persona === persona) {
+    const currentPersona = submitHandler.current?.persona?.id || submitHandler.current?.persona;
+    const newPersona = persona?.id || persona;
+
+    if (currentPersona === newPersona) {
       return
     }
     clearChat()
     submitHandler.current = new SubmitHandler({
-      completeMessageDetail,
       messageHistory,
       persona,
-      setCompleteMessageDetail,
       setChatState,
       qgenAsistantId,
       enableQgen,
@@ -520,13 +521,9 @@ export function useBackendChat({
   }, [chatState, persona])
 
   const clearChat = () => {
-    setCompleteMessageDetail({
-      sessionId: null,
-      messageMap: new Map(),
-    });
     if (submitHandler.current) {
       submitHandler.current.currChatSessionId = null;
-      submitHandler.current.messageHistory = [];
+      submitHandler.current.messageHistory = [];  // Will trigger `setMessageHistory`
     }
   };
 

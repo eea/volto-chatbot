@@ -80,6 +80,16 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
       handler();
     }
   }, [doQualityControl, halloumiResponse, message, sources]);
+  if (halloumiResponse !== null){
 
+    halloumiResponse.claims = halloumiResponse.claims.filter(claim => {
+        const claim_text = message.substring(claim.startOffset, claim.endOffset);
+        const hasSpace = claim_text.trim().includes(" ");
+        const hasSpecialCharacters = /[^a-zA-Z0-9 ]/.test(claim_text);
+        const hasSmallScore = claim.score < 0.07;
+
+        return hasSpace || !hasSpecialCharacters || !hasSmallScore;
+    });
+  }
   return { markers: halloumiResponse, isLoadingHalloumi: isLoading };
 }

@@ -29,9 +29,9 @@
 .text-ellipsis(@width: 100%) {
   overflow: hidden;
   width: @width;
-  white-space: nowrap;
-  text-overflow: ellipsis;
   text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .include-scrollbar {
@@ -80,15 +80,15 @@ mark {
   margin: 1.5em 0;
 
   .sources-sidebar {
+    padding: 1em;
     background-color: #fff;
     box-shadow: -4px 0 4px rgba(0, 0, 0, 0.25) !important;
-    padding: 1em;
 
     .sources-sidebar-heading {
       justify-content: space-between;
-      margin-bottom: 1em;
       padding-bottom: 1em;
       border-bottom: 1px solid @grey;
+      margin-bottom: 1em;
       .flex-center(row);
 
       .ui.button {
@@ -117,17 +117,18 @@ mark {
 
     .source {
       &:not(:first-child) {
-        margin-top: 0.5em !important;
         padding-top: 0.8em !important;
+        margin-top: 0.5em !important;
       }
+
       .source-header {
         .flex-center(row, 3px);
       }
 
       .source-title {
-        font-size: 15px;
-        margin: 0 3px !important;
         display: inline-block !important;
+        margin: 0 3px !important;
+        font-size: 15px;
         .text-ellipsis(250px);
       }
 
@@ -289,9 +290,9 @@ mark {
 
       .source-title {
         padding-left: 0.2em;
+        color: @grey;
         font-size: 13px;
         font-weight: 500;
-        color: @grey;
 
         @media screen and (min-width: @sm) {
           .text-ellipsis(140px);
@@ -316,8 +317,8 @@ mark {
   }
 
   .source-date {
-    line-height: 1;
     margin-top: 0.3em;
+    line-height: 1;
 
     span {
       padding: 0.2em 0.4em;
@@ -606,14 +607,14 @@ mark {
 }
 
 .ui.button.source.show-all-sources-btn {
+  display: inline-block;
   width: 200px;
   height: 100%;
-  display: inline-block;
   min-height: 110px;
   padding: 0.6em 0.7em;
   border-radius: 0.4rem;
-  background-color: @lightGrey;
   margin: 0;
+  background-color: @lightGrey;
   text-align: left;
 
   &:hover,
@@ -631,8 +632,8 @@ mark {
   }
 
   .source-title {
-    margin-top: 5px;
     padding: 0;
+    margin-top: 5px;
   }
 }
 

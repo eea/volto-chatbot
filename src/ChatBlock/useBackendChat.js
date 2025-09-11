@@ -503,6 +503,7 @@ export function useBackendChat({
   // Hold the submit handler to efficiently keep message history across re-renders
   const submitHandler = React.useRef(null);
   React.useEffect(() => {
+    // Handle persona being both a full persona call or just an assistant ID if we didn't make the call
     const currentPersona = submitHandler.current?.persona?.id || submitHandler.current?.persona;
     const newPersona = persona?.id || persona;
 

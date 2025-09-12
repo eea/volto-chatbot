@@ -1,11 +1,12 @@
 import React from 'react';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
-import { Button, Message, MessageContent } from 'semantic-ui-react';
+import { Button, Message, Tab, Sidebar } from 'semantic-ui-react';
 import { SourceDetails } from './Source';
 import Spinner from './Spinner';
 import UserActionsToolbar from './UserActionsToolbar';
 import RelatedQuestions from './RelatedQuestions';
+import HalloumiFeedback from './HalloumiFeedback';
 import useQualityMarkers from './useQualityMarkers';
 import { SVGIcon } from './utils';
 import { useDeepCompareMemoize } from './useDeepCompareMemoize';
@@ -14,17 +15,11 @@ import { serializeNodes } from '@plone/volto-slate/editor/render';
 
 import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
-import GlassesIcon from './../icons/glasses.svg';
+import ClearIcon from './../icons/clear.svg';
 
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
-
-const VERIFY_CLAIM_MESSAGES = [
-  'Going through each claim and verify against the referenced documents...',
-  'Summarising claim verifications results...',
-  'Calculating scores...',
-];
 
 // TODO: don't use this over the text like this, make it a rehype plugin
 function addCitations(text) {
@@ -38,11 +33,10 @@ function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function ToolCall({ tool_args, tool_name }) {
-  // , tool_result
+export function ToolCall({ tool_args, tool_name, showShimmer }) {
   if (tool_name === 'run_search') {
     return (
-      <div className="tool_info">
+      <div className={`tool_info ${showShimmer ? 'loading-text' : ''}`}>
         Searched for: <em>{tool_args?.query || ''}</em>
       </div>
     );
@@ -63,103 +57,6 @@ function addQualityMarkersPlugin() {
       }
     });
   };
-}
-
-function visitTextNodes(node, visitor) {
-  if (Array.isArray(node)) {
-    node.forEach((child) => visitTextNodes(child, visitor));
-  } else if (node && typeof node === 'object') {
-    if (node.text !== undefined) {
-      // Process the text node value here
-      // console.log(node.text);
-      visitor(node);
-    }
-    if (node.children) {
-      visitTextNodes(node.children, visitor);
-    }
-  }
-}
-
-function printSlate(value, score) {
-  if (typeof value === 'string') {
-    return value.replaceAll('{score}', score);
-  }
-  function visitor(node) {
-    if (node.text.indexOf('{score}') > -1) {
-      node.text = node.text.replaceAll('{score}', score);
-    }
-  }
-
-  visitTextNodes(value, visitor);
-  return serializeNodes(value);
-}
-
-function VerifyClaims() {
-  const [message, setMessage] = React.useState(0);
-
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      if (message < VERIFY_CLAIM_MESSAGES.length - 1) {
-        setMessage(message + 1);
-      }
-    }, 5000);
-    return () => clearTimeout(timer);
-  }, [message]);
-
-  return (
-    <div className="verify-claims">
-      <Spinner />
-      {VERIFY_CLAIM_MESSAGES[message]}
-    </div>
-  );
-}
-
-function HalloumiFeedback({
-  halloumiMessage,
-  isLoadingHalloumi,
-  markers,
-  score,
-  scoreColor,
-  onManualVerify,
-  showVerifyClaimsButton,
-  sources,
-}) {
-  const noClaimsScore = markers?.claims[0]?.score === null;
-  const messageBySource =
-    'Please allow a few minutes for claim verification when many references are involved.';
-
-  return (
-    <>
-      {showVerifyClaimsButton && (
-        <div className="halloumi-feedback-button">
-          <Button onClick={onManualVerify} className="claims-btn">
-            <SVGIcon name={GlassesIcon} /> Fact-check AI answer
-          </Button>
-          <div>
-            <span>{messageBySource}</span>{' '}
-          </div>
-        </div>
-      )}
-
-      {isLoadingHalloumi && sources.length > 0 && (
-        <Message color="blue">
-          <VerifyClaims />
-        </Message>
-      )}
-
-      {noClaimsScore && (
-        <Message color="red">{markers?.claims?.[0].rationale}</Message>
-      )}
-
-      {!!halloumiMessage && !!markers && !noClaimsScore && (
-        <Message color={scoreColor} icon>
-          <MessageContent>
-            {printSlate(halloumiMessage, `${score}%`)}
-          </MessageContent>
-        </Message>
-      )}
-    </>
-  );
 }
 
 export function addHalloumiContext(doc, text) {
@@ -191,7 +88,6 @@ export function ChatMessageBubble(props) {
   const {
     message,
     isLoading,
-    // isMostRecent,
     libs,
     onChoice,
     showToolCalls,
@@ -226,6 +122,9 @@ export function ChatMessageBubble(props) {
   const [verificationTriggered, setVerificationTriggered] =
     React.useState(false);
   const [isMessageVerified, setIsMessageVerified] = React.useState(false);
+  const [showShimmer, setShowShimmer] = React.useState(true);
+  const [activeTab, setActiveTab] = React.useState(0);
+  const [showSourcesSidebar, setShowSourcesSidebar] = React.useState(false);
 
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
@@ -250,7 +149,6 @@ export function ChatMessageBubble(props) {
       ),
     };
   }, {});
-  // console.log({ qualityCheckContext });
 
   const contextSources =
     qualityCheckContext === 'citations'
@@ -292,7 +190,6 @@ export function ChatMessageBubble(props) {
     addCitations(message.message),
     stableContextSources,
   );
-  // console.log({ message, sources, documentIdToText, citedSources });
 
   const claims = markers?.claims || [];
   const score = (
@@ -332,6 +229,134 @@ export function ChatMessageBubble(props) {
     }
   }, [markers]);
 
+  React.useEffect(() => {
+    if (!isUser) {
+      if (message.message && message.message.length > 0) {
+        setShowShimmer(false);
+      } else {
+        setShowShimmer(true);
+      }
+    }
+  }, [message.message, isUser]);
+
+  const answerTab = (
+    <div className="answer-tab">
+      {showSources && (
+        <div className="sources">
+          {sources.slice(0, 3).map((source, i) => (
+            <SourceDetails source={source} key={i} index={source.index} />
+          ))}
+
+          {sources.length > 3 && (
+            <Button
+              className="source show-all-sources-btn"
+              onClick={() => setShowSourcesSidebar(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  setShowSourcesSidebar(true);
+                }
+                if (e.key === 'Escape') {
+                  setShowSourcesSidebar(false);
+                }
+              }}
+            >
+              <div className="source-header">
+                <div>
+                  {Array.from({ length: 3 }).map((_, i) => (
+                    <span key={i} className="chat-citation"></span>
+                  ))}
+                </div>
+                <div className="source-title">See all sources</div>
+              </div>
+            </Button>
+          )}
+        </div>
+      )}
+
+      <Markdown
+        components={components(message, markers, stableContextSources)}
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[addQualityMarkersPlugin]}
+      >
+        {addCitations(message.message)}
+      </Markdown>
+
+      {!isUser && showTotalFailMessage && (
+        <Message color="red">{serializeNodes(totalFailMessage)}</Message>
+      )}
+
+      {!isUser && (
+        <HalloumiFeedback
+          sources={sources}
+          halloumiMessage={halloumiMessage}
+          isLoadingHalloumi={isLoadingHalloumi}
+          markers={markers}
+          score={score}
+          scoreColor={scoreColor}
+          onManualVerify={() => {
+            setForceHallomi(true);
+            setVerificationTriggered(true);
+          }}
+          showVerifyClaimsButton={showVerifyClaimsButton}
+        />
+      )}
+
+      {!isUser && !isLoading && (
+        <UserActionsToolbar
+          message={message}
+          enableFeedback={enableFeedback}
+          feedbackReasons={feedbackReasons}
+          enableMatomoTracking={enableMatomoTracking}
+          persona={persona}
+        />
+      )}
+
+      {isFirstScoreStage === -1 && serializeNodes(noSupportDocumentsMessage)}
+
+      {!isUser && isFetchingRelatedQuestions && (
+        <div className="related-questions-loader">
+          <Spinner />
+          Finding related questions...
+        </div>
+      )}
+
+      <RelatedQuestions
+        persona={persona}
+        message={message}
+        isLoading={isLoading}
+        onChoice={onChoice}
+        enableMatomoTracking={enableMatomoTracking}
+      />
+    </div>
+  );
+
+  const sourcesTab = (
+    <div className="sources-listing">
+      {showSources && sources.length > 0 && (
+        <div className="sources">
+          {sources.map((source, i) => (
+            <SourceDetails source={source} key={i} index={source.index} />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
+  const panes = [
+    { menuItem: 'Answer', render: () => <Tab.Pane>{answerTab}</Tab.Pane> },
+    {
+      menuItem: {
+        key: 'sources',
+        content: (
+          <span>
+            Sources <span className="sources-count">({sources.length})</span>
+          </span>
+        ),
+      },
+      render: () => <Tab.Pane>{sourcesTab}</Tab.Pane>,
+    },
+  ];
+
   return (
     <div>
       <div className="comment">
@@ -344,78 +369,77 @@ export function ChatMessageBubble(props) {
             <SVGIcon name={BotIcon} size="20" color="white" />
           </div>
         )}
+
         <div>
           {showToolCalls &&
             message.toolCalls?.map((info, index) => (
-              <ToolCall key={index} {...info} />
+              <ToolCall key={index} {...info} showShimmer={showShimmer} />
             ))}
 
-          {showSources && (
-            <>
-              <h5>Sources:</h5>
-              <div className="sources">
-                {sources.map((source, i) => (
-                  <SourceDetails source={source} key={i} index={source.index} />
-                ))}
-              </div>
-            </>
-          )}
+          {!isUser ? (
+            <div className="comment-tabs">
+              {sources.length > 3 ? (
+                <>
+                  <Tab
+                    activeIndex={activeTab}
+                    onTabChange={(_, data) => setActiveTab(data.activeIndex)}
+                    menu={{ secondary: true, pointing: true, fluid: true }}
+                    panes={panes}
+                  />
 
-          <Markdown
-            components={components(message, markers, stableContextSources)}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[addQualityMarkersPlugin]}
-          >
-            {addCitations(message.message)}
-          </Markdown>
-
-          {!isUser && showTotalFailMessage && (
-            <Message color="red">{serializeNodes(totalFailMessage)}</Message>
-          )}
-
-          {!isUser && (
-            <HalloumiFeedback
-              sources={sources}
-              halloumiMessage={halloumiMessage}
-              isLoadingHalloumi={isLoadingHalloumi}
-              markers={markers}
-              score={score}
-              scoreColor={scoreColor}
-              onManualVerify={() => {
-                setForceHallomi(true);
-                setVerificationTriggered(true);
-              }}
-              showVerifyClaimsButton={showVerifyClaimsButton}
-            />
-          )}
-
-          {!isUser && !isLoading && (
-            <UserActionsToolbar
-              message={message}
-              enableFeedback={enableFeedback}
-              feedbackReasons={feedbackReasons}
-              enableMatomoTracking={enableMatomoTracking}
-              persona={persona}
-            />
-          )}
-
-          {isFirstScoreStage === -1 &&
-            serializeNodes(noSupportDocumentsMessage)}
-
-          {!isUser && isFetchingRelatedQuestions && (
-            <div className="related-questions-loader">
-              <Spinner />
-              Finding related questions...
+                  <Sidebar
+                    visible={showSourcesSidebar}
+                    animation="overlay"
+                    icon="labeled"
+                    width="wide"
+                    direction="right"
+                    className="sources-sidebar"
+                    onHide={() => setShowSourcesSidebar(false)}
+                  >
+                    <div className="sources-sidebar-heading">
+                      <h4>Sources</h4>
+                      <Button
+                        basic
+                        onClick={() => {
+                          setShowSourcesSidebar(false);
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setShowSourcesSidebar(false);
+                          }
+                        }}
+                      >
+                        <SVGIcon name={ClearIcon} size="24" />
+                      </Button>
+                    </div>
+                    <div className="sources-listing">
+                      {showSources && sources.length > 0 && (
+                        <div className="sources">
+                          {sources.map((source, i) => (
+                            <SourceDetails
+                              source={source}
+                              key={i}
+                              index={source.index}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </Sidebar>
+                </>
+              ) : (
+                answerTab
+              )}
             </div>
+          ) : (
+            <Markdown
+              components={components(message, markers, stableContextSources)}
+              remarkPlugins={[remarkGfm]}
+              rehypePlugins={[addQualityMarkersPlugin]}
+            >
+              {addCitations(message.message)}
+            </Markdown>
           )}
-
-          <RelatedQuestions
-            persona={persona}
-            message={message}
-            isLoading={isLoading}
-            onChoice={onChoice}
-            enableMatomoTracking={enableMatomoTracking}
-          />
         </div>
       </div>
     </div>

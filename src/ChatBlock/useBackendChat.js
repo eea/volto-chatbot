@@ -120,6 +120,7 @@ class SubmitHandler {
     chatTitle,
     qgenAsistantId,
     enableQgen,
+    setError,
     signal,
   }) {
     this.persona = persona;
@@ -128,6 +129,7 @@ class SubmitHandler {
     this.onMessageHistoryChange = onMessageHistoryChange;
     this.qgenAsistantId = qgenAsistantId;
     this.enableQgen = enableQgen;
+    this.setError = setError;
 
     this.onSubmit = this.onSubmit.bind(this);
     this.abortSignal = signal || null;
@@ -152,7 +154,15 @@ class SubmitHandler {
   completeMessageDetail = {
       sessionId: null,
       messageMap: new Map(),
+  }
+    
+  // Resets error if no message is passed
+  handlePacketTimeout(message, promise) {
+    this.setError(message || '');
+    if (promise) {
+      promise.return();
     }
+  }
 
   async onSubmit({
     messageIdToResend,
@@ -282,13 +292,28 @@ class SubmitHandler {
 
     await delay(50);
 
+    const packetWarningTime = 10000;
+    const packetErrorTime = 15000;
+    let warningTimeout = setTimeout(() => {
+      this.handlePacketTimeout(promise);
+    }, packetWarningTime);
+    let errorTimeout = setTimeout(() => {
+      this.handlePacketTimeout(promise);
+    }, packetErrorTime);
+
     for await (const bit of promise) {
+      clearTimeout(warningTimeout);
+      clearTimeout(errorTimeout);
+      this.handlePacketTimeout()
+      
       if (bit.error) {
         stack.error = bit.error;
         throw bit.error
       } else if (bit.isComplete) {
         stack.isComplete = true;
       } else {
+        warningTimeout = setTimeout(() => {this.handlePacketTimeout("Chat is taking a long time to reply.") }, packetWarningTime);
+        errorTimeout = setTimeout(() => {this.handlePacketTimeout("No response was received from the chat, stopping", promise) }, packetErrorTime);
         stack.push(bit.packet);
       }
 
@@ -400,6 +425,7 @@ class SubmitHandler {
       }
     }
 
+
     if (
       newCompleteMessageDetail.messageMap &&
       this.enableQgen &&
@@ -457,12 +483,17 @@ export function useBackendChat({
   enableQgen,
   signal,
 }) {
-  const [error, setError] = React.useState('');
+  const [error, _setError] = React.useState('');
   const [chatState, setChatState] = React.useState(ChatState.AWAITING_START);
   const [messageHistory, setMessageHistory] = React.useState([]);
 
   const rewakeDelayInMs =
     config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
+  
+  function setError(error) {
+    _setError(error);
+    setChatState(ChatState.ERRORED);
+  }
 
   /** Try to wake up the API. Will early return if already awake */
   async function wake() {
@@ -476,8 +507,6 @@ export function useBackendChat({
       return true;
     }
 
-    setChatState(ChatState.ASLEEP);
-
     try {
       const wakeResult = await wakeApi();
       if (!!wakeResult) {
@@ -486,7 +515,6 @@ export function useBackendChat({
         return true
       }
     } catch (err) {
-      setChatState(ChatState.ERRORED);
       setError(err.message);
     }
     return false
@@ -518,6 +546,7 @@ export function useBackendChat({
       messageHistory,
       persona,
       setChatState,
+      setError,
       qgenAsistantId,
       enableQgen,
       onMessageHistoryChange: setMessageHistory

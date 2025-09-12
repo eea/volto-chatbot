@@ -168,6 +168,7 @@ function ChatWindow({
             </div>
           </>
         )}
+        {/* TODO: Only show this if it's taking a while to prevent flashing. Could cause WCAG SC 2.3.1 failure. */}
         {[ChatState.STREAMING, ChatState.SUBMITTING].includes(chatState) && (
           <div className="loader" />
         )}

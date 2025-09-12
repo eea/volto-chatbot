@@ -79,7 +79,7 @@ const HalloumiFeedback = ({
     <>
       {showVerifyClaimsButton && (
         <div className="halloumi-feedback-button">
-          <Button onClick={onManualVerify} className="claims-btn">
+          <Button onClick={onManualVerify} className="icon claims-btn">
             <SVGIcon name={GlassesIcon} /> Fact-check AI answer
           </Button>
           <div>

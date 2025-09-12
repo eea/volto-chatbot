@@ -141,8 +141,7 @@ mark {
 
   .ui.button.clear-chat,
   .ui.button.claims-btn {
-    .flex-center(row);
-    margin: 0;
+    .flex-center(row, 0.5em);
 
     svg {
       width: 18px;
@@ -260,7 +259,7 @@ mark {
         }
 
         @media screen and (max-width: @sm) {
-          width: 100%;
+          width: 100% !important;
         }
       }
 
@@ -270,12 +269,12 @@ mark {
 
           .source-title {
             display: inline;
-            width: 100%;
           }
 
           svg.icon {
             position: relative;
             top: 2px;
+            margin-left: 5px;
           }
         }
       }
@@ -285,7 +284,7 @@ mark {
         width: 100%;
         color: @grey;
 
-        .flex-center(row, 2px);
+        .flex-center(row);
       }
 
       .source-title {
@@ -634,6 +633,11 @@ mark {
   .source-title {
     padding: 0;
     margin-top: 5px;
+
+    @media screen and (max-width: @sm) {
+      display: inline-block;
+      margin-top: 10px;
+    }
   }
 }
 
@@ -676,6 +680,10 @@ mark {
 }
 
 .feedback-modal {
+  h3 {
+    color: @grey;
+  }
+
   .ui.form textarea {
     max-width: 100%;
   }
@@ -841,7 +849,7 @@ mark {
   background: linear-gradient(
     -90deg,
     #5c5c5c,
-    #e5e5e5 20%,
+    #d5d5d5 20%,
     #5c5c5c 40%,
     #5c5c5c
   );
@@ -857,7 +865,8 @@ mark {
 }
 
 .halloumi-feedback-button {
-  .flex-center(row, 0.5em);
+  margin-top: 1.5em;
+  font-size: 15px;
 }
 
 .spinner {

@@ -33,6 +33,7 @@ export const ChatFileType = {
 export const ChatState = Object.freeze({
   AWAITING_START: 'awaitingStart',
   ASLEEP: 'asleep',
+  WAKING: 'waking',
   READY: 'ready',
   SUBMITTING: 'submitting',
   STREAMING: 'awake',
@@ -492,19 +493,28 @@ export function useBackendChat({
   
   function setError(error) {
     _setError(error);
-    setChatState(ChatState.ERRORED);
+    if (error) {
+      setChatState(ChatState.ERRORED);
+    }
   }
 
   /** Try to wake up the API. Will early return if already awake */
   async function wake() {
     const readyForWaking =
       Date.now() - rewakeDelayInMs < localStorage.getItem("chat-last-awake");
-
-    if (chatState !== ChatState.ASLEEP && chatState !== ChatState.AWAITING_START) {
-      if (readyForWaking) {
-        localStorage.setItem("chat-last-awake", Date.now());
-      }
+    
+    if (readyForWaking) {
+      localStorage.setItem("chat-last-awake", Date.now());
+    }
+    if (chatState === ChatState.WAKING) {
+      return false;
+    }
+    if (![ChatState.ASLEEP, ChatState.AWAITING_START].includes(chatState)) {
       return true;
+    }
+
+    if (chatState !== ChatState.SUBMITTING) {
+      setChatState(ChatState.WAKING);
     }
 
     try {

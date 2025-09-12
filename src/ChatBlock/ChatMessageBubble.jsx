@@ -332,7 +332,7 @@ export function ChatMessageBubble(props) {
 
   const sourcesTab = (
     <div className="sources-listing">
-      {showSources && sources.length > 0 && (
+      {showSources && (
         <div className="sources">
           {sources.map((source, i) => (
             <SourceDetails source={source} key={i} index={source.index} />
@@ -378,7 +378,7 @@ export function ChatMessageBubble(props) {
 
           {!isUser ? (
             <div className="comment-tabs">
-              {sources.length > 3 ? (
+              {showSources ? (
                 <>
                   <Tab
                     activeIndex={activeTab}
@@ -413,7 +413,7 @@ export function ChatMessageBubble(props) {
                       </Button>
                     </div>
                     <div className="sources-listing">
-                      {showSources && sources.length > 0 && (
+                      {showSources && (
                         <div className="sources">
                           {sources.map((source, i) => (
                             <SourceDetails

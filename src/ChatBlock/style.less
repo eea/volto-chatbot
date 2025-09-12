@@ -123,6 +123,10 @@ mark {
 
       .source-header {
         .flex-center(row, 3px);
+
+        svg {
+          top: -1px;
+        }
       }
 
       .source-title {
@@ -578,16 +582,18 @@ mark {
 
     .item {
       border-bottom-width: 2px;
-      margin: 0em 0em -2px;
       color: #6c8295;
       font-size: 16px;
+      margin-bottom: 0 !important;
       font-weight: bold;
 
       &.active,
       &:hover {
         border-color: @grey !important;
+        border-bottom-width: 2px !important;
         color: @grey !important;
         font-weight: bold;
+        margin-bottom: 0 !important;
       }
     }
   }

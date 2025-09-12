@@ -118,7 +118,7 @@ mark {
     .source {
       &:not(:first-child) {
         padding-top: 0.8em !important;
-        margin-top: 0.5em !important;
+        margin-top: 0.8em !important;
       }
 
       .source-header {
@@ -291,7 +291,7 @@ mark {
         padding-left: 0.2em;
         color: @grey;
         font-size: 13px;
-        font-weight: 500;
+        font-weight: bold;
 
         @media screen and (min-width: @sm) {
           .text-ellipsis(140px);
@@ -352,7 +352,7 @@ mark {
       margin-bottom: 0.5em;
       color: @grey;
       font-size: 17px;
-      font-weight: 500;
+      font-weight: bold;
 
       .source-title {
         display: inline;
@@ -532,39 +532,26 @@ mark {
     }
   }
 
-  .ui.pointing.menu {
-    position: relative;
-    border: none;
-    border-bottom: none;
-    margin: 0;
-    box-shadow: none;
-    overflow-x: auto;
-    overflow-y: hidden;
+  .ui.secondary.pointing.menu {
+    border-width: 2px;
+    overflow: auto;
+    padding-bottom: 0.125rem;
 
     &::-webkit-scrollbar {
       height: 4px;
     }
 
-    &::before {
-      position: absolute;
-      z-index: 0;
-      right: 0;
-      bottom: 0.0625rem;
-      width: 100%;
-      border-top: 1px solid #bcbec0;
-      content: ' ';
-    }
-
     .item {
       max-width: 200px;
-      padding: 0.8em 1em !important;
-      margin: 0;
+      border-bottom-width: 2px;
+      margin: 0em 0em -2px;
       color: #6c8295;
 
-      &.active {
-        border-width: 3px;
-        border-color: @grey;
-        color: @grey;
+      &.active,
+      &:hover {
+        border-color: @grey !important;
+        color: @grey !important;
+        font-weight: bold;
       }
 
       span {
@@ -586,16 +573,21 @@ mark {
   margin-top: 0.5em;
 
   .ui.secondary.pointing.menu {
+    border-width: 2px;
+    margin-bottom: 1.5em;
+
     .item {
       color: #6c8295;
       font-size: 16px;
-      font-weight: 500;
+      font-weight: bold;
+      border-bottom-width: 2px;
+      margin: 0em 0em -2px;
 
       &.active,
       &:hover {
         border-color: @grey !important;
         color: @grey !important;
-        font-weight: 500;
+        font-weight: bold;
       }
     }
   }
@@ -784,7 +776,7 @@ mark {
   cursor: pointer;
   font-size: 11px;
   font-weight: bold;
-  line-height: 1.8em;
+  line-height: 1.7em;
   text-align: center;
 
   &:hover {

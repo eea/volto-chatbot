@@ -171,7 +171,7 @@ export function ClaimCitations(props) {
               >
                 <h5 className="claim-source-title">
                   {source.semantic_identifier}
-                  <SVGIcon name={LinkIcon} size="20" />
+                  <SVGIcon name={LinkIcon} size="16" />
                 </h5>
               </a>
             ) : (

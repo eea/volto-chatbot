@@ -131,10 +131,7 @@ function getClaimFromSegment(segment) {
     claim_segments[citation_index],
   );
   const explanation = claim_segments[explanation_index];
-  const segs = JSON.stringify(claim_segments, null, 2);
-  // write segs to a file named segments.txt
-  // fs.writeFileSync('/home/tibi/work/tmp/segments.txt', segs);
-  log('Label index', segs);
+  const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);
   const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);
 
   const claim = {

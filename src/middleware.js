@@ -45,7 +45,7 @@ async function getAuthCookie(username, password) {
 async function login(username, password) {
   const diff = maxAge - (new Date() - last_fetched) / 1000;
   // eslint-disable-next-line no-console
-  console.log('danswer auth still valid for seconds: ', diff);
+  log('danswer auth still valid for seconds: ', diff);
   if (!cached_auth_cookie || diff < 0) {
     await getAuthCookie(username, password);
   }

@@ -56,6 +56,9 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
             ],
             citations: {},
           });
+          throw new Error(
+            `Error fetching halloumi response: ${JSON.stringify(body.error)}`,
+          );
         } else {
           setHalloumiResponse(body);
         }
@@ -71,6 +74,8 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
           ],
           citations: {},
         });
+
+        throw new Error(`Unkown error fetching halloumi response`);
       } finally {
         setIsLoading(false);
       }

@@ -60,6 +60,8 @@ export default async function middleware(req, res, next) {
     log('Halloumi response', resp);
     res.send(resp);
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Halloumi error', error);
     res.send({ error: `Halloumi error: ${error}` });
   }
 }

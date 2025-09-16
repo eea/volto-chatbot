@@ -1,30 +1,30 @@
-/**
- * Represents a prompt with appropriate metadata
- */
+import { processTextToSemanticChunks } from './chunking.ts';
 
 /**
  * Splits a given text into sentences using sentence-splitter.
  * @param text The input string to split.
  * @returns An array of sentence strings.
  */
-function splitIntoSentences(text) {
-  const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
-  const segments = segmenter.segment(text);
+// async function splitIntoSentences(text) {
+//   return await processTextToSemanticChunks(text);
 
-  const finalSentences = [];
-  let shortSentenceString = '';
-  for (const { segment } of segments) {
-    // Assume that a sentence is more than 8 characters.
-    if (segment.length > 8) {
-      finalSentences.push(shortSentenceString + segment);
-      shortSentenceString = '';
-    } else {
-      shortSentenceString += segment;
-    }
-  }
-
-  return finalSentences;
-}
+// const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
+// const segments = segmenter.segment(text);
+//
+// const finalSentences = [];
+// let shortSentenceString = '';
+// for (const { segment } of segments) {
+//   // Assume that a sentence is more than 8 characters.
+//   if (segment.length > 8) {
+//     finalSentences.push(shortSentenceString + segment);
+//     shortSentenceString = '';
+//   } else {
+//     shortSentenceString += segment;
+//   }
+// }
+//
+// return finalSentences;
+// }
 
 /**
  * Annotate a set of sentences with a given annotation character.
@@ -49,6 +49,7 @@ function getOffsets(originalString, sentences) {
   const offsets = new Map();
   let stringProgressPointer = 0;
   let sentenceId = 1;
+  console.log('Getting offsets for sentences:', sentences);
   for (const sentence of sentences) {
     const stringToSearch = originalString.slice(stringProgressPointer);
     const startOffset =
@@ -68,19 +69,21 @@ function getOffsets(originalString, sentences) {
  * @param request The request or question that was used to produce the response.
  * @returns The Halloumi prompt.
  */
-export function createHalloumiPrompt(
+export async function createHalloumiPrompt(
   context,
   response,
   request = 'Make one or more claims about information in the documents.',
 ) {
-  const contextSentences = splitIntoSentences(context);
+  const contextSentences = await processTextToSemanticChunks(context);
+
+  // console.log('Context sentences:', contextSentences, typeof contextSentences);
   const contextOffsets = getOffsets(context, contextSentences);
   const annotatedContextSentences = annotate(contextSentences, 's');
   const annotatedContext = `<|context|>${annotatedContextSentences}<end||context>`;
 
   const annotatedRequest = `<|request|><${request.trim()}><end||request>`;
 
-  const responseSentences = splitIntoSentences(response);
+  const responseSentences = await processTextToSemanticChunks(response);
   const responseOffsets = getOffsets(response, responseSentences);
   const annotatedResponseSentences = annotate(responseSentences, 'r');
   const annotatedResponse = `<|response|>${annotatedResponseSentences}<end||response>`;
@@ -115,8 +118,8 @@ export function createHalloumiClassifierPrompt(context, response) {
  * @param response The response to the request.
  * @returns The Halloumi Classifier prompt strings.
  */
-export function createHalloumiClassifierPrompts(context, response) {
-  const responseSentences = splitIntoSentences(response);
+export async function createHalloumiClassifierPrompts(context, response) {
+  const responseSentences = await processTextToSemanticChunks(response);
   const responseOffsets = getOffsets(response, responseSentences);
   const prompts = [];
   for (const sentence of responseSentences) {

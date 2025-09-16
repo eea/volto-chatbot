@@ -88,7 +88,7 @@ export async function getVerifyClaimResponse(model, context, claims) {
       return parsedResponse;
     });
   }
-  const prompt = createHalloumiPrompt(context, claims);
+  const prompt = await createHalloumiPrompt(context, claims);
   // write prompt to a file named prompt.txt
   // fs.writeFileSync(
   //   '/home/tibi/work/tmp/prompt.txt',

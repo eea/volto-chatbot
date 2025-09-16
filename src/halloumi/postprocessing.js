@@ -1,7 +1,4 @@
 import debug from 'debug';
-// import fs from 'fs';
-
-const log = debug('halloumi');
 
 //
 // /**
@@ -131,7 +128,6 @@ function getClaimFromSegment(segment) {
     claim_segments[citation_index],
   );
   const explanation = claim_segments[explanation_index];
-  const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);
   const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);
 
   const claim = {

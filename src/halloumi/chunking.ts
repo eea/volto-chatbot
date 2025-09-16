@@ -1,32 +1,7 @@
-import 'dotenv/config';
 import { OpenAIEmbeddings } from '@langchain/openai';
-import natural from 'natural';
 import * as math from 'mathjs';
 import { quantile } from 'd3-array';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
-
-/**
- * Splits a given text corpus into an array of sentences.
- *
- * This function utilizes `natural.SentenceTokenizerNew` to tokenize the provided text corpus
- * into individual sentences. It's designed to accurately recognize sentence boundaries
- * and split the text accordingly. The tokenizer's efficiency and accuracy in identifying
- * sentence endings allow for reliable sentence segmentation, which is crucial for
- * text processing tasks that require sentence-level analysis.
- *
- * @param {string} textCorpus - The text corpus to be split into sentences.
- * @returns {string[]} An array of sentences extracted from the text corpus.
- *
- * @example
- * const text = "Hello world. This is a test text.";
- * const sentences = splitToSentences(text);
- * console.log(sentences); // Output: ["Hello world.", "This is a test text."]
- */
-const splitToSentencesUsingNLP = (textCorpus: string): string[] => {
-  const tokenizer = new natural.SentenceTokenizerNew();
-  const sentences = tokenizer.tokenize(textCorpus);
-  return sentences;
-};
 
 const splitToSentences = async (textCorpus: string): Promise<string[]> => {
   const splitter = new RecursiveCharacterTextSplitter({

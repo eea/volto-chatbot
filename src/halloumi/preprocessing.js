@@ -49,7 +49,6 @@ function getOffsets(originalString, sentences) {
   const offsets = new Map();
   let stringProgressPointer = 0;
   let sentenceId = 1;
-  console.log('Getting offsets for sentences:', sentences);
   for (const sentence of sentences) {
     const stringToSearch = originalString.slice(stringProgressPointer);
     const startOffset =
@@ -76,7 +75,6 @@ export async function createHalloumiPrompt(
 ) {
   const contextSentences = await processTextToSemanticChunks(context);
 
-  // console.log('Context sentences:', contextSentences, typeof contextSentences);
   const contextOffsets = getOffsets(context, contextSentences);
   const annotatedContextSentences = annotate(contextSentences, 's');
   const annotatedContext = `<|context|>${annotatedContextSentences}<end||context>`;
@@ -132,7 +130,6 @@ export async function createHalloumiClassifierPrompts(context, response) {
     sentences: responseSentences,
     responseOffsets: responseOffsets,
   };
-  // console.log(halloumiPrompt);
 
   return halloumiPrompt;
 }

@@ -138,7 +138,8 @@ export async function halloumiGenerativeAPI(model, prompt) {
   //   JSON.stringify(jsonData, null, 2),
   // );
   log('Classifier response', jsonData);
-  log('Logprobs', jsonData.choices[0].logprobs.content);
+  log('Classifier response', jsonData.choices[0].message.content);
+  // log('Logprobs', jsonData.choices[0].logprobs.content);
 
   const logits = jsonData.choices[0].logprobs.content;
   const tokenProbabilities = getTokenProbabilitiesFromLogits(

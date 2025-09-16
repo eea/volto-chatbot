@@ -75,7 +75,7 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
           citations: {},
         });
 
-        throw new Error(`Unkown error fetching halloumi response`);
+        throw new Error(`Unknown error fetching halloumi response`);
       } finally {
         setIsLoading(false);
       }

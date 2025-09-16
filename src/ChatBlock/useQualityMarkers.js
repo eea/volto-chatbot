@@ -1,4 +1,9 @@
 import React from 'react';
+import loadable from '@loadable/component';
+
+const Sentry = loadable.lib(
+  () => import(/* webpackChunkName: "s_entry-browser" */ '@sentry/browser'), // chunk name avoids ad blockers
+);
 
 async function fetchHalloumi(answer, sources) {
   const halloumiResponse = await fetch('/_ha/generate', {
@@ -56,9 +61,8 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
             ],
             citations: {},
           });
-          throw new Error(
-            `Error fetching halloumi response: ${JSON.stringify(body.error)}`,
-          );
+
+          Sentry.load().then((mod) => mod.captureException(body.error));
         } else {
           setHalloumiResponse(body);
         }

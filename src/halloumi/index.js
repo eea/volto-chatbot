@@ -1,4 +1,3 @@
-// import fs from 'fs';
 import debug from 'debug';
 import fetch from 'node-fetch';
 import {
@@ -71,6 +70,7 @@ export async function halloumiClassifierAPI(model, context, claims) {
   return output;
 }
 
+// main function to get verify claim response, used directly by the middleware
 export async function getVerifyClaimResponse(model, context, claims) {
   if (!context || !claims) {
     const response = {
@@ -89,15 +89,16 @@ export async function getVerifyClaimResponse(model, context, claims) {
     });
   }
   const prompt = await createHalloumiPrompt(context, claims);
-  // write prompt to a file named prompt.txt
-  // fs.writeFileSync(
-  //   '/home/tibi/work/tmp/prompt.txt',
-  //   JSON.stringify(prompt, null, 2),
-  // );
+
   log('Halloumi prompt', JSON.stringify(prompt, null, 2));
-  const result = await halloumiGenerativeAPI(model, prompt).then((claims) => {
-    return convertGenerativesClaimToVerifyClaimResponse(claims, prompt);
-  });
+
+  const unconvertedClaims = await halloumiGenerativeAPI(model, prompt);
+  const result = {
+    ...convertGenerativesClaimToVerifyClaimResponse(unconvertedClaims, prompt),
+    unconvertedClaims,
+    halloumiPrompt: prompt,
+  };
+
   return result;
 }
 
@@ -132,14 +133,11 @@ export async function halloumiGenerativeAPI(model, prompt) {
 
   const jsonData = await response.json();
 
-  // write jsonData to a file named response.json
-  // fs.writeFileSync(
-  //   '/home/tibi/work/tmp/response.json',
-  //   JSON.stringify(jsonData, null, 2),
-  // );
-  log('Classifier response', jsonData);
-  log('Classifier response', jsonData.choices[0].message.content);
-  // log('Logprobs', jsonData.choices[0].logprobs.content);
+  log('Halloumi generative full response:', jsonData);
+  log(
+    'Halloumi generative message content:',
+    jsonData.choices[0].message.content,
+  );
 
   const logits = jsonData.choices[0].logprobs.content;
   const tokenProbabilities = getTokenProbabilitiesFromLogits(

@@ -275,7 +275,7 @@ const groupSentencesIntoChunks = (
 const processTextToSemanticChunks = async (
   textCorpus: string,
   bufferSize: number = 1,
-  percentileThreshold: number = 90,
+  percentileThreshold: number = 50,
 ): Promise<string[]> => {
   // Step 1: Split text into sentences
   const sentences = await splitToSentences(textCorpus);

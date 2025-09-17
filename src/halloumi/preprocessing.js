@@ -1,30 +1,28 @@
-import { processTextToSemanticChunks } from './chunking.ts';
+// import { processTextToSemanticChunks } from './chunking.ts';
 
 /**
  * Splits a given text into sentences using sentence-splitter.
  * @param text The input string to split.
  * @returns An array of sentence strings.
  */
-// async function splitIntoSentences(text) {
-//   return await processTextToSemanticChunks(text);
+async function processTextToSemanticChunks(text) {
+  const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
+  const segments = segmenter.segment(text);
 
-// const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
-// const segments = segmenter.segment(text);
-//
-// const finalSentences = [];
-// let shortSentenceString = '';
-// for (const { segment } of segments) {
-//   // Assume that a sentence is more than 8 characters.
-//   if (segment.length > 8) {
-//     finalSentences.push(shortSentenceString + segment);
-//     shortSentenceString = '';
-//   } else {
-//     shortSentenceString += segment;
-//   }
-// }
-//
-// return finalSentences;
-// }
+  const finalSentences = [];
+  let shortSentenceString = '';
+  for (const { segment } of segments) {
+    // Assume that a sentence is more than 8 characters.
+    if (segment.length > 8) {
+      finalSentences.push(shortSentenceString + segment);
+      shortSentenceString = '';
+    } else {
+      shortSentenceString += segment;
+    }
+  }
+
+  return finalSentences;
+}
 
 /**
  * Annotate a set of sentences with a given annotation character.

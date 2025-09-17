@@ -57,7 +57,7 @@ export default async function middleware(req, res, next) {
       sources.join('\n---\n'),
       answer,
     );
-    log('Halloumi parsed response:', resp);
+    log('Halloumi parsed response:', JSON.stringify(resp, null, 2));
     res.send(resp);
   } catch (error) {
     // eslint-disable-next-line no-console

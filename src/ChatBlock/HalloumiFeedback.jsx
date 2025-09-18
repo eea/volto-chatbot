@@ -5,6 +5,7 @@ import Spinner from './Spinner';
 import { SVGIcon } from './utils';
 
 import GlassesIcon from './../icons/glasses.svg';
+import RotateIcon from './../icons/rotate.svg';
 
 const VERIFY_CLAIM_MESSAGES = [
   'Going through each claim and verify against the referenced documents...',
@@ -70,6 +71,7 @@ const HalloumiFeedback = ({
   onManualVerify,
   showVerifyClaimsButton,
   sources,
+  retryHalloumi,
 }) => {
   const noClaimsScore = markers?.claims[0]?.score === null;
   const messageBySource =
@@ -95,7 +97,12 @@ const HalloumiFeedback = ({
       )}
 
       {noClaimsScore && (
-        <Message color="red">{markers?.claims?.[0].rationale}</Message>
+        <>
+          <Message color="red">{markers?.claims?.[0].rationale}</Message>
+          <Button onClick={retryHalloumi} className="icon">
+            <SVGIcon name={RotateIcon} /> Retry Fact-check AI answer
+          </Button>
+        </>
       )}
 
       {!!halloumiMessage && !!markers && !noClaimsScore && (

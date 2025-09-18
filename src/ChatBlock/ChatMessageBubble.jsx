@@ -185,7 +185,7 @@ export function ChatMessageBubble(props) {
     showSources &&
     (qualityCheckEnabled || verificationTriggered) &&
     message.messageId > -1;
-  const { markers, isLoadingHalloumi } = useQualityMarkers(
+  const { markers, isLoadingHalloumi, retryHalloumi } = useQualityMarkers(
     doQualityControl,
     addCitations(message.message),
     stableContextSources,
@@ -298,6 +298,7 @@ export function ChatMessageBubble(props) {
             setVerificationTriggered(true);
           }}
           showVerifyClaimsButton={showVerifyClaimsButton}
+          retryHalloumi={retryHalloumi}
         />
       )}
 

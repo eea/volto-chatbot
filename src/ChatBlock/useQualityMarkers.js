@@ -24,6 +24,10 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
   const [halloumiResponse, setHalloumiResponse] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const retryHalloumi = React.useCallback(() => {
+    setHalloumiResponse(null);
+  }, []);
+
   React.useEffect(() => {
     async function handler() {
       const textSources = sources.map(({ halloumiContext }) => halloumiContext);
@@ -99,5 +103,9 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
       return hasSpace || !hasSpecialCharacters || !hasSmallScore;
     });
   }
-  return { markers: halloumiResponse, isLoadingHalloumi: isLoading };
+  return {
+    markers: halloumiResponse,
+    isLoadingHalloumi: isLoading,
+    retryHalloumi,
+  };
 }

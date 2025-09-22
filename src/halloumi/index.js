@@ -2,11 +2,11 @@ import debug from 'debug';
 import fetch from 'node-fetch';
 import {
   getClaimsFromResponse,
-  getClassifierProbabilitiesFromLogits,
+  // getClassifierProbabilitiesFromLogits,
   getTokenProbabilitiesFromLogits,
 } from './postprocessing';
 import {
-  createHalloumiClassifierPrompts,
+  // createHalloumiClassifierPrompts,
   createHalloumiPrompt,
 } from './preprocessing';
 
@@ -22,53 +22,53 @@ export function applyPlattScaling(platt, probability) {
   return sigmoid(-1 * (platt.a * log_prob + platt.b));
 }
 
-export async function halloumiClassifierAPI(model, context, claims) {
-  const classifierPrompts = createHalloumiClassifierPrompts(context, claims);
-  const headers = {
-    'Content-Type': 'application/json',
-    accept: 'application/json',
-  };
-  if (model.apiKey) {
-    headers['Authorization'] = `Bearer ${model.apiKey}`;
-  }
-  const data = {
-    input: classifierPrompts.prompts,
-    model: model.name,
-  };
-
-  const response = await fetch(model.apiUrl, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(data),
-  });
-  const jsonData = await response.json();
-  const output = {
-    claims: [],
-  };
-  for (let i = 0; i < classifierPrompts.prompts.length; i++) {
-    const embedding = jsonData.data[i].embedding;
-    const probs = getClassifierProbabilitiesFromLogits(embedding);
-    if (model.plattScaling) {
-      const platt = model.plattScaling;
-      const unsupportedScore = applyPlattScaling(platt, probs[1]);
-      const supportedScore = 1 - unsupportedScore;
-      probs[0] = supportedScore;
-      probs[1] = unsupportedScore;
-    }
-    const offset = classifierPrompts.responseOffsets.get(i + 1);
-    // 0-th index is the supported class.
-    // 1-th index is the unsupported class.
-    output.claims.push({
-      startOffset: offset.startOffset,
-      endOffset: offset.endOffset,
-      citationIds: [],
-      score: probs[0],
-      rationale: '',
-    });
-  }
-
-  return output;
-}
+// export async function halloumiClassifierAPI(model, context, claims) {
+//   const classifierPrompts = createHalloumiClassifierPrompts(context, claims);
+//   const headers = {
+//     'Content-Type': 'application/json',
+//     accept: 'application/json',
+//   };
+//   if (model.apiKey) {
+//     headers['Authorization'] = `Bearer ${model.apiKey}`;
+//   }
+//   const data = {
+//     input: classifierPrompts.prompts,
+//     model: model.name,
+//   };
+//
+//   const response = await fetch(model.apiUrl, {
+//     method: 'POST',
+//     headers: headers,
+//     body: JSON.stringify(data),
+//   });
+//   const jsonData = await response.json();
+//   const output = {
+//     claims: [],
+//   };
+//   for (let i = 0; i < classifierPrompts.prompts.length; i++) {
+//     const embedding = jsonData.data[i].embedding;
+//     const probs = getClassifierProbabilitiesFromLogits(embedding);
+//     if (model.plattScaling) {
+//       const platt = model.plattScaling;
+//       const unsupportedScore = applyPlattScaling(platt, probs[1]);
+//       const supportedScore = 1 - unsupportedScore;
+//       probs[0] = supportedScore;
+//       probs[1] = unsupportedScore;
+//     }
+//     const offset = classifierPrompts.responseOffsets.get(i + 1);
+//     // 0-th index is the supported class.
+//     // 1-th index is the unsupported class.
+//     output.claims.push({
+//       startOffset: offset.startOffset,
+//       endOffset: offset.endOffset,
+//       citationIds: [],
+//       score: probs[0],
+//       rationale: '',
+//     });
+//   }
+//
+//   return output;
+// }
 
 // main function to get verify claim response, used directly by the middleware
 export async function getVerifyClaimResponse(model, context, claims) {
@@ -79,23 +79,24 @@ export async function getVerifyClaimResponse(model, context, claims) {
     };
     return response;
   }
-  if (model.isEmbeddingModel) {
-    return halloumiClassifierAPI(model, context, claims).then((response) => {
-      const parsedResponse = {
-        claims: response.claims,
-        citations: {},
-      };
-      return parsedResponse;
-    });
-  }
+  // if (model.isEmbeddingModel) {
+  //   return halloumiClassifierAPI(model, context, claims).then((response) => {
+  //     const parsedResponse = {
+  //       claims: response.claims,
+  //       citations: {},
+  //     };
+  //     return parsedResponse;
+  //   });
+  // }
   const prompt = await createHalloumiPrompt(context, claims);
 
   log('Halloumi prompt', JSON.stringify(prompt, null, 2));
 
-  const unconvertedClaims = await halloumiGenerativeAPI(model, prompt);
+  const rawClaims = await halloumiGenerativeAPI(model, prompt);
+  console.log('Halloumi prompt responseOffsets ', prompt.responseOffsets);
   const result = {
-    ...convertGenerativesClaimToVerifyClaimResponse(unconvertedClaims, prompt),
-    unconvertedClaims,
+    ...convertGenerativesClaimToVerifyClaimResponse(rawClaims, prompt),
+    rawClaims,
     halloumiPrompt: prompt,
   };
 
@@ -192,12 +193,20 @@ export function convertGenerativesClaimToVerifyClaimResponse(
       citationIds.push(citation.toString());
     }
 
+    console.log('generativeClaims', generativeClaims);
+
     const claimId = generativeClaim.claimId;
     if (!prompt.responseOffsets.has(claimId)) {
       throw new Error(`Claim ${claimId} not found in response offsets.`);
     }
 
     const claimResponseWindow = prompt.responseOffsets.get(claimId);
+    console.log(
+      'claimResponseWindow',
+      claimResponseWindow,
+      prompt.responseOffsets,
+    );
+
     const score = generativeClaim.probabilities.get('supported');
     const claim = {
       startOffset: claimResponseWindow.startOffset,

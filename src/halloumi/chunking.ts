@@ -258,6 +258,10 @@ const groupSentencesIntoChunks = (
 
   // Add one beyond the last index to handle remaining sentences as a final chunk
   const adjustedBreakpoints = [...shiftIndices, sentenceObjectArray.length - 1];
+  console.log('Adjusted Breakpoints:', adjustedBreakpoints);
+  console.log('Sentence Object Array Length:', sentenceObjectArray.length);
+  console.log('Sentence Object Array:', sentenceObjectArray);
+  console.log('Shift Indices:', shiftIndices);
 
   // Iterate through the breakpoints to slice and accumulate sentences into chunks
   adjustedBreakpoints.forEach((breakpoint) => {
@@ -274,8 +278,8 @@ const groupSentencesIntoChunks = (
 
 const processTextToSemanticChunks = async (
   textCorpus: string,
-  bufferSize: number = 1,
-  percentileThreshold: number = 50,
+  bufferSize: number = 0,
+  percentileThreshold: number = 70,
 ): Promise<string[]> => {
   // Step 1: Split text into sentences
   const sentences = await splitToSentences(textCorpus);

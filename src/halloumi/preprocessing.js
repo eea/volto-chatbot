@@ -1,11 +1,11 @@
-// import { processTextToSemanticChunks } from './chunking.ts';
+import { processTextToSemanticChunks } from './chunking.ts';
 
 /**
  * Splits a given text into sentences using sentence-splitter.
  * @param text The input string to split.
  * @returns An array of sentence strings.
  */
-async function processTextToSemanticChunks(text) {
+async function processTextToSemanticChunks2(text) {
   const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
   const segments = segmenter.segment(text);
 
@@ -81,7 +81,12 @@ export async function createHalloumiPrompt(
 
   const responseSentences = await processTextToSemanticChunks(response);
   const responseOffsets = getOffsets(response, responseSentences);
+
+  // console.log('responseSentences', { responseSentences, response });
+  console.log('dump', { response, responseSentences, responseOffsets });
+
   const annotatedResponseSentences = annotate(responseSentences, 'r');
+
   const annotatedResponse = `<|response|>${annotatedResponseSentences}<end||response>`;
 
   const prompt = `${annotatedContext}${annotatedRequest}${annotatedResponse}`;

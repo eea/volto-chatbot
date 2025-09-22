@@ -315,10 +315,12 @@ export function ChatMessageBubble(props) {
       {isFirstScoreStage === -1 && serializeNodes(noSupportDocumentsMessage)}
 
       {!isUser && isFetchingRelatedQuestions && (
-        <div className="related-questions-loader">
-          <Spinner />
-          Finding related questions...
-        </div>
+        <Message color="blue">
+          <div className="related-questions-loader">
+            <Spinner />
+            Finding related questions...
+          </div>
+        </Message>
       )}
 
       <RelatedQuestions

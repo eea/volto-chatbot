@@ -1,4 +1,7 @@
+import debug from 'debug';
 import { getVerifyClaimResponse } from '.';
+
+const log = debug('halloumi');
 
 const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing LLMGW_TOKEN or LLMGW_URL';
@@ -42,10 +45,7 @@ export default async function middleware(req, res, next) {
   };
   const body = req.body;
 
-  if (process.env.DEBUG_HALLUMI) {
-    // eslint-disable-next-line no-console
-    console.log('Halloumi body', body);
-  }
+  log('Halloumi body', body);
   const { sources, answer } = body;
 
   res.set('Content-Type', 'application/json');
@@ -57,6 +57,7 @@ export default async function middleware(req, res, next) {
       sources.join('\n---\n'),
       answer,
     );
+    log('Halloumi response', resp);
     res.send(resp);
   } catch (error) {
     res.send({ error: `Halloumi error: ${error}` });

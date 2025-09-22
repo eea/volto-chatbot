@@ -1,3 +1,5 @@
+// import debug from 'debug';
+
 //
 // /**
 //  * Represents a claim object with all relevant information.

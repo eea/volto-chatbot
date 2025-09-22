@@ -1,4 +1,9 @@
 import React from 'react';
+import loadable from '@loadable/component';
+
+const Sentry = loadable.lib(
+  () => import(/* webpackChunkName: "s_entry-browser" */ '@sentry/browser'), // chunk name avoids ad blockers
+);
 
 async function fetchHalloumi(answer, sources) {
   const halloumiResponse = await fetch('/_ha/generate', {
@@ -18,6 +23,10 @@ const TIMEOUT_RATIONALE =
 export default function useQualityMarkers(doQualityControl, message, sources) {
   const [halloumiResponse, setHalloumiResponse] = React.useState(null);
   const [isLoading, setIsLoading] = React.useState(false);
+
+  const retryHalloumi = React.useCallback(() => {
+    setHalloumiResponse(null);
+  }, []);
 
   React.useEffect(() => {
     async function handler() {
@@ -56,6 +65,8 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
             ],
             citations: {},
           });
+
+          Sentry.load().then((mod) => mod.captureException(body.error));
         } else {
           setHalloumiResponse(body);
         }
@@ -71,6 +82,8 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
           ],
           citations: {},
         });
+
+        throw new Error(`Unknown error fetching halloumi response`);
       } finally {
         setIsLoading(false);
       }
@@ -90,5 +103,9 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
       return hasSpace || !hasSpecialCharacters || !hasSmallScore;
     });
   }
-  return { markers: halloumiResponse, isLoadingHalloumi: isLoading };
+  return {
+    markers: halloumiResponse,
+    isLoadingHalloumi: isLoading,
+    retryHalloumi,
+  };
 }

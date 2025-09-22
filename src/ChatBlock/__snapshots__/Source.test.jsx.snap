@@ -31,10 +31,10 @@ exports[`SourceDetails should render the component with doc type 1`] = `
         }
       }
       fill="currentColor"
-      height="15"
+      height="16"
       stroke="currentColor"
       viewBox=""
-      width="15"
+      width="16"
       xmlns=""
     />
   </div>
@@ -77,10 +77,10 @@ exports[`SourceDetails should render the component with link type 1`] = `
         }
       }
       fill="currentColor"
-      height="15"
+      height="16"
       stroke="currentColor"
       viewBox=""
-      width="15"
+      width="16"
       xmlns=""
     />
   </div>

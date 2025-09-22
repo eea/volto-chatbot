@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-chatbot",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "description": "@eeacms/volto-chatbot: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",

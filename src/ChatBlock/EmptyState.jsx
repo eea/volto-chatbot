@@ -7,7 +7,9 @@ function StarterMessage({ msg, onClick }) {
   return (
     <Button onClick={onClick} onKeyDown={onClick} className="starter-message">
       <span className="starter-message-title">{msg.name}</span>
-      <div className="starter-message-desc">{msg.description}</div>
+      {msg.description && (
+        <div className="starter-message-desc">{msg.description}</div>
+      )}
     </Button>
   );
 }

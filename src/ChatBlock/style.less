@@ -111,10 +111,6 @@ mark {
       }
     }
 
-    .chat-citation {
-      margin-right: 0;
-    }
-
     .source {
       &:not(:first-child) {
         padding-top: 0.8em !important;
@@ -123,6 +119,11 @@ mark {
 
       .source-header {
         .flex-center(row, 3px);
+
+        .chat-citation {
+          top: 0;
+          margin-right: 0;
+        }
 
         svg {
           top: -1px;
@@ -233,9 +234,11 @@ mark {
     margin-top: 1.5em;
 
     .sources {
+      display: flex;
+      flex-direction: row;
       flex-wrap: wrap;
       margin-bottom: @marginBottom;
-      .flex-center(row, 0.8em);
+      gap: 0.8em;
 
       .source-link:hover {
         .source {
@@ -246,8 +249,6 @@ mark {
       .source {
         display: flex;
         width: 200px;
-        height: 100%;
-        min-height: 110px;
         flex-direction: column;
         padding: 0.6em 0.7em;
         border-radius: @borderRadius;
@@ -299,7 +300,6 @@ mark {
 
         @media screen and (min-width: @sm) {
           .text-ellipsis(140px);
-          word-break: break-all;
         }
       }
 
@@ -313,7 +313,6 @@ mark {
       color: @grey;
       font-size: 12px;
       text-align: left;
-      word-break: break-all;
 
       .line-clamp(@lines: 2);
     }
@@ -365,7 +364,7 @@ mark {
 
       .chat-citation {
         position: relative;
-        top: -1px;
+        top: -2px;
 
         &:hover {
           border: 1px solid #dbd9d9;
@@ -376,7 +375,8 @@ mark {
 
       svg {
         position: relative;
-        top: 1px;
+        top: 3px;
+        margin-left: 1px;
       }
     }
 
@@ -385,7 +385,6 @@ mark {
       color: @grey;
       font-size: 15px;
       text-align: left;
-      word-break: break-all;
       .line-clamp(@lines: 3);
     }
   }
@@ -561,7 +560,6 @@ mark {
         font-size: 16px;
         font-weight: bold;
         text-align: left;
-        word-break: break-all;
         .line-clamp(@lines: 2);
       }
     }
@@ -604,13 +602,8 @@ mark {
 
 .ui.button.source.show-all-sources-btn {
   display: inline-block;
-  width: 200px;
-  height: 100%;
-  min-height: 110px;
-  padding: 0.6em 0.7em;
-  border-radius: 0.4rem;
   margin: 0;
-  background-color: @lightGrey;
+  box-shadow: none;
   text-align: left;
 
   &:hover,
@@ -649,7 +642,6 @@ mark {
 }
 
 .related-questions-loader {
-  padding: 0.5em 1.5em;
   .flex-center(row, 0.5em);
 }
 
@@ -771,15 +763,15 @@ mark {
 
 .chat-citation {
   display: inline-block;
-  width: 1.8em;
-  height: 1.8em;
+  width: 1.7em;
+  height: 1.7em;
   border: 1px solid #dbd9d9;
   border-radius: 3em;
   margin-right: 3px;
   background-color: @citationCircleColor;
   color: @grey;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: bold;
   line-height: 1.7em;
   text-align: center;

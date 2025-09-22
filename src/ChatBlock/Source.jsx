@@ -21,10 +21,10 @@ const SourceDetails_ = ({ source, index, luxon }) => {
 
   const renderIcon = () => {
     if (isLinkType) {
-      return <SVGIcon name={GlobeIcon} size="15" alt="Web icon" />;
+      return <SVGIcon name={GlobeIcon} size="16" alt="Web icon" />;
     }
     if (isDocumentType) {
-      return <SVGIcon name={FileIcon} size="15" alt="File icon" />;
+      return <SVGIcon name={FileIcon} size="16" alt="File icon" />;
     }
     return null;
   };

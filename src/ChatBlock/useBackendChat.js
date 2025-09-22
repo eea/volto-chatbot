@@ -88,7 +88,7 @@ function upsertToCompleteMessageMap({
     }
   }
   const newCompleteMessageDetail = {
-    sessionId: chatSessionId || completeMessageDetail.sessionId,
+    sessionId: chatSessionId || completeMessageDetail?.sessionId || null,  // TODO: sessionid can be null because it was an initial error. what should happen?
     messageMap: newCompleteMessageMap,
   };
   setCompleteMessageDetail(newCompleteMessageDetail);

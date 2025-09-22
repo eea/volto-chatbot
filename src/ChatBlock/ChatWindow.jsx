@@ -121,6 +121,7 @@ function ChatWindow({
                 {...data}
                 persona={persona}
                 onChoice={handleStarterPromptChoice}
+                starterPromptsHeading={data.displayMode === 'sidebar' ? null : data.starterPromptsHeading}
               />
             )}
           </>

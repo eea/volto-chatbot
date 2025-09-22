@@ -1,6 +1,8 @@
 import installChatBlock from './ChatBlock';
 import loadable from '@loadable/component';
 
+import { SidebarEntrypoint } from "@eeacms/volto-chatbot/sidebar/components/SidebarEntrypoint";
+
 const applyConfig = (config) => {
   if (__SERVER__) {
     const express = require('express');
@@ -39,6 +41,22 @@ const applyConfig = (config) => {
   };
 
   installChatBlock(config);
+
+  config.settings.appExtras = [
+    ...config.settings.appExtras,
+    {
+      match: "",
+      component: SidebarEntrypoint,
+    },
+  ];
+
+  config.settings["volto-chatbot"] = {
+    ...(config.settings["volto-chatbot"] || {}),
+    sidebar: {
+      startButtonTitle: "Start assistant chat",
+      sidebarTitle: "Help using this site",
+    }
+  };
 
   return config;
 };

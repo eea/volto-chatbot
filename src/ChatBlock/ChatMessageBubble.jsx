@@ -1,5 +1,5 @@
 import React from 'react';
-import visit from 'unist-util-visit';
+import { visit } from 'unist-util-visit';
 import loadable from '@loadable/component';
 import { Button, Message, Tab, Sidebar } from 'semantic-ui-react';
 import { SourceDetails } from './Source';

@@ -487,6 +487,7 @@ export function useBackendChat({
   const [error, _setError] = React.useState('');
   const [chatState, setChatState] = React.useState(ChatState.AWAITING_START);
   const [messageHistory, setMessageHistory] = React.useState([]);
+  const [messageToSubmit, setMessageToSubmit] = React.useState(null);
 
   const rewakeDelayInMs =
     config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
@@ -579,16 +580,29 @@ export function useBackendChat({
     }
 
     setChatState(ChatState.SUBMITTING);
-
+    setMessageToSubmit(input)
+  }, [chatState])
+  React.useEffect(() => {
+    if (chatState !== ChatState.SUBMITTING) {
+      return;
+    }
+    if (!messageToSubmit) {
+      return;
+    }
     wake().then((isAwake) => {
       if (isAwake) {
-        onSubmit(input)
+        const onSubmit = submitHandler.current?.onSubmit;
+        onSubmit(messageToSubmit)
       }
     }).catch((errorReason) => {
       setChatState(ChatState.ERRORED);
-      setError(errorReason);
+      setError(
+        errorReason instanceof Error ? errorReason.message : errorReason,
+      );
+    }).finally(() => {
+      setMessageToSubmit(null);
     })
-  }, [chatState])
+  }, [messageToSubmit, chatState]);
 
   return {
     messages: messageHistory,

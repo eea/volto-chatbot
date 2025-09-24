@@ -499,36 +499,41 @@ export function useBackendChat({
     }
   }
 
-  /** Try to wake up the API. Will early return if already awake */
-  async function wake() {
+  /** Try to wake up the API. Will early return if already awake
+   * @param {*} currentChatState Value of `chatState`. Passed in to workaround stale React state.
+   */
+  async function wake(currentChatState) {
     const readyForWaking =
       Date.now() - rewakeDelayInMs < localStorage.getItem("chat-last-awake");
-    
+
     if (readyForWaking) {
       localStorage.setItem("chat-last-awake", Date.now());
     }
-    if (chatState === ChatState.WAKING) {
+    if (currentChatState === ChatState.WAKING) {
       return false;
     }
-    if (![ChatState.ASLEEP, ChatState.AWAITING_START].includes(chatState)) {
+    if (![ChatState.ASLEEP, ChatState.AWAITING_START].includes(currentChatState)) {
       return true;
     }
 
-    if (chatState !== ChatState.SUBMITTING) {
+    if (currentChatState !== ChatState.SUBMITTING) {
       setChatState(ChatState.WAKING);
     }
 
     try {
       const wakeResult = await wakeApi();
       if (!!wakeResult) {
-        setChatState(ChatState.READY);
+        // We want to make sure we know when we're in a submitting and awake state vs just being ready to accept submission
+        if (currentChatState !== ChatState.SUBMITTING) {
+          setChatState(ChatState.READY);
+        }
         localStorage.setItem("chat-last-awake", Date.now());
-        return true
+        return true;
       }
     } catch (err) {
       setError(err.message);
     }
-    return false
+    return false;
   }
   React.useEffect(() => {
     if (chatState === ChatState.ASLEEP) {
@@ -571,7 +576,6 @@ export function useBackendChat({
     }
   };
 
-  // wakeApi
   const handleSubmit = React.useCallback(function handleSubmit(input) {
     const onSubmit = submitHandler.current?.onSubmit;
 
@@ -589,24 +593,26 @@ export function useBackendChat({
     if (!messageToSubmit) {
       return;
     }
-    wake().then((isAwake) => {
-      if (isAwake) {
-        const onSubmit = submitHandler.current?.onSubmit;
-        onSubmit(messageToSubmit)
-      }
-    }).catch((errorReason) => {
-      setChatState(ChatState.ERRORED);
-      setError(
-        errorReason instanceof Error ? errorReason.message : errorReason,
-      );
-    }).finally(() => {
-      setMessageToSubmit(null);
-    })
-  }, [messageToSubmit, chatState]);
+    wake(chatState)
+      .then((isAwake) => {
+        if (isAwake) {
+          const onSubmit = submitHandler.current?.onSubmit;
+          onSubmit(messageToSubmit);
+        }
+      })
+      .catch((errorReason) => {
+        setChatState(ChatState.ERRORED);
+        setError(
+          errorReason instanceof Error ? errorReason.message : errorReason,
+        );
+      })
+      .finally(() => {
+        setMessageToSubmit(null);
+      });
+  }, [messageToSubmit, chatState, wake]);
 
   return {
     messages: messageHistory,
-    // onSubmit: submitHandler.current?.onSubmit,
     onSubmit: handleSubmit,
     chatState,
     error,

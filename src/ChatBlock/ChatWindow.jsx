@@ -6,14 +6,12 @@ import { trackEvent } from '@eeacms/volto-matomo/utils';
 import AutoResizeTextarea from './AutoResizeTextarea';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
-import { useScrollonStream, wakeApi } from "./lib";
+import { useScrollonStream } from "./lib";
 import { useBackendChat, ChatState } from './useBackendChat';
 import { SVGIcon } from './utils';
 import PenIcon from './../icons/square-pen.svg';
 
 import './style.less';
-
-import config from "@plone/registry";
 
 function ChatWindow({
   persona,
@@ -60,8 +58,6 @@ function ChatWindow({
   });
   const [showLandingPage, setShowLandingPage] = React.useState(false);
   const isStreaming = chatState === ChatState.STREAMING;
-  const isAwake = chatState !== ChatState.ASLEEP;
-  const isFetchingRelatedQuestions = chatState === ChatState.FETCHING_RELATED;
 
   const textareaRef = React.useRef(null);
   const conversationRef = React.useRef(null);
@@ -159,7 +155,7 @@ function ChatWindow({
                   enableShowTotalFailMessage={enableShowTotalFailMessage}
                   totalFailMessage={totalFailMessage}
                   showToolCalls={showToolCalls}
-                  isFetchingRelatedQuestions={isFetchingRelatedQuestions}
+                  isFetchingRelatedQuestions={chatState === ChatState.FETCHING_RELATED}
                   enableMatomoTracking={enableMatomoTracking}
                   persona={persona}
                 />

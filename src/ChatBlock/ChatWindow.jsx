@@ -194,8 +194,12 @@ function ChatWindow({
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}
-              onFocus={wake}
-              onChange={wake}
+              onFocus={() => {
+                wake(chatState);
+              }}
+              onChange={() => {
+                wake(chatState);
+              }}
             />
           </div>
         </Form>

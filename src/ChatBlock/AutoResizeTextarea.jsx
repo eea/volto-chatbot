@@ -7,7 +7,6 @@ import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
-  const [input, setInput] = React.useState('');
   const {
     onSubmit,
     onFocus,
@@ -17,6 +16,7 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
     persona,
     ...rest
   } = props;
+  const [input, setInput] = React.useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();

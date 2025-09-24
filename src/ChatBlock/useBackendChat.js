@@ -574,6 +574,8 @@ export function useBackendChat({
       submitHandler.current.currChatSessionId = null;
       submitHandler.current.messageHistory = [];  // Will trigger `setMessageHistory`
     }
+    setError(null);
+    setChatState(ChatState.READY);
   };
 
   const handleSubmit = React.useCallback(function handleSubmit(input) {

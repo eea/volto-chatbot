@@ -493,7 +493,7 @@ export function useBackendChat({
     config.settings["volto-chatbot"].rewakeDelay * 60 * 1000;
   
   function setError(error) {
-    _setError(error);
+    _setError(error instanceof Error ? error.message : error,);
     if (error) {
       setChatState(ChatState.ERRORED);
     }

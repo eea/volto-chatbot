@@ -247,6 +247,14 @@ export function ClaimCitations(props) {
 
 export function components(message, markers, citedSources) {
   return {
+    table: (props) => {
+      const { node, children, ...rest } = props;
+      return (
+        <table className="ui celled table" {...rest}>
+          {children}
+        </table>
+      );
+    },
     span: (props) => {
       const { node, ...rest } = props;
       const child = node.children[0];

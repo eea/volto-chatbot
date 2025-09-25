@@ -275,7 +275,7 @@ export function ChatMessageBubble(props) {
 
       <Markdown
         components={components(message, markers, stableContextSources)}
-        remarkPlugins={[remarkGfm]}
+        remarkPlugins={[remarkGfm.default]}
         rehypePlugins={[addQualityMarkersPlugin]}
       >
         {addCitations(message.message)}

@@ -23,6 +23,18 @@ function splitIntoSentences(text) {
     }
   }
 
+  // we only want to have around 40 sentences, so let's find out the group size and merge sentences if needed
+  const maxSentences = 40;
+  if (finalSentences.length > maxSentences) {
+    const groupSize = Math.ceil(finalSentences.length / maxSentences);
+    const mergedSentences = [];
+    for (let i = 0; i < finalSentences.length; i += groupSize) {
+      const group = finalSentences.slice(i, i + groupSize);
+      mergedSentences.push(group.join(' '));
+    }
+    return mergedSentences;
+  }
+
   return finalSentences;
 }
 

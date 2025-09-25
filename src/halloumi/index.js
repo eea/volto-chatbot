@@ -89,15 +89,13 @@ export async function getVerifyClaimResponse(model, context, claims) {
     });
   }
   const prompt = createHalloumiPrompt(context, claims);
-  // write prompt to a file named prompt.txt
-  // fs.writeFileSync(
-  //   '/home/tibi/work/tmp/prompt.txt',
-  //   JSON.stringify(prompt, null, 2),
-  // );
-  log('Halloumi prompt', JSON.stringify(prompt, null, 2));
-  const result = await halloumiGenerativeAPI(model, prompt).then((claims) => {
-    return convertGenerativesClaimToVerifyClaimResponse(claims, prompt);
-  });
+  const rawClaims = await halloumiGenerativeAPI(model, prompt);
+  const result = {
+    ...convertGenerativesClaimToVerifyClaimResponse(rawClaims, prompt),
+    rawClaims,
+    halloumiPrompt: prompt,
+  };
+
   return result;
 }
 

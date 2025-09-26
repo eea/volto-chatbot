@@ -71,7 +71,12 @@ export async function halloumiClassifierAPI(model, context, claims) {
   return output;
 }
 
-export async function getVerifyClaimResponse(model, context, claims) {
+export async function getVerifyClaimResponse(
+  model,
+  context,
+  claims,
+  maxContextSegments = 0,
+) {
   if (!context || !claims) {
     const response = {
       claims: [],
@@ -88,7 +93,12 @@ export async function getVerifyClaimResponse(model, context, claims) {
       return parsedResponse;
     });
   }
-  const prompt = createHalloumiPrompt(context, claims);
+  const prompt = createHalloumiPrompt({
+    context,
+    response: claims,
+    maxContextSegments,
+    request: undefined,
+  });
   const rawClaims = await halloumiGenerativeAPI(model, prompt);
   const result = {
     ...convertGenerativesClaimToVerifyClaimResponse(rawClaims, prompt),

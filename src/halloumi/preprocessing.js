@@ -7,7 +7,7 @@
  * @param text The input string to split.
  * @returns An array of sentence strings.
  */
-function splitIntoSentences(text) {
+function splitIntoSentences(text, maxSegments = 0) {
   const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
   const segments = segmenter.segment(text);
 
@@ -23,10 +23,13 @@ function splitIntoSentences(text) {
     }
   }
 
-  // we only want to have around 40 sentences, so let's find out the group size and merge sentences if needed
-  const maxSentences = 40;
-  if (finalSentences.length > maxSentences) {
-    const groupSize = Math.ceil(finalSentences.length / maxSentences);
+  if (maxSegments <= 0) {
+    return finalSentences;
+  }
+
+  // we only want to have around maxSentences, so let's find out the group size and merge sentences if needed
+  if (finalSentences.length > maxSegments) {
+    const groupSize = Math.ceil(finalSentences.length / maxSegments);
     const mergedSentences = [];
     for (let i = 0; i < finalSentences.length; i += groupSize) {
       const group = finalSentences.slice(i, i + groupSize);
@@ -80,21 +83,23 @@ function getOffsets(originalString, sentences) {
  * @param request The request or question that was used to produce the response.
  * @returns The Halloumi prompt.
  */
-export function createHalloumiPrompt(
+export function createHalloumiPrompt({
   context,
   response,
   request = 'Make one or more claims about information in the documents.',
-) {
-  const contextSentences = splitIntoSentences(context);
+  maxContextSegments = 0,
+}) {
+  const contextSentences = splitIntoSentences(context, maxContextSegments);
   const contextOffsets = getOffsets(context, contextSentences);
+
   const annotatedContextSentences = annotate(contextSentences, 's');
-  const annotatedContext = `<|context|>${annotatedContextSentences}<end||context>`;
 
-  const annotatedRequest = `<|request|><${request.trim()}><end||request>`;
-
-  const responseSentences = splitIntoSentences(response);
+  const responseSentences = splitIntoSentences(response, maxContextSegments);
   const responseOffsets = getOffsets(response, responseSentences);
   const annotatedResponseSentences = annotate(responseSentences, 'r');
+
+  const annotatedContext = `<|context|>${annotatedContextSentences}<end||context>`;
+  const annotatedRequest = `<|request|><${request.trim()}><end||request>`;
   const annotatedResponse = `<|response|>${annotatedResponseSentences}<end||response>`;
 
   const prompt = `${annotatedContext}${annotatedRequest}${annotatedResponse}`;

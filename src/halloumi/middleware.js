@@ -46,7 +46,7 @@ export default async function middleware(req, res, next) {
   const body = req.body;
 
   log('Halloumi body', body);
-  const { sources, answer } = body;
+  const { sources, answer, maxContextSegments = 0 } = body;
 
   res.set('Content-Type', 'application/json');
 
@@ -56,10 +56,12 @@ export default async function middleware(req, res, next) {
       // TODO: map with citation id
       sources.join('\n---\n'),
       answer,
+      maxContextSegments,
     );
     log('Halloumi response', resp);
     res.send(resp);
   } catch (error) {
     res.send({ error: `Halloumi error: ${error}` });
+    throw error;
   }
 }

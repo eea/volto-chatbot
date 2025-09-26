@@ -293,28 +293,38 @@ class SubmitHandler {
 
     await delay(50);
 
-    const packetWarningTime = 10000;
-    const packetErrorTime = 15000;
+    const packetWarningTime = 15000;
+    const packetErrorTime = 25000;
     let warningTimeout = setTimeout(() => {
-      this.handlePacketTimeout(promise);
+      this.handlePacketTimeout("Chat is taking a long time to reply.");
     }, packetWarningTime);
     let errorTimeout = setTimeout(() => {
-      this.handlePacketTimeout(promise);
+      this.handlePacketTimeout(
+        "No response was received from the chat, stopping",
+        promise,
+      );
     }, packetErrorTime);
 
     for await (const bit of promise) {
       clearTimeout(warningTimeout);
       clearTimeout(errorTimeout);
-      this.handlePacketTimeout()
-      
+      this.handlePacketTimeout();
+
       if (bit.error) {
         stack.error = bit.error;
-        throw bit.error
+        throw bit.error;
       } else if (bit.isComplete) {
         stack.isComplete = true;
       } else {
-        warningTimeout = setTimeout(() => {this.handlePacketTimeout("Chat is taking a long time to reply.") }, packetWarningTime);
-        errorTimeout = setTimeout(() => {this.handlePacketTimeout("No response was received from the chat, stopping", promise) }, packetErrorTime);
+        warningTimeout = setTimeout(() => {
+          this.handlePacketTimeout("Chat is taking a long time to reply.");
+        }, packetWarningTime);
+        errorTimeout = setTimeout(() => {
+          this.handlePacketTimeout(
+            "No response was received from the chat, stopping",
+            promise,
+          );
+        }, packetErrorTime);
         stack.push(bit.packet);
       }
 

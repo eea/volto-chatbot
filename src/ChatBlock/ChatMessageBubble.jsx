@@ -117,6 +117,7 @@ export function ChatMessageBubble(props) {
     enableShowTotalFailMessage,
     enableMatomoTracking,
     persona,
+    maxContextSegments,
   } = props;
   const { remarkGfm } = libs; // , rehypePrism
   const { citations = {}, documents = [], type } = message;
@@ -203,6 +204,7 @@ export function ChatMessageBubble(props) {
     doQualityControl,
     addCitations(message.message),
     stableContextSources,
+    maxContextSegments,
   );
 
   const claims = markers?.claims || [];

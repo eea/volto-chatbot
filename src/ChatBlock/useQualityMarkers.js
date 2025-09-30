@@ -17,6 +17,7 @@ async function fetchHalloumi(answer, sources) {
 }
 
 const FAILURE_RATIONALE = 'Answer cannot be verified due to empty sources.';
+const TOOLARGE_RATIONALE = 'Verification failed: Too many sources provided.';
 const TIMEOUT_RATIONALE =
   'Verification failed: Halloumi service is unreachable or timed out.';
 
@@ -39,6 +40,26 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
               endOffset: message.length,
               score: 0,
               rationale: FAILURE_RATIONALE,
+            },
+          ],
+          citations: {},
+        });
+        return;
+      }
+
+      console.log('Halloumi sources:', sources.length, sources);
+      if (sources.length > 20) {
+        console.warn(
+          `Warning: Too many sources (${sources.length}). Skipping quality control.`,
+        );
+
+        setHalloumiResponse({
+          claims: [
+            {
+              startOffset: 0,
+              endOffset: message.length,
+              score: 0,
+              rationale: TOOLARGE_RATIONALE,
             },
           ],
           citations: {},

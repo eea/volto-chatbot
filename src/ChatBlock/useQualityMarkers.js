@@ -47,8 +47,9 @@ export default function useQualityMarkers(doQualityControl, message, sources) {
         return;
       }
 
-      console.log('Halloumi sources:', sources.length, sources);
+      // console.log('Halloumi sources:', sources.length, sources);
       if (sources.length > 20) {
+        // eslint-disable-next-line no-console
         console.warn(
           `Warning: Too many sources (${sources.length}). Skipping quality control.`,
         );

@@ -174,10 +174,15 @@ class SubmitHandler {
     message,
   } = {}) {
     if (this.currChatSessionId === null) {
-      this.currChatSessionId = await createChatSession(
-        this.persona.id,
-        this.chatTitle,
-      );
+      try {
+        this.currChatSessionId = await createChatSession(
+          this.persona.id,
+          this.chatTitle,
+        );
+      } catch (error) {
+        this.setError("Failed to create a chat session.");
+        return;
+      }
     }
 
     let newCompleteMessageDetail = {};

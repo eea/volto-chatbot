@@ -557,11 +557,12 @@ export function useBackendChat({
     if (chatState === ChatState.ASLEEP) {
       return;
     }
-    const timeout = setTimeout(() => {
-      if (chatState === ChatState.READY) {
-        setChatState(ChatState.ASLEEP);
-      }
-    }, rewakeDelayInMs);
+    let timeout = null;
+    if (chatState === ChatState.READY) {
+      timeout = setTimeout(() => {
+          setChatState(ChatState.ASLEEP);
+        }, rewakeDelayInMs);
+    }
     return () => clearTimeout(timeout);
   }, [chatState]);
 

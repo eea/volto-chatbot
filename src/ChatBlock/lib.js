@@ -9,35 +9,41 @@ export const delay = (ms) => {
 // GET Request to DANSWER_URL/api/health to wake it up before starting.
 //   Will retry 3 times over 90 seconds and throw if no response received or unhealthy status is returned.
 export async function wakeApi() {
-  let timeout = 15000;
-
-  function fetchWithRetry(url, retries, abortController) {
-    return fetch(url, {
-      signal: abortController,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    }).catch((error) => {
-      if ("connection" in navigator && navigator.connection.saveData === true) {
-        throw error;
-      }
-      if (retries > 0 && error.message !== "Request timed out") {
-        // Add 5 seconds to the timeout each retry
-        timeout += 5000;
-        return fetchWithRetry(url, retries - 1, AbortSignal.timeout(timeout));
-      } else {
-        throw error;
-      }
-    });
-  }
+  // let timeout = 15000;
+  // 
+  // function fetchWithRetry(url, retries, abortController) {
+  //   return fetch(url, {
+  //     signal: abortController,
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   }).catch((error) => {
+  //     if ("connection" in navigator && navigator.connection.saveData === true) {
+  //       throw error;
+  //     }
+  //     if (retries > 0 && error.message !== "Request timed out") {
+  //       // Add 5 seconds to the timeout each retry
+  //       timeout += 5000;
+  //       return fetchWithRetry(url, retries - 1, AbortSignal.timeout(timeout));
+  //     } else {
+  //       throw error;
+  //     }
+  //   });
+  // }
   let healthResponse = undefined;
   const healthCheckUrl = config.settings["volto-chatbot"].rewakeUrl;
   try {
-    healthResponse = await fetchWithRetry(
-      healthCheckUrl,
-      3,
-      AbortSignal.timeout(timeout),
-    );
+    healthResponse = await fetch(healthCheckUrl, {
+      signal: AbortSignal.timeout(60000),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    // healthResponse = await fetchWithRetry(
+    //   healthCheckUrl,
+    //   3,
+    //   AbortSignal.timeout(timeout),
+    // );
   } catch (err) {
     // Timeout reached
     if (err.name === "TimeoutError") {

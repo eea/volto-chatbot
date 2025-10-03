@@ -599,17 +599,20 @@ export function useBackendChat({
     }
   };
 
-  const handleSubmit = React.useCallback(function handleSubmit(input) {
-    const onSubmit = submitHandler.current?.onSubmit;
+  const handleSubmit = React.useCallback(
+    function handleSubmit(input) {
+      const onSubmit = submitHandler.current?.onSubmit;
 
-    if (!onSubmit) {
-      throw new Error("TESTING: NO SUBMISSION HANDLER")
-    }
+      if (!onSubmit) {
+        throw new Error("TESTING: NO SUBMISSION HANDLER");
+      }
 
-    setError(null);
-    setChatState(ChatState.SUBMITTING);
-    setMessageToSubmit(input)
-  }, [chatState])
+      setError(null);
+      setChatState(ChatState.SUBMITTING);
+      setMessageToSubmit(input);
+    },
+    [chatState],
+  );
   React.useEffect(() => {
     if (chatState !== ChatState.SUBMITTING) {
       return;
@@ -617,22 +620,18 @@ export function useBackendChat({
     if (!messageToSubmit) {
       return;
     }
-    wake(chatState)
-      .then((isAwake) => {
-        if (isAwake) {
-          const onSubmit = submitHandler.current?.onSubmit;
-          onSubmit(messageToSubmit);
-        }
-      })
-      .catch((errorReason) => {
-        setChatState(ChatState.ERRORED);
-        setError(
-          errorReason instanceof Error ? errorReason.message : errorReason,
-        );
-      })
-      .finally(() => {
-        setMessageToSubmit(null);
-      });
+
+    const onSubmit = submitHandler.current?.onSubmit;
+
+    try {
+      onSubmit(messageToSubmit);
+    } catch (errorReason) {
+      setChatState(ChatState.ERRORED);
+      setError(
+        errorReason instanceof Error ? errorReason.message : errorReason,
+      );
+    }
+    setMessageToSubmit(null);
   }, [messageToSubmit, chatState, wake]);
 
   return {

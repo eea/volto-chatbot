@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-chatbot",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "@eeacms/volto-chatbot: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -84,7 +84,6 @@
     "react-textarea-autosize": "^8.5.3",
     "rehype-prism-plus": "1.6.0",
     "remark-gfm": "3.0.1",
-    "unist-util-visit": "2.0.3",
     "uuid": "10.0.0"
   }
 }

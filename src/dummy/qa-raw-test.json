@@ -1,0 +1,18 @@
+{
+  "choices": [
+    {
+      "message": {
+        "content": "Claim 1: This is a test claim. Citations: [1]. Explanation: Test explanation."
+      },
+      "logprobs": {
+        "content": [
+          {
+            "token": "supported",
+            "logprob": -0.1,
+            "bytes": []
+          }
+        ]
+      }
+    }
+  ]
+}

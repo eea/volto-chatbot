@@ -1,38 +1,11 @@
 import { halloumiGenerativeAPI } from './index';
-import fs from 'fs';
-import path from 'path';
-
-// Mock the getLLMResponse function directly for testing its mocking behavior
-// Since getLLMResponse is not exported, we need to mock the internal behavior
-// or test halloumiGenerativeAPI which uses getLLMResponse.
-// For this test, we will mock the fs.readFileSync to control the mock file content.
 
 describe('halloumiGenerativeAPI with MOCK_LLM_CALL', () => {
   const originalEnv = process.env;
-  const mockFilePath = path.join(
-    path.dirname(require.resolve('@eeacms/volto-chatbot')),
-    'dummy/qa-raw-test.json',
-  );
 
   beforeEach(() => {
     jest.resetModules(); // Most important - reset modules between test runs
-    process.env = { ...originalEnv, MOCK_LLM_CALL: 'true', MOCK_INDEX: 'test' };
-
-    // Mock fs.readFileSync to return our dummy content
-    jest.spyOn(fs, 'readFileSync').mockReturnValueOnce(
-      JSON.stringify({
-        choices: [
-          {
-            message: {
-              content: 'This is a mocked LLM response.',
-            },
-            logprobs: {
-              content: [],
-            },
-          },
-        ],
-      }),
-    );
+    process.env = { ...originalEnv, MOCK_LLM_CALL: 'true', MOCK_INDEX: '3' };
   });
 
   afterEach(() => {
@@ -51,12 +24,13 @@ describe('halloumiGenerativeAPI with MOCK_LLM_CALL', () => {
     // We are testing halloumiGenerativeAPI which internally calls getLLMResponse
     // and getLLMResponse uses the MOCK_LLM_CALL env variable.
     const response = await halloumiGenerativeAPI(model, prompt);
+    console.log(response);
 
-    expect(fs.readFileSync).toHaveBeenCalledWith(mockFilePath, 'utf-8');
-    expect(response[0].claim).toEqual('This is a test claim.');
-    expect(response[0].citations).toEqual([1]);
-    expect(response[0].explanation).toEqual('Test explanation.');
-    expect(response[0].probabilities.get('supported')).toBeDefined();
-    expect(response[0].probabilities.get('unsupported')).toBeDefined();
+    expect(response[0].claimString).toEqual(
+      '**France – total waste generation (latest available data)**  \n',
+    );
+    expect(response[0].citations).toEqual([
+      38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
+    ]);
   });
 });

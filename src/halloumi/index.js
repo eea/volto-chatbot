@@ -65,11 +65,12 @@ export async function getVerifyClaimResponse(model, context, claims) {
 const tokenChoices = new Set(['supported', 'unsupported']);
 
 function getMockFilePath() {
-  const pkgPath = require.resolve('@eeacms/volto-chatbot');
-  const baseDir = path.dirname(pkgPath);
+  // const pkgPath = require.resolve('@eeacms/volto-chatbot');
+  // const baseDir = path.dirname(pkgPath);
   return path.join(
-    baseDir,
-    `dummy/qa-raw-${process.env.MOCK_INDEX || '1'}.json`,
+    // baseDir,
+    __dirname,
+    `../dummy/qa-raw-${process.env.MOCK_INDEX || '1'}.json`,
   );
 }
 

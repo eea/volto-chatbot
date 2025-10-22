@@ -1,4 +1,5 @@
-// import fs from 'fs';
+import fs from 'fs';
+import path from 'path';
 import debug from 'debug';
 import fetch from 'node-fetch';
 import {
@@ -23,54 +24,6 @@ export function applyPlattScaling(platt, probability) {
   return sigmoid(-1 * (platt.a * log_prob + platt.b));
 }
 
-export async function halloumiClassifierAPI(model, context, claims) {
-  const classifierPrompts = createHalloumiClassifierPrompts(context, claims);
-  const headers = {
-    'Content-Type': 'application/json',
-    accept: 'application/json',
-  };
-  if (model.apiKey) {
-    headers['Authorization'] = `Bearer ${model.apiKey}`;
-  }
-  const data = {
-    input: classifierPrompts.prompts,
-    model: model.name,
-  };
-
-  const response = await fetch(model.apiUrl, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(data),
-  });
-  const jsonData = await response.json();
-  const output = {
-    claims: [],
-  };
-  for (let i = 0; i < classifierPrompts.prompts.length; i++) {
-    const embedding = jsonData.data[i].embedding;
-    const probs = getClassifierProbabilitiesFromLogits(embedding);
-    if (model.plattScaling) {
-      const platt = model.plattScaling;
-      const unsupportedScore = applyPlattScaling(platt, probs[1]);
-      const supportedScore = 1 - unsupportedScore;
-      probs[0] = supportedScore;
-      probs[1] = unsupportedScore;
-    }
-    const offset = classifierPrompts.responseOffsets.get(i + 1);
-    // 0-th index is the supported class.
-    // 1-th index is the unsupported class.
-    output.claims.push({
-      startOffset: offset.startOffset,
-      endOffset: offset.endOffset,
-      citationIds: [],
-      score: probs[0],
-      rationale: '',
-    });
-  }
-
-  return output;
-}
-
 export async function getVerifyClaimResponse(model, context, claims) {
   if (!context || !claims) {
     const response = {
@@ -88,20 +41,77 @@ export async function getVerifyClaimResponse(model, context, claims) {
       return parsedResponse;
     });
   }
+
   const prompt = createHalloumiPrompt(context, claims);
   // write prompt to a file named prompt.txt
   // fs.writeFileSync(
   //   '/home/tibi/work/tmp/prompt.txt',
   //   JSON.stringify(prompt, null, 2),
   // );
+
   log('Halloumi prompt', JSON.stringify(prompt, null, 2));
-  const result = await halloumiGenerativeAPI(model, prompt).then((claims) => {
-    return convertGenerativesClaimToVerifyClaimResponse(claims, prompt);
-  });
+
+  const rawClaims = await halloumiGenerativeAPI(model, prompt);
+  log('Raw claims', rawClaims);
+  const result = {
+    ...convertGenerativesClaimToVerifyClaimResponse(rawClaims, prompt),
+    rawClaims,
+    halloumiPrompt: prompt,
+  };
+
   return result;
 }
 
 const tokenChoices = new Set(['supported', 'unsupported']);
+
+function getMockFilePath() {
+  // const pkgPath = require.resolve('@eeacms/volto-chatbot');
+  // const baseDir = path.dirname(pkgPath);
+  return path.join(
+    // baseDir,
+    __dirname,
+    `../dummy/qa-raw-${process.env.MOCK_INDEX || '1'}.json`,
+  );
+}
+
+async function getLLMResponse(model, prompt) {
+  let jsonData;
+
+  if (process.env.MOCK_LLM_CALL) {
+    const filePath = getMockFilePath();
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    jsonData = JSON.parse(fileContent);
+  } else {
+    const data = {
+      messages: [{ role: 'user', content: prompt.prompt }],
+      temperature: 0.0,
+      model: model.name,
+      logprobs: true,
+      top_logprobs: 3,
+    };
+    const headers = {
+      'Content-Type': 'application/json',
+      accept: 'application/json',
+    };
+    if (model.apiKey) {
+      headers['Authorization'] = `Bearer ${model.apiKey}`;
+    }
+
+    const response = await fetch(model.apiUrl, {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify(data),
+    });
+    jsonData = await response.json();
+  }
+
+  if (process.env.DUMP_HALLOUMI_RESPONSE) {
+    const filePath = getMockFilePath();
+    fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2));
+  }
+
+  return jsonData;
+}
 
 /**
  * Gets all claims from a response.
@@ -109,35 +119,9 @@ const tokenChoices = new Set(['supported', 'unsupported']);
  * @returns A list of claim objects.
  */
 export async function halloumiGenerativeAPI(model, prompt) {
-  const data = {
-    messages: [{ role: 'user', content: prompt.prompt }],
-    temperature: 0.0,
-    model: model.name,
-    logprobs: true,
-    top_logprobs: 3,
-  };
-  const headers = {
-    'Content-Type': 'application/json',
-    accept: 'application/json',
-  };
-  if (model.apiKey) {
-    headers['Authorization'] = `Bearer ${model.apiKey}`;
-  }
+  const jsonData = await getLLMResponse(model, prompt);
 
-  const response = await fetch(model.apiUrl, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(data),
-  });
-
-  const jsonData = await response.json();
-
-  // write jsonData to a file named response.json
-  // fs.writeFileSync(
-  //   '/home/tibi/work/tmp/response.json',
-  //   JSON.stringify(jsonData, null, 2),
-  // );
-  log('Classifier response', jsonData);
+  log('Generative response', jsonData);
   log('Logprobs', jsonData.choices[0].logprobs.content);
 
   const logits = jsonData.choices[0].logprobs.content;
@@ -216,4 +200,53 @@ export function convertGenerativesClaimToVerifyClaimResponse(
   };
 
   return response;
+}
+
+// this is not normally used
+export async function halloumiClassifierAPI(model, context, claims) {
+  const classifierPrompts = createHalloumiClassifierPrompts(context, claims);
+  const headers = {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+  };
+  if (model.apiKey) {
+    headers['Authorization'] = `Bearer ${model.apiKey}`;
+  }
+  const data = {
+    input: classifierPrompts.prompts,
+    model: model.name,
+  };
+
+  const response = await fetch(model.apiUrl, {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(data),
+  });
+  const jsonData = await response.json();
+  const output = {
+    claims: [],
+  };
+  for (let i = 0; i < classifierPrompts.prompts.length; i++) {
+    const embedding = jsonData.data[i].embedding;
+    const probs = getClassifierProbabilitiesFromLogits(embedding);
+    if (model.plattScaling) {
+      const platt = model.plattScaling;
+      const unsupportedScore = applyPlattScaling(platt, probs[1]);
+      const supportedScore = 1 - unsupportedScore;
+      probs[0] = supportedScore;
+      probs[1] = unsupportedScore;
+    }
+    const offset = classifierPrompts.responseOffsets.get(i + 1);
+    // 0-th index is the supported class.
+    // 1-th index is the unsupported class.
+    output.claims.push({
+      startOffset: offset.startOffset,
+      endOffset: offset.endOffset,
+      citationIds: [],
+      score: probs[0],
+      rationale: '',
+    });
+  }
+
+  return output;
 }

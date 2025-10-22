@@ -104,23 +104,40 @@ Go to http://localhost:3000
 
 To properly configure the middleware and authenticate with the Danswer service, ensure that the following environment variables are set:
 
-| **Environment Variable** | **Description**                                                        |
-| ------------------------ | ---------------------------------------------------------------------- |
-| `DANSWER_URL`            | The base URL of the Danswer service (e.g., `https://api.danswer.com`). |
-| `DANSWER_USERNAME`       | Username for authenticating with the Danswer service.                  |
-| `DANSWER_PASSWORD`       | Password for authenticating with the Danswer service.                  |
+This document lists the environment variables used in the Volto Chatbot project.
 
-### Example `.env` File
+- `DANSWER_URL`
+The base URL for the Danswer service. Used for API calls to Danswer.
 
-Create a `.env` file in your project root with the following content:
+- `DANSWER_USERNAME`
+The username for authenticating with the Danswer service.
 
-```env
-DANSWER_URL=https://api.danswer.com
-DANSWER_USERNAME=your_username
-DANSWER_PASSWORD=your_password
-```
+- `DANSWER_PASSWORD`
+The password for authenticating with the Danswer service.
 
-If you encounter issues, double-check your `.env` configuration and ensure the Danswer service is accessible at the URL you’ve provided.
+- `DANSWER_API_KEY`
+The API key for authenticating with the Danswer service.
+
+- `JEST_USE_SETUP`
+Used in Jest configuration. When set to 'ON', it enables a specific Jest setup.
+
+- `MOCK_INDEX`
+Used for mocking data in development/testing. Specifies the index of the dummy data to use.
+
+- `MOCK_LLM_CALL`
+When set, it enables mocking of LLM calls, likely for testing purposes.
+
+- `DUMP_HALLOUMI_RESPONSE`
+When set, it enables dumping of Halloumi responses, likely for debugging.
+
+- `MOCK_STREAM_DELAY`
+Specifies a delay for mock streaming, used in testing or development.
+
+- `LLMGW_URL`
+The URL for the LLM Gateway service.
+
+- `LLMGW_TOKEN`
+The token for authenticating with the LLM Gateway service.
 
 ## Release
 

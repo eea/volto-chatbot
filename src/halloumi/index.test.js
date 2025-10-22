@@ -24,7 +24,6 @@ describe('halloumiGenerativeAPI with MOCK_LLM_CALL', () => {
     // We are testing halloumiGenerativeAPI which internally calls getLLMResponse
     // and getLLMResponse uses the MOCK_LLM_CALL env variable.
     const response = await halloumiGenerativeAPI(model, prompt);
-    console.log(response);
 
     expect(response[0].claimString).toEqual(
       '**France – total waste generation (latest available data)**  \n',

@@ -193,7 +193,7 @@ range is from 0 to 100`,
           {
             '@id': 'one',
             label:
-              '❌Not supported by our content. Likely guesses—always double-check.',
+              '❌ {score} factuality score. Not supported by our content. Likely guesses—always double-check.',
             start: 0,
             end: 19,
             color: 'red',
@@ -201,7 +201,7 @@ range is from 0 to 100`,
           {
             '@id': 'two',
             label:
-              '🔍Mostly not supported—likely based on AI logic. Please verify elsewhere.',
+              '❗ {score} factuality score. Mostly not supported—likely based on AI logic. Please verify elsewhere.',
             start: 20,
             end: 39,
             color: 'orange',
@@ -209,23 +209,23 @@ range is from 0 to 100`,
           {
             '@id': 'three',
             label:
-              '❗Partially supported. Double-check if using for important decisions.',
+              '⚠️ {score} factuality score. Partially supported. Double-check if using for important decisions.',
             start: 40,
-            end: 59,
+            end: 79,
             color: 'yellow',
           },
           {
             '@id': 'four',
             label:
-              '⚠️ Mostly supported, but some parts may not be. Consider checking key points.',
-            start: 60,
+              'ℹ️ {score} factuality score. Mostly supported, but some parts may not be. Consider checking key points.',
+            start: 80,
             end: 94,
             color: 'olive',
           },
           {
             '@id': 'five',
             label:
-              '✅Fully supported by our content. Safe to trust—no need to double-check.',
+              '✅ {score} factuality score. Fully supported by our content. Safe to trust—no need to double-check.',
             start: 95,
             end: 100,
             color: 'green',

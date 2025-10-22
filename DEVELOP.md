@@ -4,13 +4,13 @@
 
 1. Make sure you have `docker` and `docker compose` installed and running on your machine:
 
-    ```Bash
-    git clone https://github.com/eea/volto-addon-template.git
-    cd volto-addon-template
-    git checkout -b bugfix-123456 develop
-    make
-    make start
-    ```
+   ```Bash
+   git clone https://github.com/eea/volto-addon-template.git
+   cd volto-addon-template
+   git checkout -b bugfix-123456 develop
+   make
+   make start
+   ```
 
 1. Wait for `Volto started at 0.0.0.0:3000` meesage
 
@@ -18,9 +18,9 @@
 
 1. Initialize git hooks
 
-    ```Bash
-    yarn prepare
-    ```
+   ```Bash
+   yarn prepare
+   ```
 
 1. Happy hacking!
 
@@ -80,27 +80,45 @@ project where you added `volto-addon-template` to `mrs.developer.json`
 
 Go to:
 
-  ```BASH
-  cd src/addons/volto-addon-template/
-  ```
+```BASH
+cd src/addons/volto-addon-template/
+```
 
 Start:
 
-  ```Bash
-  make
-  make start
-  ```
+```Bash
+make
+make start
+```
 
 This will build and start with Docker a clean `Plone backend` and `Volto Frontend` with `volto-addon-template` block installed.
 
 Open Cypress Interface:
 
-  ```Bash
-  make cypress-open
-  ```
+```Bash
+make cypress-open
+```
 
 Or run it:
 
-  ```Bash
-  make cypress-run
-  ```
+```Bash
+make cypress-run
+```
+
+## Mock develop environment
+
+The following environment variables are used in the develop environment:
+
+```Bash
+MOCK_INDEX=1
+MOCK_LLM_CALL=true
+MOCK_STREAM_DELAY=1
+```
+
+You can also dump the Halloumi response by setting:
+
+```Bash
+DUMP_HALLOUMI_RESPONSE=1
+```
+
+This is kind of exclusive, you don't want to dump if you're mocking the LLM call.

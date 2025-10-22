@@ -46,6 +46,20 @@ export function ToolCall({ tool_args, tool_name, showShimmer }) {
 
 function addQualityMarkersPlugin() {
   return function (tree) {
+    visit(tree, 'element', function (node, idx, parent) {
+      node.children?.forEach((child, cidx) => {
+        if (child.type === 'raw' && child.value?.trim() === '<br>') {
+          const newNode = {
+            ...child,
+            type: 'element',
+            tagName: 'br',
+            children: [],
+            value: '',
+          };
+          node.children[cidx] = newNode;
+        }
+      });
+    });
     visit(tree, 'text', function (node, idx, parent) {
       if (node.value?.trim()) {
         const newNode = {
@@ -439,7 +453,7 @@ export function ChatMessageBubble(props) {
           ) : (
             <Markdown
               components={components(message, markers, stableContextSources)}
-              remarkPlugins={[remarkGfm]}
+              remarkPlugins={[remarkGfm.default]}
               rehypePlugins={[addQualityMarkersPlugin]}
             >
               {addCitations(message.message)}

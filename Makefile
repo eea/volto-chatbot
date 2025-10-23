@@ -96,6 +96,10 @@ test:			## Run jest tests
 test-update:	## Update jest tests snapshots
 	${DOCKER_COMPOSE} run -e CI=1 frontend test -u
 
+.PHONY: addon-test
+addon-test:		## Run jest tests for the addon
+	cd ../../ && CI=true RAZZLE_JEST_CONFIG=src/addons/volto-chatbot/jest-addon.config.js yarn test src/addons/volto-chatbot/src/halloumi/ --watchAll=false --reporters=default --reporters=jest-junit --collectCoverage
+
 .PHONY: stylelint
 stylelint:		## Stylelint
 	$(NODE_MODULES)/.bin/stylelint --allow-empty-input 'src/**/*.{css,less}'

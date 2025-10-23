@@ -107,37 +107,40 @@ To properly configure the middleware and authenticate with the Danswer service, 
 This document lists the environment variables used in the Volto Chatbot project.
 
 - `DANSWER_URL`
-The base URL for the Danswer service. Used for API calls to Danswer.
+  The base URL for the Danswer service. Used for API calls to Danswer.
 
 - `DANSWER_USERNAME`
-The username for authenticating with the Danswer service.
+  The username for authenticating with the Danswer service. **(Deprecated: Use `DANSWER_API_KEY` instead)**
 
 - `DANSWER_PASSWORD`
-The password for authenticating with the Danswer service.
+  The password for authenticating with the Danswer service. **(Deprecated: Use `DANSWER_API_KEY` instead)**
 
 - `DANSWER_API_KEY`
-The API key for authenticating with the Danswer service.
+  The API key for authenticating with the Danswer service. This is the recommended authentication method.
 
 - `JEST_USE_SETUP`
-Used in Jest configuration. When set to 'ON', it enables a specific Jest setup.
+  Used in Jest configuration. When set to 'ON', it enables a specific Jest setup.
 
-- `MOCK_INDEX`
-Used for mocking data in development/testing. Specifies the index of the dummy data to use.
+- `MOCK_HALLOUMI_FILE_PATH`
+  When set, this specifies the absolute path to the JSON file containing the mocked Halloumi response. Setting this variable enables mocking of Halloumi API calls.
 
-- `MOCK_LLM_CALL`
-When set, it enables mocking of LLM calls, likely for testing purposes.
-
-- `DUMP_HALLOUMI_RESPONSE`
-When set, it enables dumping of Halloumi responses, likely for debugging.
+- `DUMP_HALLOUMI_FILE_PATH`
+  When set, the Halloumi response will be dumped to the specified absolute file path for debugging or to create new mock files.
 
 - `MOCK_STREAM_DELAY`
-Specifies a delay for mock streaming, used in testing or development.
+  Specifies a delay for mock streaming, used in testing or development.
+
+- `MOCK_LLM_FILE_PATH`
+  When set, this specifies the absolute path to the JSONL file containing the mocked Danswer stream response. Setting this variable enables mocking of Danswer LLM calls.
+
+- `DUMP_LLM_RESPONSE_FILE_PATH`
+  When set, the LLM response will be dumped to the specified absolute file path for debugging or to create new mock files.
 
 - `LLMGW_URL`
-The URL for the LLM Gateway service.
+  The URL for the LLM Gateway service.
 
 - `LLMGW_TOKEN`
-The token for authenticating with the LLM Gateway service.
+  The token for authenticating with the LLM Gateway service.
 
 ## Release
 

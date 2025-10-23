@@ -1,11 +1,15 @@
 import { halloumiGenerativeAPI } from './index';
+import path from 'path';
 
-describe('halloumiGenerativeAPI with MOCK_LLM_CALL', () => {
+describe('halloumiGenerativeAPI reads from mock file', () => {
   const originalEnv = process.env;
 
   beforeEach(() => {
     jest.resetModules(); // Most important - reset modules between test runs
-    process.env = { ...originalEnv, MOCK_LLM_CALL: 'true', MOCK_INDEX: '3' };
+    process.env = {
+      ...originalEnv,
+      MOCK_HALLOUMI_FILE_PATH: path.join(__dirname, '../dummy/qa-raw-3.json'),
+    };
   });
 
   afterEach(() => {

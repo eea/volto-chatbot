@@ -1,7 +1,6 @@
-import fs from 'fs';
-import path from 'path';
 import debug from 'debug';
 import fetch from 'node-fetch';
+import fs from 'fs';
 import {
   getClaimsFromResponse,
   getClassifierProbabilitiesFromLogits,
@@ -68,21 +67,11 @@ export async function getVerifyClaimResponse(
 
 const tokenChoices = new Set(['supported', 'unsupported']);
 
-function getMockFilePath() {
-  // const pkgPath = require.resolve('@eeacms/volto-chatbot');
-  // const baseDir = path.dirname(pkgPath);
-  return path.join(
-    // baseDir,
-    __dirname,
-    `../dummy/qa-raw-${process.env.MOCK_INDEX || '1'}.json`,
-  );
-}
-
 async function getLLMResponse(model, prompt) {
   let jsonData;
 
-  if (process.env.MOCK_LLM_CALL) {
-    const filePath = getMockFilePath();
+  if (process.env.MOCK_HALLOUMI_FILE_PATH) {
+    const filePath = process.env.MOCK_HALLOUMI_FILE_PATH;
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     jsonData = JSON.parse(fileContent);
   } else {
@@ -109,9 +98,10 @@ async function getLLMResponse(model, prompt) {
     jsonData = await response.json();
   }
 
-  if (process.env.DUMP_HALLOUMI_RESPONSE) {
-    const filePath = getMockFilePath();
+  if (process.env.DUMP_HALLOUMI_FILE_PATH) {
+    const filePath = process.env.DUMP_HALLOUMI_FILE_PATH;
     fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2));
+    log(`Dumped halloumi response: ${filePath}`);
   }
 
   return jsonData;

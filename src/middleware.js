@@ -78,17 +78,15 @@ function mock_create_chat(res) {
   res.end();
 }
 
-function getMockFilePath() {
-  const pkgPath = require.resolve('@eeacms/volto-chatbot');
-  const baseDir = path.dirname(pkgPath);
-  return path.join(
-    baseDir,
-    `dummy/response-${process.env.MOCK_INDEX || '1'}.jsonl`,
-  );
-}
-
 function mock_send_message(res) {
-  const filePath = getMockFilePath();
+  const filePath = process.env.MOCK_LLM_FILE_PATH;
+  if (!filePath) {
+    log('MOCK_LLM_FILE_PATH is not set. Cannot mock send message.');
+    res
+      .status(500)
+      .send('Internal Server Error: MOCK_LLM_FILE_PATH not set.');
+    return;
+  }
   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
 
   let buffer = '';
@@ -185,24 +183,33 @@ async function send_danswer_request(
     options.body = JSON.stringify(req.body);
   }
 
-  if (process.env.MOCK_LLM_CALL) {
-    if (req.url.endsWith('send-message')) {
-      try {
-        mock_send_message(res);
-      } catch (e) {
-        log(e);
-      }
-      return;
+  if (process.env.MOCK_LLM_FILE_PATH && req.url.endsWith('send-message')) {
+    try {
+      mock_send_message(res);
+    } catch (e) {
+      log(e);
     }
-    if (req.url.endsWith('create-chat-session')) {
-      mock_create_chat(res);
-      return;
-    }
+    return;
+  }
+
+  if (
+    process.env.MOCK_LLM_FILE_PATH &&
+    req.url.endsWith('create-chat-session')
+  ) {
+    mock_create_chat(res);
+    return;
   }
 
   try {
     log(`Fetching ${url}`);
     const response = await fetch(url, options, req.body);
+
+    if (process.env.DUMP_LLM_RESPONSE_FILE_PATH) {
+      const filePath = process.env.DUMP_LLM_RESPONSE_FILE_PATH;
+      const writer = fs.createWriteStream(filePath);
+      response.body.pipe(writer);
+      log(`Dumped LLM response to: ${filePath}`);
+    }
 
     if (!api_key) {
       if (response.headers.get('transfer-encoding') === 'chunked') {

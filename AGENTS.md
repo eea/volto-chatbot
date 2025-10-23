@@ -86,6 +86,7 @@ The project adheres to several development conventions to maintain code quality 
     *   Open Cypress test runner: `make cypress-open`
 *   **Pre-commit Hook:** A `pre-commit` hook is configured to automatically run `stylelint:fix`, `prettier:fix`, and `lint:fix` before each commit.
 *   **Internationalization:** Generate translation files: `make i18n`
+*   **Git Workflow:** When committing changes, always use `git status` to review changes and then `git add <relevant files changed>` to stage specific files, instead of `git add .`.
 
 For more detailed contribution guidelines, refer to `DEVELOP.md`.
 For release procedures, refer to `RELEASE.md`.

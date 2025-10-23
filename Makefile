@@ -98,7 +98,7 @@ test-update:	## Update jest tests snapshots
 
 .PHONY: addon-test
 addon-test:		## Run jest tests for the addon
-	cd ../../ && CI=true RAZZLE_JEST_CONFIG=src/addons/volto-chatbot/jest-addon.config.js yarn test src/addons/volto-chatbot/src/halloumi/ --watchAll=false --reporters=default --reporters=jest-junit --collectCoverage
+	cd ../../ && CI=true RAZZLE_JEST_CONFIG=src/addons/volto-chatbot/jest-addon.config.js yarn test src/addons/volto-chatbot/src/ --watchAll=false --reporters=default --reporters=jest-junit --collectCoverage
 
 .PHONY: stylelint
 stylelint:		## Stylelint

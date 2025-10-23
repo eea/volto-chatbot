@@ -121,26 +121,28 @@ This document lists the environment variables used in the Volto Chatbot project.
 - `JEST_USE_SETUP`
   Used in Jest configuration. When set to 'ON', it enables a specific Jest setup.
 
+- `LLMGW_URL`
+  The URL for the LLM Gateway service.
+
+- `LLMGW_TOKEN`
+  The token for authenticating with the LLM Gateway service.
+
+### Development-specific environment variables
+
 - `MOCK_HALLOUMI_FILE_PATH`
   When set, this specifies the absolute path to the JSON file containing the mocked Halloumi response. Setting this variable enables mocking of Halloumi API calls.
 
 - `DUMP_HALLOUMI_FILE_PATH`
   When set, the Halloumi response will be dumped to the specified absolute file path for debugging or to create new mock files.
 
-- `MOCK_STREAM_DELAY`
-  Specifies a delay for mock streaming, used in testing or development.
-
 - `MOCK_LLM_FILE_PATH`
   When set, this specifies the absolute path to the JSONL file containing the mocked Danswer stream response. Setting this variable enables mocking of Danswer LLM calls.
 
-- `DUMP_LLM_RESPONSE_FILE_PATH`
+- `DUMP_LLM_FILE_PATH`
   When set, the LLM response will be dumped to the specified absolute file path for debugging or to create new mock files.
 
-- `LLMGW_URL`
-  The URL for the LLM Gateway service.
-
-- `LLMGW_TOKEN`
-  The token for authenticating with the LLM Gateway service.
+- `MOCK_STREAM_DELAY`
+  Specifies a delay for mock streaming, used in testing or development.
 
 ## Release
 

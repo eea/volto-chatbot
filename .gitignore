@@ -24,3 +24,4 @@ videos
 .env.test.local
 .env.production.local
 *~
+.gemini*

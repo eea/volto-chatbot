@@ -202,8 +202,8 @@ async function send_danswer_request(
     log(`Fetching ${url}`);
     const response = await fetch(url, options, req.body);
 
-    if (process.env.DUMP_LLM_RESPONSE_FILE_PATH) {
-      const filePath = process.env.DUMP_LLM_RESPONSE_FILE_PATH;
+    if (process.env.DUMP_LLM_FILE_PATH) {
+      const filePath = process.env.DUMP_LLM_FILE_PATH;
       const writer = fs.createWriteStream(filePath);
       response.body.pipe(writer);
       log(`Dumped LLM response to: ${filePath}`);

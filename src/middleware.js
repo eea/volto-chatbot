@@ -82,9 +82,7 @@ function mock_send_message(res) {
   const filePath = process.env.MOCK_LLM_FILE_PATH;
   if (!filePath) {
     log('MOCK_LLM_FILE_PATH is not set. Cannot mock send message.');
-    res
-      .status(500)
-      .send('Internal Server Error: MOCK_LLM_FILE_PATH not set.');
+    res.status(500).send('Internal Server Error: MOCK_LLM_FILE_PATH not set.');
     return;
   }
   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });

@@ -19,23 +19,34 @@ import ClearIcon from './../icons/clear.svg';
 
 function useBufferedValue(value, delay) {
   const [bufferedValue, setBufferedValue] = React.useState(value);
-
-  const timerRef = React.useRef();
-  const flagRef = React.useRef(false);
+  const latestValue = React.useRef(value);
+  const timeoutRef = React.useRef(null);
+  const lastExecuted = React.useRef(Date.now());
 
   React.useEffect(() => {
-    if (!timerRef.current) {
-      timerRef.current = setTimeout(() => {
-        flagRef.current = true;
-      }, delay);
-    }
-    if (flagRef.current) {
+    latestValue.current = value;
+
+    const now = Date.now();
+    const remaining = delay - (now - lastExecuted.current);
+
+    if (remaining <= 0) {
       setBufferedValue(value);
-      flagRef.current = false;
+      lastExecuted.current = now;
+    } else {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
+        setBufferedValue(latestValue.current);
+        lastExecuted.current = Date.now();
+        timeoutRef.current = null;
+      }, remaining);
     }
 
     return () => {
-      clearTimeout(timerRef);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
   }, [value, delay]);
 
@@ -288,8 +299,8 @@ export function ChatMessageBubble(props) {
     }
   }, [message.message, isUser]);
 
-  const bufferedMessage = useBufferedValue(message.message, 200);
-  console.log(bufferedMessage);
+  const bufferedMessage = useBufferedValue(message.message, 400);
+  // console.log(bufferedMessage);
 
   const formattedText = (
     <Markdown
@@ -297,7 +308,7 @@ export function ChatMessageBubble(props) {
       remarkPlugins={[remarkGfm.default]}
       rehypePlugins={[addQualityMarkersPlugin]}
     >
-      {addCitations(message.message)}
+      {addCitations(bufferedMessage)}
     </Markdown>
   );
 

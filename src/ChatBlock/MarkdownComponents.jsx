@@ -107,13 +107,24 @@ export function ClaimCitations(props) {
   let joinedSources = '';
   citedSources.forEach((source) => {
     source.startIndex = joinedSources.length;
-    joinedSources += source.halloumiContext + '\n---\n';
+    joinedSources += source.halloumiContext + '\n---\n'; // sources are joined the same in halloumi middleware
   });
 
   const snippets = (ids || [])
-    .map((id) => citations[id])
+    .map((id) => {
+      const citation = citations[id];
+      if (!citation) {
+        // eslint-disable-next-line no-console
+        console.warn(`Could not find citation ${id} in `, citations);
+      }
+      return citation;
+    })
+    .filter((cit) => !!cit)
     .map((cit) => {
-      const text = joinedSources.slice(cit.startOffset, cit.endOffset);
+      const text = joinedSources.slice(
+        Math.max(0, cit.startOffset), // sometimes startOffset comes as -1
+        cit.endOffset,
+      );
       const source = citedSources.find((cit) => cit.text.indexOf(text) > -1);
       return {
         ...cit,
@@ -130,6 +141,7 @@ export function ClaimCitations(props) {
     }))
     .filter((source) => source.snippets.length > 0)
     .sort((sa, sb) => sa.index - sb.index);
+  console.log({ snippets, sourcesWithSnippets });
 
   const [activeTab, setActiveTab] = React.useState(0);
   const [visibleCitationId, setVisibleCitation] = React.useState();
@@ -237,7 +249,6 @@ export function ClaimCitations(props) {
     <div className="chat-window">
       <Tab
         menu={{ secondary: true, pointing: true }}
-        attached
         panes={panes}
         activeIndex={activeTab}
       />

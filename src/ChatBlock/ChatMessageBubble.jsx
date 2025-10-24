@@ -309,7 +309,7 @@ export function ChatMessageBubble(props) {
   }, [message.message, isUser]);
 
   const bufferedMessage = useBufferedValue(message.message, 150);
-  // console.log(bufferedMessage);
+  console.log('claims', claims);
 
   const formattedText = (
     <Markdown

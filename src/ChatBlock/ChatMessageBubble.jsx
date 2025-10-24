@@ -17,6 +17,31 @@ import BotIcon from './../icons/bot.svg';
 import UserIcon from './../icons/user.svg';
 import ClearIcon from './../icons/clear.svg';
 
+function useBufferedValue(value, delay) {
+  const [bufferedValue, setBufferedValue] = React.useState(value);
+
+  const timerRef = React.useRef();
+  const flagRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (!timerRef.current) {
+      timerRef.current = setTimeout(() => {
+        flagRef.current = true;
+      }, delay);
+    }
+    if (flagRef.current) {
+      setBufferedValue(value);
+      flagRef.current = false;
+    }
+
+    return () => {
+      clearTimeout(timerRef);
+    };
+  }, [value, delay]);
+
+  return bufferedValue;
+}
+
 const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
@@ -262,6 +287,9 @@ export function ChatMessageBubble(props) {
       }
     }
   }, [message.message, isUser]);
+
+  const bufferedMessage = useBufferedValue(message.message, 200);
+  console.log(bufferedMessage);
 
   const formattedText = (
     <Markdown

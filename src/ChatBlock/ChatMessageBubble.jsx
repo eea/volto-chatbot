@@ -176,6 +176,26 @@ function getContextSources(message, sources, qualityCheckContext) {
       );
 }
 
+function getScoreDetails(claims, qualityCheckStages) {
+  const score = (
+    (claims.length > 0
+      ? claims.reduce((acc, { score }) => acc + score, 0) / claims.length
+      : 1) * 100
+  ).toFixed(0);
+
+  const scoreStage = qualityCheckStages?.find(
+    ({ start, end }) => start <= score && score <= end,
+  );
+  const isFirstScoreStage =
+    qualityCheckStages?.reduce(
+      (acc, { start, end }, curIx) =>
+        start <= score && score <= end ? curIx : acc,
+      -1,
+    ) ?? -1;
+  const scoreColor = scoreStage?.color || 'black';
+  return { score, scoreStage, isFirstScoreStage, scoreColor };
+}
+
 export function ChatMessageBubble(props) {
   const {
     message,
@@ -244,6 +264,7 @@ export function ChatMessageBubble(props) {
     showSources &&
     (qualityCheckEnabled || verificationTriggered) &&
     message.messageId > -1;
+
   const { markers, isLoadingHalloumi, retryHalloumi } = useQualityMarkers(
     doQualityControl,
     addCitations(message.message),
@@ -252,22 +273,10 @@ export function ChatMessageBubble(props) {
   );
 
   const claims = markers?.claims || [];
-  const score = (
-    (claims.length > 0
-      ? claims.reduce((acc, { score }) => acc + score, 0) / claims.length
-      : 1) * 100
-  ).toFixed(0);
-
-  const scoreStage = qualityCheckStages?.find(
-    ({ start, end }) => start <= score && score <= end,
+  const { score, scoreStage, scoreColor, isFirstScoreStage } = getScoreDetails(
+    claims,
+    qualityCheckStages,
   );
-  const isFirstScoreStage =
-    qualityCheckStages?.reduce(
-      (acc, { start, end }, curIx) =>
-        start <= score && score <= end ? curIx : acc,
-      -1,
-    ) ?? -1;
-  const scoreColor = scoreStage?.color || 'black';
 
   const isFetching = isLoadingHalloumi || isLoading;
   const halloumiMessage =
@@ -284,14 +293,14 @@ export function ChatMessageBubble(props) {
     sources.length === 0 && !isFetching && enableShowTotalFailMessage;
 
   React.useEffect(() => {
-    if (markers && markers.claims && markers.claims.length > 0) {
+    if (markers?.claims?.length > 0) {
       setIsMessageVerified(true);
     }
   }, [markers]);
 
   React.useEffect(() => {
     if (!isUser) {
-      if (message.message && message.message.length > 0) {
+      if (message.message?.length > 0) {
         setShowShimmer(false);
       } else {
         setShowShimmer(true);
@@ -299,7 +308,7 @@ export function ChatMessageBubble(props) {
     }
   }, [message.message, isUser]);
 
-  const bufferedMessage = useBufferedValue(message.message, 400);
+  const bufferedMessage = useBufferedValue(message.message, 150);
   // console.log(bufferedMessage);
 
   const formattedText = (

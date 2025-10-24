@@ -3,13 +3,9 @@ import fetch from 'node-fetch';
 import fs from 'fs';
 import {
   getClaimsFromResponse,
-  getClassifierProbabilitiesFromLogits,
   getTokenProbabilitiesFromLogits,
 } from './postprocessing';
-import {
-  createHalloumiClassifierPrompts,
-  createHalloumiPrompt,
-} from './preprocessing';
+import { createHalloumiPrompt } from './preprocessing';
 
 const log = debug('halloumi');
 
@@ -36,15 +32,6 @@ export async function getVerifyClaimResponse(
     };
     return response;
   }
-  if (model.isEmbeddingModel) {
-    return halloumiClassifierAPI(model, context, claims).then((response) => {
-      const parsedResponse = {
-        claims: response.claims,
-        citations: {},
-      };
-      return parsedResponse;
-    });
-  }
   const prompt = createHalloumiPrompt({
     context,
     response: claims,
@@ -67,6 +54,18 @@ export async function getVerifyClaimResponse(
 
 const tokenChoices = new Set(['supported', 'unsupported']);
 
+/**
+ * Fetches a response from the LLM.
+ *
+ * @param {object} model The model configuration.
+ * @param {object} prompt The prompt to send to the LLM.
+ * @returns {Promise<object>} The JSON response from the LLM.
+ *
+ * Environment Variables:
+ * - `MOCK_HALLOUMI_FILE_PATH`: If set, the function reads the LLM response from the specified file path instead of making an API call.
+ * - `DUMP_HALLOUMI_REQ_FILE_PATH`: If set, the LLM request (URL and parameters) is dumped to the specified file path.
+ * - `DUMP_HALLOUMI_FILE_PATH`: If set, the LLM response is dumped to the specified file path.
+ */
 async function getLLMResponse(model, prompt) {
   let jsonData;
 
@@ -74,29 +73,44 @@ async function getLLMResponse(model, prompt) {
     const filePath = process.env.MOCK_HALLOUMI_FILE_PATH;
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     jsonData = JSON.parse(fileContent);
-  } else {
-    const data = {
-      messages: [{ role: 'user', content: prompt.prompt }],
-      temperature: 0.0,
-      model: model.name,
-      logprobs: true,
-      top_logprobs: 3,
-    };
-    const headers = {
-      'Content-Type': 'application/json',
-      accept: 'application/json',
-    };
-    if (model.apiKey) {
-      headers['Authorization'] = `Bearer ${model.apiKey}`;
-    }
-
-    const response = await fetch(model.apiUrl, {
-      method: 'POST',
-      headers: headers,
-      body: JSON.stringify(data),
-    });
-    jsonData = await response.json();
+    return jsonData;
   }
+
+  const data = {
+    messages: [{ role: 'user', content: prompt.prompt }],
+    temperature: 0.0,
+    model: model.name,
+    logprobs: true,
+    top_logprobs: 3,
+  };
+  const headers = {
+    'Content-Type': 'application/json',
+    accept: 'application/json',
+  };
+  if (model.apiKey) {
+    headers['Authorization'] = `Bearer ${model.apiKey}`;
+  }
+
+  const params = {
+    method: 'POST',
+    headers: headers,
+    body: JSON.stringify(data),
+  };
+  if (process.env.DUMP_HALLOUMI_REQ_FILE_PATH) {
+    const filePath = process.env.DUMP_HALLOUMI_REQ_FILE_PATH;
+    fs.writeFileSync(
+      filePath,
+      JSON.stringify(
+        { url: model.apiUrl, params: { ...params, body: data } },
+        null,
+        2,
+      ),
+    );
+    log(`Dumped halloumi response: ${filePath}`);
+  }
+
+  const response = await fetch(model.apiUrl, params);
+  jsonData = await response.json();
 
   if (process.env.DUMP_HALLOUMI_FILE_PATH) {
     const filePath = process.env.DUMP_HALLOUMI_FILE_PATH;
@@ -197,50 +211,59 @@ export function convertGenerativesClaimToVerifyClaimResponse(
 }
 
 // this is not normally used
-export async function halloumiClassifierAPI(model, context, claims) {
-  const classifierPrompts = createHalloumiClassifierPrompts(context, claims);
-  const headers = {
-    'Content-Type': 'application/json',
-    accept: 'application/json',
-  };
-  if (model.apiKey) {
-    headers['Authorization'] = `Bearer ${model.apiKey}`;
-  }
-  const data = {
-    input: classifierPrompts.prompts,
-    model: model.name,
-  };
-
-  const response = await fetch(model.apiUrl, {
-    method: 'POST',
-    headers: headers,
-    body: JSON.stringify(data),
-  });
-  const jsonData = await response.json();
-  const output = {
-    claims: [],
-  };
-  for (let i = 0; i < classifierPrompts.prompts.length; i++) {
-    const embedding = jsonData.data[i].embedding;
-    const probs = getClassifierProbabilitiesFromLogits(embedding);
-    if (model.plattScaling) {
-      const platt = model.plattScaling;
-      const unsupportedScore = applyPlattScaling(platt, probs[1]);
-      const supportedScore = 1 - unsupportedScore;
-      probs[0] = supportedScore;
-      probs[1] = unsupportedScore;
-    }
-    const offset = classifierPrompts.responseOffsets.get(i + 1);
-    // 0-th index is the supported class.
-    // 1-th index is the unsupported class.
-    output.claims.push({
-      startOffset: offset.startOffset,
-      endOffset: offset.endOffset,
-      citationIds: [],
-      score: probs[0],
-      rationale: '',
-    });
-  }
-
-  return output;
-}
+// if (model.isEmbeddingModel) {
+//   return halloumiClassifierAPI(model, context, claims).then((response) => {
+//     const parsedResponse = {
+//       claims: response.claims,
+//       citations: {},
+//     };
+//     return parsedResponse;
+//   });
+// }
+// export async function halloumiClassifierAPI(model, context, claims) {
+//   const classifierPrompts = createHalloumiClassifierPrompts(context, claims);
+//   const headers = {
+//     'Content-Type': 'application/json',
+//     accept: 'application/json',
+//   };
+//   if (model.apiKey) {
+//     headers['Authorization'] = `Bearer ${model.apiKey}`;
+//   }
+//   const data = {
+//     input: classifierPrompts.prompts,
+//     model: model.name,
+//   };
+//
+//   const response = await fetch(model.apiUrl, {
+//     method: 'POST',
+//     headers: headers,
+//     body: JSON.stringify(data),
+//   });
+//   const jsonData = await response.json();
+//   const output = {
+//     claims: [],
+//   };
+//   for (let i = 0; i < classifierPrompts.prompts.length; i++) {
+//     const embedding = jsonData.data[i].embedding;
+//     const probs = getClassifierProbabilitiesFromLogits(embedding);
+//     if (model.plattScaling) {
+//       const platt = model.plattScaling;
+//       const unsupportedScore = applyPlattScaling(platt, probs[1]);
+//       const supportedScore = 1 - unsupportedScore;
+//       probs[0] = supportedScore;
+//       probs[1] = unsupportedScore;
+//     }
+//     const offset = classifierPrompts.responseOffsets.get(i + 1);
+//     // 0-th index is the supported class.
+//     // 1-th index is the unsupported class.
+//     output.claims.push({
+//       startOffset: offset.startOffset,
+//       endOffset: offset.endOffset,
+//       citationIds: [],
+//       score: probs[0],
+//       rationale: '',
+//     });
+//   }
+//
+//   return output;
+// }

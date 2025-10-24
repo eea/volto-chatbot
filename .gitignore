@@ -25,3 +25,6 @@ videos
 .env.production.local
 *~
 .gemini*
+
+.gemini/
+gha-creds-*.json

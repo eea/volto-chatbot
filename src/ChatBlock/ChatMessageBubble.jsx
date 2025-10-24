@@ -21,7 +21,6 @@ const CITATION_MATCH = /\[\d+\](?![[(\])])/gm;
 
 const Markdown = loadable(() => import('react-markdown'));
 
-// TODO: don't use this over the text like this, make it a rehype plugin
 function addCitations(text) {
   return text.replaceAll(CITATION_MATCH, (match) => {
     const number = match.match(/\d+/)[0];
@@ -46,7 +45,7 @@ export function ToolCall({ tool_args, tool_name, showShimmer }) {
 
 function addQualityMarkersPlugin() {
   return function (tree) {
-    visit(tree, 'element', function (node, idx, parent) {
+    visit(tree, 'element', function (node) {
       node.children?.forEach((child, cidx) => {
         if (child.type === 'raw' && child.value?.trim() === '<br>') {
           const newNode = {
@@ -98,6 +97,49 @@ export function addHalloumiContext(doc, text) {
   return `${header}\n${text}`;
 }
 
+function mapToolDocumentsToText(message) {
+  // make a map of document_id: text
+  return message.toolCalls?.reduce((acc, cur) => {
+    return {
+      ...acc,
+      ...Object.assign(
+        {},
+        ...(cur.tool_result || []).map((doc) => ({
+          [doc.document_id]: doc.content,
+        })),
+      ),
+    };
+  }, {});
+}
+
+function getContextSources(message, sources, qualityCheckContext) {
+  const documentIdToText = mapToolDocumentsToText(message);
+
+  return qualityCheckContext === 'citations'
+    ? sources.map((doc) => ({
+        ...doc,
+        id: doc.document_id,
+        text: documentIdToText[doc.document_id] || '',
+        halloumiContext: addHalloumiContext(
+          doc,
+          documentIdToText[doc.document_id] || '',
+        ),
+      }))
+    : (message.toolCalls || []).reduce(
+        (acc, cur) => [
+          ...acc,
+          ...(cur.tool_result || []).map((doc) => ({
+            ...doc,
+            id: doc.document_id,
+            text: doc.content,
+            halloumiContext: addHalloumiContext(doc, doc.content),
+          })),
+        ], // TODO: make sure we don't add multiple times the same doc
+        // TODO: this doesn't have the index for source
+        [],
+      );
+}
+
 export function ChatMessageBubble(props) {
   const {
     message,
@@ -125,6 +167,12 @@ export function ChatMessageBubble(props) {
   const [forceHalloumi, setForceHallomi] = React.useState(
     qualityCheck === 'enabled',
   );
+  const [verificationTriggered, setVerificationTriggered] =
+    React.useState(false);
+  const [isMessageVerified, setIsMessageVerified] = React.useState(false);
+  const [showShimmer, setShowShimmer] = React.useState(true);
+  const [activeTab, setActiveTab] = React.useState(0);
+  const [showSourcesSidebar, setShowSourcesSidebar] = React.useState(false);
 
   React.useEffect(() => {
     if (qualityCheck === 'ondemand_toggle' && qualityCheckEnabled) {
@@ -134,13 +182,6 @@ export function ChatMessageBubble(props) {
     }
   }, [qualityCheck, qualityCheckEnabled]);
 
-  const [verificationTriggered, setVerificationTriggered] =
-    React.useState(false);
-  const [isMessageVerified, setIsMessageVerified] = React.useState(false);
-  const [showShimmer, setShowShimmer] = React.useState(true);
-  const [activeTab, setActiveTab] = React.useState(0);
-  const [showSourcesSidebar, setShowSourcesSidebar] = React.useState(false);
-
   const inverseMap = Object.entries(citations).reduce((acc, [k, v]) => {
     return { ...acc, [v]: k };
   }, {});
@@ -149,46 +190,13 @@ export function ChatMessageBubble(props) {
     ...(documents.find((doc) => doc.db_doc_id === doc_id) || {}),
     index: inverseMap[doc_id],
   }));
-  // const showLoader = isMostRecent && isLoading;
   const showSources = sources.length > 0;
 
-  // TODO: maybe this should be just on the first tool call?
-  const documentIdToText = message.toolCalls?.reduce((acc, cur) => {
-    return {
-      ...acc,
-      ...Object.assign(
-        {},
-        ...(cur.tool_result || []).map((doc) => ({
-          [doc.document_id]: doc.content,
-        })),
-      ),
-    };
-  }, {});
-
-  const contextSources =
-    qualityCheckContext === 'citations'
-      ? sources.map((doc) => ({
-          ...doc,
-          id: doc.document_id,
-          text: documentIdToText[doc.document_id] || '',
-          halloumiContext: addHalloumiContext(
-            doc,
-            documentIdToText[doc.document_id] || '',
-          ),
-        }))
-      : (message.toolCalls || []).reduce(
-          (acc, cur) => [
-            ...acc,
-            ...(cur.tool_result || []).map((doc) => ({
-              ...doc,
-              id: doc.document_id,
-              text: doc.content,
-              halloumiContext: addHalloumiContext(doc, doc.content),
-            })),
-          ], // TODO: make sure we don't add multiple times the same doc
-          // TODO: this doesn't have the index for source
-          [],
-        );
+  const contextSources = getContextSources(
+    message,
+    sources,
+    qualityCheckContext,
+  );
 
   const stableContextSources = useDeepCompareMemoize(contextSources);
 
@@ -255,6 +263,16 @@ export function ChatMessageBubble(props) {
     }
   }, [message.message, isUser]);
 
+  const formattedText = (
+    <Markdown
+      components={components(message, markers, stableContextSources)}
+      remarkPlugins={[remarkGfm.default]}
+      rehypePlugins={[addQualityMarkersPlugin]}
+    >
+      {addCitations(message.message)}
+    </Markdown>
+  );
+
   const answerTab = (
     <div className="answer-tab">
       {showSources && (
@@ -289,13 +307,7 @@ export function ChatMessageBubble(props) {
         </div>
       )}
 
-      <Markdown
-        components={components(message, markers, stableContextSources)}
-        remarkPlugins={[remarkGfm.default]}
-        rehypePlugins={[addQualityMarkersPlugin]}
-      >
-        {addCitations(message.message)}
-      </Markdown>
+      {formattedText}
 
       {!isUser && showTotalFailMessage && (
         <Message color="red">{serializeNodes(totalFailMessage)}</Message>
@@ -349,18 +361,6 @@ export function ChatMessageBubble(props) {
     </div>
   );
 
-  const sourcesTab = (
-    <div className="sources-listing">
-      {showSources && (
-        <div className="sources">
-          {sources.map((source, i) => (
-            <SourceDetails source={source} key={i} index={source.index} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-
   const panes = [
     { menuItem: 'Answer', render: () => <Tab.Pane>{answerTab}</Tab.Pane> },
     {
@@ -372,7 +372,19 @@ export function ChatMessageBubble(props) {
           </span>
         ),
       },
-      render: () => <Tab.Pane>{sourcesTab}</Tab.Pane>,
+      render: () => (
+        <Tab.Pane>
+          <div className="sources-listing">
+            {showSources && (
+              <div className="sources">
+                {sources.map((source, i) => (
+                  <SourceDetails source={source} key={i} index={source.index} />
+                ))}
+              </div>
+            )}
+          </div>
+        </Tab.Pane>
+      ),
     },
   ];
 
@@ -451,13 +463,7 @@ export function ChatMessageBubble(props) {
               )}
             </div>
           ) : (
-            <Markdown
-              components={components(message, markers, stableContextSources)}
-              remarkPlugins={[remarkGfm.default]}
-              rehypePlugins={[addQualityMarkersPlugin]}
-            >
-              {addCitations(message.message)}
-            </Markdown>
+            formattedText
           )}
         </div>
       </div>

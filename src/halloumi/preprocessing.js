@@ -48,16 +48,12 @@ function splitIntoSentences(text, maxSegments = 0) {
  * @returns The annotated string with annotation characters + sentence number.
  */
 function annotate(sentences, annotationChar) {
-  const annotatedSentences = [];
-
-  let sentenceNumber = 0;
-  for (const sentence of sentences) {
-    sentenceNumber++;
-    const annotatedSentence = `<|${annotationChar}${sentenceNumber}|><${sentence}><end||${annotationChar}>`;
-    annotatedSentences.push(annotatedSentence);
-  }
-
-  return annotatedSentences.join('');
+  return sentences
+    .map(
+      (sentence, i) =>
+        `<|${annotationChar}${i + 1}|><${sentence}><end||${annotationChar}>`,
+    )
+    .join('');
 }
 
 function getOffsets(originalString, sentences) {

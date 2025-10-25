@@ -9,6 +9,7 @@ const DEFAULT_HALLOUMI_REQUEST =
 function splitIntoSentences(text, maxSegments = 0) {
   const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
   const segments = segmenter.segment(text);
+  // note: the segmenter keeps the whitespaces at the end of sentences, after the dot
 
   const finalSentences = [];
   let shortSentenceString = '';

@@ -8,7 +8,7 @@
 //     claimId: number;
 //     claimString: string;
 //     subclaims: string[];
-//     citations: number[];
+//     segments: number[];
 //     explanation: string;
 //     supported: boolean;
 //     probabilities: Map<string, number>;
@@ -124,19 +124,19 @@ function getClaimFromSegment(segment) {
     }
   }
 
-  const citations = getClaimCitationsFromSubsegment(
+  const segments = getClaimCitationsFromSubsegment(
     claim_segments[citation_index],
   );
   const explanation = claim_segments[explanation_index];
   const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);
 
   const claim = {
-    claimId: claimId,
-    claimString: claimString,
-    subclaims: subclaims,
-    citations: citations,
-    explanation: explanation,
-    supported: supported,
+    claimId,
+    claimString,
+    subclaims,
+    segments,
+    explanation,
+    supported,
     probabilities: new Map(),
   };
 

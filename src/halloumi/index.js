@@ -28,7 +28,7 @@ export async function getVerifyClaimResponse(
   if (!context || !claims) {
     const response = {
       claims: [],
-      citations: {},
+      segments: {},
     };
     return response;
   }
@@ -167,22 +167,22 @@ export function convertGenerativesClaimToVerifyClaimResponse(
   generativeClaims,
   prompt,
 ) {
-  const citations = {};
+  const segments = {};
   const claims = [];
 
   for (const offset of prompt.contextOffsets) {
-    const citation = {
+    const id = offset[0].toString();
+    segments[id] = {
+      id,
       startOffset: offset[1].startOffset,
       endOffset: offset[1].endOffset,
-      id: offset[0].toString(),
     };
-    citations[offset[0].toString()] = citation;
   }
 
   for (const generativeClaim of generativeClaims) {
-    const citationIds = [];
-    for (const citation of generativeClaim.citations) {
-      citationIds.push(citation.toString());
+    const segmentIds = [];
+    for (const seg of generativeClaim.segments) {
+      segmentIds.push(seg.toString());
     }
 
     const claimId = generativeClaim.claimId;
@@ -195,75 +195,17 @@ export function convertGenerativesClaimToVerifyClaimResponse(
     const claim = {
       startOffset: claimResponseWindow.startOffset,
       endOffset: claimResponseWindow.endOffset,
-      citationIds: citationIds,
-      score: score,
       rationale: generativeClaim.explanation,
+      segmentIds,
+      score,
     };
     claims.push(claim);
   }
 
   const response = {
-    claims: claims,
-    citations: citations,
+    claims,
+    segments,
   };
 
   return response;
 }
-
-// this is not normally used
-// if (model.isEmbeddingModel) {
-//   return halloumiClassifierAPI(model, context, claims).then((response) => {
-//     const parsedResponse = {
-//       claims: response.claims,
-//       citations: {},
-//     };
-//     return parsedResponse;
-//   });
-// }
-// export async function halloumiClassifierAPI(model, context, claims) {
-//   const classifierPrompts = createHalloumiClassifierPrompts(context, claims);
-//   const headers = {
-//     'Content-Type': 'application/json',
-//     accept: 'application/json',
-//   };
-//   if (model.apiKey) {
-//     headers['Authorization'] = `Bearer ${model.apiKey}`;
-//   }
-//   const data = {
-//     input: classifierPrompts.prompts,
-//     model: model.name,
-//   };
-//
-//   const response = await fetch(model.apiUrl, {
-//     method: 'POST',
-//     headers: headers,
-//     body: JSON.stringify(data),
-//   });
-//   const jsonData = await response.json();
-//   const output = {
-//     claims: [],
-//   };
-//   for (let i = 0; i < classifierPrompts.prompts.length; i++) {
-//     const embedding = jsonData.data[i].embedding;
-//     const probs = getClassifierProbabilitiesFromLogits(embedding);
-//     if (model.plattScaling) {
-//       const platt = model.plattScaling;
-//       const unsupportedScore = applyPlattScaling(platt, probs[1]);
-//       const supportedScore = 1 - unsupportedScore;
-//       probs[0] = supportedScore;
-//       probs[1] = unsupportedScore;
-//     }
-//     const offset = classifierPrompts.responseOffsets.get(i + 1);
-//     // 0-th index is the supported class.
-//     // 1-th index is the unsupported class.
-//     output.claims.push({
-//       startOffset: offset.startOffset,
-//       endOffset: offset.endOffset,
-//       citationIds: [],
-//       score: probs[0],
-//       rationale: '',
-//     });
-//   }
-//
-//   return output;
-// }

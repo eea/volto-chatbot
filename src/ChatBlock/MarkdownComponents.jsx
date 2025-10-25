@@ -100,16 +100,14 @@ const RenderClaimView = (props) => {
   );
 };
 
-export function ClaimCitations(props) {
-  const { ids, citations, citedSources } = props;
-
+export function ClaimCitations({ segmentIds, citations, citedSources }) {
   let joinedSources = '';
   citedSources.forEach((source) => {
     source.startIndex = joinedSources.length;
     joinedSources += source.halloumiContext + '\n---\n'; // sources are joined the same in halloumi middleware
   });
 
-  const snippets = (ids || [])
+  const snippets = (segmentIds || [])
     .map((id) => {
       const citation = citations[id];
       if (!citation) {
@@ -256,6 +254,63 @@ export function ClaimCitations(props) {
   );
 }
 
+/**
+  * claim: an object like:
+  * {
+    "startOffset": 0,
+    "endOffset": 40,
+    "segmentIds": [ "4", "5", "6", "7", "8", "9" ],
+    "score": 0.6776354518137262,
+    "rationale": "The EU is taking various actions to combat climate change, including setting emission reduction targets, implementing policies to reduce emissions, and promoting adaptation and resilience."
+    }
+    citedSources: an array of document results
+    text: the text for this clicked response text
+    markers: the response from halloumi
+  *
+  */
+function ClaimModal({ claim, markers, text, citedSources }) {
+  return (
+    <Modal
+      className="claim-modal"
+      trigger={
+        <span className={`claim ${getSupportedBgColor(claim.score)}`}>
+          {text}
+        </span>
+      }
+    >
+      <ModalHeader>
+        <div className="circle assistant">
+          <SVGIcon name={BotIcon} size="20" color="white" />
+        </div>
+        <h5 className={`claim claim-text ${getSupportedBgColor(claim.score)}`}>
+          &ldquo;{text}&rdquo;
+        </h5>
+      </ModalHeader>
+      <ModalContent>
+        <div className="claim-source">
+          <p className="claim-score">
+            Supported by citations:{' '}
+            <span className={getSupportedTextColor(claim.score)}>
+              {convertToPercentage(claim.score)}
+            </span>
+          </p>
+
+          <p className="claim-rationale">
+            <strong>Rationale: </strong>
+            {claim.rationale}
+          </p>
+        </div>
+
+        <ClaimCitations
+          segmentIds={claim.segmentIds}
+          segments={markers?.segments || []}
+          citedSources={citedSources}
+        />
+      </ModalContent>
+    </Modal>
+  );
+}
+
 export function components(message, markers, citedSources) {
   return {
     table: (props) => {
@@ -271,6 +326,7 @@ export function components(message, markers, citedSources) {
       const child = node.children[0];
       let claim;
 
+      // identifies if the current text belongs to a claim
       if (
         child.type === 'text' &&
         child.position &&
@@ -289,46 +345,12 @@ export function components(message, markers, citedSources) {
       return !claim || claim?.score === null ? (
         rest.children || []
       ) : (
-        <Modal
-          className="claim-modal"
-          trigger={
-            <span className={`claim ${getSupportedBgColor(claim.score)}`}>
-              {rest.children}
-            </span>
-          }
-        >
-          <ModalHeader>
-            <div className="circle assistant">
-              <SVGIcon name={BotIcon} size="20" color="white" />
-            </div>
-            <h5
-              className={`claim claim-text ${getSupportedBgColor(claim.score)}`}
-            >
-              &ldquo;{rest.children}&rdquo;
-            </h5>
-          </ModalHeader>
-          <ModalContent>
-            <div className="claim-source">
-              <p className="claim-score">
-                Supported by citations:{' '}
-                <span className={getSupportedTextColor(claim.score)}>
-                  {convertToPercentage(claim.score)}
-                </span>
-              </p>
-
-              <p className="claim-rationale">
-                <strong>Rationale: </strong>
-                {claim.rationale}
-              </p>
-            </div>
-
-            <ClaimCitations
-              ids={claim.citationIds}
-              citations={markers?.citations || []}
-              citedSources={citedSources}
-            />
-          </ModalContent>
-        </Modal>
+        <ClaimModal
+          claim={claim}
+          markers={markers}
+          text={rest.children}
+          citedSources={citedSources}
+        />
       );
     },
     a: (props) => {

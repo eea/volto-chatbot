@@ -21,6 +21,18 @@ const TOOLARGE_RATIONALE = 'Verification failed: Too many sources provided.';
 const TIMEOUT_RATIONALE =
   'Verification failed: Halloumi service is unreachable or timed out.';
 
+const empty = (message, rationale, score = 0) => ({
+  claims: [
+    {
+      startOffset: 0,
+      endOffset: message.length,
+      score: 0,
+      rationale,
+    },
+  ],
+  segments: {},
+});
+
 export default function useQualityMarkers(
   doQualityControl,
   message,
@@ -38,17 +50,7 @@ export default function useQualityMarkers(
     async function handler() {
       const textSources = sources.map(({ halloumiContext }) => halloumiContext);
       if (sources.length === 0) {
-        setHalloumiResponse({
-          claims: [
-            {
-              startOffset: 0,
-              endOffset: message.length,
-              score: 0,
-              rationale: FAILURE_RATIONALE,
-            },
-          ],
-          citations: {},
-        });
+        setHalloumiResponse(empty(message, FAILURE_RATIONALE));
         return;
       }
 
@@ -59,17 +61,7 @@ export default function useQualityMarkers(
           `Warning: Too many sources (${sources.length}). Skipping quality control.`,
         );
 
-        setHalloumiResponse({
-          claims: [
-            {
-              startOffset: 0,
-              endOffset: message.length,
-              score: 0,
-              rationale: TOOLARGE_RATIONALE,
-            },
-          ],
-          citations: {},
-        });
+        setHalloumiResponse(empty(message, TOOLARGE_RATIONALE));
         return;
       }
 
@@ -85,35 +77,13 @@ export default function useQualityMarkers(
         // console.log({ message, sources, body });
 
         if (body.error) {
-          setHalloumiResponse({
-            claims: [
-              {
-                startOffset: 0,
-                endOffset: message.length,
-                score: null,
-                rationale: TIMEOUT_RATIONALE,
-              },
-            ],
-            citations: {},
-          });
-
+          setHalloumiResponse(empty(message, TIMEOUT_RATIONALE, null));
           Sentry.load().then((mod) => mod.captureException(body.error));
         } else {
           setHalloumiResponse(body);
         }
       } catch {
-        setHalloumiResponse({
-          claims: [
-            {
-              startOffset: 0,
-              endOffset: message.length,
-              score: null,
-              rationale: TIMEOUT_RATIONALE,
-            },
-          ],
-          citations: {},
-        });
-
+        setHalloumiResponse(empty(message, TIMEOUT_RATIONALE, null));
         throw new Error(`Unknown error fetching halloumi response`);
       } finally {
         setIsLoading(false);

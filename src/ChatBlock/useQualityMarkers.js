@@ -26,7 +26,7 @@ const empty = (message, rationale, score = 0) => ({
     {
       startOffset: 0,
       endOffset: message.length,
-      score: 0,
+      score,
       rationale,
     },
   ],

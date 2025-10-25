@@ -45,35 +45,35 @@ function getClaimIdFromSubsegment(subsegment) {
  */
 function getClaimCitationsFromSubsegment(subsegment) {
   const citationSegments = subsegment.split(',');
-  const citations = [];
+  const segments = [];
   for (const citationSegment of citationSegments) {
-    const citation = citationSegment.replaceAll('|', '').replaceAll('s', '');
-    if (citation.includes('-')) {
-      const citationRange = citation.split('-');
+    const segment = citationSegment.replaceAll('|', '').replaceAll('s', '');
+    if (segment.includes('-')) {
+      const segmentRange = segment.split('-');
       for (
-        let i = parseInt(citationRange[0].trim());
-        i <= parseInt(citationRange[1].trim());
+        let i = parseInt(segmentRange[0].trim());
+        i <= parseInt(segmentRange[1].trim());
         i++
       ) {
-        citations.push(i);
+        segments.push(i);
       }
-    } else if (citation.includes('to')) {
-      const citationRange = citation.split('to');
+    } else if (segment.includes('to')) {
+      const segmentRange = segment.split('to');
       for (
-        let i = parseInt(citationRange[0].trim());
-        i <= parseInt(citationRange[1].trim());
+        let i = parseInt(segmentRange[0].trim());
+        i <= parseInt(segmentRange[1].trim());
         i++
       ) {
-        citations.push(i);
+        segments.push(i);
       }
     } else {
-      const citationInt = parseInt(citation);
-      if (!isNaN(citationInt)) {
-        citations.push(parseInt(citation));
+      const segmentInt = parseInt(segment);
+      if (!isNaN(segmentInt)) {
+        segments.push(parseInt(segment));
       }
     }
   }
-  return citations;
+  return segments;
 }
 
 /**

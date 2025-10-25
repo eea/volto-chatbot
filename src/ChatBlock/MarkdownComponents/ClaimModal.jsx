@@ -7,6 +7,7 @@ import BotIcon from '@eeacms/volto-chatbot/icons/bot.svg';
 import './colors.less';
 
 export function ClaimModal({ claim, markers, text, citedSources }) {
+  // console.log({ claim, markers, text, citedSources });
   return (
     <Modal
       className="claim-modal"
@@ -41,7 +42,7 @@ export function ClaimModal({ claim, markers, text, citedSources }) {
 
         <ClaimSegments
           segmentIds={claim.segmentIds}
-          segments={markers?.segments || []}
+          segments={markers?.segments || {}}
           citedSources={citedSources}
         />
       </ModalContent>

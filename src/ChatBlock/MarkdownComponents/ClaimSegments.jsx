@@ -141,7 +141,7 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
             segmentContainerRef={segmentContainerRef}
             spanRefs={spanRefs}
             sourceStartIndex={source.startIndex}
-            segments={segments}
+            segments={Object.values(segments)}
           />
         </TabPane>
       ),

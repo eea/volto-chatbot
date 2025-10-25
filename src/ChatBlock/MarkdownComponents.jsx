@@ -6,7 +6,6 @@ import {
   Tab,
   TabPane,
   Button,
-  Menu,
 } from 'semantic-ui-react';
 import { Citation } from './Citation';
 import { convertToPercentage, transformEmailsToLinks, SVGIcon } from './utils';
@@ -141,7 +140,9 @@ export function ClaimCitations(props) {
     }))
     .filter((source) => source.snippets.length > 0)
     .sort((sa, sb) => sa.index - sb.index);
-  console.log({ snippets, sourcesWithSnippets });
+
+  // eslint-disable-next-line no-console
+  console.log({ snippets, sourcesWithSnippets, citations, citedSources });
 
   const [activeTab, setActiveTab] = React.useState(0);
   const [visibleCitationId, setVisibleCitation] = React.useState();
@@ -158,19 +159,18 @@ export function ClaimCitations(props) {
       : snippetButtons.slice(0, VISIBLE_CITATIONS);
 
     return {
-      menuItem: () => (
-        <Menu.Item
-          key={i}
-          className={`${activeTab === i ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab(i);
-          }}
-        >
+      menuItem: {
+        key: i,
+        content: (
           <span title={source?.semantic_identifier}>
             {source?.semantic_identifier}
           </span>
-        </Menu.Item>
-      ),
+        ),
+        className: `${activeTab === i ? 'active' : ''}`,
+        onClick: () => {
+          setActiveTab(i);
+        },
+      },
       render: () => (
         <TabPane>
           <div className="claim-source-header">

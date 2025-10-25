@@ -309,7 +309,11 @@ export function ChatMessageBubble(props) {
   }, [message.message, isUser]);
 
   const bufferedMessage = useBufferedValue(message.message, 150);
-  console.log('claims', claims);
+
+  if (claims.length > 0) {
+    // eslint-disable-next-line no-console
+    console.log('claims', claims);
+  }
 
   const formattedText = (
     <Markdown

@@ -1,8 +1,4 @@
 /**
- * Represents a prompt with appropriate metadata
- */
-
-/**
  * Splits a given text into sentences using sentence-splitter.
  * @param text The input string to split.
  * @returns An array of sentence strings.
@@ -84,13 +80,17 @@ function getOffsets(originalString, sentences) {
  * @returns The Halloumi prompt.
  */
 export function createHalloumiPrompt({
-  context,
+  sources,
   response,
   request = 'Make one or more claims about information in the documents.',
   maxContextSegments = 0,
 }) {
-  const contextSentences = splitIntoSentences(context, maxContextSegments);
-  const contextOffsets = getOffsets(context, contextSentences);
+  const contextSentences = sources.flatMap((text) =>
+    splitIntoSentences(text, maxContextSegments),
+  );
+  const joinedContext = sources.join('\n');
+  // const contextSentences = splitIntoSentences(sources, maxContextSegments);
+  const contextOffsets = getOffsets(joinedContext, contextSentences);
 
   const annotatedContextSentences = annotate(contextSentences, 's');
 
@@ -104,49 +104,10 @@ export function createHalloumiPrompt({
 
   const prompt = `${annotatedContext}${annotatedRequest}${annotatedResponse}`;
   const halloumiPrompt = {
-    prompt: prompt,
-    contextOffsets: contextOffsets,
-    responseOffsets: responseOffsets,
+    prompt,
+    contextOffsets, // used by convertGenerativesClaimToVerifyClaimResponse
+    responseOffsets,
   };
-
-  return halloumiPrompt;
-}
-
-/**
- * Creates a Halloumi prompt from a given context and response.
- * @param context The context or document to reference.
- * @param response The response to the request.
- * @returns The Halloumi Classifier prompt string.
- */
-export function createHalloumiClassifierPrompt(context, response) {
-  const annotatedContext = `<context>\n${context.trim()}\n</context>`;
-  const annotatedResponse = `<claims>\n${response.trim()}\n</claims>`;
-
-  const prompt = `${annotatedContext}\n\n${annotatedResponse}`;
-  return prompt;
-}
-
-/**
- * Creates a Halloumi prompt from a given context and response.
- * @param context The context or document to reference.
- * @param response The response to the request.
- * @returns The Halloumi Classifier prompt strings.
- */
-export function createHalloumiClassifierPrompts(context, response) {
-  const responseSentences = splitIntoSentences(response);
-  const responseOffsets = getOffsets(response, responseSentences);
-  const prompts = [];
-  for (const sentence of responseSentences) {
-    const prompt = createHalloumiClassifierPrompt(context, sentence);
-    prompts.push(prompt);
-  }
-
-  const halloumiPrompt = {
-    prompts: prompts,
-    sentences: responseSentences,
-    responseOffsets: responseOffsets,
-  };
-  // console.log(halloumiPrompt);
 
   return halloumiPrompt;
 }

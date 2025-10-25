@@ -1,6 +1,3 @@
-// import debug from 'debug';
-
-//
 // /**
 //  * Represents a claim object with all relevant information.
 //  */
@@ -235,8 +232,4 @@ export function getTokenProbabilitiesFromLogits(logits, tokenChoices) {
     tokenProbabilities.push(tokenProbability);
   }
   return tokenProbabilities;
-}
-
-export function getClassifierProbabilitiesFromLogits(logits) {
-  return softmax(logits);
 }

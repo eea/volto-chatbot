@@ -3,7 +3,6 @@ import fetch from 'node-fetch';
 import debug from 'debug';
 
 import fs from 'fs';
-import path from 'path';
 
 const log = debug('volto-chatbot');
 

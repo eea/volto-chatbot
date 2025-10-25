@@ -1,4 +1,4 @@
-import { halloumiGenerativeAPI } from './index';
+import { halloumiGenerativeAPI } from './generative';
 import path from 'path';
 
 describe('halloumiGenerativeAPI reads from mock file', () => {

@@ -22,27 +22,34 @@ describe('createHalloumiPrompt', () => {
 
     // Expect contextOffsets and responseOffsets to be correctly populated
     expect(result.contextOffsets).toBeInstanceOf(Map);
+    const s1 = 'This is the first source. ';
+    const s2 = 'This is its second sentence.';
+    const s3 = 'This is the second source.';
+
     expect(result.contextOffsets.get(1)).toEqual({
       startOffset: 0,
-      endOffset: 26,
+      endOffset: s1.length,
     });
     expect(result.contextOffsets.get(2)).toEqual({
-      startOffset: 26,
-      endOffset: 54,
+      startOffset: s1.length,
+      endOffset: s1.length + s2.length,
     });
     expect(result.contextOffsets.get(3)).toEqual({
-      startOffset: 55,
-      endOffset: 81,
+      startOffset: s1.length + s2.length + 1, // +1 for the space between sentences
+      endOffset: s1.length + s2.length + 1 + s3.length,
     });
 
     expect(result.responseOffsets).toBeInstanceOf(Map);
+    const r1 = 'This is the response. ';
+    const r2 = 'It has two sentences.';
+
     expect(result.responseOffsets.get(1)).toEqual({
       startOffset: 0,
-      endOffset: 22,
+      endOffset: r1.length,
     });
     expect(result.responseOffsets.get(2)).toEqual({
-      startOffset: 22,
-      endOffset: 43,
+      startOffset: r1.length,
+      endOffset: r1.length + r2.length,
     });
   });
 
@@ -82,13 +89,16 @@ describe('createHalloumiPrompt', () => {
     expect(result.prompt).toContain(
       '<|context|><|s1|><Sentence one. Sentence two. ><end||s><|s2|><Sentence three. Sentence four.><end||s><end||context>',
     );
+    const mergedS1 = 'Sentence one. Sentence two. ';
+    const mergedS2 = 'Sentence three. Sentence four.';
+
     expect(result.contextOffsets.get(1)).toEqual({
       startOffset: 0,
-      endOffset: 28,
+      endOffset: mergedS1.length,
     });
     expect(result.contextOffsets.get(2)).toEqual({
-      startOffset: 28,
-      endOffset: 58,
+      startOffset: mergedS1.length,
+      endOffset: mergedS1.length + mergedS2.length,
     });
   });
 });

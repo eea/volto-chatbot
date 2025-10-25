@@ -84,6 +84,7 @@ The project adheres to several development conventions to maintain code quality 
     *   Update snapshots for tests: `make test-update`
     *   Run Cypress end-to-end tests in headless mode: `make cypress-run`
     *   Open Cypress test runner: `make cypress-open`
+    *   **Specific test file:** `make addon-test TEST_FILE=src/addons/volto-chatbot/src/halloumi/preprocessing.test.js`
 *   **Pre-commit Hook:** A `pre-commit` hook is configured to automatically run `stylelint:fix`, `prettier:fix`, and `lint:fix` before each commit.
 *   **Internationalization:** Generate translation files: `make i18n`
 *   **Git Workflow:** When committing changes, always use `git status` to review changes and then `git add <relevant files changed>` to stage specific files, instead of `git add .`.

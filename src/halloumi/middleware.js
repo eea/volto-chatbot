@@ -54,7 +54,7 @@ export default async function middleware(req, res, next) {
     const resp = await getVerifyClaimResponse(
       model,
       // TODO: map with citation id
-      sources.join('\n---\n'),
+      sources,
       answer,
       maxContextSegments,
     );

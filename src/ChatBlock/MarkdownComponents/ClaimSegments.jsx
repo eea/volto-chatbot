@@ -9,7 +9,8 @@ const VISIBLE_SEGMENTS = 50; // Number of citations to show by default
 export function ClaimSegments({ segmentIds, segments, citedSources }) {
   const joinedSources = citedSources.reduce((acc, source) => {
     source.startIndex = acc.length;
-    return acc + source.halloumiContext + '\n---\n';
+    const sep = acc ? '\n' : '';
+    return acc + sep + source.halloumiContext; // + '\n---\n';
   }, '');
 
   const snippets = (segmentIds || [])

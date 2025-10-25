@@ -7,6 +7,8 @@ import {
 } from './postprocessing';
 import { createHalloumiPrompt } from './preprocessing';
 
+// const CONTEXT_SEPARTOR = '\n---\n';
+
 const log = debug('halloumi');
 
 function sigmoid(x) {
@@ -21,19 +23,23 @@ export function applyPlattScaling(platt, probability) {
 
 export async function getVerifyClaimResponse(
   model,
-  context,
+  sources,
   claims,
   maxContextSegments = 0,
 ) {
-  if (!context || !claims) {
+  // const contextSeparator = CONTEXT_SEPARTOR;
+  // const joinedContext = sources.join(contextSeparator);
+
+  if (!sources?.length || !claims) {
     const response = {
       claims: [],
       segments: {},
     };
     return response;
   }
+
   const prompt = createHalloumiPrompt({
-    context,
+    sources,
     response: claims,
     maxContextSegments,
     request: undefined,

@@ -1,5 +1,5 @@
 import debug from 'debug';
-import { getVerifyClaimResponse } from '.';
+import { getVerifyClaimResponse } from './generative';
 
 const log = debug('halloumi');
 

@@ -6,40 +6,40 @@ const DEFAULT_HALLOUMI_REQUEST =
  * @param text The input string to split.
  * @returns An array of sentence strings.
  */
-function splitIntoSentences(text, maxSegments = 0) {
+export function splitIntoSentences(text, maxSegments = 0) {
   const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
-  const segments = segmenter.segment(text);
-  // note: the segmenter keeps the whitespaces at the end of sentences, after the dot
+  const segments = Array.from(segmenter.segment(text)).map((s) => s.segment);
 
-  const finalSentences = [];
-  let shortSentenceString = '';
-  for (const { segment } of segments) {
-    // Assume that a sentence is more than 8 characters.
-    if (segment.length > 8) {
-      finalSentences.push(shortSentenceString + segment);
-      shortSentenceString = '';
-    } else {
-      shortSentenceString += segment;
+  const initialSentences = [];
+  let currentSentence = '';
+
+  for (const segment of segments) {
+    currentSentence += segment;
+    if (currentSentence.trim().length > 8) {
+      initialSentences.push(currentSentence);
+      currentSentence = '';
     }
+  }
+  // Push any remaining part that didn't make it to 8 characters
+  if (currentSentence) {
+    initialSentences.push(currentSentence);
   }
 
   if (maxSegments <= 0) {
-    return finalSentences;
+    return initialSentences;
   }
 
-  // we only want to have around maxSentences, so let's find out
-  // the group size and merge sentences if needed
-  if (finalSentences.length > maxSegments) {
-    const groupSize = Math.ceil(finalSentences.length / maxSegments);
+  if (initialSentences.length > maxSegments) {
+    const groupSize = Math.ceil(initialSentences.length / maxSegments);
     const mergedSentences = [];
-    for (let i = 0; i < finalSentences.length; i += groupSize) {
-      const group = finalSentences.slice(i, i + groupSize);
+    for (let i = 0; i < initialSentences.length; i += groupSize) {
+      const group = initialSentences.slice(i, i + groupSize);
       mergedSentences.push(group.join(''));
     }
     return mergedSentences;
   }
 
-  return finalSentences;
+  return initialSentences;
 }
 
 /**
@@ -48,7 +48,7 @@ function splitIntoSentences(text, maxSegments = 0) {
  * @param annotationChar The character to use for annotation.
  * @returns The annotated string with annotation characters + sentence number.
  */
-function annotate(sentences, annotationChar) {
+export function annotate(sentences, annotationChar) {
   return sentences
     .map(
       (sentence, i) =>
@@ -57,7 +57,7 @@ function annotate(sentences, annotationChar) {
     .join('');
 }
 
-function getOffsets(originalString, sentences) {
+export function getOffsets(originalString, sentences) {
   const offsets = new Map();
   let stringProgressPointer = 0;
   let sentenceId = 1;

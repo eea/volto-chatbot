@@ -1,29 +1,33 @@
-export const RenderClaimView = ({
-  contextText,
-  value,
-  visibleSegmentId,
-  segmentContainerRef,
-  spanRefs,
-  sourceStartIndex = 0,
-  segments = [],
-}) => {
+export const RenderClaimView = (props) => {
+  const {
+    contextText,
+    value,
+    visibleSegmentId,
+    segmentContainerRef,
+    spanRefs,
+    sourceStartIndex = 0,
+    segments = [],
+  } = props;
+  // console.log('props', props);
   const sortedSegments = segments.sort((a, b) => a.startOffset - b.startOffset);
 
   const segmentSpans = sortedSegments.map((segment, ind) => {
     const isSelectedSegment = segment.id === visibleSegmentId;
     const Tag = isSelectedSegment ? 'mark' : 'span';
     return (
-      <span
-        key={ind}
-        ref={(el) => {
-          if (el) spanRefs.current[segment.id] = el;
-        }}
-      >
-        <Tag>
-          {contextText.slice(segment.startOffset, segment.endOffset)}
-          <sup>{segment.id}</sup>
-        </Tag>
-      </span>
+      <p>
+        <span
+          key={ind}
+          ref={(el) => {
+            if (el) spanRefs.current[segment.id] = el;
+          }}
+        >
+          <Tag>
+            {contextText.slice(segment.startOffset, segment.endOffset)}
+            <sup>{segment.id}</sup>
+          </Tag>
+        </span>
+      </p>
     );
   });
 

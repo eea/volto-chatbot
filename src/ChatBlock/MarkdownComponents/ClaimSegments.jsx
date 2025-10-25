@@ -45,7 +45,7 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
     .sort((sa, sb) => sa.index - sb.index);
 
   // eslint-disable-next-line no-console
-  console.log({ snippets, sourcesWithSnippets, segments, citedSources });
+  // console.log({ snippets, sourcesWithSnippets, segments, citedSources });
 
   const [activeTab, setActiveTab] = React.useState(0);
   const [visibleSegmentId, setVisibleSegment] = React.useState();

@@ -1,3 +1,6 @@
+const DEFAULT_HALLOUMI_REQUEST =
+  'Make one or more claims about information in the documents.';
+
 /**
  * Splits a given text into sentences using sentence-splitter.
  * @param text The input string to split.
@@ -23,13 +26,14 @@ function splitIntoSentences(text, maxSegments = 0) {
     return finalSentences;
   }
 
-  // we only want to have around maxSentences, so let's find out the group size and merge sentences if needed
+  // we only want to have around maxSentences, so let's find out
+  // the group size and merge sentences if needed
   if (finalSentences.length > maxSegments) {
     const groupSize = Math.ceil(finalSentences.length / maxSegments);
     const mergedSentences = [];
     for (let i = 0; i < finalSentences.length; i += groupSize) {
       const group = finalSentences.slice(i, i + groupSize);
-      mergedSentences.push(group.join(' '));
+      mergedSentences.push(group.join(''));
     }
     return mergedSentences;
   }
@@ -82,9 +86,10 @@ function getOffsets(originalString, sentences) {
 export function createHalloumiPrompt({
   sources,
   response,
-  request = 'Make one or more claims about information in the documents.',
+  request,
   maxContextSegments = 0,
 }) {
+  const finalRequest = request || DEFAULT_HALLOUMI_REQUEST;
   const contextSentences = sources.flatMap((text) =>
     splitIntoSentences(text, maxContextSegments),
   );
@@ -99,7 +104,7 @@ export function createHalloumiPrompt({
   const annotatedResponseSentences = annotate(responseSentences, 'r');
 
   const annotatedContext = `<|context|>${annotatedContextSentences}<end||context>`;
-  const annotatedRequest = `<|request|><${request.trim()}><end||request>`;
+  const annotatedRequest = `<|request|><${finalRequest.trim()}><end||request>`;
   const annotatedResponse = `<|response|>${annotatedResponseSentences}<end||response>`;
 
   const prompt = `${annotatedContext}${annotatedRequest}${annotatedResponse}`;

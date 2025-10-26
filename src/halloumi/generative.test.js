@@ -32,7 +32,7 @@ describe('halloumiGenerativeAPI reads from mock file', () => {
     expect(response[0].claimString).toEqual(
       '**France – total waste generation (latest available data)**  \n',
     );
-    expect(response[0].citations).toEqual([
+    expect(response[0].segments).toEqual([
       38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
     ]);
   });

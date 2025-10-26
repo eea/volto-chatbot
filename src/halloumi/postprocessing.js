@@ -104,13 +104,13 @@ function getClaimFromSegment(segment) {
     }
   }
 
-  let citation_index = -1;
+  let cite_tag_index = -1;
   let explanation_index = -1;
   let label_index = -1;
   for (let i = claimProgressIndex; i < claim_segments.length; i++) {
     const subsegment = claim_segments[i];
     if (subsegment.startsWith('|cite|')) {
-      citation_index = i + 1;
+      cite_tag_index = i;
     } else if (subsegment.startsWith('|explain|')) {
       explanation_index = i + 1;
     } else if (
@@ -122,7 +122,7 @@ function getClaimFromSegment(segment) {
   }
 
   const segments = getClaimCitationsFromSubsegment(
-    claim_segments[citation_index],
+    claim_segments[cite_tag_index + 1],
   );
   const explanation = claim_segments[explanation_index];
   const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);

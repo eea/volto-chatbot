@@ -90,6 +90,7 @@ export function ChatBlockSchema({ assistants, data }) {
                 'noSupportDocumentsMessage',
                 'qualityCheckContext',
                 'qualityCheckStages',
+                'maxContextSegments',
               ]
             : []),
           'enableFeedback',
@@ -230,6 +231,13 @@ range is from 0 to 100`,
             color: 'green',
           },
         ],
+      },
+      maxContextSegments: {
+        title: 'Max context segments',
+        type: 'number',
+        default: 0,
+        description:
+          'Optimize quality check performance by grouping sentences into a max number of segments. Set to 0 to disable grouping and instead use one sentence per segment.',
       },
       feedbackReasons: {
         title: 'Feedback reasons',

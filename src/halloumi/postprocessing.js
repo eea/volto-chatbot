@@ -1,6 +1,3 @@
-// import debug from 'debug';
-
-//
 // /**
 //  * Represents a claim object with all relevant information.
 //  */
@@ -8,7 +5,7 @@
 //     claimId: number;
 //     claimString: string;
 //     subclaims: string[];
-//     citations: number[];
+//     segments: number[];
 //     explanation: string;
 //     supported: boolean;
 //     probabilities: Map<string, number>;
@@ -45,35 +42,35 @@ function getClaimIdFromSubsegment(subsegment) {
  */
 function getClaimCitationsFromSubsegment(subsegment) {
   const citationSegments = subsegment.split(',');
-  const citations = [];
+  const segments = [];
   for (const citationSegment of citationSegments) {
-    const citation = citationSegment.replaceAll('|', '').replaceAll('s', '');
-    if (citation.includes('-')) {
-      const citationRange = citation.split('-');
+    const segment = citationSegment.replaceAll('|', '').replaceAll('s', '');
+    if (segment.includes('-')) {
+      const segmentRange = segment.split('-');
       for (
-        let i = parseInt(citationRange[0].trim());
-        i <= parseInt(citationRange[1].trim());
+        let i = parseInt(segmentRange[0].trim());
+        i <= parseInt(segmentRange[1].trim());
         i++
       ) {
-        citations.push(i);
+        segments.push(i);
       }
-    } else if (citation.includes('to')) {
-      const citationRange = citation.split('to');
+    } else if (segment.includes('to')) {
+      const segmentRange = segment.split('to');
       for (
-        let i = parseInt(citationRange[0].trim());
-        i <= parseInt(citationRange[1].trim());
+        let i = parseInt(segmentRange[0].trim());
+        i <= parseInt(segmentRange[1].trim());
         i++
       ) {
-        citations.push(i);
+        segments.push(i);
       }
     } else {
-      const citationInt = parseInt(citation);
-      if (!isNaN(citationInt)) {
-        citations.push(parseInt(citation));
+      const segmentInt = parseInt(segment);
+      if (!isNaN(segmentInt)) {
+        segments.push(parseInt(segment));
       }
     }
   }
-  return citations;
+  return segments;
 }
 
 /**
@@ -107,13 +104,13 @@ function getClaimFromSegment(segment) {
     }
   }
 
-  let citation_index = -1;
+  let cite_tag_index = -1;
   let explanation_index = -1;
   let label_index = -1;
   for (let i = claimProgressIndex; i < claim_segments.length; i++) {
     const subsegment = claim_segments[i];
     if (subsegment.startsWith('|cite|')) {
-      citation_index = i + 1;
+      cite_tag_index = i;
     } else if (subsegment.startsWith('|explain|')) {
       explanation_index = i + 1;
     } else if (
@@ -124,19 +121,19 @@ function getClaimFromSegment(segment) {
     }
   }
 
-  const citations = getClaimCitationsFromSubsegment(
-    claim_segments[citation_index],
+  const segments = getClaimCitationsFromSubsegment(
+    claim_segments[cite_tag_index + 1],
   );
   const explanation = claim_segments[explanation_index];
   const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);
 
   const claim = {
-    claimId: claimId,
-    claimString: claimString,
-    subclaims: subclaims,
-    citations: citations,
-    explanation: explanation,
-    supported: supported,
+    claimId,
+    claimString,
+    subclaims,
+    segments,
+    explanation,
+    supported,
     probabilities: new Map(),
   };
 
@@ -151,6 +148,8 @@ function getClaimFromSegment(segment) {
 export function getClaimsFromResponse(response) {
   // Example response: <|r1|><There is no information about the average lifespan of a giant squid in the deep waters of the Pacific Ocean in the provided document.><|subclaims|><The document contains information about the average lifespan of a giant squid.><The information about giant squid lifespan is related to the Pacific Ocean.><end||subclaims><|cite|><|s1 to s49|><end||cite><|explain|><Upon reviewing the entire document, there is no mention of giant squid or any related topic, including their average lifespan or the Pacific Ocean. The document is focused on international relations, diplomacy, and conflict resolution.><end||explain><|supported|><end||r><|r2|><The document is focused on international relations, diplomacy, and conflict resolution, and does not mention giant squid or any related topic.><|subclaims|><The document is focused on international relations, diplomacy, and conflict resolution.><The document does not mention giant squid or any related topic.><end||subclaims><|cite|><|s1|,|s2|,|s3|,|s4|><end||cite><|explain|><The first four sentences clearly establish the document's focus on international relations, diplomacy, and conflict resolution, and there is no mention of giant squid or any related topic throughout the document.><end||explain><|supported|><end||r><|r3|><The document mentions cats.><|subclaims|><The document makes some mention of cats.><end||subclaims><|cite|><None><end||cite><|explain|><There is no mention of cats anywhere in the document.><end||explain><|unsupported|><end||r>
 
+  // eslint-disable-next-line no-console
+  // console.log('getClaimsFromResponse', response);
   let segments = response.split('<end||r>');
   const claims = [];
 
@@ -233,8 +232,4 @@ export function getTokenProbabilitiesFromLogits(logits, tokenChoices) {
     tokenProbabilities.push(tokenProbability);
   }
   return tokenProbabilities;
-}
-
-export function getClassifierProbabilitiesFromLogits(logits) {
-  return softmax(logits);
 }

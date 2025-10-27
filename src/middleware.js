@@ -225,7 +225,7 @@ async function send_danswer_request(
 }
 
 export default async function middleware(req, res, next) {
-  const path = req.url.replace('/_da/', '/');
+  const path = req.url.replace(/^.*(?=\/persona)/, '');
 
   const reqUrl = `${process.env.DANSWER_URL || ''}/api${path}`;
 

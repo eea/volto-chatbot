@@ -41,6 +41,7 @@ function ChatWindow({
     starterPromptsPosition = 'top',
     enableMatomoTracking = true,
     onDemandInputToggle = true,
+    maxContextSegments = 0,
   } = data;
   const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(
     onDemandInputToggle ?? true,
@@ -164,6 +165,7 @@ function ChatWindow({
                   isFetchingRelatedQuestions={isFetchingRelatedQuestions}
                   enableMatomoTracking={enableMatomoTracking}
                   persona={persona}
+                  maxContextSegments={maxContextSegments}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}

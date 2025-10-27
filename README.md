@@ -104,23 +104,45 @@ Go to http://localhost:3000
 
 To properly configure the middleware and authenticate with the Danswer service, ensure that the following environment variables are set:
 
-| **Environment Variable** | **Description**                                                        |
-| ------------------------ | ---------------------------------------------------------------------- |
-| `DANSWER_URL`            | The base URL of the Danswer service (e.g., `https://api.danswer.com`). |
-| `DANSWER_USERNAME`       | Username for authenticating with the Danswer service.                  |
-| `DANSWER_PASSWORD`       | Password for authenticating with the Danswer service.                  |
+This document lists the environment variables used in the Volto Chatbot project.
 
-### Example `.env` File
+- `DANSWER_URL`
+  The base URL for the Danswer service. Used for API calls to Danswer.
 
-Create a `.env` file in your project root with the following content:
+- `DANSWER_USERNAME`
+  The username for authenticating with the Danswer service. **(Deprecated: Use `DANSWER_API_KEY` instead)**
 
-```env
-DANSWER_URL=https://api.danswer.com
-DANSWER_USERNAME=your_username
-DANSWER_PASSWORD=your_password
-```
+- `DANSWER_PASSWORD`
+  The password for authenticating with the Danswer service. **(Deprecated: Use `DANSWER_API_KEY` instead)**
 
-If you encounter issues, double-check your `.env` configuration and ensure the Danswer service is accessible at the URL you’ve provided.
+- `DANSWER_API_KEY`
+  The API key for authenticating with the Danswer service. This is the recommended authentication method.
+
+- `JEST_USE_SETUP`
+  Used in Jest configuration. When set to 'ON', it enables a specific Jest setup.
+
+- `LLMGW_URL`
+  The URL for the LLM Gateway service.
+
+- `LLMGW_TOKEN`
+  The token for authenticating with the LLM Gateway service.
+
+### Development-specific environment variables
+
+- `MOCK_HALLOUMI_FILE_PATH`
+  When set, this specifies the absolute path to the JSON file containing the mocked Halloumi response. Setting this variable enables mocking of Halloumi API calls.
+
+- `DUMP_HALLOUMI_FILE_PATH`
+  When set, the Halloumi response will be dumped to the specified absolute file path for debugging or to create new mock files.
+
+- `MOCK_LLM_FILE_PATH`
+  When set, this specifies the absolute path to the JSONL file containing the mocked Danswer stream response. Setting this variable enables mocking of Danswer LLM calls.
+
+- `DUMP_LLM_FILE_PATH`
+  When set, the LLM response will be dumped to the specified absolute file path for debugging or to create new mock files.
+
+- `MOCK_STREAM_DELAY`
+  Specifies a delay for mock streaming, used in testing or development.
 
 ## Release
 

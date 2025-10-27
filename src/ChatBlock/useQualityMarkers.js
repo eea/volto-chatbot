@@ -54,16 +54,16 @@ export default function useQualityMarkers(
         return;
       }
 
-      // console.log('Halloumi sources:', sources.length, sources);
-      if (sources.length > 20) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `Warning: Too many sources (${sources.length}). Skipping quality control.`,
-        );
-
-        setHalloumiResponse(empty(message, TOOLARGE_RATIONALE));
-        return;
-      }
+      // // console.log('Halloumi sources:', sources.length, sources);
+      // if (sources.length > 40) {
+      //   // eslint-disable-next-line no-console
+      //   console.warn(
+      //     `Warning: Too many sources (${sources.length}). Skipping quality control.`,
+      //   );
+      //
+      //   setHalloumiResponse(empty(message, TOOLARGE_RATIONALE));
+      //   return;
+      // }
 
       setIsLoading(true);
 

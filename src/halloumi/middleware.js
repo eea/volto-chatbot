@@ -65,6 +65,6 @@ export default async function middleware(req, res, next) {
       error: `Halloumi error: ${error}`,
       traceback: error.stack || null,
     });
-    throw error;
+    // throw error;
   }
 }

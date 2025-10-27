@@ -17,7 +17,7 @@ async function fetchHalloumi(answer, sources, maxContextSegments) {
 }
 
 const FAILURE_RATIONALE = 'Answer cannot be verified due to empty sources.';
-const TOOLARGE_RATIONALE = 'Verification failed: Too many sources provided.';
+// const TOOLARGE_RATIONALE = 'Verification failed: Too many sources provided.';
 const TIMEOUT_RATIONALE =
   'Verification failed: Halloumi service is unreachable or timed out.';
 

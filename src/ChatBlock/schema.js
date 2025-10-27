@@ -87,10 +87,10 @@ export function ChatBlockSchema({ assistants, data }) {
             : []),
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
             ? [
+                'maxContextSegments',
                 'noSupportDocumentsMessage',
                 'qualityCheckContext',
                 'qualityCheckStages',
-                'maxContextSegments',
               ]
             : []),
           'enableFeedback',
@@ -235,7 +235,7 @@ range is from 0 to 100`,
       maxContextSegments: {
         title: 'Max context segments',
         type: 'number',
-        default: 0,
+        default: 100,
         description:
           'Optimize quality check performance by grouping sentences into a max number of segments. Set to 0 to disable grouping and instead use one sentence per segment.',
       },

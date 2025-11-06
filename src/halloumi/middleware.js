@@ -1,4 +1,7 @@
-import { getVerifyClaimResponse } from '.';
+import debug from 'debug';
+import { getVerifyClaimResponse } from './generative';
+
+const log = debug('halloumi');
 
 const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing LLMGW_TOKEN or LLMGW_URL';
@@ -42,7 +45,8 @@ export default async function middleware(req, res, next) {
   };
   const body = req.body;
 
-  const { sources, answer } = body;
+  log('Halloumi body', body);
+  const { sources, answer, maxContextSegments = 0 } = body;
 
   res.set('Content-Type', 'application/json');
 
@@ -50,11 +54,17 @@ export default async function middleware(req, res, next) {
     const resp = await getVerifyClaimResponse(
       model,
       // TODO: map with citation id
-      sources.join('\n---\n'),
+      sources,
       answer,
+      maxContextSegments,
     );
+    log('Halloumi response', resp);
     res.send(resp);
   } catch (error) {
-    res.send({ error: `Halloumi error: ${error}` });
+    res.status(500).send({
+      error: `Halloumi error: ${error}`,
+      traceback: error.stack || null,
+    });
+    // throw error;
   }
 }

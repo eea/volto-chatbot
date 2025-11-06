@@ -4,8 +4,12 @@ import fs from 'fs';
 import path from 'path';
 import debug from 'debug';
 
+import fs from 'fs';
+
 const log = debug('volto-chatbot');
 // import readline from 'readline';
+
+const MOCK_STREAM_DELAY = parseInt(process.env.MOCK_STREAM_DELAY || '0');
 
 let cached_auth_cookie = null;
 let last_fetched = null;
@@ -50,7 +54,7 @@ async function getAuthCookie(username, password) {
 async function login(username, password) {
   const diff = maxAge - (new Date() - last_fetched) / 1000;
   // eslint-disable-next-line no-console
-  console.log('danswer auth still valid for seconds: ', diff);
+  log('danswer auth still valid for seconds: ', diff);
   if (!cached_auth_cookie || diff < 0) {
     await getAuthCookie(username, password);
   }
@@ -79,10 +83,12 @@ function mock_create_chat(res) {
 }
 
 function mock_send_message(res) {
-  const filePath = path.join(
-    __dirname,
-    '../src/addons/volto-chatbot/dummy.jsonl',
-  );
+  const filePath = process.env.MOCK_LLM_FILE_PATH;
+  if (!filePath) {
+    log('MOCK_LLM_FILE_PATH is not set. Cannot mock send message.');
+    res.status(500).send('Internal Server Error: MOCK_LLM_FILE_PATH not set.');
+    return;
+  }
   const readStream = fs.createReadStream(filePath, { encoding: 'utf8' });
 
   let buffer = '';
@@ -93,10 +99,16 @@ function mock_send_message(res) {
   res.setHeader('Transfer-Encoding', 'chunked');
 
   const sendLineWithDelay = (line, index) => {
-    setTimeout(() => {
+    if (MOCK_STREAM_DELAY === 0) {
       res.write(line + '\n');
       log(`Sent line ${index + 1}: ${line.substring(0, 50)}...`);
-    }, index * MOCK_STREAM_DELAY);
+      return;
+    } else {
+      setTimeout(() => {
+        res.write(line + '\n');
+        log(`Sent line ${index + 1}: ${line.substring(0, 50)}...`);
+      }, index * MOCK_STREAM_DELAY);
+    }
   };
 
   readStream.on('data', (chunk) => {
@@ -173,20 +185,33 @@ async function send_danswer_request(
     options.body = JSON.stringify(req.body);
   }
 
-  if (process.env.MOCK_LLM_CALL) {
-    if (req.url.endsWith('send-message')) {
+  if (process.env.MOCK_LLM_FILE_PATH && req.url.endsWith('send-message')) {
+    try {
       mock_send_message(res);
-      return;
+    } catch (e) {
+      log(e);
     }
-    if (req.url.endsWith('create-chat-session')) {
-      mock_create_chat(res);
-      return;
-    }
+    return;
+  }
+
+  if (
+    process.env.MOCK_LLM_FILE_PATH &&
+    req.url.endsWith('create-chat-session')
+  ) {
+    mock_create_chat(res);
+    return;
   }
 
   try {
     log(`Fetching ${url}`);
     const response = await fetch(url, options, req.body);
+
+    if (process.env.DUMP_LLM_FILE_PATH) {
+      const filePath = process.env.DUMP_LLM_FILE_PATH;
+      const writer = fs.createWriteStream(filePath);
+      response.body.pipe(writer);
+      log(`Dumped LLM response to: ${filePath}`);
+    }
 
     if (!api_key) {
       if (response.headers.get('transfer-encoding') === 'chunked') {
@@ -206,7 +231,7 @@ async function send_danswer_request(
 export default async function middleware(req, res, next) {
   const path = req.url.replace('/_da/', '/');
 
-  const reqUrl = `${process.env.DANSWER_URL}/api${path}`;
+  const reqUrl = `${process.env.DANSWER_URL || ''}/api${path}`;
 
   const username = process.env.DANSWER_USERNAME;
   const password = process.env.DANSWER_PASSWORD;

@@ -1,6 +1,7 @@
 import React from 'react';
-import TextareaAutosize from 'react-textarea-autosize';
 import { Button, Checkbox } from 'semantic-ui-react';
+import { trackEvent } from '@eeacms/volto-matomo/utils';
+import TextareaAutosize from 'react-textarea-autosize';
 
 import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
@@ -9,6 +10,8 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
   const {
     onSubmit,
     isStreaming,
+    enableMatomoTracking,
+    persona,
     deepResearch,
     isDeepResearchEnabled,
     setIsDeepResearchEnabled,
@@ -20,7 +23,15 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (input.trim()) {
+    const trimmedInput = input.trim();
+    if (trimmedInput) {
+      if (enableMatomoTracking) {
+        trackEvent({
+          category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
+          action: 'Chatbot: Type a question',
+          name: 'Message submitted',
+        });
+      }
       onSubmit({ message: input });
       setInput('');
     }

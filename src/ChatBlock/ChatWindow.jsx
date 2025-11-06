@@ -1,8 +1,10 @@
 import React from 'react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import { Button, Form, Segment } from 'semantic-ui-react';
+import { trackEvent } from '@eeacms/volto-matomo/utils';
 
 import AutoResizeTextarea from './AutoResizeTextarea';
+import QualityCheckToggle from './QualityCheckToggle';
 import { ChatMessageBubble } from './ChatMessageBubble';
 import EmptyState from './EmptyState';
 import { useScrollonStream } from './lib';
@@ -38,8 +40,20 @@ function ChatWindow({
     showAssistantTitle,
     showAssistantDescription,
     starterPromptsPosition = 'top',
+    enableMatomoTracking = true,
+    onDemandInputToggle = true,
+    maxContextSegments = 0,
   } = data;
-  const libs = { rehypePrism, remarkGfm }; // rehypePrism, remarkGfm
+  const [qualityCheckEnabled, setQualityCheckEnabled] = React.useState(
+    onDemandInputToggle ?? true,
+  );
+
+  React.useEffect(() => {
+    if (isEditMode && qualityCheck === 'ondemand_toggle') {
+      setQualityCheckEnabled(onDemandInputToggle ?? true);
+    }
+  }, [onDemandInputToggle, qualityCheck, isEditMode]);
+  const libs = { rehypePrism, remarkGfm };
   const {
     onSubmit,
     messages,
@@ -87,6 +101,18 @@ function ChatWindow({
     debounce: 100, // time for debouncing
   });
 
+  const handleStarterPromptChoice = (message) => {
+    if (enableMatomoTracking) {
+      trackEvent({
+        category: persona?.name ? `Chatbot - ${persona.name}` : 'Chatbot',
+        action: 'Chatbot: Starter prompt click',
+        name: 'Message submitted',
+      });
+    }
+    onSubmit({ message });
+    setShowLandingPage(false);
+  };
+
   return (
     <div className="chat-window">
       <div className="messages">
@@ -99,10 +125,7 @@ function ChatWindow({
               <EmptyState
                 {...data}
                 persona={persona}
-                onChoice={(message) => {
-                  onSubmit({ message });
-                  setShowLandingPage(false);
-                }}
+                onChoice={handleStarterPromptChoice}
               />
             )}
           </>
@@ -134,6 +157,7 @@ function ChatWindow({
                   libs={libs}
                   qualityCheck={qualityCheck}
                   qualityCheckStages={qualityCheckStages}
+                  qualityCheckEnabled={qualityCheckEnabled}
                   onChoice={(message) => {
                     onSubmit({ message });
                   }}
@@ -143,6 +167,9 @@ function ChatWindow({
                   totalFailMessage={totalFailMessage}
                   showToolCalls={showToolCalls}
                   isFetchingRelatedQuestions={isFetchingRelatedQuestions}
+                  enableMatomoTracking={enableMatomoTracking}
+                  persona={persona}
+                  maxContextSegments={maxContextSegments}
                 />
               ))}
               <div ref={endDivRef} /> {/* End div to mark the bottom */}
@@ -165,6 +192,8 @@ function ChatWindow({
                 messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
               }
               isStreaming={isStreaming}
+              enableMatomoTracking={enableMatomoTracking}
+              persona={persona}
               onSubmit={onSubmit}
               deepResearch={deepResearch}
               setIsDeepResearchEnabled={setIsDeepResearchEnabled}
@@ -172,16 +201,21 @@ function ChatWindow({
             />
           </div>
         </Form>
+
+        {qualityCheck === 'ondemand_toggle' && (
+          <QualityCheckToggle
+            isEditMode={isEditMode}
+            enabled={qualityCheckEnabled}
+            setEnabled={setQualityCheckEnabled}
+          />
+        )}
       </div>
 
       {showLandingPage && starterPromptsPosition === 'bottom' && (
         <EmptyState
           {...data}
           persona={persona}
-          onChoice={(message) => {
-            onSubmit({ message });
-            setShowLandingPage(false);
-          }}
+          onChoice={handleStarterPromptChoice}
         />
       )}
     </div>

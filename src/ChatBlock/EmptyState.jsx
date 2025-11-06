@@ -5,15 +5,11 @@ function StarterMessage({ msg, onClick }) {
   if (!(msg.name || msg.message)) return null;
 
   return (
-    <Button
-      onClick={onClick}
-      onKeyDown={onClick}
-      role="button"
-      tabIndex={-1}
-      className="starter-message"
-    >
+    <Button onClick={onClick} onKeyDown={onClick} className="starter-message">
       <span className="starter-message-title">{msg.name}</span>
-      <div className="starter-message-desc">{msg.description}</div>
+      {msg.description && (
+        <div className="starter-message-desc">{msg.description}</div>
+      )}
     </Button>
   );
 }

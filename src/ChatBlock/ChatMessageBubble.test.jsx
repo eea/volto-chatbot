@@ -1,4 +1,3 @@
-import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import configureStore from 'redux-mock-store';
 import renderer from 'react-test-renderer';
@@ -8,6 +7,10 @@ import { Provider } from 'react-intl-redux';
 import { ToolCall } from './ChatMessageBubble';
 
 const mockStore = configureStore();
+
+jest.mock('@eeacms/volto-matomo/utils', () => ({
+  trackEvent: jest.fn(),
+}));
 
 describe('ToolCall', () => {
   it('should render the component', () => {

@@ -1,29 +1,45 @@
-/**
- * Represents a prompt with appropriate metadata
- */
+const DEFAULT_HALLOUMI_REQUEST =
+  'Make one or more claims about information in the documents.';
 
 /**
  * Splits a given text into sentences using sentence-splitter.
  * @param text The input string to split.
  * @returns An array of sentence strings.
  */
-function splitIntoSentences(text) {
+export function splitIntoSentences(text, maxSegments = 0) {
   const segmenter = new Intl.Segmenter('en', { granularity: 'sentence' });
-  const segments = segmenter.segment(text);
+  const segments = Array.from(segmenter.segment(text)).map((s) => s.segment);
 
-  const finalSentences = [];
-  let shortSentenceString = '';
-  for (const { segment } of segments) {
-    // Assume that a sentence is more than 8 characters.
-    if (segment.length > 8) {
-      finalSentences.push(shortSentenceString + segment);
-      shortSentenceString = '';
-    } else {
-      shortSentenceString += segment;
+  const initialSentences = [];
+  let currentSentence = '';
+
+  for (const segment of segments) {
+    currentSentence += segment;
+    if (currentSentence.trim().length > 8) {
+      initialSentences.push(currentSentence);
+      currentSentence = '';
     }
   }
+  // Push any remaining part that didn't make it to 8 characters
+  if (currentSentence) {
+    initialSentences.push(currentSentence);
+  }
 
-  return finalSentences;
+  if (maxSegments <= 0) {
+    return initialSentences;
+  }
+
+  if (initialSentences.length > maxSegments) {
+    const groupSize = Math.ceil(initialSentences.length / maxSegments);
+    const mergedSentences = [];
+    for (let i = 0; i < initialSentences.length; i += groupSize) {
+      const group = initialSentences.slice(i, i + groupSize);
+      mergedSentences.push(group.join(''));
+    }
+    return mergedSentences;
+  }
+
+  return initialSentences;
 }
 
 /**
@@ -32,20 +48,16 @@ function splitIntoSentences(text) {
  * @param annotationChar The character to use for annotation.
  * @returns The annotated string with annotation characters + sentence number.
  */
-function annotate(sentences, annotationChar) {
-  const annotatedSentences = [];
-
-  let sentenceNumber = 0;
-  for (const sentence of sentences) {
-    sentenceNumber++;
-    const annotatedSentence = `<|${annotationChar}${sentenceNumber}|><${sentence}><end||${annotationChar}>`;
-    annotatedSentences.push(annotatedSentence);
-  }
-
-  return annotatedSentences.join('');
+export function annotate(sentences, annotationChar) {
+  return sentences
+    .map(
+      (sentence, i) =>
+        `<|${annotationChar}${i + 1}|><${sentence}><end||${annotationChar}>`,
+    )
+    .join('');
 }
 
-function getOffsets(originalString, sentences) {
+export function getOffsets(originalString, sentences) {
   const offsets = new Map();
   let stringProgressPointer = 0;
   let sentenceId = 1;
@@ -68,68 +80,36 @@ function getOffsets(originalString, sentences) {
  * @param request The request or question that was used to produce the response.
  * @returns The Halloumi prompt.
  */
-export function createHalloumiPrompt(
-  context,
+export function createHalloumiPrompt({
+  sources,
   response,
-  request = 'Make one or more claims about information in the documents.',
-) {
-  const contextSentences = splitIntoSentences(context);
-  const contextOffsets = getOffsets(context, contextSentences);
+  request,
+  maxContextSegments = 0,
+}) {
+  const finalRequest = request || DEFAULT_HALLOUMI_REQUEST;
+  const contextSentences = sources.flatMap((text) =>
+    splitIntoSentences(text, maxContextSegments),
+  );
+  const joinedContext = sources.join('\n');
+  // const contextSentences = splitIntoSentences(sources, maxContextSegments);
+  const contextOffsets = getOffsets(joinedContext, contextSentences);
+
   const annotatedContextSentences = annotate(contextSentences, 's');
-  const annotatedContext = `<|context|>${annotatedContextSentences}<end||context>`;
 
-  const annotatedRequest = `<|request|><${request.trim()}><end||request>`;
-
-  const responseSentences = splitIntoSentences(response);
+  const responseSentences = splitIntoSentences(response, maxContextSegments);
   const responseOffsets = getOffsets(response, responseSentences);
   const annotatedResponseSentences = annotate(responseSentences, 'r');
+
+  const annotatedContext = `<|context|>${annotatedContextSentences}<end||context>`;
+  const annotatedRequest = `<|request|><${finalRequest.trim()}><end||request>`;
   const annotatedResponse = `<|response|>${annotatedResponseSentences}<end||response>`;
 
   const prompt = `${annotatedContext}${annotatedRequest}${annotatedResponse}`;
   const halloumiPrompt = {
-    prompt: prompt,
-    contextOffsets: contextOffsets,
-    responseOffsets: responseOffsets,
+    prompt,
+    contextOffsets, // used by convertGenerativesClaimToVerifyClaimResponse
+    responseOffsets,
   };
-
-  return halloumiPrompt;
-}
-
-/**
- * Creates a Halloumi prompt from a given context and response.
- * @param context The context or document to reference.
- * @param response The response to the request.
- * @returns The Halloumi Classifier prompt string.
- */
-export function createHalloumiClassifierPrompt(context, response) {
-  const annotatedContext = `<context>\n${context.trim()}\n</context>`;
-  const annotatedResponse = `<claims>\n${response.trim()}\n</claims>`;
-
-  const prompt = `${annotatedContext}\n\n${annotatedResponse}`;
-  return prompt;
-}
-
-/**
- * Creates a Halloumi prompt from a given context and response.
- * @param context The context or document to reference.
- * @param response The response to the request.
- * @returns The Halloumi Classifier prompt strings.
- */
-export function createHalloumiClassifierPrompts(context, response) {
-  const responseSentences = splitIntoSentences(response);
-  const responseOffsets = getOffsets(response, responseSentences);
-  const prompts = [];
-  for (const sentence of responseSentences) {
-    const prompt = createHalloumiClassifierPrompt(context, sentence);
-    prompts.push(prompt);
-  }
-
-  const halloumiPrompt = {
-    prompts: prompts,
-    sentences: responseSentences,
-    responseOffsets: responseOffsets,
-  };
-  // console.log(halloumiPrompt);
 
   return halloumiPrompt;
 }

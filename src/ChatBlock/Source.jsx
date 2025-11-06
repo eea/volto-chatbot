@@ -21,27 +21,50 @@ const SourceDetails_ = ({ source, index, luxon }) => {
 
   const renderIcon = () => {
     if (isLinkType) {
-      return <SVGIcon name={GlobeIcon} size="15" alt="Web icon" />;
+      return <SVGIcon name={GlobeIcon} size="16" alt="Web icon" />;
     }
     if (isDocumentType) {
-      return <SVGIcon name={FileIcon} size="15" alt="File icon" />;
+      return <SVGIcon name={FileIcon} size="16" alt="File icon" />;
     }
     return null;
   };
 
+  const sourceContent = (
+    <>
+      {blurb && (
+        <div className="source-desc">
+          <span>{blurb}</span>
+        </div>
+      )}
+      {updated_at && (
+        <div className="source-date">
+          <span>{relativeTime}</span>
+        </div>
+      )}
+    </>
+  );
+
   return (
-    <div className="source">
-      <div className="source-header">
-        {isLinkType ? (
-          <a href={link} rel="noreferrer" target="_blank">
+    <>
+      {isLinkType ? (
+        <a
+          href={link}
+          rel="noreferrer"
+          target="_blank"
+          className="source source-link"
+        >
+          <div className="source-header">
             <span className="chat-citation">{index}</span>
             <div className="source-title" title={semantic_identifier}>
               {semantic_identifier}
             </div>
             {renderIcon()}
-          </a>
-        ) : (
-          <>
+          </div>
+          {sourceContent}
+        </a>
+      ) : (
+        <div className="source">
+          <div className="source-header">
             <Popup
               on="click"
               wide="very"
@@ -53,20 +76,11 @@ const SourceDetails_ = ({ source, index, luxon }) => {
               {semantic_identifier}
             </div>
             {renderIcon()}
-          </>
-        )}
-      </div>
-      {updated_at && (
-        <div className="source-date">
-          <span>{relativeTime}</span>
+          </div>
+          {sourceContent}
         </div>
       )}
-      {blurb && (
-        <div className="source-desc">
-          <span>{blurb}</span>
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 

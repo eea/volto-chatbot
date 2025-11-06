@@ -84,8 +84,12 @@ export function ChatBlockSchema({ assistants, data }) {
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
           'qualityCheck',
+          ...(data.qualityCheck && data.qualityCheck === 'ondemand_toggle'
+            ? ['onDemandInputToggle']
+            : []),
           ...(data.qualityCheck && data.qualityCheck !== 'disabled'
             ? [
+                'maxContextSegments',
                 'noSupportDocumentsMessage',
                 'qualityCheckContext',
                 'qualityCheckStages',
@@ -93,6 +97,7 @@ export function ChatBlockSchema({ assistants, data }) {
             : []),
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
+          'enableMatomoTracking',
           'scrollToInput',
           'showToolCalls',
           'showAssistantTitle',
@@ -168,9 +173,17 @@ export function ChatBlockSchema({ assistants, data }) {
           ['disabled', 'Disabled'],
           ['enabled', 'Enabled'],
           ['ondemand', 'On demand'],
+          ['ondemand_toggle', 'On demand (show toggle on input)'],
         ],
         default: 'disabled',
         description: 'Show Halloumi-based automated quality check',
+      },
+      onDemandInputToggle: {
+        title: 'Fact-check AI toggle default state',
+        type: 'boolean',
+        default: true,
+        description:
+          'Sets the default state of the fact-check AI toggle. When enabled, quality checks run automatically; when disabled, users must enable them manually.',
       },
       qualityCheckContext: {
         title: 'Context documents',
@@ -191,7 +204,7 @@ range is from 0 to 100`,
           {
             '@id': 'one',
             label:
-              '❌Not supported by our content. Likely guesses—always double-check.',
+              '❌ {score} factuality score. Not supported by our content. Likely guesses—always double-check.',
             start: 0,
             end: 19,
             color: 'red',
@@ -199,7 +212,7 @@ range is from 0 to 100`,
           {
             '@id': 'two',
             label:
-              '🔍Mostly not supported—likely based on AI logic. Please verify elsewhere.',
+              '❗ {score} factuality score. Mostly not supported—likely based on AI logic. Please verify elsewhere.',
             start: 20,
             end: 39,
             color: 'orange',
@@ -207,28 +220,35 @@ range is from 0 to 100`,
           {
             '@id': 'three',
             label:
-              '❗Partially supported. Double-check if using for important decisions.',
+              '⚠️ {score} factuality score. Partially supported. Double-check if using for important decisions.',
             start: 40,
-            end: 59,
+            end: 79,
             color: 'yellow',
           },
           {
             '@id': 'four',
             label:
-              '⚠️ Mostly supported, but some parts may not be. Consider checking key points.',
-            start: 60,
+              'ℹ️ {score} factuality score. Mostly supported, but some parts may not be. Consider checking key points.',
+            start: 80,
             end: 94,
             color: 'olive',
           },
           {
             '@id': 'five',
             label:
-              '✅Fully supported by our content. Safe to trust—no need to double-check.',
+              '✅ {score} factuality score. Fully supported by our content. Safe to trust—no need to double-check.',
             start: 95,
             end: 100,
             color: 'green',
           },
         ],
+      },
+      maxContextSegments: {
+        title: 'Max context segments',
+        type: 'number',
+        default: 100,
+        description:
+          'Optimize quality check performance by grouping sentences into a max number of segments. Set to 0 to disable grouping and instead use one sentence per segment.',
       },
       feedbackReasons: {
         title: 'Feedback reasons',
@@ -314,6 +334,15 @@ range is from 0 to 100`,
         type: 'string',
         description:
           'Heading shown above the starter prompts (e.g. "Try the following questions")',
+      },
+      enableMatomoTracking: {
+        type: 'boolean',
+        title: 'Enable Matomo tracking',
+        configPath: 'enableMatomoTracking',
+        default: true,
+        description:
+          'Enable tracking of user interactions via Matomo Analytics. When enabled, the chatbot will send events for: ' +
+          'starter prompt clicks, user-submitted questions, clicks on related questions, and feedback on answers (positive/negative).',
       },
       showToolCalls: {
         title: 'Show query used in retriever',

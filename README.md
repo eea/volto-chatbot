@@ -144,6 +144,10 @@ This document lists the environment variables used in the Volto Chatbot project.
 - `MOCK_STREAM_DELAY`
   Specifies a delay for mock streaming, used in testing or development.
 
+## AI-Generated documentation
+
+See [volto-chatbot DeepWiki](https://deepwiki.com/eea/volto-chatbot/)
+
 ## Release
 
 See [RELEASE.md](https://github.com/eea/volto-chatbot/blob/master/RELEASE.md).

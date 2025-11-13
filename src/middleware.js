@@ -1,10 +1,13 @@
 import superagent from 'superagent';
 import fetch from 'node-fetch';
+import fs from 'fs';
+import path from 'path';
 import debug from 'debug';
 
 import fs from 'fs';
 
 const log = debug('volto-chatbot');
+// import readline from 'readline';
 
 const MOCK_STREAM_DELAY = parseInt(process.env.MOCK_STREAM_DELAY || '0');
 
@@ -16,6 +19,8 @@ const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing DANSWER username and password';
 const MSG_FETCH_COOKIE = 'Error while fetching authentication cookie';
 const MSG_ERROR_REQUEST = 'Error in processing request to Danswer';
+
+const MOCK_STREAM_DELAY = 1;
 
 async function get_login_cookie(username, password) {
   const url = `${process.env.DANSWER_URL}/api/auth/login`;
@@ -217,7 +222,6 @@ async function send_danswer_request(
     } else {
       res.set('Content-Type', response.headers.get('Content-Type'));
     }
-
     response.body.pipe(res);
   } catch (error) {
     throw error;

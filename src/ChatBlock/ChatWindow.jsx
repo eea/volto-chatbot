@@ -36,6 +36,7 @@ function ChatWindow({
     noSupportDocumentsMessage,
     totalFailMessage,
     enableShowTotalFailMessage,
+    deepResearch,
     showAssistantTitle,
     showAssistantDescription,
     starterPromptsPosition = 'top',
@@ -59,10 +60,13 @@ function ChatWindow({
     isStreaming,
     isFetchingRelatedQuestions,
     clearChat,
+    setIsDeepResearchEnabled,
+    isDeepResearchEnabled,
   } = useBackendChat({
     persona,
     qgenAsistantId,
     enableQgen,
+    deepResearch,
   });
   const [showLandingPage, setShowLandingPage] = React.useState(false);
 
@@ -191,6 +195,9 @@ function ChatWindow({
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}
+              deepResearch={deepResearch}
+              setIsDeepResearchEnabled={setIsDeepResearchEnabled}
+              isDeepResearchEnabled={isDeepResearchEnabled}
             />
           </div>
         </Form>

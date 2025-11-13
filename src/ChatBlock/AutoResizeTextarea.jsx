@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button } from 'semantic-ui-react';
+import { Button, Checkbox } from 'semantic-ui-react';
 import { trackEvent } from '@eeacms/volto-matomo/utils';
 import TextareaAutosize from 'react-textarea-autosize';
 
@@ -7,8 +7,18 @@ import { SVGIcon } from './utils';
 import SendIcon from './../icons/send.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
-  const { onSubmit, isStreaming, enableMatomoTracking, persona, ...rest } =
-    props;
+  const {
+    onSubmit,
+    isStreaming,
+    enableMatomoTracking,
+    persona,
+    deepResearch,
+    isDeepResearchEnabled,
+    setIsDeepResearchEnabled,
+    ...rest
+  } = props;
+  const showDeepResearchToggle =
+    deepResearch === 'user_on' || deepResearch === 'user_off';
   const [input, setInput] = React.useState('');
 
   const handleSubmit = (e) => {
@@ -44,22 +54,36 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
         ref={ref}
       />
 
-      <Button
-        className="submit-btn"
-        disabled={isStreaming}
-        type="submit"
-        aria-label="Send"
-        onKeyDown={(e) => {
-          handleSubmit(e);
-        }}
-        onClick={(e) => {
-          handleSubmit(e);
-        }}
-      >
-        <div className="btn-icon">
-          <SVGIcon name={SendIcon} size="28" />
-        </div>
-      </Button>
+      <div className="chat-right-actions">
+        {showDeepResearchToggle && (
+          <div className="deep-research-toggle">
+            <Checkbox
+              toggle
+              checked={isDeepResearchEnabled}
+              onChange={(e, { checked }) => setIsDeepResearchEnabled(checked)}
+            />
+            Deep research
+          </div>
+        )}
+        {deepResearch === 'always_on' && <small>Agent search on</small>}
+
+        <Button
+          className="submit-btn"
+          disabled={isStreaming}
+          type="submit"
+          aria-label="Send"
+          onKeyDown={(e) => {
+            handleSubmit(e);
+          }}
+          onClick={(e) => {
+            handleSubmit(e);
+          }}
+        >
+          <div className="btn-icon">
+            <SVGIcon name={SendIcon} size="28" />
+          </div>
+        </Button>
+      </div>
     </>
   );
 });

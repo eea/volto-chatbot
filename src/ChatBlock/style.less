@@ -51,6 +51,7 @@
   100% {
     opacity: 0.2;
   }
+
   50% {
     opacity: 1;
   }
@@ -63,6 +64,7 @@
     opacity: 0.3;
     transform: scale(0.8);
   }
+
   40% {
     opacity: 1;
     transform: scale(1);
@@ -74,6 +76,7 @@
   100% {
     opacity: 1;
   }
+
   50% {
     opacity: 0.3;
   }
@@ -84,6 +87,7 @@
     opacity: 0;
     transform: scale(0.95);
   }
+
   to {
     opacity: 1;
     transform: scale(1);
@@ -95,6 +99,7 @@
     opacity: 0;
     transform: translateX(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateX(0);
@@ -860,10 +865,10 @@ mark {
 
 .chat-citation {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 1.7em;
   height: 1.7em;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #dbd9d9;
   border-radius: 3em;
   margin: 0 3px;
@@ -1084,8 +1089,8 @@ mark {
   height: 8px;
   border-radius: 50%;
   margin: 0 2px;
-  background-color: @grey;
   animation: blink-dot 1.4s infinite;
+  background-color: @grey;
 
   &:nth-child(2) {
     animation-delay: 0.2s;
@@ -1133,8 +1138,8 @@ mark {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background-color: @grey;
   animation: pulse 1.5s ease-in-out infinite;
+  background-color: @grey;
 
   &.with-margin {
     margin-left: 8px;
@@ -1144,8 +1149,8 @@ mark {
 // SourceChip component styles
 .source-chip {
   display: inline-flex;
-  align-items: center;
   max-width: 15rem;
+  align-items: center;
   padding: 4px 12px;
   border: 1px solid #e0e0e0;
   border-radius: 16px;
@@ -1172,9 +1177,9 @@ mark {
 
   .source-chip-icon {
     display: flex;
-    flex-shrink: 0;
     width: 16px;
     height: 16px;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
   }
@@ -1244,16 +1249,16 @@ mark {
     border-radius: @borderRadius;
 
     .error-title {
-      font-weight: bold;
       margin-bottom: 0.5em;
       font-size: 1rem;
+      font-weight: bold;
     }
 
     .error-content {
       font-family: monospace;
+      font-size: 0.9rem;
       white-space: pre-wrap;
       word-break: break-word;
-      font-size: 0.9rem;
     }
   }
 }
@@ -1265,12 +1270,12 @@ mark {
   // Connector line between tools
   .tool-connector-line {
     position: absolute;
-    left: 10px;
+    z-index: 0;
     top: 20px;
     bottom: 0;
+    left: 10px;
     width: 1px;
     background-color: #e5e7eb;
-    z-index: 0;
   }
 
   // Main row with icon and content
@@ -1279,27 +1284,27 @@ mark {
     z-index: 10;
     display: flex;
     align-items: flex-start;
-    gap: 0.5rem;
     color: @grey;
+    gap: 0.5rem;
   }
 
   // Icon column
   .tool-icon-wrapper {
     display: flex;
-    flex-direction: column;
-    align-items: center;
     width: 1.25rem;
+    flex-direction: column;
     flex-shrink: 0;
+    align-items: center;
   }
 
   .tool-icon-circle {
     display: flex;
-    align-items: center;
-    justify-content: center;
     width: 1.25rem;
     height: 1.25rem;
-    border-radius: 50%;
     flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
 
     svg {
       width: 14px;
@@ -1308,11 +1313,11 @@ mark {
   }
 
   .tool-icon-default {
+    display: inline-block;
     width: 0.5rem;
     height: 0.5rem;
     border-radius: 50%;
     background-color: currentColor;
-    display: inline-block;
   }
 
   // Content column
@@ -1329,9 +1334,9 @@ mark {
   }
 
   .tool-status {
-    font-size: 0.875rem;
     display: flex;
     align-items: center;
+    font-size: 0.875rem;
     gap: 0.25rem;
 
     &.clickable {
@@ -1345,12 +1350,12 @@ mark {
   }
 
   .tool-text {
-    font-size: 0.75rem;
     color: #6b7280;
+    font-size: 0.75rem;
 
     &.expanded {
-      font-size: 0.875rem;
       color: @grey;
+      font-size: 0.875rem;
     }
   }
 }
@@ -1362,10 +1367,10 @@ mark {
   &.streaming {
     .tools-container {
       width: 100%;
-      background-color: @lightGrey;
-      border-radius: @borderRadius;
       padding: 1rem;
+      border-radius: @borderRadius;
       margin-bottom: 0.5rem;
+      background-color: @lightGrey;
 
       > div {
         width: 100%;
@@ -1384,12 +1389,12 @@ mark {
 
       .tool-connector-short {
         position: absolute;
-        left: 10px;
+        z-index: 0;
         top: 28px;
         bottom: -0.5rem;
+        left: 10px;
         width: 1px;
         background-color: #e5e7eb;
-        z-index: 0;
       }
 
       .tool-status-short {
@@ -1397,20 +1402,8 @@ mark {
         z-index: 10;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 1rem;
-        font-weight: 500;
         padding: 0.5rem 0;
-
-        &.clickable {
-          cursor: pointer;
-          transition: color 0.2s;
-          color: @grey;
-
-          &:hover {
-            color: #1a1a1a;
-          }
-        }
+        animation: shimmer 2.5s linear infinite;
 
         // Shimmer effect for active (non-clickable) status
         background: linear-gradient(
@@ -1421,11 +1414,23 @@ mark {
           @grey 60%,
           @grey 100%
         );
-        background-size: 200% 100%;
-        background-clip: text;
         -webkit-background-clip: text;
+        background-clip: text;
+        background-size: 200% 100%;
+        font-size: 1rem;
+        font-weight: 500;
+        gap: 0.5rem;
         -webkit-text-fill-color: transparent;
-        animation: shimmer 2.5s linear infinite;
+
+        &.clickable {
+          color: @grey;
+          cursor: pointer;
+          transition: color 0.2s;
+
+          &:hover {
+            color: #1a1a1a;
+          }
+        }
 
         svg {
           width: 16px;
@@ -1434,8 +1439,8 @@ mark {
       }
 
       .tool-content-short {
-        font-size: 0.875rem;
         color: #6b7280;
+        font-size: 0.875rem;
         line-height: 1.5;
         text-align: justify;
 
@@ -1462,14 +1467,14 @@ mark {
       }
 
       .tools-count {
+        color: @grey;
         font-size: 0.875rem;
         font-weight: 600;
-        color: @grey;
       }
 
       .expand-chevron {
-        font-size: 0.75rem;
         color: @grey;
+        font-size: 0.75rem;
         transition: transform 0.2s;
 
         &.expanded {
@@ -1479,8 +1484,8 @@ mark {
     }
 
     .tools-expanded-content {
-      max-height: 0;
       overflow: hidden;
+      max-height: 0;
       transition: max-height 0.3s ease-out;
 
       &.visible {
@@ -1501,12 +1506,12 @@ mark {
 
   .tool-done-connector {
     position: absolute;
-    left: 10px;
+    z-index: 0;
     top: -12px;
+    left: 10px;
     width: 1px;
     height: 32px;
     background-color: #e5e7eb;
-    z-index: 0;
   }
 
   .tool-done-row {
@@ -1514,26 +1519,26 @@ mark {
     z-index: 10;
     display: flex;
     align-items: flex-start;
-    gap: 0.5rem;
     padding-bottom: 0.75rem;
     color: @grey;
+    gap: 0.5rem;
 
     .tool-icon-wrapper {
       display: flex;
-      flex-direction: column;
-      align-items: center;
       width: 1.25rem;
+      flex-direction: column;
       flex-shrink: 0;
+      align-items: center;
     }
 
     .tool-icon-circle {
       display: flex;
-      align-items: center;
-      justify-content: center;
       width: 1.25rem;
       height: 1.25rem;
-      border-radius: 50%;
       flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
 
       .check-icon {
         width: 0.75rem;
@@ -1550,7 +1555,7 @@ mark {
   }
 
   .tool-done-text {
-    font-size: 0.875rem;
     margin-bottom: 0.25rem;
+    font-size: 0.875rem;
   }
 }

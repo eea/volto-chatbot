@@ -1,0 +1,1162 @@
+{"user_message_id": 655, "reserved_assistant_message_id": 656}
+{"ind": 0, "obj": {"type": "reasoning_start"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "The"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " user"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " wants"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " \""}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "using"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Overview"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Europe"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "|"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "9"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "Govern"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "ance"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " climate"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " change"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " mitigation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "|"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "Europe"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u2019s"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " environment"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "202"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "5"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " ("}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "EE"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "A"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": ")"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " document"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " give"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " me"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " informations"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " about"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " overview"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Europe"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Also"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " provide"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " related"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " questions"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "!\"\n\n"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "We"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " need"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " to"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " \""}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "Identify"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " highlight"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " any"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " relevant"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " sections"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " from"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " provided"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " context"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " documents"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " answer"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\"."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " However"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " we"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " have"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " not"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " been"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " provided"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " actual"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " document"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " text"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " prompt"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " The"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " user"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " says"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " \""}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "provided"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " context"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " documents"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\"."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " There"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " is"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " no"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " attached"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " docs"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " conversation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": ";"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " perhaps"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " we"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " need"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " to"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " call"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " internal"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "_search"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " to"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " retrieve"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " document"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " text"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Use"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " internal"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "_search"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " with"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " queries"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " likely"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " \""}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "Overview"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Europe"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "9"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Governance"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " climate"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " change"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " mitigation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Europe"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\u2019s"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " environment"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "202"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "5"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "\"."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Let's"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " search"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 1, "obj": {"type": "internal_search_tool_start", "is_internet_search": false}}
+{"ind": 1, "obj": {"type": "internal_search_tool_delta", "queries": ["\"Overview of adaptation policies in Europe\" \"2.9 Governance of climate change mitigation and adaptation\" \"Europe\u2019s environment 2025\""], "documents": []}}
+{"ind": 2, "obj": {"type": "section_end"}}
+{"ind": 1, "obj": {"type": "internal_search_tool_delta", "queries": [], "documents": [{"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-climate-governance-in-the-eu", "chunk_ind": 0, "semantic_identifier": "Overview of adaptation policies in Europe | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-climate-governance-in-the-eu", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nOverview of adaptation policies in Europe\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.8840654017824606, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "ClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\n<hi>Overview</hi> <hi>of</hi> <hi>adaptation</hi> <hi>policies</hi> <hi>in</hi> <hi>Europe</hi>\nFlourish Visualization Created 17 Jul 2025 Published 28 Sept 2025 Modified 19 Sept 2025\nShare\nDownload\nThe figure provides an <hi>overview</hi>", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation", "chunk_ind": 2, "semantic_identifier": "2.9 Governance of climate change mitigation and adaptation | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation", "blurb": "It is also necessary to increase the timeliness and quality of plans, addressing the ambition gaps (i.e. Member States targets/contributions not achieving EU-wide targets) and public participation as well as reduce administrative burdens .\nThe 2021 Adaptation Strategy outlines a vision of a climate-resilient EU society by 2050 . The European Climate Law requires Member States and the EU to enhance their adaptive capacity, strengthen their resilience and reduce their vulnerability to climate change . ", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.7034393598795259, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "and ensure evidence-based decision-making in climate policy formulation and implementation.\nCharts/maps\nFigure 1. Overview of climate governance in the EU\nFigure 2. <hi>Overview</hi> <hi>of</hi> <hi>adaptation</hi> <hi>policies</hi> <hi>in</hi> <hi>Europe</hi>\n1 Map 2 List\nNote\nSources\nShare\nEnlarge\n\tCountry profile\tNational climate law with adaptation provisions (year)\tNational adaptation..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-adaptation-policies-in-europe", "chunk_ind": 0, "semantic_identifier": "Overview of climate governance in the EU | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-adaptation-policies-in-europe", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nOverview of climate governance in the EU\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.4938510667644228, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/2-9-governance-on-climate-changing.png", "chunk_ind": 0, "semantic_identifier": "2.9 governance on climate changing.png | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/2-9-governance-on-climate-changing.png", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\n2.9 governance on climate changing.png\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.4920071203801479, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/figure-1-table-briefing-2-9-1.csv", "chunk_ind": 0, "semantic_identifier": "Figure 1 table - briefing 2.9.csv | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/figure-1-table-briefing-2-9-1.csv", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nFigure 1 table - briefing 2.9.csv\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.421434008535772, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/overview", "chunk_ind": 2, "semantic_identifier": "Climate change: overview | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/overview", "blurb": "Justice aspects in sustainability transitions are more broadly discussed in briefing 4.11 Justice in sustainability transitions .\n2.8 Climate action financing\nThis briefing covers the scale of investments in climate action to date and considers what investments are still needed (public and private) to achieve the EU climate change targets (with sums converted into constant values based on 2024 (EUR 2024 ) to account for changing values over different years). It is possible that certain investments included here will also contribute to other environmental objectives. ", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.4180691864953603, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "covered in briefing 2.6 Climate risks to the economy and the EU sustainable finance agenda is covered in briefing 4.12 Financing the transition towards sustainable activities .\n<hi>2</hi>.<hi>9</hi> <hi>Governance</hi> <hi>of</hi> <hi>climate</hi> <hi>change</hi> <hi>mitigation</hi> <hi>and</hi> <hi>adaptation</hi>\nClimate governance, for the purposes of this briefing, refers to the framework and..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-society", "chunk_ind": 0, "semantic_identifier": "2.7 Climate risks to society | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-society", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.34909194535689847, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "inequalities are addressed in briefing 3.6 Environmental health inequalities related to air pollution . Information on adaptation governance can be found in briefing <hi>2</hi>.<hi>9</hi> <hi>Governance</hi> <hi>of</hi> <hi>climate</hi> <hi>change</hi> <hi>mitigation</hi> <hi>and</hi> <hi>adaptation</hi> . Justice aspects in sustainability transitions are more broadly discussed in briefing 4.11..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-the-economy", "chunk_ind": 0, "semantic_identifier": "2.6 Climate risks to the economy | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-the-economy", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.33948222199499173, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "financing . How climate change impacts society is discussed in briefing 2.7 Climate risks to society and climate governance is discussed in briefing <hi>2</hi>.<hi>9</hi> <hi>Governance</hi> <hi>of</hi> <hi>climate</hi> <hi>change</hi> <hi>mitigation</hi> <hi>and</hi> <hi>adaptation</hi> .\nKey messages\nFrom 1980 to 2023, weather- and climate-related events caused over EUR\u00a0738 billion in losses in..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-action-financing", "chunk_ind": 0, "semantic_identifier": "2.8 Climate action financing | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-action-financing", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n2.8 Climate action financing\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.23244778605626212, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n2.8 Climate action financing\nPublished 28 Sept 2025\nThis briefing covers the scale of investments in climate action to date and considers what investments", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/report/@@download/file", "chunk_ind": 73, "semantic_identifier": "file", "link": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/report/@@download/file", "blurb": "quarter of total energy use, \nstrengthening Europe's\nenergy independence\nThe EU is largely on track\n to meet the agreed targets \nfor 2030 if full implementation \nof policies is ensured\nAll European \nMember States\nhave dedicated\nadaptation policies \nin place\nDeployment of \nclean technologies\nis decarbonising Europe \nwhile increasing \ncompetitiveness\u00a0\nand resilience\nEU successfully \nphased out \nozone-depleting\nsubstances\n\n\nEuropes environment and climate: state and outlook \n77\nEuropes environment and climate: knowledge for resilience, prosperity and sustainability\nWhat is the EU doing?\nThe EU is addressing climate risks through both climate change mitigation and \nadaptation strategies. ", "source_type": "web", "boost": 0, "hidden": false, "metadata": {"Author": "EEA", "CreationDate": "D:20250930091538+02'00'", "Creator": "Adobe InDesign 20.5 (Windows)", "ModDate": "D:20250930091620+02'00'", "Producer": "Adobe PDF Library 17.0", "Title": "Europe\u00b4s environment and climate - Main report", "Trapped": "/False"}, "score": 0.23230556885724316, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["quarter of total energy use, \nstrengthening Europe's\nenergy independence\nThe EU is largely on track\n to meet the agreed targets \nfor 2030 if full implementation \nof policies is ensured\nAll European \nMember States\nhave dedicated\nadaptation policies \nin place\nDeployment of \nclean technologies\nis decarbonising Europe \nwhile increasing \ncompetitiveness\u00a0\nand resilience\nEU successfully \nphased", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/greenhouse-gas-emissions", "chunk_ind": 0, "semantic_identifier": "2.1 Greenhouse gas emissions | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/greenhouse-gas-emissions", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n2.1 Greenhouse gas emissions\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.1911042475378955, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n2.1 Greenhouse gas emissions\nPublished 28 Sept 2025\nAddressing climate change is one of the defining challenges of our times. The reduction of GHG ", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/sectors-affected-by-climate-change", "chunk_ind": 0, "semantic_identifier": "Sectors affected by climate change by geographical area in 2025 | Europe\u2019s environment and climate: knowledge for resilience, prosperity and sustainability | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/sectors-affected-by-climate-change", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nSectors affected by climate change by geographical area in 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.1649150144632733, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/biodiversity-and-ecosystems/ecosystems-and-climate-impacts", "chunk_ind": 0, "semantic_identifier": "1.5 Ecosystems and climate impacts | 1. Biodiversity and ecosystems | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/biodiversity-and-ecosystems/ecosystems-and-climate-impacts", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.15328400789482247, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n1.5 Ecosystems and climate impacts\nPublished 28 Sept 2025\nThis briefing covers how climate change neagtively impacts ecosystems in Europe. Many", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/main-report", "chunk_ind": 0, "semantic_identifier": "Europe\u2019s environment and climate: knowledge for resilience, prosperity and sustainability | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/main-report", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.1493869948299768, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "ClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\nEuropes environment and climate: knowledge for resilience, prosperity and sustainability\nPublished 28 Sept 2025\nEuropes environment and climate: knowledge for resilience, prosperity and sustainability\n", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/circular-economy-and-other-enablers-of-transformative-change/transformative-innovation", "chunk_ind": 0, "semantic_identifier": "4.8 Transformative innovation | 4. Circular economy and other enablers of transformative change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/circular-economy-and-other-enablers-of-transformative-change/transformative-innovation", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n4.8 Transformative innovation\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.14621980404114596, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n4.8 Transformative innovation\nPublished 28 Sept 2025\nThis thematic briefing examines past trends in innovation performance through the lens of the European Commission's eco", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}]}}
+{"ind": 2, "obj": {"type": "section_end"}}
+{"ind": 3, "obj": {"type": "reasoning_start"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "User"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " wants"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " \u201c"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "using"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Overview"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Europe"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "|"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "9"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Govern"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "ance"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " climate"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " change"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " mitigation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "|"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Europe"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u2019s"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " environment"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u202f"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "202"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "5"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ("}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "EE"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "A"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ")"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " document"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " give"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " me"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " informations"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " about"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " overview"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Europe"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Also"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " related"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " questions"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "!\u201d\n\n"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "We"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " need"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " to"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " identify"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " highlight"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " relevant"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " sections"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " from"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " supplied"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " context"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " that"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " help"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " answer"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " concise"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " answer"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " with"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " highlighted"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " sections"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Also"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " related"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " questions"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Should"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " include"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " inline"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " citations"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Use"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " markdown"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " tables"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " if"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " needed"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Use"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " excerpt"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " from"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " doc"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ("}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "9"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Governance"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ")"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " which"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " contains"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " overview"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " key"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " messages"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " key"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " trends"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " data"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " tables"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ("}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Figure"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " overview"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Europe"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ")."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Also"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " doc"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "1"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " overview"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " figure"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " description"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " So"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " we"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " can"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " quote"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " relevant"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " lines"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".\n\n"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "We"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " need"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " to"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " \""}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "highlight"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " any"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " relevant"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " sections"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\""}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " \u2013"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " perhaps"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " use"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " block"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "quote"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " or"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " bold"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " to"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " denote"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".\n\n"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Answer"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " summarize"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " overview"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " all"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " EU"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " member"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " states"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " have"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "13"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " have"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " national"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " climate"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " laws"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " with"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " provisions"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " number"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " local"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " strategies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " increasing"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ("}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "51"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "%"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " large"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " cities"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "202"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ")."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " key"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "202"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "1"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " EU"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Adapt"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "ation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Strategy"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " European"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Climate"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Law"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " inclusion"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Covenant"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " May"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "ors"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Mission"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " on"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Adapt"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "ation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Monitoring"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Mechan"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "ism"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Regulation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Governance"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Regulation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Fit"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " for"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "55"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " RE"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Power"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "EU"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " trends"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " past"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "10"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "-"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "15"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " years"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " improving"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " all"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " EU"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " members"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " have"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " dedicated"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policy"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ("}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Figure"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ")."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " outlook"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " more"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " systemic"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ","}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " target"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " setting"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " upcoming"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".\n\n"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " related"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " questions"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " e"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".g"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".,"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " What"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " are"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " main"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " components"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "202"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "1"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " EU"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Adapt"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "ation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Strategy"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "?"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Which"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " countries"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " have"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " national"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " climate"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " laws"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " with"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " provisions"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "?"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " How"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " many"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " local"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " authorities"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " have"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " plans"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "?"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " What"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " are"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " the"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " gaps"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " in"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " implementation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "?"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " etc"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".\n\n"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Need"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " citations"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ":"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " e"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".g"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".,"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " adaptation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " overview"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " from"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " doc"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ["}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "];"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " figure"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " with"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " table"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " data"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " from"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " doc"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " lines"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " showing"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " table"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " country"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " profiles"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ["}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "];"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " description"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " figure"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " from"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " doc"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "1"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ["}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "1"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "];"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " mention"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " of"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " EU"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "202"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "1"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Adapt"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "ation"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Strategy"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " from"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " doc"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " "}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " ["}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "2"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "].\n\n"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "Let"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "\u2019s"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " craft"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " concise"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " answer"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " with"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " highlighted"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " sections"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " using"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " block"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "quote"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " bold"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "."}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " Provide"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " a"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " small"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " markdown"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " table"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " summar"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": "izing"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " key"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " policies"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " and"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": " trends"}}
+{"ind": 3, "obj": {"type": "reasoning_delta", "reasoning": ".\n\n"}}
+{"ind": 4, "obj": {"type": "message_start", "final_documents": [{"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-climate-governance-in-the-eu", "chunk_ind": 0, "semantic_identifier": "Overview of adaptation policies in Europe | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-climate-governance-in-the-eu", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nOverview of adaptation policies in Europe\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "ClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\n<hi>Overview</hi> <hi>of</hi> <hi>adaptation</hi> <hi>policies</hi> <hi>in</hi> <hi>Europe</hi>\nFlourish Visualization Created 17 Jul 2025 Published 28 Sept 2025 Modified 19 Sept 2025\nShare\nDownload\nThe figure provides an <hi>overview</hi>", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation", "chunk_ind": 0, "semantic_identifier": "2.9 Governance of climate change mitigation and adaptation | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation", "blurb": "It is also necessary to increase the timeliness and quality of plans, addressing the ambition gaps (i.e. Member States targets/contributions not achieving EU-wide targets) and public participation as well as reduce administrative burdens .\nThe 2021 Adaptation Strategy outlines a vision of a climate-resilient EU society by 2050 . The European Climate Law requires Member States and the EU to enhance their adaptive capacity, strengthen their resilience and reduce their vulnerability to climate change . ", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "and ensure evidence-based decision-making in climate policy formulation and implementation.\nCharts/maps\nFigure 1. Overview of climate governance in the EU\nFigure 2. <hi>Overview</hi> <hi>of</hi> <hi>adaptation</hi> <hi>policies</hi> <hi>in</hi> <hi>Europe</hi>\n1 Map 2 List\nNote\nSources\nShare\nEnlarge\n\tCountry profile\tNational climate law with adaptation provisions (year)\tNational adaptation..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-adaptation-policies-in-europe", "chunk_ind": 0, "semantic_identifier": "Overview of climate governance in the EU | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-adaptation-policies-in-europe", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nOverview of climate governance in the EU\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/2-9-governance-on-climate-changing.png", "chunk_ind": 0, "semantic_identifier": "2.9 governance on climate changing.png | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/2-9-governance-on-climate-changing.png", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\n2.9 governance on climate changing.png\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/figure-1-table-briefing-2-9-1.csv", "chunk_ind": 0, "semantic_identifier": "Figure 1 table - briefing 2.9.csv | 2.9 Governance of climate change mitigation and adaptation | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/figure-1-table-briefing-2-9-1.csv", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nFigure 1 table - briefing 2.9.csv\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/overview", "chunk_ind": 0, "semantic_identifier": "Climate change: overview | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/overview", "blurb": "Justice aspects in sustainability transitions are more broadly discussed in briefing 4.11 Justice in sustainability transitions .\n2.8 Climate action financing\nThis briefing covers the scale of investments in climate action to date and considers what investments are still needed (public and private) to achieve the EU climate change targets (with sums converted into constant values based on 2024 (EUR 2024 ) to account for changing values over different years). It is possible that certain investments included here will also contribute to other environmental objectives. ", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "covered in briefing 2.6 Climate risks to the economy and the EU sustainable finance agenda is covered in briefing 4.12 Financing the transition towards sustainable activities .\n<hi>2</hi>.<hi>9</hi> <hi>Governance</hi> <hi>of</hi> <hi>climate</hi> <hi>change</hi> <hi>mitigation</hi> <hi>and</hi> <hi>adaptation</hi>\nClimate governance, for the purposes of this briefing, refers to the framework and..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-society", "chunk_ind": 0, "semantic_identifier": "2.7 Climate risks to society | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-society", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "inequalities are addressed in briefing 3.6 Environmental health inequalities related to air pollution . Information on adaptation governance can be found in briefing <hi>2</hi>.<hi>9</hi> <hi>Governance</hi> <hi>of</hi> <hi>climate</hi> <hi>change</hi> <hi>mitigation</hi> <hi>and</hi> <hi>adaptation</hi> . Justice aspects in sustainability transitions are more broadly discussed in briefing 4.11..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-the-economy", "chunk_ind": 0, "semantic_identifier": "2.6 Climate risks to the economy | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-risks-to-the-economy", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "financing . How climate change impacts society is discussed in briefing 2.7 Climate risks to society and climate governance is discussed in briefing <hi>2</hi>.<hi>9</hi> <hi>Governance</hi> <hi>of</hi> <hi>climate</hi> <hi>change</hi> <hi>mitigation</hi> <hi>and</hi> <hi>adaptation</hi> .\nKey messages\nFrom 1980 to 2023, weather- and climate-related events caused over EUR\u00a0738 billion in losses in..."], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-action-financing", "chunk_ind": 0, "semantic_identifier": "2.8 Climate action financing | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/climate-action-financing", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n2.8 Climate action financing\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n2.8 Climate action financing\nPublished 28 Sept 2025\nThis briefing covers the scale of investments in climate action to date and considers what investments", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/report/@@download/file", "chunk_ind": 0, "semantic_identifier": "file", "link": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/report/@@download/file", "blurb": "quarter of total energy use, \nstrengthening Europe's\nenergy independence\nThe EU is largely on track\n to meet the agreed targets \nfor 2030 if full implementation \nof policies is ensured\nAll European \nMember States\nhave dedicated\nadaptation policies \nin place\nDeployment of \nclean technologies\nis decarbonising Europe \nwhile increasing \ncompetitiveness\u00a0\nand resilience\nEU successfully \nphased out \nozone-depleting\nsubstances\n\n\nEuropes environment and climate: state and outlook \n77\nEuropes environment and climate: knowledge for resilience, prosperity and sustainability\nWhat is the EU doing?\nThe EU is addressing climate risks through both climate change mitigation and \nadaptation strategies. ", "source_type": "web", "boost": 0, "hidden": false, "metadata": {"Author": "EEA", "CreationDate": "D:20250930091538+02'00'", "Creator": "Adobe InDesign 20.5 (Windows)", "ModDate": "D:20250930091620+02'00'", "Producer": "Adobe PDF Library 17.0", "Title": "Europe\u00b4s environment and climate - Main report", "Trapped": "/False"}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["quarter of total energy use, \nstrengthening Europe's\nenergy independence\nThe EU is largely on track\n to meet the agreed targets \nfor 2030 if full implementation \nof policies is ensured\nAll European \nMember States\nhave dedicated\nadaptation policies \nin place\nDeployment of \nclean technologies\nis decarbonising Europe \nwhile increasing \ncompetitiveness\u00a0\nand resilience\nEU successfully \nphased", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/greenhouse-gas-emissions", "chunk_ind": 0, "semantic_identifier": "2.1 Greenhouse gas emissions | 2. Climate change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/greenhouse-gas-emissions", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n2.1 Greenhouse gas emissions\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n2.1 Greenhouse gas emissions\nPublished 28 Sept 2025\nAddressing climate change is one of the defining challenges of our times. The reduction of GHG ", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/sectors-affected-by-climate-change", "chunk_ind": 0, "semantic_identifier": "Sectors affected by climate change by geographical area in 2025 | Europe\u2019s environment and climate: knowledge for resilience, prosperity and sustainability | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/main-report/sectors-affected-by-climate-change", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nSectors affected by climate change by geographical area in 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/biodiversity-and-ecosystems/ecosystems-and-climate-impacts", "chunk_ind": 0, "semantic_identifier": "1.5 Ecosystems and climate impacts | 1. Biodiversity and ecosystems | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/biodiversity-and-ecosystems/ecosystems-and-climate-impacts", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n1.5 Ecosystems and climate impacts\nPublished 28 Sept 2025\nThis briefing covers how climate change neagtively impacts ecosystems in Europe. Many", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/main-report", "chunk_ind": 0, "semantic_identifier": "Europe\u2019s environment and climate: knowledge for resilience, prosperity and sustainability | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/main-report", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nEurope's environment 2025\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "ClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\nEuropes environment and climate: knowledge for resilience, prosperity and sustainability\nPublished 28 Sept 2025\nEuropes environment and climate: knowledge for resilience, prosperity and sustainability\n", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}, {"document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/circular-economy-and-other-enablers-of-transformative-change/transformative-innovation", "chunk_ind": 0, "semantic_identifier": "4.8 Transformative innovation | 4. Circular economy and other enablers of transformative change | Europe's environment 2025 (EEA)", "link": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/circular-economy-and-other-enablers-of-transformative-change/transformative-innovation", "blurb": "Skip to main content Skip to navigation Skip to footer\nAn official website of the European Union | How do you know?\nAll official European Union website addresses are in the europa.eu domain. See all EU institutions and bodies\nEnvironmental information systems\nEuropean Environment Agency website\nWISE marine - Marine information system for Europe\nWISE freshwater - Freshwater information system for Europe\nBISE - Biodiversity information system for Europe\nFISE - Forest information system for Europe\nEuropean Climate and health observatory\nClimateADAPT\nEuropean Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\nEurope's environment 2025\n4.8 Transformative innovation\n", "source_type": "web", "boost": 0, "hidden": false, "metadata": {}, "score": 0.0, "is_relevant": null, "relevance_explanation": null, "match_highlights": ["", "Industrial Emissions Portal\nClimate and energy in the EU\nCopernicus Land Monitoring Service\nCopernicus InSitu\nThematic briefing\n<hi>Europe</hi>'<hi>s</hi> <hi>environment</hi> <hi>2025</hi>\n4.8 Transformative innovation\nPublished 28 Sept 2025\nThis thematic briefing examines past trends in innovation performance through the lens of the European Commission's eco", ""], "updated_at": null, "primary_owners": null, "secondary_owners": null, "is_internet": false, "db_doc_id": 0}], "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Overview"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " in"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Europe"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "EE"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "A"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u2018"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Europe"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u2019s"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " environment"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "5"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u2019,"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "2"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "9"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Govern"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ance"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ">"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Key"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " messages"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " \u2013"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "All"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Member"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " States"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " have"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " a"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " dedicated"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ";"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " "}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "13"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "countries"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " have"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adopted"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " national"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " laws"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " that"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " include"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " provisions"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " showing"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " a"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " shift"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " toward"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " legally"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u2011"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "binding"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " commitments"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "[[2]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ">"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Past"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " trends"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "10"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u2011"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "15"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "yr"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " \u2013"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Since"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " "}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "201"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "9"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " every"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Member"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " State"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " has"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " a"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " national"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " strategy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Fig"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "2"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " and"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " number"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " local"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " strategies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " is"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " rising"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " \u2013"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "in"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " "}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "2"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "51"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "%"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " large"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " European"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " cities"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " had"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " dedicated"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " plans"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "[[2]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ">"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Key"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " \u2013"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "1"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Adapt"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Strategy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "European"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Law"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "which"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " embeds"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "),"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Govern"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ance"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Regulation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "201"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "8"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Fit"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "for"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "55"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " package"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**,"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "RE"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Power"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**,"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "C"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "oven"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ant"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " May"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ors"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " for"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " &"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Energy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**,"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " and"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Mission"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " on"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Adapt"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " to"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Change"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "[[2]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "###"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Quick"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " reference"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " table"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\n\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Aspect"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Detail"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Source"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "--------"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "--------"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "--------"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Legal"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " status"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " All"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " members"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " have"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " an"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ";"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " "}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "13"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "have"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " national"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " laws"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " with"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " clauses"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "5"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " [[2]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "National"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " strategies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Every"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Member"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " State"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " reports"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " a"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " national"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " strategy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Fig"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "2"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " [[2]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Local"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " action"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " "}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "51"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "%"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " large"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " cities"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " with"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " dedicated"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " plans"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "2"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " [[2]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Major"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " instruments"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " "}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "1"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Adapt"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Strategy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " European"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Law"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Governance"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Regulation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Fit"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "for"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u202f"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "55"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " RE"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Power"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Covenant"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " May"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ors"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Mission"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " on"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Adapt"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " [[2]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "|"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Data"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " visual"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "isation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " \u201c"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Overview"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " in"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Europe"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u201d"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " figure"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " ("}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "based"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " on"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " reporting"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " "}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "201"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "5"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u2011"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "5"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ")"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ""}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "[[1]](https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-climate-governance-in-the-eu)"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " |\n\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "---"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "###"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Related"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " questions"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " you"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " might"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " explore"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "1"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Which"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Member"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " States"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " have"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " *"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "national"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " laws"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "*"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " that"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " explicitly"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " contain"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " provisions"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ","}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " and"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " when"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " were"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " they"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adopted"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "?"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "2"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " What"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " are"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " main"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " objectives"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " and"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " actions"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " outlined"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " in"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "202"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "1"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " EU"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Adapt"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Strategy"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "?"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "3"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " How"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " does"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "European"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Climate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Law"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " integrate"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " targets"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " with"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " mitigation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " goals"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "?"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "4"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " What"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " is"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " role"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "C"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "oven"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ant"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " May"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ors"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " and"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Mission"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " on"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Adapt"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " in"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " driving"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " sub"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "\u2011"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "national"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " measures"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "?"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "5"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Which"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " sectors"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " or"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " regions"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " show"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " greatest"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " gaps"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " between"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " reported"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " and"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " actual"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " implementation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "?"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "6"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "."}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " How"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " are"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " monitored"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " under"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Govern"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ance"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Regulation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " and"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " **"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "Monitoring"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Mechan"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "ism"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Regulation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "**"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "?"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "  \n\n"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "These"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " points"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " synth"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "esize"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " sections"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " most"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " relevant"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " to"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " the"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " requested"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " \u201c"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": "overview"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " of"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " adaptation"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " policies"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " in"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": " Europe"}}
+{"ind": 4, "obj": {"type": "message_delta", "content": ".\u201d"}}
+{"ind": 5, "obj": {"type": "section_end"}}
+{"ind": 5, "obj": {"type": "section_end"}}
+{"ind": 6, "obj": {"type": "citation_start"}}
+{"ind": 6, "obj": {"type": "citation_delta", "citations": [{"level": null, "level_question_num": null, "citation_num": 2, "document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation"}, {"level": null, "level_question_num": null, "citation_num": 1, "document_id": "https://www.eea.europa.eu/en/europe-environment-2025/thematic-briefings/climate-change/governance-of-climate-change-mitigation-and-adaptation/overview-of-climate-governance-in-the-eu"}]}}
+{"ind": 6, "obj": {"type": "section_end"}}
+{"ind": 6, "obj": {"type": "stop"}}

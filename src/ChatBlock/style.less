@@ -11,6 +11,96 @@
 @md: 800px;
 @lg: 1200px;
 
+@keyframes dot-flashing {
+  0% {
+    background-color: @grey;
+  }
+
+  50%,
+  100% {
+    background-color: rgba(61, 82, 101, 0.2);
+  }
+}
+
+@keyframes spin-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .flex-center(@dir: row, @gap: 0) {
   display: flex;
   flex-direction: @dir;
@@ -204,6 +294,10 @@ mark {
     margin-bottom: @marginBottom;
     gap: 0.8em;
 
+    .comment-content {
+      flex: 1;
+    }
+
     i.inverted.circular.grey.icon {
       background-color: @grey !important;
     }
@@ -231,7 +325,7 @@ mark {
   }
 
   .answer-tab {
-    margin-top: 1.5em;
+    // margin-top: 1.5em;
 
     .sources {
       display: flex;
@@ -574,7 +668,7 @@ mark {
 }
 
 .comment-tabs {
-  margin-top: 0.5em;
+  // margin-top: 0.5em;
 
   .ui.secondary.pointing.menu {
     border-width: 2px;
@@ -765,12 +859,14 @@ mark {
 }
 
 .chat-citation {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 1.7em;
   height: 1.7em;
   border: 1px solid #dbd9d9;
   border-radius: 3em;
-  margin-right: 3px;
+  margin: 0 3px;
   background-color: @citationCircleColor;
   color: @grey;
   cursor: pointer;
@@ -977,37 +1073,484 @@ mark {
   }
 }
 
-@keyframes dot-flashing {
-  0% {
-    background-color: @grey;
+.message-content {
+  width: 100%;
+}
+
+// Blinking dot for streaming indicator
+.blinking-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 2px;
+  background-color: @grey;
+  animation: blink-dot 1.4s infinite;
+
+  &:nth-child(2) {
+    animation-delay: 0.2s;
   }
 
-  50%,
-  100% {
-    background-color: rgba(61, 82, 101, 0.2);
+  &:nth-child(3) {
+    animation-delay: 0.4s;
   }
 }
 
-@keyframes spin-rotate {
-  0% {
-    transform: rotate(0deg);
+// Responsive adjustments for new components
+@media screen and (max-width: @md) {
+  .reasoning-container {
+    padding: 0.6em 0.8em;
+
+    .reasoning-header {
+      font-size: 12px;
+    }
+
+    .reasoning-content {
+      font-size: 13px;
+    }
   }
 
-  50% {
-    transform: rotate(180deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
+  .message-text-wrapper {
+    font-size: 14px;
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .reasoning-container {
+    border-width: 2px;
+    background-color: #fff;
   }
 
-  100% {
-    background-position: -200% 0;
+  .status-badge {
+    border: 1px solid currentColor;
+  }
+}
+
+// BlinkingDot component styles
+.blinking-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: @grey;
+  animation: pulse 1.5s ease-in-out infinite;
+
+  &.with-margin {
+    margin-left: 8px;
+  }
+}
+
+// SourceChip component styles
+.source-chip {
+  display: inline-flex;
+  align-items: center;
+  max-width: 15rem;
+  padding: 4px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  background-color: @lightGrey;
+  color: @grey;
+  cursor: pointer;
+  font-size: 0.875rem;
+  gap: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: @hoverGreyColor;
+  }
+
+  &.animate-in {
+    animation: fadeInScale 0.3s ease-out;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .source-chip-icon {
+    display: flex;
+    flex-shrink: 0;
+    width: 16px;
+    height: 16px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .source-chip-remove {
+    margin-left: 4px;
+    cursor: pointer;
+    font-size: 12px;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+// Search and tool renderer styles
+.search-tool-renderer,
+.fetch-tool-renderer {
+  .queries-section,
+  .results-section {
+    margin-bottom: 1em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .queries-header,
+  .results-header {
+    margin-bottom: 0.5em;
+    color: @grey;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .queries-list,
+  .results-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .query-item,
+  .result-item {
+    animation: fadeIn 0.15s ease-out backwards;
+
+    &.more-button {
+      .source-chip {
+        background-color: #e9ecef;
+        font-weight: 500;
+
+        &:hover {
+          background-color: #dee2e6;
+        }
+      }
+    }
+  }
+}
+
+// Error message styles
+.message-error {
+  margin: 1em 0;
+
+  .error-message {
+    width: 100%;
+    padding: 1em;
+    border-radius: @borderRadius;
+
+    .error-title {
+      font-weight: bold;
+      margin-bottom: 0.5em;
+      font-size: 1rem;
+    }
+
+    .error-content {
+      font-family: monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// MultiToolRenderer - Expanded tool item styles
+.tool-item-expanded {
+  position: relative;
+
+  // Connector line between tools
+  .tool-connector-line {
+    position: absolute;
+    left: 10px;
+    top: 20px;
+    bottom: 0;
+    width: 1px;
+    background-color: #e5e7eb;
+    z-index: 0;
+  }
+
+  // Main row with icon and content
+  .tool-item-row {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: @grey;
+  }
+
+  // Icon column
+  .tool-icon-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .tool-icon-circle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .tool-icon-default {
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: currentColor;
+    display: inline-block;
+  }
+
+  // Content column
+  .tool-content {
+    flex: 1;
+
+    &.with-padding {
+      padding-bottom: 1rem;
+    }
+  }
+
+  .tool-status-row {
+    display: flex;
+  }
+
+  .tool-status {
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+
+    &.clickable {
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #1a1a1a;
+      }
+    }
+  }
+
+  .tool-text {
+    font-size: 0.75rem;
+    color: #6b7280;
+
+    &.expanded {
+      font-size: 0.875rem;
+      color: @grey;
+    }
+  }
+}
+
+// Multi-tool renderer container styles
+.multi-tool-renderer {
+  margin-bottom: 1em;
+
+  &.streaming {
+    .tools-container {
+      width: 100%;
+      background-color: @lightGrey;
+      border-radius: @borderRadius;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+
+      > div {
+        width: 100%;
+      }
+    }
+
+    .tools-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    // Short tool item styles (collapsed streaming view)
+    .tool-item-short {
+      position: relative;
+      margin-bottom: 0.5rem;
+
+      .tool-connector-short {
+        position: absolute;
+        left: 10px;
+        top: 28px;
+        bottom: -0.5rem;
+        width: 1px;
+        background-color: #e5e7eb;
+        z-index: 0;
+      }
+
+      .tool-status-short {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 0.5rem 0;
+
+        &.clickable {
+          cursor: pointer;
+          transition: color 0.2s;
+          color: @grey;
+
+          &:hover {
+            color: #1a1a1a;
+          }
+        }
+
+        // Shimmer effect for active (non-clickable) status
+        background: linear-gradient(
+          90deg,
+          @grey 0%,
+          @grey 40%,
+          rgba(61, 82, 101, 0.5) 50%,
+          @grey 60%,
+          @grey 100%
+        );
+        background-size: 200% 100%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: shimmer 2.5s linear infinite;
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .tool-content-short {
+        font-size: 0.875rem;
+        color: #6b7280;
+        line-height: 1.5;
+        text-align: justify;
+
+        &.with-margin {
+          margin-bottom: 0.75rem;
+        }
+      }
+    }
+  }
+
+  &.complete {
+    .tools-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 0.8em;
+      border-radius: @borderRadius;
+      background-color: @lightGrey;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: @hoverGreyColor;
+      }
+
+      .tools-count {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: @grey;
+      }
+
+      .expand-chevron {
+        font-size: 0.75rem;
+        color: @grey;
+        transition: transform 0.2s;
+
+        &.expanded {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .tools-expanded-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+
+      &.visible {
+        max-height: 5000px;
+        transition: max-height 0.5s ease-in;
+      }
+    }
+
+    .tools-list {
+      padding-top: 1em;
+    }
+  }
+}
+
+// Tool done node styles
+.tool-done-node {
+  position: relative;
+
+  .tool-done-connector {
+    position: absolute;
+    left: 10px;
+    top: -12px;
+    width: 1px;
+    height: 32px;
+    background-color: #e5e7eb;
+    z-index: 0;
+  }
+
+  .tool-done-row {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding-bottom: 0.75rem;
+    color: @grey;
+
+    .tool-icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 1.25rem;
+      flex-shrink: 0;
+    }
+
+    .tool-icon-circle {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.25rem;
+      height: 1.25rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+
+      .check-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .tool-done-content {
+    flex: 1;
+  }
+
+  .tool-done-text {
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
   }
 }

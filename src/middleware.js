@@ -1,7 +1,5 @@
 import superagent from 'superagent';
 import fetch from 'node-fetch';
-import fs from 'fs';
-import path from 'path';
 import debug from 'debug';
 
 import fs from 'fs';
@@ -19,8 +17,6 @@ const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing DANSWER username and password';
 const MSG_FETCH_COOKIE = 'Error while fetching authentication cookie';
 const MSG_ERROR_REQUEST = 'Error in processing request to Danswer';
-
-const MOCK_STREAM_DELAY = 1;
 
 async function get_login_cookie(username, password) {
   const url = `${process.env.DANSWER_URL}/api/auth/login`;

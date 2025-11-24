@@ -30,8 +30,7 @@ export function SourceChip({
       {icon && <div className="source-chip-icon">{icon}</div>}
       <span>{title}</span>
       {onRemove && (
-        <button
-          type="button"
+        <span
           className="source-chip-remove"
           onClick={(e) => {
             e.stopPropagation();
@@ -39,9 +38,17 @@ export function SourceChip({
           }}
           aria-label={`Remove ${title}`}
           title={`Remove ${title}`}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              onRemove();
+            }
+          }}
         >
           ✕
-        </button>
+        </span>
       )}
     </button>
   );

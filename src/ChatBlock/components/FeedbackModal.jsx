@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { trackEvent } from '@eeacms/volto-matomo/utils';
 import { Modal, Button, TextArea, Form, Icon } from 'semantic-ui-react';
-import { createChatMessageFeedback } from '../old/lib';
+import { createChatMessageFeedback } from '../utils';
 
 const FeedbackModal = ({
   modalOpen,

@@ -1,15 +1,14 @@
 import type { Persona } from '../types/interfaces';
 import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
-import { Button, Form, Segment } from 'semantic-ui-react';
+import { Button, Form, Segment, Checkbox } from 'semantic-ui-react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import { trackEvent } from '@eeacms/volto-matomo/utils';
 
-import { ChatMessage, MemoizedChatMessage } from '.';
+import { ChatMessage } from '.';
 import AutoResizeTextarea from '../components/AutoResizeTextarea';
 import QualityCheckToggle from '../components/QualityCheckToggle';
 import EmptyState from '../components/EmptyState';
-import { useScrollonStream } from '../old/lib';
-import { useChatController } from '../hooks/useChatController';
+import { useScrollonStream, useChatController } from '../hooks';
 import SVGIcon from '../components/Icon';
 import PenIcon from '../../icons/square-pen.svg';
 
@@ -77,6 +76,9 @@ function ChatWindow({
     onDemandInputToggle ?? true,
   );
 
+  const showDeepResearchToggle =
+    deepResearch === 'user_on' || deepResearch === 'user_off';
+
   useEffect(() => {
     if (isEditMode && qualityCheck === 'ondemand_toggle') {
       setQualityCheckEnabled(onDemandInputToggle ?? true);
@@ -107,7 +109,7 @@ function ChatWindow({
 
   const [showLandingPage, setShowLandingPage] = useState(true);
 
-  const textareaRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const conversationRef = useRef(null);
   const endDivRef = useRef(null);
   const scrollDist = useRef(0); // Keep track of scroll distance
@@ -166,6 +168,7 @@ function ChatWindow({
           </>
         ) : (
           <>
+            {/* @ts-ignore */}
             <Segment clearing basic>
               <Button
                 disabled={isStreaming}
@@ -216,9 +219,11 @@ function ChatWindow({
       </div>
 
       <div className="chat-form">
+        {/* @ts-ignore */}
         <Form>
           <div className="textarea-wrapper">
             <AutoResizeTextarea
+              // @ts-ignore TODO: convert AutoResizeTextarea to TypeScript
               maxRows={8}
               minRows={1}
               ref={textareaRef}
@@ -237,13 +242,31 @@ function ChatWindow({
           </div>
         </Form>
 
-        {qualityCheck === 'ondemand_toggle' && (
-          <QualityCheckToggle
-            isEditMode={isEditMode}
-            enabled={qualityCheckEnabled}
-            setEnabled={setQualityCheckEnabled}
-          />
-        )}
+        <div className="chat-controls">
+          {qualityCheck === 'ondemand_toggle' && (
+            <QualityCheckToggle
+              isEditMode={isEditMode}
+              enabled={qualityCheckEnabled}
+              setEnabled={setQualityCheckEnabled}
+            />
+          )}
+
+          {showDeepResearchToggle && (
+            <div className="deep-research-toggle">
+              <Checkbox
+                id="deep-research-toggle"
+                toggle
+                checked={isDeepResearchEnabled}
+                label="Deep research"
+                onChange={(_, { checked }) =>
+                  setIsDeepResearchEnabled(checked ?? false)
+                }
+              />
+            </div>
+          )}
+
+          {deepResearch === 'always_on' && <small>Deep research on</small>}
+        </div>
       </div>
 
       {showLandingPage && starterPromptsPosition === 'bottom' && (

@@ -3,6 +3,13 @@ import { useState, useCallback, useEffect } from 'react';
 
 export const EMAIL_REGEX = /([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/g;
 
+interface CreateChatMessageFeedbackArgs {
+  chat_message_id: string;
+  feedback_text?: string;
+  is_positive: boolean;
+  predefined_feedback?: string;
+}
+
 // Convert text with email addresses to mailto links
 export function transformEmailsToLinks(text: string): (string | ReactNode)[] {
   return text.split(EMAIL_REGEX).map((part, index) => {
@@ -59,4 +66,49 @@ export function convertToPercentage(
     return '0%';
   }
   return (floatValue * 100).toFixed(digits) + '%';
+}
+
+export async function createChatMessageFeedback({
+  chat_message_id,
+  feedback_text = '',
+  is_positive,
+  predefined_feedback = '',
+}: CreateChatMessageFeedbackArgs): Promise<any> {
+  const payload: {
+    chat_message_id: string;
+    feedback_text: string;
+    is_positive: boolean;
+    predefined_feedback?: string;
+  } = {
+    chat_message_id,
+    feedback_text,
+    is_positive,
+  };
+
+  if (!is_positive) {
+    payload.predefined_feedback = predefined_feedback;
+  }
+
+  const createChatMessageFeedbackResponse = await fetch(
+    '/_da/chat/create-chat-message-feedback',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    },
+  );
+
+  if (!createChatMessageFeedbackResponse.ok) {
+    //eslint-disable-next-line no-console
+    console.log(
+      `Failed to submit feedback - ${createChatMessageFeedbackResponse.status}`,
+    );
+    throw Error(`Failed to submit feedback.`);
+  }
+
+  const createChatMessageFeedbackResponseJson =
+    await createChatMessageFeedbackResponse.json();
+  return await createChatMessageFeedbackResponseJson;
 }

@@ -16,7 +16,7 @@ import {
   isStreamingComplete,
   isFinalAnswerComing,
   hasError,
-} from '../services/packetUtils';
+} from '../services';
 import { useDeepCompareMemoize, useQualityMarkers } from '../hooks';
 import { MultiToolRenderer, RendererComponent } from '../packets';
 import SVGIcon from '../components/Icon';
@@ -25,14 +25,14 @@ import ClearIcon from '../../icons/clear.svg';
 import { addCitations } from '../utils/citations';
 
 // Lazy load heavy components
-const SourceDetails = loadable(() => import('../components/Source'));
-const UserActionsToolbar = loadable(
+const SourceDetails: any = loadable(() => import('../components/Source'));
+const UserActionsToolbar: any = loadable(
   () => import('../components/UserActionsToolbar'),
 );
-const RelatedQuestions = loadable(
+const RelatedQuestions: any = loadable(
   () => import('../components/RelatedQuestions'),
 );
-const HalloumiFeedback = loadable(
+const HalloumiFeedback: any = loadable(
   () => import('../components/HalloumiFeedback'),
 );
 
@@ -81,10 +81,10 @@ export function addHalloumiContext(doc: any, text: string) {
     : '';
 
   const docIndex = doc.index ? `DOCUMENT ${doc.index}: ` : '';
+  const sources: any = { web: 'Website', file: 'File' };
 
   const sourceType = doc.source_type
-    ? { web: 'Website', file: 'File' }[doc.source_type] ||
-      capitalize(doc.source_type)
+    ? sources[doc.source_type] || capitalize(doc.source_type)
     : '';
 
   const header = `${docIndex}${doc.semantic_identifier}${
@@ -262,7 +262,7 @@ export function AIMessage({
     message.messageId &&
     message.messageId > -1;
 
-  const { markers, isLoadingHalloumi, retryHalloumi } = useQualityMarkers(
+  const { markers, isLoadingHalloumi, retryHalloumi }: any = useQualityMarkers(
     doQualityControl,
     addCitations(message.message, message),
     stableContextSources,

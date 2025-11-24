@@ -233,7 +233,9 @@ export function useChatController({
           .filter((m) => m.type === 'assistant')
           .pop();
 
-        if (lastMessage) {
+        const lastPacket = lastMessage?.packets.pop();
+
+        if (lastMessage && lastPacket?.obj.type !== PacketType.ERROR) {
           parentNodeId = lastMessage.nodeId;
           parentMessageId = lastMessage.messageId || null;
         }
@@ -270,7 +272,7 @@ export function useChatController({
             regenerate: false,
             filters: null,
             selectedDocumentIds: [],
-            fullDoc: true, // Request full document content for quality checking
+            fullDoc: true,
           },
           assistantNodeId,
           userNodeId,

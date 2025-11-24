@@ -4,3 +4,4 @@ export { useChatController } from './useChatController';
 export { useMarked } from './useMarked';
 export { useQualityMarkers } from './useQualityMarkers';
 export { useDeepCompareMemoize } from './useDeepCompareMemoize';
+export { useScrollonStream } from './useScrollonStream';

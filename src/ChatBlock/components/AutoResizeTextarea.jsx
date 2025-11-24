@@ -14,13 +14,8 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
     cancelStreaming,
     enableMatomoTracking,
     persona,
-    deepResearch,
-    isDeepResearchEnabled,
-    setIsDeepResearchEnabled,
     ...rest
   } = props;
-  const showDeepResearchToggle =
-    deepResearch === 'user_on' || deepResearch === 'user_off';
   const [input, setInput] = React.useState('');
 
   const handleSubmit = (e) => {
@@ -57,18 +52,6 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
       />
 
       <div className="chat-right-actions">
-        {showDeepResearchToggle && (
-          <div className="deep-research-toggle">
-            <Checkbox
-              toggle
-              checked={isDeepResearchEnabled}
-              onChange={(e, { checked }) => setIsDeepResearchEnabled(checked)}
-            />
-            Deep research
-          </div>
-        )}
-        {deepResearch === 'always_on' && <small>Agent search on</small>}
-
         <Button
           className="submit-btn"
           type="submit"

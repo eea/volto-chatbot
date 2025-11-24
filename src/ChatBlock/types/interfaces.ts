@@ -1,8 +1,4 @@
-import type {
-  Packet,
-  OnyxDocument,
-  StreamingCitation,
-} from './streamingModels';
+import type { Packet, OnyxDocument } from './streamingModels';
 
 export type FeedbackType = 'like' | 'dislike';
 

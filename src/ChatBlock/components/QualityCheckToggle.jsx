@@ -12,10 +12,7 @@ const QualityCheckToggle = ({ isEditMode, enabled, setEnabled }) => {
           <Checkbox
             id="fact-check-toggle"
             toggle
-            label={{
-              children: 'Fact-check AI answer',
-              htmlFor: 'fact-check-toggle',
-            }}
+            label="Fact-check AI answer"
             disabled={isEditMode}
             checked={enabled}
             onChange={() => setEnabled((v) => !v)}

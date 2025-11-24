@@ -21,7 +21,12 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
 
-    "paths": {},
+    "paths": {
+      "@plone/volto/*": ["../../../node_modules/@plone/volto/src/*"],
+      "@eeacms/volto-matomo/*": [
+        "../../../node_modules/@eeacms/volto-matomo/src/*"
+      ]
+    },
     "jsx": "react-jsx"
   },
   "include": ["src"],

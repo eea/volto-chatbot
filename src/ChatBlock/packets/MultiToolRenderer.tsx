@@ -238,7 +238,11 @@ export function MultiToolRenderer({
 
   // If complete, show summary with toggle
   return (
-    <div className="multi-tool-renderer complete">
+    <div
+      className={`multi-tool-renderer complete ${
+        !toolGroups.length ? 'empty' : ''
+      }`.trim()}
+    >
       {/* Summary header - clickable */}
       <div
         className="tools-summary-header"

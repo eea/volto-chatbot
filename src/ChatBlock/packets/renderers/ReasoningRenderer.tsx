@@ -9,7 +9,7 @@ import { PacketType } from '../../types/streamingModels';
 import { components } from '../../components/markdown';
 import { addCitations } from '../../utils/citations';
 
-const Markdown = loadable(() => import('react-markdown'));
+const Markdown: any = loadable(() => import('react-markdown'));
 
 const THINKING_MIN_DURATION_MS = 500; // 0.5 second minimum for "Thinking" state
 const THINKING_STATUS = 'Thinking';

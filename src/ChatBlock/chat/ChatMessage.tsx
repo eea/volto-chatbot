@@ -1,8 +1,10 @@
+import { Message as SemanticMessage } from 'semantic-ui-react';
 import type { ChatMessageProps } from '../types/interfaces';
 import { UserMessage, AIMessage } from '.';
 
 export function ChatMessage(props: ChatMessageProps) {
   const { message, libs, className = '' } = props;
+
   if (message.type === 'user') {
     return <UserMessage message={message} libs={libs} className={className} />;
   }
@@ -13,9 +15,11 @@ export function ChatMessage(props: ChatMessageProps) {
 
   if (message.type === 'error') {
     return (
-      <div className={`error-message ${className}`}>
-        <div className="error-icon">⚠️</div>
-        <div className="error-text">{message.message}</div>
+      <div className="message-error">
+        <SemanticMessage color="red" className="error-message">
+          <div className="error-title">Error</div>
+          <div className="error-content">{message.message}</div>
+        </SemanticMessage>
       </div>
     );
   }

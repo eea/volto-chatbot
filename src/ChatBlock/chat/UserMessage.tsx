@@ -4,7 +4,7 @@ import SVGIcon from '../components/Icon';
 import { components } from '../components/markdown';
 import UserIcon from '../../icons/user.svg';
 
-const Markdown = loadable(() => import('react-markdown'));
+const Markdown: any = loadable(() => import('react-markdown'));
 
 export function UserMessage({
   message,

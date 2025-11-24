@@ -1,9 +1,9 @@
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import FeedbackModal from '../components/FeedbackModal';
-import * as lib from '../old/lib';
+import * as lib from '../utils';
 
-jest.mock('./lib');
+jest.mock('../utils');
 
 beforeEach(() => {
   jest.clearAllMocks();

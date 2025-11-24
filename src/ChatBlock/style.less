@@ -556,8 +556,6 @@ mark {
 }
 
 .quality-check-toggle {
-  margin-top: 1em;
-
   .ui.toggle.checkbox {
     input:checked ~ label {
       color: @grey !important;
@@ -1047,35 +1045,11 @@ mark {
   margin-left: auto;
 }
 
-.deep-research-toggle {
+.chat-controls {
   display: flex;
   align-items: center;
-  font-size: 13px;
   gap: 1em;
-
-  .ui.toggle.checkbox {
-    width: 2.5rem !important;
-    min-height: 1rem;
-
-    input,
-    label:before {
-      width: 2.5rem;
-      height: 1rem;
-    }
-
-    label:after {
-      width: 1rem;
-      height: 1rem;
-    }
-
-    input:checked ~ label:after {
-      left: 1.5rem;
-    }
-
-    label {
-      min-height: 1rem;
-    }
-  }
+  margin-top: 1em;
 }
 
 .message-content {
@@ -1497,6 +1471,10 @@ mark {
     .tools-list {
       padding-top: 1em;
     }
+  }
+
+  &.empty {
+    display: none;
   }
 }
 

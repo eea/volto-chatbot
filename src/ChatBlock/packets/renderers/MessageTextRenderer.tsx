@@ -7,7 +7,7 @@ import { isFinalAnswerComplete } from '../../services/packetUtils';
 import { PacketType } from '../../types/streamingModels';
 import { BlinkingDot } from '../../components/BlinkingDot';
 
-const Markdown = loadable(() => import('react-markdown'));
+const Markdown: any = loadable(() => import('react-markdown'));
 
 // Control the rate of packet streaming (packets per second)
 const PACKET_DELAY_MS = 10;

@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import ChatMessageFeedback from '../components/ChatMessageFeedback';
 
-jest.mock('./FeedbackModal', () => (props) => {
+jest.mock('../components/FeedbackModal', () => (props) => {
   const { modalOpen, onClose, onToast } = props;
 
   return modalOpen ? (
@@ -20,16 +20,24 @@ jest.mock('./FeedbackModal', () => (props) => {
   ) : null;
 });
 
-jest.mock('./utils', () => ({
+jest.mock('../components/Icon', () => ({ name }) => (
+  <img src={name} alt="icon" />
+));
+
+jest.mock('../components/markdown', () => ({
   SVGIcon: ({ name }) => <img src={name} alt="icon" />,
 }));
 
-jest.mock('./../icons/thumbs-up.svg', () => 'thumbs-up.svg');
-jest.mock('./../icons/thumbs-down.svg', () => 'thumbs-down.svg');
+jest.mock('../../icons/thumbs-up.svg', () => 'thumbs-up.svg');
+jest.mock('../../icons/thumbs-down.svg', () => 'thumbs-down.svg');
 
 describe('ChatMessageFeedback', () => {
   const defaultProps = {
-    message: 'Test message',
+    message: {
+      messageId: 1,
+      message: 'Test message',
+      type: 'assistant',
+    },
     feedbackReasons: ['Reason 1', 'Reason 2'],
   };
 

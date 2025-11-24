@@ -189,6 +189,7 @@ function ChatWindow({
                   key={message.messageId}
                   message={message}
                   isLoading={isStreaming}
+                  isDeepResearchEnabled={isDeepResearchEnabled}
                   libs={libs}
                   onChoice={(message) => onSubmit({ message })}
                   onFetchRelatedQuestions={onFetchRelatedQuestions}
@@ -235,9 +236,6 @@ function ChatWindow({
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}
-              deepResearch={deepResearch}
-              setIsDeepResearchEnabled={setIsDeepResearchEnabled}
-              isDeepResearchEnabled={isDeepResearchEnabled}
             />
           </div>
         </Form>

@@ -121,6 +121,7 @@ export interface ToolCallMetadata {
 export interface ChatMessageProps {
   message: Message;
   isLoading: boolean;
+  isDeepResearchEnabled?: boolean;
   libs?: any;
   onChoice?: (message: string) => void;
   onFetchRelatedQuestions?: () => void;

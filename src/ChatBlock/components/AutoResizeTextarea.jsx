@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Checkbox } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import { trackEvent } from '@eeacms/volto-matomo/utils';
 import TextareaAutosize from 'react-textarea-autosize';
 

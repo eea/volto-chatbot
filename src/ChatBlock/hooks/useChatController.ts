@@ -266,6 +266,17 @@ export function useChatController({
       qgenAsistantId &&
       latestAssistantMessage?.type === 'assistant'
     ) {
+      if (isDeepResearchEnabled) {
+        setMessages((prev) => {
+          return prev.map((m) =>
+            m.nodeId === latestAssistantMessage.nodeId
+              ? { ...m, relatedQuestions: null }
+              : m,
+          );
+        });
+        return;
+      }
+
       let relatedQuestions: RelatedQuestion[] | null = null;
       setIsFetchingRelatedQuestions(true);
 

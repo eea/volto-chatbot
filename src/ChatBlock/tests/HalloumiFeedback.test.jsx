@@ -2,13 +2,15 @@ import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
 import HalloumiFeedback from '../components/HalloumiFeedback';
 
-jest.mock('./Spinner', () => () => <div data-testid="spinner">Loading...</div>);
+jest.mock('../components/Spinner', () => () => (
+  <div data-testid="spinner">Loading...</div>
+));
 
-jest.mock('./utils', () => ({
-  SVGIcon: ({ name }) => <img src={name} alt="icon" />,
-}));
+jest.mock('../components/Icon', () => ({ name }) => (
+  <img src={name} alt="icon" />
+));
 
-jest.mock('./../icons/glasses.svg', () => 'glasses.svg');
+jest.mock('../../icons/glasses.svg', () => 'glasses.svg');
 
 jest.mock('@plone/volto-slate/editor/render', () => ({
   serializeNodes: (nodes) => {

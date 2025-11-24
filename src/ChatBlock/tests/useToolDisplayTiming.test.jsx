@@ -107,9 +107,7 @@ describe('useToolDisplayTiming', () => {
   });
 
   it('should handle empty tool groups', () => {
-    const { result } = renderHook(() =>
-      useToolDisplayTiming([], false, false),
-    );
+    const { result } = renderHook(() => useToolDisplayTiming([], false, false));
 
     expect(result.current.visibleTools).toEqual(new Set());
     expect(result.current.allToolsDisplayed).toBe(true);

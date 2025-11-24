@@ -145,7 +145,7 @@ describe('MessageProcessor', () => {
 
     processor.addPackets(packets);
     processor.reset();
-    
+
     const result = processor.getMessage();
     expect(result.groupedPackets).toEqual([]);
     expect(result.documents).toEqual(null);

@@ -46,14 +46,18 @@ function ExpandedToolItem({
         <div className={`tool-content ${!isLastItem ? 'with-padding' : ''}`}>
           {status && !expandedText && (
             <div className="tool-status-row">
-              <div
-                className={`tool-status ${
-                  showClickableToggle ? 'clickable' : ''
-                }`}
-                onClick={showClickableToggle ? onToggleClick : undefined}
-              >
-                {status}
-              </div>
+              {showClickableToggle ? (
+                <button
+                  type="button"
+                  className="tool-status clickable"
+                  onClick={onToggleClick}
+                  aria-label="Toggle tool status"
+                >
+                  {status}
+                </button>
+              ) : (
+                <div className="tool-status">{status}</div>
+              )}
             </div>
           )}
 
@@ -180,24 +184,28 @@ export function MultiToolRenderer({
                             <div className="tool-connector-short" />
                           )}
 
-                          <div
-                            className={`tool-status-short ${
-                              toolsToDisplay.length > 1 && isLastItem
-                                ? 'clickable'
-                                : ''
-                            }`}
-                            onClick={
-                              toolsToDisplay.length > 1 && isLastItem
-                                ? () =>
-                                    setIsStreamingExpanded(!isStreamingExpanded)
-                                : undefined
-                            }
-                          >
-                            {icon
-                              ? React.createElement(icon, { size: 14 })
-                              : null}
-                            {status}
-                          </div>
+                          {toolsToDisplay.length > 1 && isLastItem ? (
+                            <button
+                              type="button"
+                              className="tool-status-short clickable"
+                              onClick={() =>
+                                setIsStreamingExpanded(!isStreamingExpanded)
+                              }
+                              aria-label="Toggle streaming expansion"
+                            >
+                              {icon
+                                ? React.createElement(icon, { size: 14 })
+                                : null}
+                              {status}
+                            </button>
+                          ) : (
+                            <div className="tool-status-short">
+                              {icon
+                                ? React.createElement(icon, { size: 14 })
+                                : null}
+                              {status}
+                            </div>
+                          )}
 
                           <div
                             className={`tool-content-short ${
@@ -231,18 +239,24 @@ export function MultiToolRenderer({
       }`.trim()}
     >
       {/* Summary header - clickable */}
-      <div
+      <button
+        type="button"
         className="tools-summary-header"
         onClick={() => setIsExpanded(!isExpanded)}
+        aria-expanded={isExpanded}
+        aria-controls="tools-expanded-content"
       >
         <span className="tools-count">{toolGroups.length} steps</span>
         <span className={`expand-chevron ${isExpanded ? 'expanded' : ''}`}>
           ▼
         </span>
-      </div>
+      </button>
 
       {/* Expanded content */}
-      <div className={`tools-expanded-content ${isExpanded ? 'visible' : ''}`}>
+      <div
+        id="tools-expanded-content"
+        className={`tools-expanded-content ${isExpanded ? 'visible' : ''}`}
+      >
         <div className="tools-list">
           <div>
             {toolGroups.map((toolGroup) => {

@@ -127,8 +127,9 @@ export function useToolDisplayTiming(
 
   // Cleanup timeouts on unmount
   useEffect(() => {
+    const timeouts = timeoutsRef.current;
     return () => {
-      timeoutsRef.current.forEach((timeout) => clearTimeout(timeout));
+      timeouts.forEach((timeout) => clearTimeout(timeout));
     };
   }, []);
 

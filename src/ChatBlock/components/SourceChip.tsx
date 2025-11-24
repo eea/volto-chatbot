@@ -30,15 +30,18 @@ export function SourceChip({
       {icon && <div className="source-chip-icon">{icon}</div>}
       <span>{title}</span>
       {onRemove && (
-        <span
+        <button
+          type="button"
           className="source-chip-remove"
           onClick={(e) => {
             e.stopPropagation();
             onRemove();
           }}
+          aria-label={`Remove ${title}`}
+          title={`Remove ${title}`}
         >
           ✕
-        </span>
+        </button>
       )}
     </button>
   );

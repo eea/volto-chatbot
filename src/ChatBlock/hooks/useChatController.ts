@@ -306,7 +306,7 @@ export function useChatController({
         setIsFetchingRelatedQuestions(false);
       }
     }
-  }, [messages, enableQgen, qgenAsistantId]);
+  }, [messages, enableQgen, qgenAsistantId, isDeepResearchEnabled]);
 
   const clearChat = useCallback(() => {
     setMessages([]);

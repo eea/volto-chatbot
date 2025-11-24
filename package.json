@@ -32,8 +32,10 @@
     "cypress": "13.1.0",
     "cypress-fail-fast": "^5.0.1",
     "husky": "^8.0.3",
+    "i": "0.3.7",
     "lint-staged": "^14.0.1",
     "md5": "^2.3.0",
+    "npm": "11.6.3",
     "remark-preset-wooorm": "^7.0.0",
     "typescript": "^5.7.3"
   },

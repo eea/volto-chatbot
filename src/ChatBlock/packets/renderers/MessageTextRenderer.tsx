@@ -62,7 +62,7 @@ export const MessageTextRenderer: MessageRenderer<ChatPacket> = ({
         : 0;
       setDisplayedPacketCount(resetCount);
     }
-  }, [animate, packets.length, displayedPacketCount]);
+  }, [animate, packets, displayedPacketCount]);
 
   // Only mark as complete when all packets are received AND displayed
   useEffect(() => {

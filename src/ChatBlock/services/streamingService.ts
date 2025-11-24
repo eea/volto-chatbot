@@ -268,7 +268,6 @@ export async function createChatSession(
   });
 
   if (!response.ok) {
-    console.error(`Failed to create chat session - ${response.status}`);
     throw new Error('Failed to create chat session');
   }
 
@@ -311,7 +310,6 @@ export async function submitFeedback(params: {
   });
 
   if (!response.ok) {
-    console.error(`Failed to submit feedback - ${response.status}`);
     throw new Error('Failed to submit feedback');
   }
 

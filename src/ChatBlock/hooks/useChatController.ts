@@ -122,7 +122,7 @@ export function useChatController({
         return messagesRef.current;
       });
     },
-    onComplete: async (completedMessage, processor) => {
+    onComplete: (completedMessage, processor) => {
       // Get real database IDs from backend
       const { userMessageId, assistantMessageId } = processor.messageIds;
 

@@ -27,6 +27,7 @@ export interface Message {
   messageId: number | null;
   nodeId: number;
   message: string; // Unique identifier for tree structure (can be negative for temp messages)
+  error?: string;
   type: 'user' | 'assistant' | 'system' | 'error';
   retrievalType?: RetrievalType;
   researchType?: ResearchType;
@@ -42,10 +43,20 @@ export interface Message {
 
   // Packet-based data
   packets: Packet[];
+  groupedPackets?: { ind: number; packets: Packet[] }[];
+
+  // Packet indices for tracking
+  toolPackets?: number[];
+  displayPackets?: number[];
+
+  // Message status
+  isComplete?: boolean;
+  isFinalMessageComing?: boolean;
 
   // Cached values for easy access
   documents?: OnyxDocument[] | null;
   citations?: Record<string, string>; // citation_num -> document_id
+  relatedQuestions?: { question: string }[] | null;
 
   // Feedback state
   currentFeedback?: FeedbackType | null;
@@ -61,11 +72,6 @@ export interface RendererResult {
   expandedText?: JSX.Element;
 }
 
-export enum RenderType {
-  HIGHLIGHT = 'highlight',
-  FULL = 'full',
-}
-
 export interface MessageRendererProps<T extends Packet = Packet> {
   packets: T[];
   message: Message;
@@ -76,7 +82,6 @@ export interface MessageRendererProps<T extends Packet = Packet> {
   stableContextSources?: any;
   addQualityMarkersPlugin?: any;
   onComplete: () => void;
-  renderType: RenderType;
   animate: boolean;
   stopPacketSeen: boolean;
   children: (result: RendererResult) => JSX.Element;
@@ -115,9 +120,10 @@ export interface ToolCallMetadata {
 
 export interface ChatMessageProps {
   message: Message;
-  isLoading?: boolean;
+  isLoading: boolean;
   libs?: any;
   onChoice?: (message: string) => void;
+  onFetchRelatedQuestions?: () => void;
   showToolCalls?: boolean;
   enableFeedback?: boolean;
   feedbackReasons?: string[];

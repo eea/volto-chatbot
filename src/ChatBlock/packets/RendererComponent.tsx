@@ -1,7 +1,6 @@
 import type { Packet } from '../types/streamingModels';
 import type { RendererResult, Message } from '../types/interfaces';
 import { PacketType } from '../types/streamingModels';
-import { RenderType as RenderTypeEnum } from '../types/interfaces';
 import {
   MessageTextRenderer,
   SearchToolRenderer,
@@ -42,8 +41,7 @@ function isFetchToolPacket(packet: Packet): boolean {
 function isReasoningPacket(packet: Packet): boolean {
   return (
     packet.obj.type === PacketType.REASONING_START ||
-    packet.obj.type === PacketType.REASONING_DELTA ||
-    packet.obj.type === PacketType.SECTION_END
+    packet.obj.type === PacketType.REASONING_DELTA
   );
 }
 
@@ -75,7 +73,6 @@ export function RendererComponent({
   onComplete,
   animate,
   stopPacketSeen,
-  useShortRenderer = false,
   children,
   message,
   libs,
@@ -87,7 +84,6 @@ export function RendererComponent({
   onComplete: () => void;
   animate: boolean;
   stopPacketSeen: boolean;
-  useShortRenderer?: boolean;
   children: (result: RendererResult) => JSX.Element;
   libs: any;
   message?: Message;
@@ -96,9 +92,6 @@ export function RendererComponent({
   addQualityMarkersPlugin?: any;
 }) {
   const RendererFn = findRenderer({ packets });
-  const renderType = useShortRenderer
-    ? RenderTypeEnum.HIGHLIGHT
-    : RenderTypeEnum.FULL;
 
   if (!RendererFn) {
     return children({ icon: null, status: null, content: <></> });
@@ -109,7 +102,6 @@ export function RendererComponent({
       packets={packets as any}
       onComplete={onComplete}
       animate={animate}
-      renderType={renderType}
       stopPacketSeen={stopPacketSeen}
       message={message}
       libs={libs}

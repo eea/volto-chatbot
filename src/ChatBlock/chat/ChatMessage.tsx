@@ -6,7 +6,14 @@ export function ChatMessage(props: ChatMessageProps) {
   const { message, libs, className = '' } = props;
 
   if (message.type === 'user') {
-    return <UserMessage message={message} libs={libs} className={className} />;
+    return (
+      <UserMessage
+        message={message}
+        libs={libs}
+        className={className}
+        isLoading={props.isLoading}
+      />
+    );
   }
 
   if (message.type === 'assistant') {
@@ -18,7 +25,7 @@ export function ChatMessage(props: ChatMessageProps) {
       <div className="message-error">
         <SemanticMessage color="red" className="error-message">
           <div className="error-title">Error</div>
-          <div className="error-content">{message.message}</div>
+          <div className="error-content">{message.error}</div>
         </SemanticMessage>
       </div>
     );

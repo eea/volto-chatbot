@@ -93,13 +93,13 @@ function ChatWindow({
 
   const {
     onSubmit,
+    onFetchRelatedQuestions,
     messages,
     isStreaming,
     isFetchingRelatedQuestions,
     clearChat,
     setIsDeepResearchEnabled,
     isDeepResearchEnabled,
-    cancelStreaming,
   } = useChatController({
     personaId: persona.id,
     qgenAsistantId,
@@ -191,6 +191,7 @@ function ChatWindow({
                   isLoading={isStreaming}
                   libs={libs}
                   onChoice={(message) => onSubmit({ message })}
+                  onFetchRelatedQuestions={onFetchRelatedQuestions}
                   showToolCalls={showToolCalls}
                   enableFeedback={enableFeedback}
                   feedbackReasons={feedbackReasons}
@@ -231,7 +232,6 @@ function ChatWindow({
                 messages.length > 0 ? 'Ask follow-up...' : placeholderPrompt
               }
               isStreaming={isStreaming}
-              cancelStreaming={cancelStreaming}
               enableMatomoTracking={enableMatomoTracking}
               persona={persona}
               onSubmit={onSubmit}

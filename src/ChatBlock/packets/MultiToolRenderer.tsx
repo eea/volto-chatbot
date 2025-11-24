@@ -1,8 +1,7 @@
 import type { Packet } from '../types/streamingModels';
 import type { Message } from '../types/interfaces';
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { RendererComponent } from './RendererComponent';
-import { isToolPacket } from '../services/packetUtils';
 import { useToolDisplayTiming } from '../hooks/useToolDisplayTiming';
 import SVGIcon from '../components/Icon';
 import DoneIcon from '../../icons/done.svg';
@@ -69,36 +68,25 @@ function ExpandedToolItem({
 
 // Multi-tool renderer component for grouped tools
 export function MultiToolRenderer({
-  packetGroups,
+  toolGroups,
   message,
   libs,
-  isFinalAnswerComing,
-  isComplete,
-  stopPacketSeen,
   onAllToolsDisplayed,
   showToolCalls,
 }: {
-  packetGroups: { ind: number; packets: Packet[] }[];
+  toolGroups: { ind: number; packets: Packet[] }[];
   message: Message;
   libs: any;
-  isFinalAnswerComing: boolean;
-  isComplete: boolean;
-  stopPacketSeen: boolean;
   onAllToolsDisplayed?: () => void;
   showToolCalls?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isStreamingExpanded, setIsStreamingExpanded] = useState(false);
-
-  const toolGroups = useMemo(() => {
-    return packetGroups.filter(
-      (group) => group.packets[0] && isToolPacket(group.packets[0], false),
-    );
-  }, [packetGroups]);
+  const { isFinalMessageComing = false, isComplete = false, error } = message;
 
   // Use the custom hook to manage tool display timing
   const { visibleTools, allToolsDisplayed, handleToolComplete } =
-    useToolDisplayTiming(toolGroups, isFinalAnswerComing, isComplete);
+    useToolDisplayTiming(toolGroups, isFinalMessageComing, isComplete);
 
   // Notify parent when all tools are displayed
   useEffect(() => {
@@ -115,7 +103,7 @@ export function MultiToolRenderer({
   }, [isComplete, isStreamingExpanded]);
 
   // If still processing, show tools progressively with timing
-  if (!isComplete && !isFinalAnswerComing) {
+  if ((!allToolsDisplayed && !isStreamingExpanded) || !!error) {
     // Get the tools to display based on visibleTools
     const toolsToDisplay = toolGroups.filter((group) =>
       visibleTools.has(group.ind),
@@ -161,9 +149,8 @@ export function MultiToolRenderer({
                         handleToolComplete(toolInd);
                       }
                     }}
+                    stopPacketSeen={isComplete}
                     animate
-                    stopPacketSeen={stopPacketSeen}
-                    useShortRenderer={!isStreamingExpanded}
                   >
                     {({ icon, content, status, expandedText }) => {
                       // When expanded, show full renderer style similar to complete state
@@ -273,11 +260,10 @@ export function MultiToolRenderer({
                       handleToolComplete(toolInd);
                     }
                   }}
-                  animate
-                  stopPacketSeen={stopPacketSeen}
-                  useShortRenderer={false}
+                  stopPacketSeen={isComplete}
                   message={message}
                   libs={libs}
+                  animate
                 >
                   {({ icon, content, status, expandedText }) => (
                     <ExpandedToolItem

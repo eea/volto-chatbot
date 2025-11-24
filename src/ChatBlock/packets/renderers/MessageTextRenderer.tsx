@@ -36,19 +36,6 @@ export const MessageTextRenderer: MessageRenderer<ChatPacket> = ({
   const [displayedPacketCount, setDisplayedPacketCount] =
     useState(initialPacketCount);
 
-  // Get the full content from all packets
-  const fullContent = packets
-    .map((packet) => {
-      if (
-        packet.obj.type === PacketType.MESSAGE_DELTA ||
-        packet.obj.type === PacketType.MESSAGE_START
-      ) {
-        return packet.obj.content;
-      }
-      return '';
-    })
-    .join('');
-
   // Animation effect - gradually increase displayed packets at controlled rate
   useEffect(() => {
     if (!animate) {
@@ -95,7 +82,7 @@ export const MessageTextRenderer: MessageRenderer<ChatPacket> = ({
   // Get content based on displayed packet count
   const content = useMemo(() => {
     if (!animate || displayedPacketCount === -1) {
-      return fullContent; // Show all content
+      return message.message; // Show all content
     }
 
     // Only show content from packets up to displayedPacketCount
@@ -111,7 +98,7 @@ export const MessageTextRenderer: MessageRenderer<ChatPacket> = ({
         return '';
       })
       .join('');
-  }, [animate, displayedPacketCount, fullContent, packets]);
+  }, [animate, displayedPacketCount, message.message, packets]);
 
   // Add blinking cursor when streaming
   const displayContent = stopPacketSeen ? content : content + ' ▊';

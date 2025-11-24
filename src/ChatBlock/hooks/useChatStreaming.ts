@@ -5,9 +5,9 @@ import { sendMessage } from '../services/streamingService';
 import { MessageProcessor } from '../services/messageProcessor';
 
 interface UseChatStreamingProps {
-  onMessageUpdate?: (message: Message) => void;
+  onMessageUpdate?: (message: Message, processor: MessageProcessor) => void;
   onComplete?: (message: Message, processor: MessageProcessor) => void;
-  onError?: (error: Error) => void;
+  onError?: (error: Error, processor: MessageProcessor) => void;
 }
 
 export function useChatStreaming({
@@ -31,6 +31,7 @@ export function useChatStreaming({
         abortControllerRef.current.abort();
       }
 
+      // Reset previous processor state
       setIsStreaming(true);
       abortControllerRef.current = new AbortController();
       processorRef.current = new MessageProcessor(nodeId, parentNodeId);
@@ -44,9 +45,9 @@ export function useChatStreaming({
           const message = processorRef.current.getMessage();
 
           setCurrentMessage(message);
-          onMessageUpdate?.(message);
+          onMessageUpdate?.(message, processorRef.current);
 
-          if (processorRef.current.isComplete()) {
+          if (processorRef.current.isComplete) {
             onComplete?.(message, processorRef.current);
             break;
           }
@@ -54,7 +55,7 @@ export function useChatStreaming({
       } catch (error) {
         if ((error as Error).name !== 'AbortError') {
           console.error('Streaming error:', error);
-          onError?.(error as Error);
+          onError?.(error as Error, processorRef.current);
         }
       } finally {
         setIsStreaming(false);

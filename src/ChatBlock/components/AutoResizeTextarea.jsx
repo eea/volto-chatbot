@@ -5,17 +5,10 @@ import TextareaAutosize from 'react-textarea-autosize';
 
 import SVGIcon from './Icon';
 import SendIcon from '../../icons/send.svg';
-import StopIcon from '../../icons/stop.svg';
 
 export default React.forwardRef(function AutoResizeTextarea(props, ref) {
-  const {
-    onSubmit,
-    isStreaming,
-    cancelStreaming,
-    enableMatomoTracking,
-    persona,
-    ...rest
-  } = props;
+  const { onSubmit, isStreaming, enableMatomoTracking, persona, ...rest } =
+    props;
   const [input, setInput] = React.useState('');
 
   const handleSubmit = (e) => {
@@ -59,20 +52,13 @@ export default React.forwardRef(function AutoResizeTextarea(props, ref) {
           onKeyDown={(e) => {
             handleSubmit(e);
           }}
+          disabled={isStreaming}
           onClick={(e) => {
-            if (isStreaming) {
-              cancelStreaming();
-            } else {
-              handleSubmit(e);
-            }
+            handleSubmit(e);
           }}
         >
           <div className="btn-icon">
-            {isStreaming ? (
-              <SVGIcon name={StopIcon} size="28" />
-            ) : (
-              <SVGIcon name={SendIcon} size="28" />
-            )}
+            <SVGIcon name={SendIcon} size="28" />
           </div>
         </Button>
       </div>

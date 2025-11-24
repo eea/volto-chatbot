@@ -1,20 +1,37 @@
-import type { Packet } from '../types/streamingModels';
+import type {
+  CitationDelta,
+  MessageDelta,
+  MessageStart,
+  OnyxDocument,
+  Packet,
+  StreamingCitation,
+} from '../types/streamingModels';
 import type { Message, ToolCallMetadata } from '../types/interfaces';
-import { PacketType } from '../types/streamingModels';
 import {
-  getDocuments,
-  getCitations,
-  getTextContent,
-  injectSectionEndPackets,
+  getSynteticPacket,
+  isToolPacket,
+  isDisplayPacket,
 } from './packetUtils';
+import { PacketType } from '../types/streamingModels';
 
 /**
  * Process streaming packets into a message object
  */
 export class MessageProcessor {
   private packets: Packet[] = [];
+  private groupedPackets = new Map<number, Packet[]>();
+  private toolPackets: number[] = [];
+  private displayPackets: number[] = [];
   private userMessageId: number | null = null;
   private assistantMessageId: number | null = null;
+  private documentMap = new Map<string, OnyxDocument>();
+  private indicesStarted: number[] = [];
+  private _textContent: string = '';
+  private _errorContent: string = '';
+  private _documents: OnyxDocument[] = [];
+  private _citations = new Map<number, string>();
+  private _isComplete: boolean = false;
+  private _isFinalMessageComing: boolean = false;
 
   constructor(
     private nodeId: number,
@@ -25,30 +42,37 @@ export class MessageProcessor {
    * Add new packets to the processor
    */
   addPackets(newPackets: Packet[]): void {
-    this.packets.push(...newPackets);
-
-    // Check for MessageResponseIDInfo packet (special case)
     for (const packet of newPackets) {
-      // Handle raw MessageResponseIDInfo packet from backend
-      if (packet.obj.type === PacketType.MESSAGE_END_ID_INFO) {
-        const idInfo = packet.obj;
-        this.userMessageId = idInfo.user_message_id;
-        this.assistantMessageId = idInfo.reserved_assistant_message_id;
-      }
+      this.processPacket(packet);
+      this.processMessageIdsInfo(packet);
+      this.processTextContent(packet);
+      this.processDocuments(packet);
+      this.processCitations(packet);
+      this.processFinalMessageComming(packet);
+      this.processError(packet);
+      this.processStreamEnd(packet);
     }
   }
 
+  // Getters
   /**
-   * Check if streaming is complete
+   * Indicates if the streaming has completed
    */
-  isComplete(): boolean {
-    return this.packets.some((p) => p.obj.type === PacketType.STOP);
+  get isComplete(): boolean {
+    return this._isComplete;
+  }
+
+  /**
+   * Indicates if the final message is about to come
+   */
+  get isFinalMessageComing(): boolean {
+    return this._isFinalMessageComing;
   }
 
   /**
    * Get the real database message IDs from backend
    */
-  getMessageIds(): {
+  get messageIds(): {
     userMessageId: number | null;
     assistantMessageId: number | null;
   } {
@@ -58,6 +82,163 @@ export class MessageProcessor {
     };
   }
 
+  // Packet processing
+  /**
+   * Process a single packet and track its lifecycle
+   */
+  private processPacket(packet: Packet) {
+    let processedPacket: Packet = packet;
+
+    // Store tool packets indices
+    if (isToolPacket(packet) && !this.toolPackets.includes(packet.ind)) {
+      this.toolPackets.push(packet.ind);
+    }
+
+    // Store display packets indices
+    if (isDisplayPacket(packet) && !this.displayPackets.includes(packet.ind)) {
+      this.displayPackets.push(packet.ind);
+    }
+
+    // Keep track of all started indices to know when to send SECTION_END
+    if (
+      packet.ind > -1 &&
+      packet.obj.type !== PacketType.SECTION_END &&
+      !this.indicesStarted.includes(packet.ind)
+    ) {
+      this.indicesStarted.push(packet.ind);
+    }
+
+    // Send synthetic SECTION_END when needed
+    if (
+      packet.obj.type === PacketType.SECTION_END &&
+      this.indicesStarted.length > 0
+    ) {
+      processedPacket = getSynteticPacket(
+        this.indicesStarted.shift()!,
+        PacketType.SECTION_END,
+      );
+    } else if (packet.obj.type === PacketType.SECTION_END) {
+      return;
+    }
+
+    const { ind } = processedPacket;
+
+    // Store processed packet for later aggregation
+    this.packets.push(processedPacket);
+
+    // Group packets by index for later processing
+    if (!this.groupedPackets.has(ind)) {
+      this.groupedPackets.set(ind, []);
+    }
+    this.groupedPackets.get(ind)!.push(processedPacket);
+  }
+
+  /**
+   * Process MESSAGE_END_ID_INFO packets to extract message IDs
+   * These packets contain the actual database message IDs assigned by the backend
+   */
+  private processMessageIdsInfo(packet: Packet) {
+    if (packet.obj.type !== PacketType.MESSAGE_END_ID_INFO) {
+      return;
+    }
+    const idInfo = packet.obj;
+    this.userMessageId = idInfo.user_message_id;
+    this.assistantMessageId = idInfo.reserved_assistant_message_id;
+  }
+
+  /**
+   * Process text content from MESSAGE_START and MESSAGE_DELTA packets
+   * Accumulates text content across multiple packets
+   */
+  private processTextContent(packet: Packet) {
+    if (
+      [PacketType.MESSAGE_START, PacketType.MESSAGE_DELTA].includes(
+        packet.obj.type,
+      )
+    ) {
+      const content = (packet.obj as MessageStart | MessageDelta).content || '';
+      this._textContent += content;
+    }
+  }
+
+  /**
+   * Process document information from various tool packets
+   * Updates the internal document collection and notifies when new documents are added
+   */
+  private processDocuments(packet: Packet) {
+    if (
+      ![
+        PacketType.MESSAGE_START,
+        PacketType.SEARCH_TOOL_DELTA,
+        PacketType.FETCH_TOOL_START,
+      ].includes(packet.obj.type)
+    ) {
+      return;
+    }
+    let newDocuments = false;
+    const data = packet.obj as any;
+    const documents = data.final_documents || data.documents;
+    if (documents) {
+      documents.forEach((doc: OnyxDocument) => {
+        const docId = doc.document_id;
+        if (docId && !this.documentMap.has(docId)) {
+          this.documentMap.set(docId, doc);
+          newDocuments = true;
+        }
+      });
+    }
+    if (newDocuments) {
+      this._documents = Array.from(this.documentMap.values());
+    }
+  }
+
+  /**
+   * Process citation information from CITATION_DELTA packets
+   * Updates the internal citation collection and notifies when new citations are added
+   */
+  private processCitations(packet: Packet) {
+    if (packet.obj.type !== PacketType.CITATION_DELTA) {
+      return;
+    }
+    const citationDelta = packet.obj as CitationDelta;
+    citationDelta.citations?.forEach((citation: StreamingCitation) => {
+      if (!this._citations.has(citation.citation_num)) {
+        this._citations.set(citation.citation_num, citation.document_id);
+      }
+    });
+  }
+
+  /**
+   * Check if a packet indicates the final message is about to be sent
+   * Sets the _isFinalMessageComing flag when appropriate
+   */
+  private processFinalMessageComming(packet: Packet) {
+    if (
+      [
+        PacketType.MESSAGE_START,
+        PacketType.IMAGE_GENERATION_TOOL_START,
+      ].includes(packet.obj.type)
+    ) {
+      this._isFinalMessageComing = true;
+    }
+  }
+
+  private processError(packet: Packet) {
+    if (packet.obj.type === PacketType.ERROR) {
+      this._errorContent = packet.obj.error;
+    }
+  }
+
+  /**
+   * Handle STOP packets to mark streaming as complete
+   */
+  private processStreamEnd(packet: Packet) {
+    if ([PacketType.STOP, PacketType.ERROR].includes(packet.obj.type)) {
+      this._isComplete = true;
+    }
+  }
+
+  // Utility methods
   /**
    * Extract tool call information from packets
    */
@@ -110,35 +291,37 @@ export class MessageProcessor {
    * Get the current message state
    */
   getMessage(): Message {
-    // Inject section end packets for graceful completion
-    const processedPackets = injectSectionEndPackets(this.packets);
+    let toolCall = null;
 
-    // Extract documents
-    const documents = getDocuments(processedPackets);
-
-    // Extract citations
-    const citationsArray = getCitations(processedPackets);
-    const citations: Record<number, string> = {};
-    citationsArray.forEach((citation) => {
-      citations[citation.citation_num] = citation.document_id;
-    });
-
-    // Extract text content
-    const textContent = getTextContent(processedPackets);
-
-    // Extract tool call information
-    const toolCall = this.extractToolCall(processedPackets);
+    if (this._isComplete) {
+      // Extract tool call information
+      toolCall = this._isComplete ? this.extractToolCall(this.packets) : null;
+    }
 
     return {
       messageId: this.assistantMessageId,
       nodeId: this.nodeId,
-      message: textContent,
+      message: this._textContent,
+      error: this._errorContent,
       type: 'assistant',
       parentNodeId: this.parentNodeId,
-      packets: processedPackets,
-      documents: documents.length > 0 ? documents : null,
-      citations: Object.keys(citations).length > 0 ? citations : undefined,
+      packets: [...this.packets],
+      groupedPackets: Array.from(this.groupedPackets.entries())
+        .map(([ind, packets]) => ({
+          ind,
+          packets: [...packets],
+        }))
+        .sort((a, b) => a.ind - b.ind),
+      toolPackets: [...this.toolPackets],
+      displayPackets: [...this.displayPackets],
+      documents: this._documents.length > 0 ? [...this._documents] : null,
+      citations:
+        this._citations.size > 0
+          ? Object.fromEntries(this._citations)
+          : undefined,
       files: [],
+      isComplete: this._isComplete,
+      isFinalMessageComing: this._isFinalMessageComing,
       toolCall,
     };
   }
@@ -148,7 +331,18 @@ export class MessageProcessor {
    */
   reset(): void {
     this.packets = [];
+    this.groupedPackets.clear();
+    this.toolPackets = [];
+    this.displayPackets = [];
     this.userMessageId = null;
     this.assistantMessageId = null;
+    this.documentMap.clear();
+    this.indicesStarted = [];
+    this._textContent = '';
+    this._errorContent = '';
+    this._documents = [];
+    this._citations.clear();
+    this._isComplete = false;
+    this._isFinalMessageComing = false;
   }
 }

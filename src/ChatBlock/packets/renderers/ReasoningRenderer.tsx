@@ -47,10 +47,9 @@ export const ReasoningRenderer: MessageRenderer<ReasoningPacket> = ({
 }) => {
   const { remarkGfm } = libs;
 
-  const { hasStart, hasEnd, content } = useMemo(
-    () => constructCurrentReasoningState(packets),
-    [packets],
-  );
+  const { hasStart, hasEnd, content } = useMemo(() => {
+    return constructCurrentReasoningState(packets);
+  }, [packets]);
 
   // Track reasoning timing for minimum display duration
   const [reasoningStartTime, setReasoningStartTime] = useState<number | null>(

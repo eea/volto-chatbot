@@ -1,11 +1,7 @@
 import type { Message } from '../types/interfaces';
 import { useState, useCallback, useRef, useEffect } from 'react';
 import { useChatStreaming } from './useChatStreaming';
-import {
-  createChatSession,
-  submitFeedback,
-  sendMessage,
-} from '../services/streamingService';
+import { createChatSession, sendMessage } from '../services/streamingService';
 import { PacketType } from '../types/streamingModels';
 import { ResearchType } from '../types/interfaces';
 
@@ -91,7 +87,6 @@ export function useChatController({
   deepResearch,
 }: UseChatControllerProps) {
   const [messages, setMessages] = useState<Message[]>([]);
-  const messagesRef = useRef(messages);
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
   const [isDeepResearchEnabled, setIsDeepResearchEnabled] = useState(
     deepResearch === 'always_on' || deepResearch === 'user_on',
@@ -100,8 +95,11 @@ export function useChatController({
     useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
 
+  const messagesRef = useRef(messages);
   const nodeIdCounter = useRef(1);
   const isCancelledRef = useRef(isCancelled);
+
+  console.log(messages);
 
   // Keep ref in sync with state
   useEffect(() => {
@@ -117,7 +115,7 @@ export function useChatController({
 
         if (existingIndex >= 0) {
           const updated = [...prev];
-          updated[existingIndex] = message;
+          updated[existingIndex] = { ...message };
           return updated;
         }
         messagesRef.current = [...prev, message];
@@ -126,7 +124,7 @@ export function useChatController({
     },
     onComplete: async (completedMessage, processor) => {
       // Get real database IDs from backend
-      const { userMessageId, assistantMessageId } = processor.getMessageIds();
+      const { userMessageId, assistantMessageId } = processor.messageIds;
 
       // Update messages with real IDs
       if (userMessageId || assistantMessageId) {
@@ -156,53 +154,20 @@ export function useChatController({
           return updatedMessages;
         });
       }
-
-      // Fetch related questions if enabled
-      if (
-        enableQgen &&
-        qgenAsistantId &&
-        completedMessage.type === 'assistant'
-      ) {
-        setIsFetchingRelatedQuestions(true);
-
-        try {
-          // Get the parent user message directly from the completed message
-          const userMessage = messagesRef.current.find(
-            (m) => m.nodeId === completedMessage.parentNodeId,
-          );
-
-          if (userMessage && completedMessage.message) {
-            const relatedQuestions = await fetchRelatedQuestions(
-              userMessage.message,
-              completedMessage.message,
-              qgenAsistantId,
-            );
-
-            // Update the message with related questions
-            setMessages((prev) => {
-              return prev.map((m) =>
-                m.nodeId === completedMessage.nodeId
-                  ? { ...m, relatedQuestions }
-                  : m,
-              );
-            });
-          }
-        } catch (error) {
-          console.error('Failed to fetch related questions:', error);
-        } finally {
-          setIsFetchingRelatedQuestions(false);
-        }
-      }
     },
     onError: (error) => {
       const errorMessage: Message = {
         messageId: Date.now(),
         nodeId: nodeIdCounter.current++,
-        message: `Error: ${error.message}`,
+        message: '',
+        error: `Error: ${error.message}`,
         type: 'error',
         parentNodeId:
           messages.length > 0 ? messages[messages.length - 1].nodeId : null,
         packets: [],
+        groupedPackets: [],
+        toolPackets: [],
+        displayPackets: [],
         files: [],
         toolCall: null,
       };
@@ -291,42 +256,53 @@ export function useChatController({
     ],
   );
 
+  const onFetchRelatedQuestions = useCallback(async () => {
+    const latestAssistantMessage = messages
+      .filter((m) => m.type === 'assistant')
+      .pop();
+
+    if (
+      enableQgen &&
+      qgenAsistantId &&
+      latestAssistantMessage?.type === 'assistant'
+    ) {
+      let relatedQuestions: RelatedQuestion[] | null = null;
+      setIsFetchingRelatedQuestions(true);
+
+      try {
+        // Get the parent user message directly from the latest assistant message
+        const userMessage = messages.find(
+          (m) => m.nodeId === latestAssistantMessage.parentNodeId,
+        );
+
+        if (userMessage && latestAssistantMessage.message) {
+          relatedQuestions = await fetchRelatedQuestions(
+            userMessage.message,
+            latestAssistantMessage.message,
+            qgenAsistantId,
+          );
+        }
+      } catch (error) {
+        console.error('Failed to fetch related questions:', error);
+      } finally {
+        setMessages((prev) => {
+          return prev.map((m) =>
+            m.nodeId === latestAssistantMessage.nodeId
+              ? { ...m, relatedQuestions }
+              : m,
+          );
+        });
+        setIsFetchingRelatedQuestions(false);
+      }
+    }
+  }, [messages, enableQgen, qgenAsistantId]);
+
   const clearChat = useCallback(() => {
     setMessages([]);
     setChatSessionId(null);
     nodeIdCounter.current = 1;
     setIsCancelled(false);
   }, []);
-
-  const handleFeedback = useCallback(
-    async (
-      messageId: number,
-      feedback: 'like' | 'dislike' | null,
-      feedbackText?: string,
-      predefinedFeedback?: string,
-    ) => {
-      if (!feedback) return;
-
-      try {
-        await submitFeedback({
-          chatMessageId: messageId,
-          isPositive: feedback === 'like',
-          feedbackText: feedbackText || '',
-          predefinedFeedback: predefinedFeedback || '',
-        });
-
-        // Update message feedback state
-        setMessages((prev) =>
-          prev.map((m) =>
-            m.messageId === messageId ? { ...m, currentFeedback: feedback } : m,
-          ),
-        );
-      } catch (error) {
-        console.error('Failed to submit feedback:', error);
-      }
-    },
-    [],
-  );
 
   const handleCancel = useCallback(() => {
     setIsCancelled(true);
@@ -339,9 +315,9 @@ export function useChatController({
     isCancelled,
     isFetchingRelatedQuestions,
     onSubmit,
+    onFetchRelatedQuestions,
     clearChat,
     cancelStreaming: handleCancel,
-    handleFeedback,
     isDeepResearchEnabled,
     setIsDeepResearchEnabled,
     chatSessionId,

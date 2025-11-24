@@ -9,20 +9,12 @@ import {
   Message as SemanticMessage,
 } from 'semantic-ui-react';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
-import {
-  groupPacketsByInd,
-  isToolPacket,
-  isDisplayPacket,
-  isStreamingComplete,
-  isFinalAnswerComing,
-  hasError,
-} from '../services';
 import { useDeepCompareMemoize, useQualityMarkers } from '../hooks';
 import { MultiToolRenderer, RendererComponent } from '../packets';
+import { addCitations } from '../utils/citations';
 import SVGIcon from '../components/Icon';
 import BotIcon from '../../icons/bot.svg';
 import ClearIcon from '../../icons/clear.svg';
-import { addCitations } from '../utils/citations';
 
 // Lazy load heavy components
 const SourceDetails: any = loadable(() => import('../components/Source'));
@@ -171,6 +163,7 @@ export function AIMessage({
   isLoading,
   libs,
   onChoice,
+  onFetchRelatedQuestions,
   showToolCalls,
   enableFeedback,
   feedbackReasons,
@@ -192,32 +185,30 @@ export function AIMessage({
   const [messageDisplayed, setMessageDisplayed] = useState(false);
   const [activeTab, setActiveTab] = useState(0);
   const [showSourcesSidebar, setShowSourcesSidebar] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   // Halloumi
   const [forceHalloumi, setForceHallomi] = useState(qualityCheck === 'enabled');
   const [verificationTriggered, setVerificationTriggered] = useState(false);
   const [isMessageVerified, setIsMessageVerified] = useState(false);
 
-  const { packets = [], citations = {}, documents = [] } = message;
+  const {
+    groupedPackets = [],
+    toolPackets = [],
+    displayPackets = [],
+    citations = {},
+    documents = [],
+    relatedQuestions,
+    isComplete = false,
+    error,
+  } = message;
 
-  // Check for error in packets
-  useEffect(() => {
-    const { hasError: hasErrorInPackets, errorMessage: errorMsg } =
-      hasError(packets);
-    if (hasErrorInPackets && errorMsg) {
-      setErrorMessage(errorMsg);
-      // When there's an error, we should treat it as if streaming is complete
-      console.log('Error detected in packets, treating as complete:', errorMsg);
-    }
-  }, [packets]);
+  // Separate tool groups from display groups
+  const toolGroups = useMemo(() => {
+    return groupedPackets.filter((group) => toolPackets.includes(group.ind));
+  }, [groupedPackets, toolPackets]);
 
-  useEffect(() => {
-    if (qualityCheck === 'ondemand_toggle' && qualityCheckEnabled) {
-      setForceHallomi(true);
-    } else {
-      setForceHallomi(false);
-    }
-  }, [qualityCheck, qualityCheckEnabled]);
+  const displayGroups = useMemo(() => {
+    return groupedPackets.filter((group) => displayPackets.includes(group.ind));
+  }, [groupedPackets, displayPackets]);
 
   // Build sources from citations
   const inverseMap = useMemo(
@@ -243,7 +234,7 @@ export function AIMessage({
     [citations, documents, inverseMap],
   );
 
-  const showSources = sources.length > 0;
+  const showSources = messageDisplayed && sources.length > 0;
 
   const contextSources = getContextSources(
     message,
@@ -254,6 +245,7 @@ export function AIMessage({
   const stableContextSources = useDeepCompareMemoize(contextSources);
 
   const doQualityControl =
+    messageDisplayed &&
     qualityCheck &&
     qualityCheck !== 'disabled' &&
     forceHalloumi &&
@@ -280,6 +272,7 @@ export function AIMessage({
     isMessageVerified || doQualityControl ? scoreStage?.label : '';
 
   const showVerifyClaimsButton =
+    messageDisplayed &&
     sources.length > 0 &&
     !isFetching &&
     !markers &&
@@ -287,42 +280,39 @@ export function AIMessage({
       (qualityCheck === 'ondemand_toggle' && !qualityCheckEnabled));
 
   const showTotalFailMessage =
-    sources.length === 0 && !isFetching && enableShowTotalFailMessage;
+    messageDisplayed &&
+    sources.length === 0 &&
+    !isFetching &&
+    enableShowTotalFailMessage;
+
+  useEffect(() => {
+    if (isFetchingRelatedQuestions || typeof relatedQuestions !== 'undefined') {
+      return;
+    }
+    if (messageDisplayed && isComplete && onFetchRelatedQuestions) {
+      onFetchRelatedQuestions();
+    }
+  }, [
+    messageDisplayed,
+    relatedQuestions,
+    isComplete,
+    onFetchRelatedQuestions,
+    isFetchingRelatedQuestions,
+  ]);
+
+  useEffect(() => {
+    if (qualityCheck === 'ondemand_toggle' && qualityCheckEnabled) {
+      setForceHallomi(true);
+    } else {
+      setForceHallomi(false);
+    }
+  }, [qualityCheck, qualityCheckEnabled]);
 
   useEffect(() => {
     if (markers?.claims?.length > 0) {
       setIsMessageVerified(true);
     }
   }, [markers]);
-
-  // Group packets by ind
-  const groupedPackets = useMemo(() => {
-    return groupPacketsByInd(packets);
-  }, [packets]);
-
-  // Separate tool groups from display groups
-  const toolGroups = useMemo(() => {
-    return groupedPackets.filter((group) =>
-      group.packets.some((p) => isToolPacket(p)),
-    );
-  }, [groupedPackets]);
-
-  const displayGroups = useMemo(() => {
-    return groupedPackets.filter((group) =>
-      group.packets.some((p) => isDisplayPacket(p)),
-    );
-  }, [groupedPackets]);
-
-  // Check streaming status
-  const stopPacketSeen = useMemo(() => {
-    return isStreamingComplete(packets);
-  }, [packets]);
-
-  const finalAnswerComing = useMemo(() => {
-    return isFinalAnswerComing(packets);
-  }, [packets]);
-
-  const isComplete = stopPacketSeen;
 
   // Answer tab content
   const answerTab = (
@@ -357,11 +347,10 @@ export function AIMessage({
         {/* Render tools if any */}
         {toolGroups.length > 0 && (
           <MultiToolRenderer
-            packetGroups={toolGroups}
-            isComplete={isComplete}
-            isFinalAnswerComing={finalAnswerComing}
-            stopPacketSeen={stopPacketSeen}
-            onAllToolsDisplayed={() => setAllToolsDisplayed(true)}
+            toolGroups={toolGroups}
+            onAllToolsDisplayed={() => {
+              setAllToolsDisplayed(true);
+            }}
             message={message}
             libs={libs}
             showToolCalls={showToolCalls}
@@ -369,25 +358,25 @@ export function AIMessage({
         )}
 
         {/* Display error message if present */}
-        {errorMessage && (
+        {!!error && (
           <div className="message-error">
             <SemanticMessage color="red" className="error-message">
               <div className="error-title">Error</div>
-              <div className="error-content">{errorMessage}</div>
+              <div className="error-content">{error}</div>
             </SemanticMessage>
           </div>
         )}
 
         {/* Display normal content if no error or if we have content to display alongside the error */}
         {(allToolsDisplayed || toolGroups.length === 0) &&
+          !error &&
           displayGroups.map((group) => (
             <div key={group.ind} className="message-display-group">
               <RendererComponent
                 packets={group.packets}
                 onComplete={() => setMessageDisplayed(true)}
                 animate={!messageDisplayed}
-                stopPacketSeen={stopPacketSeen}
-                useShortRenderer={false}
+                stopPacketSeen={isComplete}
                 message={message}
                 libs={libs}
                 markers={markers}
@@ -410,7 +399,7 @@ export function AIMessage({
       )}
 
       {/* Halloumi/Quality feedback */}
-      {qualityCheck !== 'disabled' && (
+      {qualityCheck !== 'disabled' && !error && (
         <HalloumiFeedback
           sources={sources}
           halloumiMessage={halloumiMessage}
@@ -440,7 +429,7 @@ export function AIMessage({
 
       {isFirstScoreStage === -1 && serializeNodes(noSupportDocumentsMessage)}
 
-      {isFetchingRelatedQuestions && isLastMessage && (
+      {isFetchingRelatedQuestions && isLastMessage && !error && (
         <SemanticMessage color="blue">
           <div className="related-questions-loader">
             Finding related questions...
@@ -449,13 +438,16 @@ export function AIMessage({
       )}
 
       {/* Related questions */}
-      <RelatedQuestions
-        persona={persona}
-        message={message}
-        isLoading={isLoading}
-        onChoice={onChoice}
-        enableMatomoTracking={enableMatomoTracking}
-      />
+
+      {!error && (
+        <RelatedQuestions
+          persona={persona}
+          message={message}
+          isLoading={isLoading}
+          onChoice={onChoice}
+          enableMatomoTracking={enableMatomoTracking}
+        />
+      )}
     </div>
   );
 
@@ -496,7 +488,7 @@ export function AIMessage({
       <div className="comment-content">
         {/* Main content with tabs or plain */}
         <div className="comment-tabs">
-          {showSources ? (
+          {showSources && !error ? (
             <>
               <Tab
                 activeIndex={activeTab}

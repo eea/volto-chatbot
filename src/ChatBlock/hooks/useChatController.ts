@@ -99,8 +99,6 @@ export function useChatController({
   const nodeIdCounter = useRef(1);
   const isCancelledRef = useRef(isCancelled);
 
-  console.log(messages);
-
   // Keep ref in sync with state
   useEffect(() => {
     isCancelledRef.current = isCancelled;

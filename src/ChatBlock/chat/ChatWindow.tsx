@@ -8,7 +8,7 @@ import { ChatMessage } from '.';
 import AutoResizeTextarea from '../components/AutoResizeTextarea';
 import QualityCheckToggle from '../components/QualityCheckToggle';
 import EmptyState from '../components/EmptyState';
-import { useScrollonStream, useChatController } from '../hooks';
+import { useChatController } from '../hooks';
 import SVGIcon from '../components/Icon';
 import PenIcon from '../../icons/square-pen.svg';
 
@@ -110,9 +110,8 @@ function ChatWindow({
   const [showLandingPage, setShowLandingPage] = useState(true);
 
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
-  const conversationRef = useRef(null);
-  const endDivRef = useRef(null);
-  const scrollDist = useRef(0); // Keep track of scroll distance
+  const chatWindowRef = useRef(null);
+  const chatWindowEndRef = useRef(null);
 
   useEffect(() => {
     if (!textareaRef.current || isEditMode) return;
@@ -125,15 +124,6 @@ function ChatWindow({
   useEffect(() => {
     setShowLandingPage(messages.length === 0);
   }, [messages]);
-
-  useScrollonStream({
-    isStreaming,
-    scrollableDivRef: conversationRef,
-    scrollDist,
-    endDivRef,
-    distance: 500, // distance that should "engage" the scroll
-    debounce: 100, // time for debouncing
-  });
 
   const handleStarterPromptChoice = useCallback(
     (message: string) => {
@@ -180,7 +170,7 @@ function ChatWindow({
               </Button>
             </Segment>
             <div
-              ref={conversationRef}
+              ref={chatWindowRef}
               className={`conversation ${height ? 'include-scrollbar' : ''}`}
               style={{ maxHeight: height }}
             >
@@ -209,9 +199,10 @@ function ChatWindow({
                   maxContextSegments={maxContextSegments}
                   isLastMessage={index === messages.length - 1}
                   className={index === messages.length - 1 ? 'most-recent' : ''}
+                  chatWindowRef={chatWindowRef}
+                  chatWindowEndRef={chatWindowEndRef}
                 />
               ))}
-              <div ref={endDivRef} /> {/* End div to mark the bottom */}
             </div>
           </>
         )}
@@ -239,7 +230,6 @@ function ChatWindow({
             />
           </div>
         </Form>
-
         <div className="chat-controls">
           {qualityCheck === 'ondemand_toggle' && (
             <QualityCheckToggle
@@ -265,6 +255,7 @@ function ChatWindow({
 
           {deepResearch === 'always_on' && <small>Deep research on</small>}
         </div>
+        <div ref={chatWindowEndRef} /> {/* End div to mark the bottom */}
       </div>
 
       {showLandingPage && starterPromptsPosition === 'bottom' && (

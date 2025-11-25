@@ -9,7 +9,11 @@ import {
   Message as SemanticMessage,
 } from 'semantic-ui-react';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
-import { useDeepCompareMemoize, useQualityMarkers } from '../hooks';
+import {
+  useDeepCompareMemoize,
+  useQualityMarkers,
+  useScrollonStream,
+} from '../hooks';
 import { MultiToolRenderer, RendererComponent } from '../packets';
 import { addCitations } from '../utils/citations';
 import SVGIcon from '../components/Icon';
@@ -173,13 +177,15 @@ export function AIMessage({
   qualityCheckEnabled,
   noSupportDocumentsMessage,
   totalFailMessage,
-  isFetchingRelatedQuestions,
+  isFetchingRelatedQuestions = false,
   enableShowTotalFailMessage,
   enableMatomoTracking,
   persona,
   maxContextSegments,
   isLastMessage,
   className = '',
+  chatWindowRef,
+  chatWindowEndRef,
 }: ChatMessageProps) {
   const [allToolsDisplayed, setAllToolsDisplayed] = useState(false);
   const [messageDisplayed, setMessageDisplayed] = useState(false);
@@ -189,6 +195,12 @@ export function AIMessage({
   const [forceHalloumi, setForceHallomi] = useState(qualityCheck === 'enabled');
   const [verificationTriggered, setVerificationTriggered] = useState(false);
   const [isMessageVerified, setIsMessageVerified] = useState(false);
+
+  useScrollonStream({
+    containerRef: chatWindowRef,
+    bottomRef: chatWindowEndRef,
+    isStreaming: isLoading || !messageDisplayed || isFetchingRelatedQuestions,
+  });
 
   const {
     groupedPackets = [],

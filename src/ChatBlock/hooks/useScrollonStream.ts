@@ -1,95 +1,112 @@
-import { useRef, useEffect } from 'react';
-import type { RefObject, MutableRefObject } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 
-interface UseScrollOnStreamArgs {
+type ScrollonStreamProps = {
+  containerRef?: React.RefObject<HTMLDivElement>;
+  bottomRef?: React.RefObject<HTMLDivElement>;
   isStreaming: boolean;
-  scrollableDivRef: RefObject<HTMLElement>;
-  scrollDist: MutableRefObject<number>;
-  endDivRef: RefObject<HTMLElement>;
-  distance: number;
-  debounce: number;
-}
+};
 
 export function useScrollonStream({
+  bottomRef,
   isStreaming,
-  scrollableDivRef,
-  scrollDist,
-  endDivRef,
-  distance,
-  debounce,
-}: UseScrollOnStreamArgs): void {
-  const preventScrollInterference = useRef(false);
-  const preventScroll = useRef(false);
-  const blockActionRef = useRef(false);
-  const previousScroll = useRef(0);
+}: ScrollonStreamProps) {
+  const [enabled, setEnabled] = useState(true);
+  const scrollIntervalRef = useRef<number | null>(null);
+  const stopStreamingTimeoutRef = useRef<number | null>(null);
+  const [isActive, setIsActive] = useState(isStreaming);
 
-  useEffect(() => {
-    if (isStreaming && scrollableDivRef && scrollableDivRef.current) {
-      let newHeight = scrollableDivRef.current?.scrollTop;
-      const heightDifference = newHeight - previousScroll.current;
-      previousScroll.current = newHeight;
-
-      // Prevent streaming scroll
-      if (heightDifference < 0 && !preventScroll.current) {
-        scrollableDivRef.current.style.scrollBehavior = 'auto';
-        // scrollableDivRef.current.scrollTop = scrollableDivRef.current.scrollTop;
-        scrollableDivRef.current.style.scrollBehavior = 'smooth';
-        preventScrollInterference.current = true;
-        preventScroll.current = true;
-
-        setTimeout(() => {
-          preventScrollInterference.current = false;
-        }, 2000);
-        setTimeout(() => {
-          preventScroll.current = false;
-        }, 10000);
-      }
-
-      // Ensure can scroll if scroll down
-      else if (!preventScrollInterference.current) {
-        preventScroll.current = false;
-      }
-      if (
-        scrollDist.current < distance &&
-        !blockActionRef.current &&
-        !preventScroll.current &&
-        endDivRef &&
-        endDivRef.current
-      ) {
-        // catch up if necessary!
-        const scrollAmount = scrollDist.current + 10000;
-        if (scrollDist.current > 140) {
-          endDivRef.current.scrollIntoView();
-        } else {
-          blockActionRef.current = true;
-
-          scrollableDivRef?.current &&
-            scrollableDivRef.current.scrollBy({
-              left: 0,
-              top: Math.max(0, scrollAmount),
-              behavior: 'smooth',
-            });
-
-          setTimeout(() => {
-            blockActionRef.current = false;
-          }, debounce);
-        }
-      }
+  function clearScrollInterval() {
+    if (scrollIntervalRef.current) {
+      clearInterval(scrollIntervalRef.current);
+      scrollIntervalRef.current = null;
     }
-  });
+  }
 
-  // scroll on end of stream if within distance
+  const disableScroll = useCallback(() => {
+    clearScrollInterval();
+    setEnabled(false);
+  }, []);
+
+  // Track streaming state with grace period for brief interruptions
   useEffect(() => {
-    if (scrollableDivRef?.current && !isStreaming) {
-      if (scrollDist.current < distance) {
-        scrollableDivRef?.current &&
-          scrollableDivRef.current.scrollBy({
-            left: 0,
-            top: Math.max(scrollDist.current + 600, 0),
-            behavior: 'smooth',
-          });
-      }
+    if (stopStreamingTimeoutRef.current) {
+      clearTimeout(stopStreamingTimeoutRef.current);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
+    if (isStreaming) {
+      setIsActive(true);
+    } else {
+      // Wait before considering streaming stopped
+      stopStreamingTimeoutRef.current = window.setTimeout(() => {
+        setIsActive(false);
+      }, 500);
+    }
+
+    return () => {
+      if (stopStreamingTimeoutRef.current) {
+        clearTimeout(stopStreamingTimeoutRef.current);
+      }
+    };
   }, [isStreaming]);
+
+  // Listen for user input events that indicate scrolling intent
+  useEffect(() => {
+    if (!enabled) {
+      return;
+    }
+
+    const userEvents = ['wheel', 'touchstart', 'keydown', 'mousedown'];
+
+    userEvents.forEach((e) => {
+      window.addEventListener(e, disableScroll, { passive: true });
+    });
+
+    return () => {
+      userEvents.forEach((e) => {
+        window.removeEventListener(e, disableScroll);
+      });
+    };
+  }, [disableScroll, enabled]);
+
+  // Scroll to bottom when new content streams in
+  useEffect(() => {
+    function scrollToBottom() {
+      const bottomEl = bottomRef?.current;
+      if (!bottomEl) return;
+
+      const rect = bottomEl.getBoundingClientRect();
+      const offset = 24;
+      const targetScrollY =
+        window.scrollY + rect.bottom - window.innerHeight + offset;
+
+      // Already at target position
+      if (Math.abs(targetScrollY - window.scrollY) < 1) {
+        return;
+      }
+
+      window.scrollTo({
+        top: targetScrollY,
+        behavior: 'smooth',
+      });
+    }
+
+    if (!enabled) {
+      return;
+    }
+
+    if (!isActive) {
+      // One final scroll when streaming stops
+      setTimeout(() => {
+        disableScroll();
+        scrollToBottom();
+      }, 100);
+      return;
+    }
+
+    scrollIntervalRef.current = window.setInterval(scrollToBottom, 100);
+
+    return () => {
+      clearScrollInterval();
+    };
+  }, [isActive, bottomRef, disableScroll, enabled]);
 }

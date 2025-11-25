@@ -112,7 +112,7 @@ export function MultiToolRenderer({
   }, [isComplete, isStreamingExpanded]);
 
   // If still processing, show tools progressively with timing
-  if ((!allToolsDisplayed && !isStreamingExpanded) || !!error) {
+  if (!allToolsDisplayed && !isStreamingExpanded && !error) {
     // Get the tools to display based on visibleTools
     const toolsToDisplay = toolGroups.filter((group) =>
       visibleTools.has(group.ind),

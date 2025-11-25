@@ -141,6 +141,8 @@ export interface ChatMessageProps {
   maxContextSegments?: number;
   isLastMessage?: boolean;
   className?: string;
+  chatWindowRef?: React.RefObject<HTMLDivElement>;
+  chatWindowEndRef?: React.RefObject<HTMLDivElement>;
 }
 
 export interface Persona {

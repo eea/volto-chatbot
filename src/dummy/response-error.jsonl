@@ -1,0 +1,7 @@
+{"user_message_id": 990, "reserved_assistant_message_id": 991}
+{"ind": 0, "obj": {"type": "reasoning_start"}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": "The user wants information about climate change in Europe. Let me search for relevant documents."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " I'll use internal_search to find the most relevant information."}}
+{"ind": 0, "obj": {"type": "reasoning_delta", "reasoning": " Let me construct a search query."}}
+{"ind": 0, "obj": {"type": "section_end"}}
+{"error": "Final answer is empty. Inference provider likely failed to provide content packets.", "stack_trace": null}

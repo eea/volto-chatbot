@@ -3,7 +3,7 @@ const makeLoaderFinder = require('razzle-dev-utils/makeLoaderFinder');
 
 const modify = (config, { target, dev }, webpack) => {
   const markedPath = path.dirname(require.resolve('marked'));
-  const nodeFetch = path.dirname(require.resolve('node-fetch'));
+  // const nodeFetch = path.dirname(require.resolve('node-fetch'));
 
   const babelLoaderFinder = makeLoaderFinder('babel-loader');
   const babelLoader = config.module.rules.find(babelLoaderFinder);

@@ -11,6 +11,101 @@
 @md: 800px;
 @lg: 1200px;
 
+@keyframes dot-flashing {
+  0% {
+    background-color: @grey;
+  }
+
+  50%,
+  100% {
+    background-color: rgba(61, 82, 101, 0.2);
+  }
+}
+
+@keyframes spin-rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  50% {
+    transform: rotate(180deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes blink-dot {
+  0%,
+  80%,
+  100% {
+    opacity: 0.3;
+    transform: scale(0.8);
+  }
+
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
 .flex-center(@dir: row, @gap: 0) {
   display: flex;
   flex-direction: @dir;
@@ -204,6 +299,10 @@ mark {
     margin-bottom: @marginBottom;
     gap: 0.8em;
 
+    .comment-content {
+      flex: 1;
+    }
+
     i.inverted.circular.grey.icon {
       background-color: @grey !important;
     }
@@ -231,7 +330,7 @@ mark {
   }
 
   .answer-tab {
-    margin-top: 1.5em;
+    // margin-top: 1.5em;
 
     .sources {
       display: flex;
@@ -303,8 +402,11 @@ mark {
         }
       }
 
-      .source-date {
-        margin-top: auto;
+      .source-date span {
+        padding: 0.2em 0.4em;
+        border-radius: @borderRadius;
+        background-color: #e5e7eb;
+        font-size: 11px;
       }
     }
 
@@ -454,8 +556,6 @@ mark {
 }
 
 .quality-check-toggle {
-  margin-top: 1em;
-
   .ui.toggle.checkbox {
     input:checked ~ label {
       color: @grey !important;
@@ -571,7 +671,7 @@ mark {
 }
 
 .comment-tabs {
-  margin-top: 0.5em;
+  // margin-top: 0.5em;
 
   .ui.secondary.pointing.menu {
     border-width: 2px;
@@ -762,12 +862,14 @@ mark {
 }
 
 .chat-citation {
-  display: inline-block;
+  display: inline-flex;
   width: 1.7em;
   height: 1.7em;
+  align-items: center;
+  justify-content: center;
   border: 1px solid #dbd9d9;
   border-radius: 3em;
-  margin-right: 3px;
+  margin: 0 3px;
   background-color: @citationCircleColor;
   color: @grey;
   cursor: pointer;
@@ -799,6 +901,7 @@ mark {
 
   .textarea-wrapper {
     width: 100%;
+    align-items: center;
     justify-content: space-between;
     padding: 0.6em 0.8em;
     border: 1px solid #e5e5e5;
@@ -814,6 +917,14 @@ mark {
       border: none !important;
       background: none !important;
       resize: none !important;
+
+      @media only screen and (min-width: 800px) {
+        width: 80% !important;
+      }
+    }
+
+    @media only screen and (max-width: 800px) {
+      flex-direction: column;
     }
   }
 
@@ -902,37 +1013,527 @@ mark {
   }
 }
 
-@keyframes dot-flashing {
-  0% {
-    background-color: @grey;
+.ui.accordion.subquestion-accordion {
+  margin: 1em 0 2em 0;
+
+  .active.title {
+    background-color: #efefef;
   }
 
-  50%,
-  100% {
-    background-color: rgba(61, 82, 101, 0.2);
+  .question-label-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    .question-label {
+      padding: 4px 7px;
+      border-radius: @borderRadius;
+      background-color: #e3e3e3;
+      font-size: 13px;
+    }
+  }
+
+  .analyzing-toggle-btn {
+    margin-top: 2em;
+    margin-bottom: 1em;
+    cursor: pointer;
   }
 }
 
-@keyframes spin-rotate {
-  0% {
-    transform: rotate(0deg);
+.chat-right-actions {
+  display: flex;
+  margin-left: auto;
+}
+
+.chat-controls {
+  display: flex;
+  align-items: center;
+  margin-top: 1em;
+  gap: 1em;
+}
+
+.message-content {
+  width: 100%;
+}
+
+// Blinking dot for streaming indicator
+.blinking-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin: 0 2px;
+  animation: blink-dot 1.4s infinite;
+  background-color: @grey;
+
+  &:nth-child(2) {
+    animation-delay: 0.2s;
   }
 
-  50% {
-    transform: rotate(180deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
+  &:nth-child(3) {
+    animation-delay: 0.4s;
   }
 }
 
-@keyframes shimmer {
-  0% {
-    background-position: 200% 0;
+// Responsive adjustments for new components
+@media screen and (max-width: @md) {
+  .reasoning-container {
+    padding: 0.6em 0.8em;
+
+    .reasoning-header {
+      font-size: 12px;
+    }
+
+    .reasoning-content {
+      font-size: 13px;
+    }
   }
 
-  100% {
-    background-position: -200% 0;
+  .message-text-wrapper {
+    font-size: 14px;
+  }
+}
+
+// High contrast mode support
+@media (prefers-contrast: high) {
+  .reasoning-container {
+    border-width: 2px;
+    background-color: #fff;
+  }
+
+  .status-badge {
+    border: 1px solid currentColor;
+  }
+}
+
+// BlinkingDot component styles
+.blinking-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  animation: pulse 1.5s ease-in-out infinite;
+  background-color: @grey;
+
+  &.with-margin {
+    margin-left: 8px;
+  }
+}
+
+// SourceChip component styles
+.source-chip {
+  display: inline-flex;
+  max-width: 15rem;
+  align-items: center;
+  padding: 4px 12px;
+  border: 1px solid #e0e0e0;
+  border-radius: 16px;
+  background-color: @lightGrey;
+  color: @grey;
+  cursor: pointer;
+  font-size: 0.875rem;
+  gap: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: @hoverGreyColor;
+  }
+
+  &.animate-in {
+    animation: fadeInScale 0.3s ease-out;
+  }
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .source-chip-icon {
+    display: flex;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .source-chip-remove {
+    margin-left: 4px;
+    cursor: pointer;
+    font-size: 12px;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+// Search and tool renderer styles
+.search-tool-renderer,
+.fetch-tool-renderer {
+  .queries-section,
+  .results-section {
+    margin-bottom: 1em;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .queries-header,
+  .results-header {
+    margin-bottom: 0.5em;
+    color: @grey;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .queries-list,
+  .results-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+  }
+
+  .query-item,
+  .result-item {
+    animation: fadeIn 0.15s ease-out backwards;
+
+    &.more-button {
+      .source-chip {
+        background-color: #e9ecef;
+        font-weight: 500;
+
+        &:hover {
+          background-color: #dee2e6;
+        }
+      }
+    }
+  }
+}
+
+// Error message styles
+.message-error {
+  margin: 1em 0;
+
+  .error-message {
+    width: 100%;
+    padding: 1em;
+    border-radius: @borderRadius;
+
+    .error-title {
+      margin-bottom: 0.5em;
+      font-size: 1rem;
+      font-weight: bold;
+    }
+
+    .error-content {
+      font-family: monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}
+
+// MultiToolRenderer - Expanded tool item styles
+.tool-item-expanded {
+  position: relative;
+
+  // Connector line between tools
+  .tool-connector-line {
+    position: absolute;
+    z-index: 0;
+    top: 20px;
+    bottom: 0;
+    left: 10px;
+    width: 1px;
+    background-color: #e5e7eb;
+  }
+
+  // Main row with icon and content
+  .tool-item-row {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    color: @grey;
+    gap: 0.5rem;
+  }
+
+  // Icon column
+  .tool-icon-wrapper {
+    display: flex;
+    width: 1.25rem;
+    flex-direction: column;
+    flex-shrink: 0;
+    align-items: center;
+  }
+
+  .tool-icon-circle {
+    display: flex;
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+
+  .tool-icon-default {
+    display: inline-block;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 50%;
+    background-color: currentColor;
+  }
+
+  // Content column
+  .tool-content {
+    flex: 1;
+
+    &.with-padding {
+      padding-bottom: 1rem;
+    }
+  }
+
+  .tool-status-row {
+    display: flex;
+  }
+
+  .tool-status {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    gap: 0.25rem;
+
+    &.clickable {
+      cursor: pointer;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #1a1a1a;
+      }
+    }
+  }
+
+  .tool-text {
+    color: #6b7280;
+    font-size: 0.75rem;
+
+    &.expanded {
+      color: @grey;
+      font-size: 0.875rem;
+    }
+  }
+}
+
+// Multi-tool renderer container styles
+.multi-tool-renderer {
+  margin-bottom: 1em;
+
+  &.streaming {
+    .tools-container {
+      width: 100%;
+      padding: 1rem;
+      border-radius: @borderRadius;
+      margin-bottom: 0.5rem;
+      background-color: @lightGrey;
+
+      > div {
+        width: 100%;
+      }
+    }
+
+    .tools-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    // Short tool item styles (collapsed streaming view)
+    .tool-item-short {
+      position: relative;
+      margin-bottom: 0.5rem;
+
+      .tool-connector-short {
+        position: absolute;
+        z-index: 0;
+        top: 28px;
+        bottom: -0.5rem;
+        left: 10px;
+        width: 1px;
+        background-color: #e5e7eb;
+      }
+
+      .tool-status-short {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 0;
+        animation: shimmer 2.5s linear infinite;
+
+        // Shimmer effect for active (non-clickable) status
+        background: linear-gradient(
+          90deg,
+          @grey 0%,
+          @grey 40%,
+          rgba(61, 82, 101, 0.5) 50%,
+          @grey 60%,
+          @grey 100%
+        );
+        -webkit-background-clip: text;
+        background-clip: text;
+        background-size: 200% 100%;
+        font-size: 1rem;
+        font-weight: 500;
+        gap: 0.5rem;
+        -webkit-text-fill-color: transparent;
+
+        &.clickable {
+          color: @grey;
+          cursor: pointer;
+          transition: color 0.2s;
+
+          &:hover {
+            color: #1a1a1a;
+          }
+        }
+
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+
+      .tool-content-short {
+        color: #6b7280;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        text-align: justify;
+
+        &.with-margin {
+          margin-bottom: 0.75rem;
+        }
+      }
+    }
+  }
+
+  &.complete {
+    .tools-summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5em 0.8em;
+      border-radius: @borderRadius;
+      background-color: @lightGrey;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: @hoverGreyColor;
+      }
+
+      .tools-count {
+        color: @grey;
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      .expand-chevron {
+        color: @grey;
+        font-size: 0.75rem;
+        transition: transform 0.2s;
+
+        &.expanded {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    .tools-expanded-content {
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 0.3s ease-out;
+
+      &.visible {
+        max-height: 5000px;
+        transition: max-height 0.5s ease-in;
+      }
+    }
+
+    .tools-list {
+      padding-top: 1em;
+    }
+  }
+
+  &.empty {
+    display: none;
+  }
+}
+
+// Tool done node styles
+.tool-done-node {
+  position: relative;
+
+  .tool-done-connector {
+    position: absolute;
+    z-index: 0;
+    top: -12px;
+    left: 10px;
+    width: 1px;
+    height: 32px;
+    background-color: #e5e7eb;
+  }
+
+  .tool-done-row {
+    position: relative;
+    z-index: 10;
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 0.75rem;
+    color: @grey;
+    gap: 0.5rem;
+
+    .tool-icon-wrapper {
+      display: flex;
+      width: 1.25rem;
+      flex-direction: column;
+      flex-shrink: 0;
+      align-items: center;
+    }
+
+    .tool-icon-circle {
+      display: flex;
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+
+      .check-icon {
+        width: 0.75rem;
+        height: 0.75rem;
+        border-radius: 50%;
+        font-size: 0.75rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .tool-done-content {
+    flex: 1;
+  }
+
+  .tool-done-text {
+    margin-bottom: 0.25rem;
+    font-size: 0.875rem;
   }
 }

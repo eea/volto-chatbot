@@ -1,7 +1,6 @@
-import React from 'react';
-import withDanswerData from './withDanswerData';
-import ChatWindow from './ChatWindow';
 import superagent from 'superagent';
+import withDanswerData from './hocs/withDanswerData';
+import { ChatWindow } from './chat';
 
 function ChatBlockView(props) {
   const { assistantData, data, isEditMode } = props;

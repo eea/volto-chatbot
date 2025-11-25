@@ -1,6 +1,6 @@
 {
   "name": "@eeacms/volto-chatbot",
-  "version": "0.6.1",
+  "version": "1.0.0",
   "description": "@eeacms/volto-chatbot: Volto add-on",
   "main": "src/index.js",
   "author": "European Environment Agency: IDM2 A-Team",
@@ -23,13 +23,36 @@
     "@babel/plugin-proposal-private-methods": "7.18.6",
     "@cypress/code-coverage": "^3.10.0",
     "@plone/scripts": "*",
+    "@plone/types": "*",
+    "@types/loadable__component": "5.13.10",
+    "@types/node": "^24",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "cypress": "13.1.0",
     "cypress-fail-fast": "^5.0.1",
     "husky": "^8.0.3",
+    "i": "0.3.7",
     "lint-staged": "^14.0.1",
     "md5": "^2.3.0",
-    "remark-preset-wooorm": "^7.0.0"
+    "npm": "11.6.3",
+    "remark-preset-wooorm": "^7.0.0",
+    "typescript": "^5.7.3"
+  },
+  "dependencies": {
+    "@eeacms/volto-matomo": "*",
+    "@microsoft/fetch-event-source": "2.0.1",
+    "@plone-collective/volto-sentry": "0.3.1",
+    "fast-json-patch": "3.1.1",
+    "highlight.js": "11.10.0",
+    "luxon": "3.5.0",
+    "marked": "13.0.3",
+    "node-fetch": "2.7.0",
+    "react-markdown": "8.0.7",
+    "react-textarea-autosize": "^8.5.3",
+    "rehype-prism-plus": "1.6.0",
+    "remark-gfm": "3.0.1",
+    "uuid": "10.0.0"
   },
   "lint-staged": {
     "src/**/*.{js,jsx,ts,tsx,json}": [
@@ -71,20 +94,5 @@
     "i18n": "make i18n",
     "cypress:run": "make cypress-run",
     "cypress:open": "make cypress-open"
-  },
-  "dependencies": {
-    "@eeacms/volto-matomo": "*",
-    "@microsoft/fetch-event-source": "2.0.1",
-    "@plone-collective/volto-sentry": "*",
-    "fast-json-patch": "3.1.1",
-    "highlight.js": "11.10.0",
-    "luxon": "3.5.0",
-    "marked": "13.0.3",
-    "node-fetch": "2.7.0",
-    "react-markdown": "8.0.7",
-    "react-textarea-autosize": "^8.5.3",
-    "rehype-prism-plus": "1.6.0",
-    "remark-gfm": "3.0.1",
-    "uuid": "10.0.0"
   }
 }

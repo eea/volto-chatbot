@@ -4,7 +4,7 @@ import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
 
 import ChatBlockView from './ChatBlockView';
 import { ChatBlockSchema } from './schema';
-import withDanswerData from './withDanswerData';
+import withDanswerData from './hocs/withDanswerData';
 
 const ChatBlockEdit = (props) => {
   const { onChangeBlock, block, assistants, data } = props;

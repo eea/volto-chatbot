@@ -16,6 +16,10 @@
 
 [Volto](https://github.com/plone/volto) add-on that integrates an AI-powered chatbot with a customizable interface and advanced settings to tailor its behavior and enhance user interactions.
 
+## Upgrade
+
+**1.0.0 (Breaking)** - This release introduces breaking changes to the chatbot configuration and API endpoints, making it compatible with Onyx v2.
+
 ## Features
 
 https://github.com/user-attachments/assets/f9b5f813-672f-4e4d-81d0-bf2aec35b587

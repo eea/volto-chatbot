@@ -5,6 +5,7 @@ import debug from 'debug';
 import fs from 'fs';
 
 const log = debug('volto-chatbot');
+// import readline from 'readline';
 
 const MOCK_STREAM_DELAY = parseInt(process.env.MOCK_STREAM_DELAY || '0');
 
@@ -217,7 +218,6 @@ async function send_danswer_request(
     } else {
       res.set('Content-Type', response.headers.get('Content-Type'));
     }
-
     response.body.pipe(res);
   } catch (error) {
     throw error;

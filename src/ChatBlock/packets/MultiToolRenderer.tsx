@@ -1,6 +1,7 @@
 import type { Packet } from '../types/streamingModels';
 import type { Message } from '../types/interfaces';
-import React, { useState, useEffect } from 'react';
+import { PacketType } from '../types/streamingModels';
+import React, { useState, useEffect, useMemo } from 'react';
 import { RendererComponent } from './RendererComponent';
 import { useToolDisplayTiming } from '../hooks/useToolDisplayTiming';
 import SVGIcon from '../components/Icon';
@@ -78,24 +79,36 @@ function ExpandedToolItem({
 // Multi-tool renderer component for grouped tools
 export function MultiToolRenderer({
   toolGroups,
+  showTools = [PacketType.SEARCH_TOOL_START],
   message,
   libs,
   onAllToolsDisplayed,
-  showToolCalls,
 }: {
   toolGroups: { ind: number; packets: Packet[] }[];
+  showTools?: PacketType[];
   message: Message;
   libs: any;
   onAllToolsDisplayed?: () => void;
-  showToolCalls?: boolean;
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isStreamingExpanded, setIsStreamingExpanded] = useState(false);
   const { isFinalMessageComing = false, isComplete = false, error } = message;
 
+  // Filter tool groups based on the allowed tool types
+  const filteredToolGroups = useMemo(
+    () =>
+      toolGroups.filter(
+        (group) =>
+          group.packets?.some(
+            (packet) => showTools?.includes(packet.obj.type as PacketType),
+          ),
+      ),
+    [toolGroups, showTools],
+  );
+
   // Use the custom hook to manage tool display timing
   const { visibleTools, allToolsDisplayed, handleToolComplete } =
-    useToolDisplayTiming(toolGroups, isFinalMessageComing, isComplete);
+    useToolDisplayTiming(filteredToolGroups, isFinalMessageComing, isComplete);
 
   // Notify parent when all tools are displayed
   useEffect(() => {
@@ -114,7 +127,7 @@ export function MultiToolRenderer({
   // If still processing, show tools progressively with timing
   if (!allToolsDisplayed && !isStreamingExpanded && !error) {
     // Get the tools to display based on visibleTools
-    const toolsToDisplay = toolGroups.filter((group) =>
+    const toolsToDisplay = filteredToolGroups.filter((group) =>
       visibleTools.has(group.ind),
     );
 
@@ -130,7 +143,7 @@ export function MultiToolRenderer({
     return (
       <div
         className="multi-tool-renderer streaming"
-        style={{ display: showToolCalls ? 'block' : 'none' }}
+        style={{ display: 'block' }}
       >
         <div className="tools-container">
           <div>
@@ -237,15 +250,11 @@ export function MultiToolRenderer({
     );
   }
 
-  if (!showToolCalls) {
-    return null;
-  }
-
   // If complete, show summary with toggle
   return (
     <div
       className={`multi-tool-renderer complete ${
-        !toolGroups.length ? 'empty' : ''
+        !filteredToolGroups.length ? 'empty' : ''
       }`.trim()}
     >
       {/* Summary header - clickable */}
@@ -261,7 +270,7 @@ export function MultiToolRenderer({
           }
         }}
       >
-        <span className="tools-count">{toolGroups.length} steps</span>
+        <span className="tools-count">{filteredToolGroups.length} steps</span>
         <span className={`expand-chevron ${isExpanded ? 'expanded' : ''}`}>
           ▼
         </span>
@@ -271,7 +280,7 @@ export function MultiToolRenderer({
       <div className={`tools-expanded-content ${isExpanded ? 'visible' : ''}`}>
         <div className="tools-list">
           <div>
-            {toolGroups.map((toolGroup) => {
+            {filteredToolGroups.map((toolGroup) => {
               // Don't mark as last item if we're going to show the Done node
               const isLastItem = false; // Always draw connector line since Done node follows
 

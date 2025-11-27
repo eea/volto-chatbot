@@ -168,7 +168,6 @@ export function AIMessage({
   libs,
   onChoice,
   onFetchRelatedQuestions,
-  showToolCalls,
   enableFeedback,
   feedbackReasons,
   qualityCheck,
@@ -186,6 +185,7 @@ export function AIMessage({
   className = '',
   chatWindowRef,
   chatWindowEndRef,
+  showTools,
 }: ChatMessageProps) {
   const [allToolsDisplayed, setAllToolsDisplayed] = useState(false);
   const [messageDisplayed, setMessageDisplayed] = useState(false);
@@ -360,12 +360,12 @@ export function AIMessage({
         {toolGroups.length > 0 && (
           <MultiToolRenderer
             toolGroups={toolGroups}
+            showTools={showTools}
             onAllToolsDisplayed={() => {
               setAllToolsDisplayed(true);
             }}
             message={message}
             libs={libs}
-            showToolCalls={showToolCalls}
           />
         )}
 

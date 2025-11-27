@@ -1,3 +1,5 @@
+import { PacketType } from './types/streamingModels';
+
 const ScoreRangeSchema = {
   title: 'Score Range',
   fieldsets: [
@@ -97,9 +99,9 @@ export function ChatBlockSchema({ assistants, data }) {
             : []),
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
+          'showTools',
           'enableMatomoTracking',
           'scrollToInput',
-          'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
           'showAssistantPrompts',
@@ -344,10 +346,15 @@ range is from 0 to 100`,
           'Enable tracking of user interactions via Matomo Analytics. When enabled, the chatbot will send events for: ' +
           'starter prompt clicks, user-submitted questions, clicks on related questions, and feedback on answers (positive/negative).',
       },
-      showToolCalls: {
-        title: 'Show query used in retriever',
-        type: 'boolean',
-        default: true,
+      showTools: {
+        title: 'Show tools',
+        type: 'string',
+        choices: [
+          [PacketType.SEARCH_TOOL_START, 'Search tool'],
+          [PacketType.REASONING_START, 'Reasoning tool'],
+        ],
+        isMulti: true,
+        default: [PacketType.SEARCH_TOOL_START],
       },
       placeholderPrompt: {
         default: 'Ask a question',

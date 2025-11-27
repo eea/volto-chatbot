@@ -1,7 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 
 type ScrollonStreamProps = {
-  containerRef?: React.RefObject<HTMLDivElement>;
   bottomRef?: React.RefObject<HTMLDivElement>;
   isStreaming: boolean;
 };

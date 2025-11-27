@@ -183,7 +183,6 @@ export function AIMessage({
   maxContextSegments,
   isLastMessage,
   className = '',
-  chatWindowRef,
   chatWindowEndRef,
   showTools,
 }: ChatMessageProps) {
@@ -197,7 +196,6 @@ export function AIMessage({
   const [isMessageVerified, setIsMessageVerified] = useState(false);
 
   useScrollonStream({
-    containerRef: chatWindowRef,
     bottomRef: chatWindowEndRef,
     isStreaming: isLoading || !messageDisplayed || isFetchingRelatedQuestions,
   });

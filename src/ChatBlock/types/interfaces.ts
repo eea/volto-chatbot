@@ -1,4 +1,5 @@
 import type { Packet, OnyxDocument } from './streamingModels';
+import { PacketType } from './streamingModels';
 
 export type FeedbackType = 'like' | 'dislike';
 
@@ -125,7 +126,6 @@ export interface ChatMessageProps {
   libs?: any;
   onChoice?: (message: string) => void;
   onFetchRelatedQuestions?: () => void;
-  showToolCalls?: boolean;
   enableFeedback?: boolean;
   feedbackReasons?: string[];
   qualityCheck?: string;
@@ -143,6 +143,7 @@ export interface ChatMessageProps {
   className?: string;
   chatWindowRef?: React.RefObject<HTMLDivElement>;
   chatWindowEndRef?: React.RefObject<HTMLDivElement>;
+  showTools?: PacketType[];
 }
 
 export interface Persona {

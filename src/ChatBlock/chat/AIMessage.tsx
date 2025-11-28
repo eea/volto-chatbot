@@ -168,7 +168,6 @@ export function AIMessage({
   libs,
   onChoice,
   onFetchRelatedQuestions,
-  showToolCalls,
   enableFeedback,
   feedbackReasons,
   qualityCheck,
@@ -184,8 +183,8 @@ export function AIMessage({
   maxContextSegments,
   isLastMessage,
   className = '',
-  chatWindowRef,
   chatWindowEndRef,
+  showTools,
 }: ChatMessageProps) {
   const [allToolsDisplayed, setAllToolsDisplayed] = useState(false);
   const [messageDisplayed, setMessageDisplayed] = useState(false);
@@ -197,7 +196,6 @@ export function AIMessage({
   const [isMessageVerified, setIsMessageVerified] = useState(false);
 
   useScrollonStream({
-    containerRef: chatWindowRef,
     bottomRef: chatWindowEndRef,
     isStreaming: isLoading || !messageDisplayed || isFetchingRelatedQuestions,
   });
@@ -360,12 +358,12 @@ export function AIMessage({
         {toolGroups.length > 0 && (
           <MultiToolRenderer
             toolGroups={toolGroups}
+            showTools={showTools}
             onAllToolsDisplayed={() => {
               setAllToolsDisplayed(true);
             }}
             message={message}
             libs={libs}
-            showToolCalls={showToolCalls}
           />
         )}
 

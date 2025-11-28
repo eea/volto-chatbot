@@ -5,6 +5,7 @@ import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import { trackEvent } from '@eeacms/volto-matomo/utils';
 
 import { ChatMessage } from '.';
+import { PacketType } from '../types/streamingModels';
 import AutoResizeTextarea from '../components/AutoResizeTextarea';
 import QualityCheckToggle from '../components/QualityCheckToggle';
 import EmptyState from '../components/EmptyState';
@@ -33,6 +34,7 @@ interface ChatWindowProps {
   totalFailMessage?: string;
   enableShowTotalFailMessage?: boolean;
   deepResearch?: string;
+  showTools?: PacketType[];
   showAssistantTitle?: boolean;
   showAssistantDescription?: boolean;
   starterPromptsPosition?: 'top' | 'bottom';
@@ -56,7 +58,6 @@ function ChatWindow({
     enableQgen,
     enableFeedback = true,
     scrollToInput,
-    showToolCalls = true,
     feedbackReasons,
     qualityCheck = 'disabled',
     qualityCheckStages = [],
@@ -65,6 +66,7 @@ function ChatWindow({
     totalFailMessage,
     enableShowTotalFailMessage,
     deepResearch,
+    showTools,
     showAssistantTitle,
     showAssistantDescription,
     starterPromptsPosition = 'top',
@@ -183,7 +185,6 @@ function ChatWindow({
                   libs={libs}
                   onChoice={(message) => onSubmit({ message })}
                   onFetchRelatedQuestions={onFetchRelatedQuestions}
-                  showToolCalls={showToolCalls}
                   enableFeedback={enableFeedback}
                   feedbackReasons={feedbackReasons}
                   qualityCheck={qualityCheck}
@@ -201,6 +202,7 @@ function ChatWindow({
                   className={index === messages.length - 1 ? 'most-recent' : ''}
                   chatWindowRef={chatWindowRef}
                   chatWindowEndRef={chatWindowEndRef}
+                  showTools={showTools}
                 />
               ))}
             </div>

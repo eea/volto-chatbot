@@ -3,13 +3,15 @@ import { useRef, useState, useEffect, useCallback } from 'react';
 type ScrollonStreamProps = {
   bottomRef?: React.RefObject<HTMLDivElement>;
   isStreaming: boolean;
+  enabled?: boolean;
 };
 
 export function useScrollonStream({
   bottomRef,
   isStreaming,
+  ...props
 }: ScrollonStreamProps) {
-  const [enabled, setEnabled] = useState(true);
+  const [enabled, setEnabled] = useState(props.enabled ?? true);
   const scrollIntervalRef = useRef<number | null>(null);
   const stopStreamingTimeoutRef = useRef<number | null>(null);
   const [isActive, setIsActive] = useState(isStreaming);
@@ -21,7 +23,12 @@ export function useScrollonStream({
     }
   }
 
-  const disableScroll = useCallback(() => {
+  const disableScroll = useCallback((e: any) => {
+    const items = document.querySelectorAll('.tools-summary-header');
+    const expandToolsEl = items[items.length - 1];
+    if (expandToolsEl && e?.target && expandToolsEl.contains(e.target)) {
+      return;
+    }
     clearScrollInterval();
     setEnabled(false);
   }, []);
@@ -75,6 +82,19 @@ export function useScrollonStream({
 
       const rect = bottomEl.getBoundingClientRect();
       const offset = 24;
+
+      // Check if bottom element is already visible in viewport
+      const isVisible =
+        rect.top >= 0 &&
+        rect.bottom <= window.innerHeight &&
+        rect.left >= 0 &&
+        rect.right <= window.innerWidth;
+
+      // Don't scroll if element is already fully visible
+      if (isVisible) {
+        return;
+      }
+
       const targetScrollY =
         window.scrollY + rect.bottom - window.innerHeight + offset;
 
@@ -96,7 +116,7 @@ export function useScrollonStream({
     if (!isActive) {
       // One final scroll when streaming stops
       setTimeout(() => {
-        disableScroll();
+        disableScroll(null);
         scrollToBottom();
       }, 100);
       return;

@@ -169,6 +169,7 @@ export function AIMessage({
   onChoice,
   onFetchRelatedQuestions,
   enableFeedback,
+  scrollToInput,
   feedbackReasons,
   qualityCheck,
   qualityCheckStages,
@@ -198,6 +199,7 @@ export function AIMessage({
   useScrollonStream({
     bottomRef: chatWindowEndRef,
     isStreaming: isLoading || !messageDisplayed || isFetchingRelatedQuestions,
+    enabled: scrollToInput,
   });
 
   const {

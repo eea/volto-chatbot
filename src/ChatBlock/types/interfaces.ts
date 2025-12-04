@@ -127,6 +127,7 @@ export interface ChatMessageProps {
   onChoice?: (message: string) => void;
   onFetchRelatedQuestions?: () => void;
   enableFeedback?: boolean;
+  scrollToInput?: boolean;
   feedbackReasons?: string[];
   qualityCheck?: string;
   qualityCheckStages?: any[];

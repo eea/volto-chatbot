@@ -28,12 +28,28 @@ exports[`AIMessage renders AI message with content 1`] = `
     <div
       className="comment-tabs"
     >
-      <div
-        className="answer-tab"
-      >
+      <div>
         <div
-          className="message-content"
-        />
+          className="ui fluid pointing secondary without-sources menu"
+        >
+          <a
+            className="active item"
+            onClick={[Function]}
+          >
+            Answer
+          </a>
+        </div>
+        <div
+          className="ui bottom attached segment active tab"
+        >
+          <div
+            className="answer-tab"
+          >
+            <div
+              className="message-content"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -68,12 +84,28 @@ exports[`AIMessage renders AI message with feedback options 1`] = `
     <div
       className="comment-tabs"
     >
-      <div
-        className="answer-tab"
-      >
+      <div>
         <div
-          className="message-content"
-        />
+          className="ui fluid pointing secondary without-sources menu"
+        >
+          <a
+            className="active item"
+            onClick={[Function]}
+          >
+            Answer
+          </a>
+        </div>
+        <div
+          className="ui bottom attached segment active tab"
+        >
+          <div
+            className="answer-tab"
+          >
+            <div
+              className="message-content"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -108,12 +140,28 @@ exports[`AIMessage renders AI message with sources 1`] = `
     <div
       className="comment-tabs"
     >
-      <div
-        className="answer-tab"
-      >
+      <div>
         <div
-          className="message-content"
-        />
+          className="ui fluid pointing secondary without-sources menu"
+        >
+          <a
+            className="active item"
+            onClick={[Function]}
+          >
+            Answer
+          </a>
+        </div>
+        <div
+          className="ui bottom attached segment active tab"
+        >
+          <div
+            className="answer-tab"
+          >
+            <div
+              className="message-content"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -148,12 +196,28 @@ exports[`AIMessage renders empty AI message 1`] = `
     <div
       className="comment-tabs"
     >
-      <div
-        className="answer-tab"
-      >
+      <div>
         <div
-          className="message-content"
-        />
+          className="ui fluid pointing secondary without-sources menu"
+        >
+          <a
+            className="active item"
+            onClick={[Function]}
+          >
+            Answer
+          </a>
+        </div>
+        <div
+          className="ui bottom attached segment active tab"
+        >
+          <div
+            className="answer-tab"
+          >
+            <div
+              className="message-content"
+            />
+          </div>
+        </div>
       </div>
     </div>
   </div>

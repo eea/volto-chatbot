@@ -481,7 +481,7 @@ export function AIMessage({
 
   // Tab panes - conditionally include Sources tab
   const panes = [
-    { menuItem: 'Answer', pane: <Tab.Pane>{answerTab}</Tab.Pane> },
+    { menuItem: 'Answer', pane: <Tab.Pane key="answer">{answerTab}</Tab.Pane> },
     ...(showSources && !error
       ? [
           {
@@ -495,7 +495,7 @@ export function AIMessage({
               ),
             },
             pane: (
-              <Tab.Pane>
+              <Tab.Pane key="sources">
                 <div className="sources-listing">
                   <div className="sources">
                     {sources.map((source: any, i: number) => (

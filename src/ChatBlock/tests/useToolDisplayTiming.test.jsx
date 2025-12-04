@@ -10,7 +10,7 @@ describe('useToolDisplayTiming', () => {
     jest.useRealTimers();
   });
 
-  it('should initialize with first tool visible when not complete', () => {
+  it('should initialize with all tools visible when not complete', () => {
     const toolGroups = [
       { ind: 1, packets: [] },
       { ind: 2, packets: [] },
@@ -20,7 +20,7 @@ describe('useToolDisplayTiming', () => {
       useToolDisplayTiming(toolGroups, false, false),
     );
 
-    expect(result.current.visibleTools).toEqual(new Set([1]));
+    expect(result.current.visibleTools).toEqual(new Set([1, 2]));
     expect(result.current.allToolsDisplayed).toBe(false);
   });
 
@@ -58,9 +58,9 @@ describe('useToolDisplayTiming', () => {
       useToolDisplayTiming(toolGroups, false, false),
     );
 
-    // First tool should be visible
+    // All tools should be visible
     expect(result.current.visibleTools.has(1)).toBe(true);
-    expect(result.current.visibleTools.has(2)).toBe(false);
+    expect(result.current.visibleTools.has(2)).toBe(true);
 
     // Complete first tool - should not throw errors
     expect(() => {
@@ -92,6 +92,11 @@ describe('useToolDisplayTiming', () => {
     const { result } = renderHook(() =>
       useToolDisplayTiming(toolGroups, true, true),
     );
+
+    // Mark tool as completed
+    act(() => {
+      result.current.handleToolComplete(1);
+    });
 
     expect(result.current.allToolsDisplayed).toBe(true);
   });

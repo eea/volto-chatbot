@@ -524,13 +524,18 @@ mark {
     }
   }
 
+  .loader-container {
+    display: flex;
+    align-items: center;
+    height: 30px;
+  }
+
   .loader {
     position: relative;
     width: 10px;
     height: 10px;
     border-radius: 5px;
-    margin-top: 1em;
-    margin-left: 64px;
+    margin-left: 15px;
     animation: dot-flashing 1s infinite linear alternate;
     animation-delay: 0.5s;
     background-color: @grey;
@@ -725,6 +730,10 @@ mark {
         color: @grey !important;
         font-weight: bold;
       }
+    }
+
+    &.without-sources {
+      display: none;
     }
   }
 
@@ -1281,7 +1290,6 @@ mark {
     align-items: center;
     justify-content: space-between;
     padding: 0.625rem 0.875rem;
-    border-radius: @borderRadius;
     background-color: @lightGrey;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -1458,7 +1466,6 @@ mark {
 
     .tools-summary-header {
       padding: 0.5em 0.8em;
-      border-left: 3px solid transparent;
       transition: all 0.2s;
     }
 

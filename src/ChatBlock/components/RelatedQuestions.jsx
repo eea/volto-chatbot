@@ -33,9 +33,18 @@ const RelatedQuestions = ({
                 key={idx}
                 className="relatedQuestionButton"
                 role="button"
-                onClick={() => handleRelatedQuestionClick(question)}
-                onKeyDown={() => handleRelatedQuestionClick(question)}
-                tabIndex="-1"
+                onClick={(e) => {
+                  e.currentTarget.blur();
+                  handleRelatedQuestionClick(question);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault(); // Prevent space from scrolling
+                    e.currentTarget.blur();
+                    handleRelatedQuestionClick(question);
+                  }
+                }}
+                tabIndex="0"
               >
                 {question}
               </div>

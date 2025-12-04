@@ -24,7 +24,7 @@ export function useScrollonStream({
   }
 
   const disableScroll = useCallback((e: any) => {
-    const items = document.querySelectorAll('.tools-summary-header');
+    const items = document.querySelectorAll('.tools-collapsed-header');
     const expandToolsEl = items[items.length - 1];
     if (expandToolsEl && e?.target && expandToolsEl.contains(e.target)) {
       return;

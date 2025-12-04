@@ -1,5 +1,6 @@
 import type { ChatMessageProps } from '../types/interfaces';
 import { useState, useMemo, useEffect } from 'react';
+import cx from 'classnames';
 import visit from 'unist-util-visit';
 import loadable from '@loadable/component';
 import {
@@ -222,6 +223,12 @@ export function AIMessage({
     return groupedPackets.filter((group) => displayPackets.includes(group.ind));
   }, [groupedPackets, displayPackets]);
 
+  const onAllToolsDisplayed = useMemo(() => {
+    return () => {
+      setAllToolsDisplayed(true);
+    };
+  }, []);
+
   // Build sources from citations
   const inverseMap = useMemo(
     () =>
@@ -361,9 +368,7 @@ export function AIMessage({
           <MultiToolRenderer
             toolGroups={toolGroups}
             showTools={showTools}
-            onAllToolsDisplayed={() => {
-              setAllToolsDisplayed(true);
-            }}
+            onAllToolsDisplayed={onAllToolsDisplayed}
             message={message}
             libs={libs}
           />
@@ -380,7 +385,9 @@ export function AIMessage({
         )}
 
         {/* Display normal content if no error or if we have content to display alongside the error */}
-        {(allToolsDisplayed || toolGroups.length === 0) &&
+        {(allToolsDisplayed ||
+          toolGroups.length === 0 ||
+          message.isFinalMessageComing) &&
           !error &&
           displayGroups.map((group) => (
             <div key={group.ind} className="message-display-group">
@@ -401,6 +408,15 @@ export function AIMessage({
               </RendererComponent>
             </div>
           ))}
+
+        {isLoading &&
+          isLastMessage &&
+          !isFetchingRelatedQuestions &&
+          !message.isFinalMessageComing && (
+            <div className="loader-container">
+              <div className="loader" />
+            </div>
+          )}
       </div>
 
       {/* Total fail message */}
@@ -463,32 +479,39 @@ export function AIMessage({
     </div>
   );
 
-  // Tab panes
+  // Tab panes - conditionally include Sources tab
   const panes = [
-    { menuItem: 'Answer', render: () => <Tab.Pane>{answerTab}</Tab.Pane> },
-    {
-      menuItem: {
-        key: 'sources',
-        content: (
-          <span>
-            Sources <span className="sources-count">({sources.length})</span>
-          </span>
-        ),
-      },
-      render: () => (
-        <Tab.Pane>
-          <div className="sources-listing">
-            {showSources && (
-              <div className="sources">
-                {sources.map((source: any, i: number) => (
-                  <SourceDetails source={source} key={i} index={source.index} />
-                ))}
-              </div>
-            )}
-          </div>
-        </Tab.Pane>
-      ),
-    },
+    { menuItem: 'Answer', pane: <Tab.Pane>{answerTab}</Tab.Pane> },
+    ...(showSources && !error
+      ? [
+          {
+            menuItem: {
+              key: 'sources',
+              content: (
+                <span>
+                  Sources{' '}
+                  <span className="sources-count">({sources.length})</span>
+                </span>
+              ),
+            },
+            pane: (
+              <Tab.Pane>
+                <div className="sources-listing">
+                  <div className="sources">
+                    {sources.map((source: any, i: number) => (
+                      <SourceDetails
+                        source={source}
+                        key={i}
+                        index={source.index}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </Tab.Pane>
+            ),
+          },
+        ]
+      : []),
   ];
 
   return (
@@ -498,50 +521,50 @@ export function AIMessage({
       </div>
 
       <div className="comment-content">
-        {/* Main content with tabs or plain */}
+        {/* Main content with tabs */}
         <div className="comment-tabs">
-          {showSources && !error ? (
-            <>
-              <Tab
-                activeIndex={activeTab}
-                onTabChange={(_, data: any) => setActiveTab(data.activeIndex)}
-                menu={{ secondary: true, pointing: true, fluid: true }}
-                panes={panes}
-              />
+          <Tab
+            activeIndex={activeTab}
+            onTabChange={(_, data: any) => setActiveTab(data.activeIndex)}
+            menu={{
+              secondary: true,
+              pointing: true,
+              fluid: true,
+              className: cx({ 'without-sources': !showSources }),
+            }}
+            panes={panes}
+            renderActiveOnly={false}
+          />
 
-              {/* Sources sidebar */}
-              <Sidebar
-                visible={showSourcesSidebar}
-                animation="overlay"
-                icon="labeled"
-                width="wide"
-                direction="right"
-                className="sources-sidebar"
-                onHide={() => setShowSourcesSidebar(false)}
-              >
-                <div className="sources-sidebar-heading">
-                  <h4>Sources</h4>
-                  <Button basic onClick={() => setShowSourcesSidebar(false)}>
-                    <SVGIcon name={ClearIcon} size={24} />
-                  </Button>
+          {/* Sources sidebar */}
+          {showSources && !error && (
+            <Sidebar
+              visible={showSourcesSidebar}
+              animation="overlay"
+              icon="labeled"
+              width="wide"
+              direction="right"
+              className="sources-sidebar"
+              onHide={() => setShowSourcesSidebar(false)}
+            >
+              <div className="sources-sidebar-heading">
+                <h4>Sources</h4>
+                <Button basic onClick={() => setShowSourcesSidebar(false)}>
+                  <SVGIcon name={ClearIcon} size={24} />
+                </Button>
+              </div>
+              <div className="sources-listing">
+                <div className="sources">
+                  {sources.map((source: any, i: number) => (
+                    <SourceDetails
+                      source={source}
+                      key={i}
+                      index={source.index}
+                    />
+                  ))}
                 </div>
-                <div className="sources-listing">
-                  {showSources && (
-                    <div className="sources">
-                      {sources.map((source: any, i: number) => (
-                        <SourceDetails
-                          source={source}
-                          key={i}
-                          index={source.index}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </Sidebar>
-            </>
-          ) : (
-            answerTab
+              </div>
+            </Sidebar>
           )}
         </div>
       </div>

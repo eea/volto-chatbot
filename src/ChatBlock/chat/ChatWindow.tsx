@@ -201,9 +201,6 @@ function ChatWindow({
             </div>
           </>
         )}
-        {isStreaming && !isFetchingRelatedQuestions && (
-          <div className="loader" />
-        )}
       </div>
 
       <div className="chat-form">

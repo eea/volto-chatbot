@@ -50,7 +50,7 @@ export function MultiToolRenderer({
   useEffect(() => {
     if (allToolsDisplayed && onAllToolsDisplayed) {
       onAllToolsDisplayed();
-      setIsExpanded(true);
+      setIsExpanded(false);
     }
   }, [allToolsDisplayed, onAllToolsDisplayed]);
 
@@ -136,7 +136,7 @@ export function MultiToolRenderer({
                         }
                       }}
                       stopPacketSeen={isComplete}
-                      animate
+                      animate={false}
                     >
                       {({ icon, content, status, expandedText }) => {
                         const finalIcon = icon ? (

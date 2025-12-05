@@ -1,4 +1,5 @@
 import React from 'react';
+import { compose } from 'redux';
 import superagent from 'superagent';
 import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
 
@@ -36,7 +37,10 @@ const ChatBlockEdit = (props) => {
   );
 };
 
-export default withDanswerData(() => [
-  'assistants',
-  superagent.get('/_da/persona?include_deleted=false').type('json'),
-])(ChatBlockEdit);
+export default compose(
+  withDanswerData(() => [
+    'assistants',
+    superagent.get('/_da/persona?include_deleted=false').type('json'),
+  ]),
+  // withDanswerData(() => ['tool', superagent.get('/_da/tool').type('json')]), // May be needed in the future
+)(ChatBlockEdit);

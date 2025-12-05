@@ -116,14 +116,6 @@ function ChatWindow({
   const chatWindowEndRef = useRef(null);
 
   useEffect(() => {
-    if (!textareaRef.current || isEditMode) return;
-
-    if (isStreaming || scrollToInput) {
-      textareaRef.current.focus();
-    }
-  }, [isStreaming, scrollToInput, isEditMode]);
-
-  useEffect(() => {
     setShowLandingPage(messages.length === 0);
   }, [messages]);
 
@@ -186,6 +178,7 @@ function ChatWindow({
                   onChoice={(message) => onSubmit({ message })}
                   onFetchRelatedQuestions={onFetchRelatedQuestions}
                   enableFeedback={enableFeedback}
+                  scrollToInput={scrollToInput}
                   feedbackReasons={feedbackReasons}
                   qualityCheck={qualityCheck}
                   qualityCheckStages={qualityCheckStages}
@@ -207,9 +200,6 @@ function ChatWindow({
               ))}
             </div>
           </>
-        )}
-        {isStreaming && !isFetchingRelatedQuestions && (
-          <div className="loader" />
         )}
       </div>
 

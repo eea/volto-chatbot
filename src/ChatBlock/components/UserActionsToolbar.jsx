@@ -1,3 +1,4 @@
+import cx from 'classnames';
 import { Button } from 'semantic-ui-react';
 import { useCopyToClipboard } from '../utils';
 import SVGIcon from './Icon';
@@ -7,16 +8,17 @@ import CopyIcon from '../../icons/copy.svg';
 import CheckIcon from '../../icons/check.svg';
 
 const UserActionsToolbar = ({
+  className,
   message,
   enableFeedback,
   feedbackReasons,
   enableMatomoTracking,
   persona,
 }) => {
-  const [copied, handleCopy] = useCopyToClipboard(message.message);
+  const [copied, handleCopy] = useCopyToClipboard(message?.message || '');
 
   return (
-    <div className="message-actions">
+    <div className={cx('message-actions', className)}>
       <Button
         basic
         onClick={() => handleCopy()}

@@ -167,6 +167,7 @@ export async function* handleStream(
  */
 export async function* sendMessage({
   regenerate,
+  retrieval_options,
   message,
   fileDescriptors,
   currentMessageFiles,
@@ -201,13 +202,15 @@ export async function* sendMessage({
     file_descriptors: fileDescriptors,
     current_message_files: currentMessageFiles,
     regenerate,
-    retrieval_options: !documentsAreSelected
-      ? {
-          run_search: queryOverride || forceSearch ? 'always' : 'auto',
-          real_time: true,
-          filters: filters,
-        }
-      : null,
+    retrieval_options:
+      retrieval_options ??
+      (!documentsAreSelected
+        ? {
+            run_search: queryOverride || forceSearch ? 'always' : 'auto',
+            real_time: true,
+            filters: filters,
+          }
+        : null),
     query_override: queryOverride,
     prompt_override: systemPromptOverride
       ? {

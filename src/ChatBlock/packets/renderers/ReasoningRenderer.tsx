@@ -101,7 +101,7 @@ export const ReasoningRenderer: MessageRenderer<ReasoningPacket> = ({
   const renderedContent = (
     <div className="reasoning-content">
       <Markdown
-        remarkPlugins={[remarkGfm.default]}
+        remarkPlugins={remarkGfm ? [remarkGfm.default] : []}
         components={components(message)}
       >
         {addCitations(content, message)}

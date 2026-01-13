@@ -43,4 +43,16 @@ const applyConfig = (config) => {
   return config;
 };
 
+export {
+  createChatSession,
+  sendMessage,
+} from './ChatBlock/services/streamingService';
+export { MessageProcessor } from './ChatBlock/services/messageProcessor';
+export { default as withDanswerData } from './ChatBlock/hocs/withDanswerData';
+export * from './ChatBlock/packets';
+
+export { default as UserActionsToolbar } from './ChatBlock/components/UserActionsToolbar';
+export { default as FeedbackModal } from './ChatBlock/components/FeedbackModal';
+export { default as ChatMessageFeedback } from './ChatBlock/components/ChatMessageFeedback';
+
 export default applyConfig;

@@ -14,10 +14,10 @@ const PACKET_DELAY_MS = 10;
 // Number of packets to show per animation tick when catching up
 const PACKETS_PER_TICK = 5;
 // Adaptive animation constants for fast streams
-const MIN_REVEAL_DURATION_MS = 400;  // Minimum typing animation duration
-const PACKET_VALUE_MS = 1.5;          // Additional time per packet (scales with length)
+const MIN_REVEAL_DURATION_MS = 400; // Minimum typing animation duration
+const PACKET_VALUE_MS = 1.5; // Additional time per packet (scales with length)
 const MAX_REVEAL_DURATION_MS = 2000; // Cap to prevent slow reveals
-const CATCH_UP_THRESHOLD = 20;       // Threshold for catch-up mode
+const CATCH_UP_THRESHOLD = 20; // Threshold for catch-up mode
 
 export const MessageTextRenderer: MessageRenderer<ChatPacket> = ({
   packets,
@@ -80,7 +80,8 @@ export const MessageTextRenderer: MessageRenderer<ChatPacket> = ({
         setDisplayedPacketCount((prev) => {
           const remaining = packets.length - prev;
           // If we're far behind, catch up faster
-          const increment = remaining > CATCH_UP_THRESHOLD ? PACKETS_PER_TICK : 1;
+          const increment =
+            remaining > CATCH_UP_THRESHOLD ? PACKETS_PER_TICK : 1;
           return Math.min(prev + increment, packets.length);
         });
       }, PACKET_DELAY_MS);
@@ -150,8 +151,8 @@ export const MessageTextRenderer: MessageRenderer<ChatPacket> = ({
     <div className="message-text-content">
       <Markdown
         components={components(message, markers, stableContextSources)}
-        remarkPlugins={[remarkGfm.default]}
-        rehypePlugins={[addQualityMarkersPlugin]}
+        remarkPlugins={remarkGfm ? [remarkGfm.default] : []}
+        rehypePlugins={addQualityMarkersPlugin ? [addQualityMarkersPlugin] : []}
       >
         {displayContent}
       </Markdown>

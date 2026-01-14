@@ -23,6 +23,7 @@ export interface SendMessageParams {
   enabledToolIds?: number[];
   forcedToolIds?: number[];
   fullDoc?: boolean;
+  retrieval_options?: any;
 }
 
 export interface StreamResponse {

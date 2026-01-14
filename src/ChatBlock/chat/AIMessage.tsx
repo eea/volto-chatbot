@@ -269,9 +269,11 @@ export function AIMessage({
     qualityCheck !== 'disabled' &&
     forceHalloumi &&
     showSources &&
-    (qualityCheckEnabled || verificationTriggered) &&
     message.messageId &&
-    message.messageId > -1;
+    message.messageId > -1 &&
+    (qualityCheck === 'enabled' ||
+      qualityCheckEnabled ||
+      verificationTriggered);
 
   const { markers, isLoadingHalloumi, retryHalloumi }: any = useQualityMarkers(
     doQualityControl,
@@ -322,7 +324,7 @@ export function AIMessage({
   useEffect(() => {
     if (qualityCheck === 'ondemand_toggle' && qualityCheckEnabled) {
       setForceHallomi(true);
-    } else {
+    } else if (qualityCheck !== 'enabled') {
       setForceHallomi(false);
     }
   }, [qualityCheck, qualityCheckEnabled]);

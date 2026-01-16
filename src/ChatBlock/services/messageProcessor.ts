@@ -279,7 +279,7 @@ export class MessageProcessor {
         },
         tool_result: toolDocuments.map((doc) => ({
           ...doc,
-          content: doc.content || doc.blurb, // Use full content if available, fallback to blurb
+          content: doc.content || doc.blurb,
         })),
       };
     }

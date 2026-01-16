@@ -10,7 +10,6 @@ interface UseChatControllerProps {
   enableQgen?: boolean;
   qgenAsistantId?: number;
   deepResearch?: string;
-  factCheckAllowed?: boolean;
 }
 
 interface RelatedQuestion {
@@ -86,7 +85,6 @@ export function useChatController({
   enableQgen = false,
   qgenAsistantId,
   deepResearch,
-  factCheckAllowed,
 }: UseChatControllerProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [chatSessionId, setChatSessionId] = useState<string | null>(null);
@@ -237,7 +235,6 @@ export function useChatController({
             regenerate: false,
             filters: null,
             selectedDocumentIds: [],
-            fullDoc: factCheckAllowed,
           },
           assistantNodeId,
           userNodeId,
@@ -253,7 +250,6 @@ export function useChatController({
       isDeepResearchEnabled,
       startStreaming,
       messages,
-      factCheckAllowed,
     ],
   );
 

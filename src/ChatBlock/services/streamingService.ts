@@ -22,7 +22,6 @@ export interface SendMessageParams {
   useAgentSearch?: boolean;
   enabledToolIds?: number[];
   forcedToolIds?: number[];
-  fullDoc?: boolean;
   retrieval_options?: any;
 }
 
@@ -188,7 +187,6 @@ export async function* sendMessage({
   useAgentSearch,
   enabledToolIds,
   forcedToolIds,
-  fullDoc,
 }: SendMessageParams): AsyncGenerator<Packet[], void, unknown> {
   const documentsAreSelected =
     selectedDocumentIds && selectedDocumentIds.length > 0;
@@ -230,7 +228,6 @@ export async function* sendMessage({
     use_agentic_search: useAgentSearch ?? false,
     allowed_tool_ids: enabledToolIds,
     forced_tool_ids: forcedToolIds,
-    full_doc: fullDoc,
   };
 
   const body = JSON.stringify(payload);

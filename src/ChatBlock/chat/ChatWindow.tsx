@@ -107,7 +107,6 @@ function ChatWindow({
     qgenAsistantId,
     enableQgen,
     deepResearch,
-    factCheckAllowed: qualityCheck !== 'disabled',
   });
 
   const [showLandingPage, setShowLandingPage] = useState(true);

@@ -337,8 +337,45 @@ mark {
     margin-bottom: 0;
   }
 
+  .citation-text {
+    overflow: auto;
+    max-height: 350px;
+  }
+
   .empty-state {
     margin-top: 2em;
+  }
+
+  .citations-header {
+    margin-bottom: 0.5em;
+    font-size: 15px;
+    font-weight: bold;
+  }
+
+  .citation-buttons {
+    padding: 0.5em 0.8em;
+    border-radius: @borderRadius;
+    margin-bottom: 1em;
+    background-color: @lightGrey;
+
+    .citation-buttons-container {
+      .flex-center(row, 0.3em);
+      flex-flow: wrap;
+
+      .ui.button {
+        padding: 0;
+        background-color: transparent;
+        color: #3b82f6;
+        font-size: 14px;
+        font-weight: normal;
+        text-decoration-line: underline;
+      }
+
+      .ui.button.toggle-text {
+        font-weight: bold;
+        text-decoration: none;
+      }
+    }
   }
 
   .comment {

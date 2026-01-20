@@ -7,6 +7,15 @@ export function getSupportedTextColor(score) {
   return 'text-gray-500';
 }
 
+export function getScoreLevel(score) {
+  if (score >= 0.7) {
+    return 'score-high';
+  } else if (score >= 0.4) {
+    return 'score-medium';
+  }
+  return 'score-low';
+}
+
 export function getSupportedBgColor(score) {
   if (0 <= score && score < 0.125) {
     return 'bg-red-500';

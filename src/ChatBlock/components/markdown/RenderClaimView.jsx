@@ -48,25 +48,28 @@ export const RenderClaimView = (props) => {
   }
 
   return (
-    <div className="citation-text" ref={segmentContainerRef}>
-      <p>
+    <div className="citation-text-container" ref={segmentContainerRef}>
+      <div className="citation-text-content">
         {parts.map((part, index) => {
           const endline = part.content.endsWith('\n');
           const content = part.content.split('\n');
 
           if (part.type === 'segment') {
             const isSelectedSegment = part.id === visibleSegmentId;
-            const Tag = isSelectedSegment ? 'mark' : 'span';
             return (
               <React.Fragment key={part.id || index}>
                 <span
                   ref={(el) => {
                     if (el) spanRefs.current[part.id] = el;
                   }}
+                  className={`citation-segment ${
+                    isSelectedSegment ? 'active' : ''
+                  }`}
                 >
-                  <Tag>
-                    {part.content.trim()} <sup>{part.id}</sup>
-                  </Tag>
+                  <mark className="citation-highlight">
+                    {part.content.trim()}
+                    <sup className="citation-ref">{part.id}</sup>
+                  </mark>
                   {!endline && <>&nbsp;</>}
                 </span>
                 {endline && <span className="br" />}
@@ -78,16 +81,16 @@ export const RenderClaimView = (props) => {
             <React.Fragment key={index}>
               {content
                 .filter((line) => !line.startsWith('DOCUMENT '))
-                .map((line, index) => (
-                  <React.Fragment key={index}>
-                    <span>{line}</span>
-                    {index < content.length - 1 && <span className="br" />}
+                .map((line, lineIndex) => (
+                  <React.Fragment key={lineIndex}>
+                    <span className="citation-line">{line}</span>
+                    {lineIndex < content.length - 1 && <span className="br" />}
                   </React.Fragment>
                 ))}
             </React.Fragment>
           );
         })}
-      </p>
+      </div>
     </div>
   );
 };

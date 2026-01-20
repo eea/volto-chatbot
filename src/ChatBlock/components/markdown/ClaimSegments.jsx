@@ -1,8 +1,10 @@
 import React from 'react';
-import { Tab, TabPane, Button } from 'semantic-ui-react';
+import { Tab, TabPane } from 'semantic-ui-react';
 import SVGIcon from '../Icon';
 import { RenderClaimView } from './RenderClaimView';
 import LinkIcon from '../../../icons/external-link.svg';
+import FileIcon from '../../../icons/file.svg';
+import GlobeIcon from '../../../icons/globe.svg';
 
 const VISIBLE_SEGMENTS = 50; // Number of citations to show by default
 
@@ -62,6 +64,9 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
       ? snippetButtons
       : snippetButtons.slice(0, VISIBLE_SEGMENTS);
 
+    const sourceType = source.source_type;
+    const SourceIcon = source.source_type === 'web' ? GlobeIcon : FileIcon;
+
     return {
       menuItem: {
         key: i,
@@ -77,31 +82,38 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
       },
       render: () => (
         <TabPane>
-          <div className="claim-source-header">
-            {source?.link ? (
+          <div className="source-card-header">
+            <div className="source-card-info">
+              <SVGIcon name={SourceIcon} size="20" className="source-icon" />
+              <div className="source-card-details">
+                <h5 className="source-card-title">
+                  {source?.semantic_identifier}
+                </h5>
+                <span className="source-type-badge">{sourceType}</span>
+              </div>
+            </div>
+            {source?.link && (
               <a
                 href={source.link}
                 rel="noreferrer"
                 target="_blank"
-                className="claim-source-link"
+                className="source-external-link"
+                title="Open source"
               >
-                <h5 className="claim-source-title">
-                  {source.semantic_identifier}
-                  <SVGIcon name={LinkIcon} size="16" />
-                </h5>
+                <SVGIcon name={LinkIcon} size="16" />
               </a>
-            ) : (
-              <h5 className="claim-source-title">
-                {source?.semantic_identifier}
-              </h5>
             )}
           </div>
-          <div className="citation-buttons">
-            <h5 className="citations-header">Citations:</h5>
-            <div className="citation-buttons-container">
+
+          <div className="citation-chips-section">
+            <h5 className="citation-chips-header">Jump to Citation</h5>
+            <div className="citation-chips-container">
               {segmentButtons.map(({ id }) => (
-                <Button
+                <button
                   key={id}
+                  className={`citation-chip ${
+                    visibleSegmentId === id ? 'active' : ''
+                  }`}
                   onClick={() => {
                     const container = segmentContainerRef.current;
                     const target = spanRefs.current[id];
@@ -119,19 +131,19 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
                     setVisibleSegment(id);
                   }}
                 >
-                  Line {id}
-                </Button>
+                  #{id}
+                </button>
               ))}
 
               {snippetButtons.length > VISIBLE_SEGMENTS && (
-                <Button
-                  className="toggle-text"
-                  role="button"
-                  tabIndex={0}
+                <button
+                  className="citation-chip more-chip"
                   onClick={() => setShowAllButtons(!showAllButtons)}
                 >
-                  {showAllButtons ? 'Less' : '... More'}
-                </Button>
+                  {showAllButtons
+                    ? 'Less'
+                    : `+${snippetButtons.length - VISIBLE_SEGMENTS} More`}
+                </button>
               )}
             </div>
           </div>

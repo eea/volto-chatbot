@@ -1,71 +1,60 @@
 @gray-500: #6b7280;
+@gray-400: #9ca3af;
+@gray-300: #d1d5db;
+@gray-200: #e5e7eb;
+@gray-100: #f3f4f6;
+@gray-50: #f9fafb;
 
 @red-500: #ef4444;
 @red-400: #f87171;
 @red-300: #fca5a5;
 @red-200: #fecaca;
+@red-100: #fee2e2; //
 
 @green-200: #bbf7d0;
 @green-300: #86efac;
 @green-400: #4ade80;
 @green-500: #22c55e;
+@green-100: #dcfce7; //
+@green-700: #166534; //
 
-.claim {
-  position: relative;
-  display: inline;
-  cursor: pointer;
-  text-decoration: underline;
-  text-decoration-style: wavy;
+@yellow-500: #eab308; //
+@yellow-400: #facc15; //
+@yellow-300: #fde047; //
+@yellow-200: #fef08a; //
+@yellow-100: #fef9c3; //
+
+@amber-500: #f59e0b; //
+@amber-100: #fef3c7; //
+@amber-700: #92400e; //
+
+@lime-500: #84cc16; //
+
+.generate-colors(@namespace, @name, @color, @lighter-value: 20, @darker-value: 20) {
+  @var-name: ~'--@{namespace}-color';
+  @values: 10, 20, 30, 40, 50;
+
+  .@{namespace}-@{name} {
+    // Fallback (Less compile-time)
+    --@{namespace}-color: @color;
+    --@{namespace}-lighter-color: lighten(@color, @lighter-value);
+    --@{namespace}-darker-color: darken(@color, @darker-value);
+
+    // Modern browsers (CSS runtime)
+    /* prettier-ignore */
+    @supports (color: hsl(from white h s l)) {
+      --@{namespace}-lighter-color: hsl(from var(@var-name) h s calc(l + @lighter-value));
+      --@{namespace}-darker-color: hsl(from var(@var-name) h s calc(l - @darker-value));
+  }
+  }
 }
 
-.text-red-500 {
-  color: @red-500;
-}
-
-.text-green-500 {
-  color: @green-500;
-}
-
-.text-gray-500 {
-  color: @gray-500;
-}
-
-.bg-red-500 {
-  text-decoration-color: @red-500;
-}
-
-.bg-red-400 {
-  text-decoration-color: @red-400;
-}
-
-.bg-red-300 {
-  text-decoration-color: @red-300;
-}
-
-.bg-red-200 {
-  text-decoration-color: @red-200;
-}
-
-.bg-green-200 {
-  text-decoration-color: @green-200;
-}
-
-.bg-green-300 {
-  text-decoration-color: @green-300;
-}
-
-.bg-green-400 {
-  text-decoration-color: @green-400;
-}
-
-.bg-green-500 {
-  text-decoration-color: @green-500;
-}
-
-.bg-gray-500 {
-  text-decoration-color: @gray-500;
-}
-
-.bg-yellow-200 {
-  background-color: yellow;
-}
+.generate-colors(claim, gray-500, @gray-500, 45, 20);
+.generate-colors(claim, red-500, @red-500, 35, 20);
+.generate-colors(claim, red-400, @red-400, 25, 25);
+.generate-colors(claim, red-300, @red-300, 15, 25);
+.generate-colors(claim, red-200, @red-200, 8, 30);
+.generate-colors(claim, green-500, @green-500, 45, 20);
+.generate-colors(claim, green-400, @green-400, 35, 25);
+.generate-colors(claim, green-300, @green-300, 20, 35);
+.generate-colors(claim, green-200, @green-200, 10, 45);

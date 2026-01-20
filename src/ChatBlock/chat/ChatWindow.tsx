@@ -238,9 +238,10 @@ function ChatWindow({
                 toggle
                 checked={isDeepResearchEnabled}
                 label="Deep research"
-                onChange={(_, { checked }) =>
-                  setIsDeepResearchEnabled(checked ?? false)
-                }
+                onChange={(_, { checked }) => {
+                  setIsDeepResearchEnabled(checked ?? false);
+                  textareaRef.current?.focus();
+                }}
               />
             </div>
           )}

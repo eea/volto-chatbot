@@ -8,7 +8,7 @@ const VISIBLE_SEGMENTS = 50; // Number of citations to show by default
 
 export function ClaimSegments({ segmentIds, segments, citedSources }) {
   const joinedSources = citedSources.reduce((acc, source) => {
-    source.startIndex = acc.length;
+    source.startIndex = acc.length ? acc.length + 1 : 0;
     const sep = acc ? '\n' : '';
     return acc + sep + source.halloumiContext; // + '\n---\n';
   }, '');
@@ -142,7 +142,7 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
             segmentContainerRef={segmentContainerRef}
             spanRefs={spanRefs}
             sourceStartIndex={source.startIndex}
-            segments={Object.values(segments)}
+            segments={source.snippets}
           />
         </TabPane>
       ),

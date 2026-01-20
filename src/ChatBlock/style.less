@@ -656,16 +656,16 @@ mark {
     color: @grey;
     font-size: 0.875rem;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   .claim-quote {
     position: relative;
     padding: 1em 1.25em;
     border: none;
-    border-left: 4px solid @green-500;
     border-radius: 0 @borderRadius @borderRadius 0;
+    border-left: 4px solid @green-500;
     margin: 0;
     background-color: @gray-50;
     color: @grey;
@@ -750,8 +750,8 @@ mark {
   .score-label {
     font-size: 0.75rem;
     font-weight: 500;
-    text-transform: uppercase;
     letter-spacing: 0.025em;
+    text-transform: uppercase;
   }
 
   .score-progress-bar {
@@ -789,8 +789,8 @@ mark {
     color: @grey;
     font-size: 0.875rem;
     font-weight: 600;
-    text-transform: uppercase;
     letter-spacing: 0.05em;
+    text-transform: uppercase;
   }
 
   .claim-rationale {
@@ -845,13 +845,13 @@ mark {
   }
 
   .source-type-badge {
+    width: fit-content;
     padding: 0.125em 0.5em;
     border-radius: 9999px;
     background-color: @gray-200;
     color: @gray-500;
     font-size: 0.75rem;
     font-weight: 500;
-    width: fit-content;
   }
 
   .source-external-link {
@@ -863,7 +863,9 @@ mark {
     border-radius: @borderRadius;
     margin-left: 0.5em;
     color: @grey;
-    transition: background-color 0.2s, color 0.2s;
+    transition:
+      background-color 0.2s,
+      color 0.2s;
 
     &:hover {
       background-color: @gray-200;
@@ -935,8 +937,8 @@ mark {
     border-radius: @borderRadius;
     background-color: #fff;
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
-    scrollbar-width: thin;
     scrollbar-color: @gray-300 transparent;
+    scrollbar-width: thin;
 
     &::-webkit-scrollbar {
       width: 8px;
@@ -947,8 +949,8 @@ mark {
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: @gray-300;
       border-radius: 4px;
+      background-color: @gray-300;
 
       &:hover {
         background-color: @gray-400;
@@ -979,7 +981,9 @@ mark {
     border-radius: 2px;
     background-color: @yellow-100;
     color: @grey;
-    transition: background-color 0.2s, box-shadow 0.2s;
+    transition:
+      background-color 0.2s,
+      box-shadow 0.2s;
   }
 
   .citation-ref {
@@ -997,11 +1001,11 @@ mark {
   // Source tabs - simplified display
   .ui.secondary.pointing.menu {
     display: flex;
-    overflow-x: auto;
     flex-wrap: nowrap;
     padding-bottom: 0.125rem;
     border-width: 2px;
     gap: 0;
+    overflow-x: auto;
 
     &::-webkit-scrollbar {
       height: 4px;
@@ -1023,8 +1027,8 @@ mark {
 
       span {
         display: block;
-        max-width: 180px;
         overflow: hidden;
+        max-width: 180px;
         font-size: 14px;
         font-weight: 600;
         text-align: left;

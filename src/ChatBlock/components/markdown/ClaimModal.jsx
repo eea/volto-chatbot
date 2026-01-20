@@ -27,7 +27,7 @@ function stripMarkdown(md) {
 }
 
 const trimNonAlphanumeric = (str) =>
-  stripMarkdown(str).replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
+  stripMarkdown(str).replace(/(?:^[^a-zA-Z0-9]+)|(?:[^a-zA-Z0-9]+$)/g, '');
 
 export function ClaimModal({ claim, markers, text, citedSources }) {
   const highlightText = trimNonAlphanumeric(text?.[0] || '');

@@ -90,7 +90,8 @@ function getSupportStatusFromSubsegment(subsegment) {
 function getClaimFromSegment(segment) {
   const claim_segments = segment.split('><');
   const claimId = getClaimIdFromSubsegment(claim_segments[0]);
-  const claimString = claim_segments[1];
+  // Strip trailing '>' which can occur in malformed segments without subclaims
+  const claimString = claim_segments[1]?.replace(/>$/, '') || '';
 
   const subclaims = [];
   let claimProgressIndex = 3; // Start at 3 to skip the claim id, claim string and the subclaims tag

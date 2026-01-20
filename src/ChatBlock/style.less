@@ -631,8 +631,8 @@ mark {
   display: inline;
   cursor: pointer;
   text-decoration: underline;
-  text-decoration-style: wavy;
   text-decoration-color: var(--claim-color);
+  text-decoration-style: wavy;
 
   &:hover {
     background-color: var(--claim-lighter-color);
@@ -641,10 +641,10 @@ mark {
 
 .ui.message.claim-message {
   background-color: var(--claim-lighter-color) !important;
-  color: var(--claim-darker-color) !important;
   box-shadow:
     0px 0px 0px 1px var(--claim-darker-color) inset,
     0px 0px 0px 0px rgba(0, 0, 0, 0) !important;
+  color: var(--claim-darker-color) !important;
 }
 
 .ui.modal.claim-modal {
@@ -728,9 +728,9 @@ mark {
     justify-content: center;
     padding: 0.75em 1em;
     border-radius: @borderRadius;
-    text-align: center;
-    color: var(--claim-darker-color);
     background-color: var(--claim-lighter-color);
+    color: var(--claim-darker-color);
+    text-align: center;
   }
 
   .score-percentage {
@@ -757,8 +757,8 @@ mark {
   .score-progress-fill {
     height: 100%;
     border-radius: 3px;
-    transition: width 0.3s ease;
     background-color: var(--claim-color);
+    transition: width 0.3s ease;
   }
 
   .rationale-section {

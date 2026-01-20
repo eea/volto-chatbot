@@ -18,8 +18,6 @@ function visitTextNodes(node, visitor) {
     node.forEach((child) => visitTextNodes(child, visitor));
   } else if (node && typeof node === 'object') {
     if (node.text !== undefined) {
-      // Process the text node value here
-      // console.log(node.text);
       visitor(node);
     }
     if (node.children) {

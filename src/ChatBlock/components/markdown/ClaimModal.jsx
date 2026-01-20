@@ -7,6 +7,19 @@ import { ClaimSegments } from './ClaimSegments';
 import BotIcon from '../../../icons/bot.svg';
 import './colors.less';
 
+function stripMarkdown(md) {
+  return (
+    md
+      .replace(/[`*_~>#-]/g, '') // formatting chars
+      .replace(/\n{2,}/g, '\n') // extra newlines
+      // [[1]](url) → <sup>1</sup>
+      .replace(/\[\[(\d+)\]\]\([^)]*\)/g, '<sup>$1</sup>')
+      // optional: strip normal markdown links [text](url) → text
+      .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+      .trim()
+  );
+}
+
 export function ClaimModal({ claim, markers, text, citedSources }) {
   const scoreLevel = getScoreLevel(claim.score);
 
@@ -30,7 +43,13 @@ export function ClaimModal({ claim, markers, text, citedSources }) {
           <blockquote
             className={`claim-quote ${getSupportedBgColor(claim.score)}`}
           >
-            &ldquo;{text}&rdquo;
+            &ldquo;
+            <span
+              dangerouslySetInnerHTML={{
+                __html: stripMarkdown(claim.claimString),
+              }}
+            />
+            &rdquo;
           </blockquote>
         </div>
       </ModalHeader>

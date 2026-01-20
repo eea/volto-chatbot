@@ -38,12 +38,7 @@ export function components(message, markers, citedSources) {
       let claim;
 
       // identifies if the current text belongs to a claim
-      if (
-        child.type === 'text' &&
-        child.position &&
-        child.value?.length > 10 && // we don't show for short text
-        markers
-      ) {
+      if (child.type === 'text' && child.position && markers) {
         const start = child.position.start.offset;
         const end = child.position.end.offset;
         claim = markers.claims?.find(

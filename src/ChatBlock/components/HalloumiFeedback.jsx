@@ -1,8 +1,10 @@
 import React from 'react';
+import cx from 'classnames';
 import { Button, Message, MessageContent } from 'semantic-ui-react';
 import { serializeNodes } from '@plone/volto-slate/editor/render';
 import Spinner from './Spinner';
 import SVGIcon from './Icon';
+import { getSupportedBgColor } from './markdown/colors';
 
 import GlassesIcon from '../../icons/glasses.svg';
 import RotateIcon from '../../icons/rotate.svg';
@@ -104,7 +106,14 @@ const HalloumiFeedback = ({
       )}
 
       {!!halloumiMessage && !!markers && !noClaimsScore && (
-        <Message color={scoreColor} icon>
+        <Message
+          color={scoreColor}
+          className={cx(
+            'claim-message',
+            getSupportedBgColor(score / 100, 'claim'),
+          )}
+          icon
+        >
           <MessageContent>
             {printSlate(halloumiMessage, `${score}%`)}
           </MessageContent>

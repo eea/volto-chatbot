@@ -80,7 +80,7 @@ export const RenderClaimView = (props) => {
           return (
             <React.Fragment key={index}>
               {content
-                .filter((line) => !line.startsWith('DOCUMENT '))
+                .filter((line) => !/^(DOCUMENT |Source)/.test(line))
                 .map((line, lineIndex) => (
                   <React.Fragment key={lineIndex}>
                     <span className="citation-line">{line}</span>

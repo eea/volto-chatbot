@@ -626,6 +626,27 @@ mark {
   font-size: 14px;
 }
 
+.claim {
+  position: relative;
+  display: inline;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: wavy;
+  text-decoration-color: var(--claim-color);
+
+  &:hover {
+    background-color: var(--claim-lighter-color);
+  }
+}
+
+.ui.message.claim-message {
+  background-color: var(--claim-lighter-color) !important;
+  color: var(--claim-darker-color) !important;
+  box-shadow:
+    0px 0px 0px 1px var(--claim-darker-color) inset,
+    0px 0px 0px 0px rgba(0, 0, 0, 0) !important;
+}
+
 .ui.modal.claim-modal {
   .chat-window {
     margin-top: 1em;
@@ -665,7 +686,7 @@ mark {
     padding: 1em 1.25em;
     border: none;
     border-radius: 0 @borderRadius @borderRadius 0;
-    border-left: 4px solid @green-500;
+    border-left: 4px solid var(--claim-color);
     margin: 0;
     background-color: @gray-50;
     color: @grey;
@@ -673,23 +694,6 @@ mark {
     font-style: italic;
     font-weight: 500;
     line-height: 1.5;
-
-    &.bg-red-500,
-    &.bg-red-400,
-    &.bg-red-300,
-    &.bg-red-200 {
-      border-left-color: @red-500;
-    }
-
-    &.bg-green-200,
-    &.bg-green-300 {
-      border-left-color: @lime-500;
-    }
-
-    &.bg-green-400,
-    &.bg-green-500 {
-      border-left-color: @green-500;
-    }
   }
 
   // Verification card styles
@@ -716,6 +720,7 @@ mark {
   }
 
   .score-badge {
+    position: relative;
     display: flex;
     min-width: 100px;
     flex-direction: column;
@@ -724,21 +729,8 @@ mark {
     padding: 0.75em 1em;
     border-radius: @borderRadius;
     text-align: center;
-
-    &.score-high {
-      background-color: @green-100;
-      color: @green-700;
-    }
-
-    &.score-medium {
-      background-color: @amber-100;
-      color: @amber-700;
-    }
-
-    &.score-low {
-      background-color: @red-100;
-      color: @red-500;
-    }
+    color: var(--claim-darker-color);
+    background-color: var(--claim-lighter-color);
   }
 
   .score-percentage {
@@ -766,18 +758,7 @@ mark {
     height: 100%;
     border-radius: 3px;
     transition: width 0.3s ease;
-
-    &.score-high {
-      background-color: @green-500;
-    }
-
-    &.score-medium {
-      background-color: @amber-500;
-    }
-
-    &.score-low {
-      background-color: @red-500;
-    }
+    background-color: var(--claim-color);
   }
 
   .rationale-section {

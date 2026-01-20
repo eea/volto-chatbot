@@ -26,15 +26,17 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
     })
     .filter((segment) => !!segment)
     .map((segment) => {
-      const text = joinedSources.slice(
-        Math.max(0, segment.startOffset), // sometimes startOffset comes as -1
-        segment.endOffset,
+      const startOffset = Math.max(0, segment.startOffset); // sometimes startOffset comes as -1
+      const endOffset = segment.endOffset;
+      const text = joinedSources.slice(startOffset, endOffset);
+      const source = citedSources.find(
+        (source) =>
+          startOffset >= source.startIndex &&
+          endOffset <= source.halloumiContext.length + source.startIndex,
       );
-      const source = citedSources.find((cit) => cit.text.indexOf(text) > -1);
       return {
         ...segment,
         text,
-        // expandedText,
         source_id: source?.id,
       };
     });
@@ -46,9 +48,6 @@ export function ClaimSegments({ segmentIds, segments, citedSources }) {
     }))
     .filter((source) => source.snippets.length > 0)
     .sort((sa, sb) => sa.index - sb.index);
-
-  // eslint-disable-next-line no-console
-  // console.log({ snippets, sourcesWithSnippets, segments, citedSources });
 
   const [activeTab, setActiveTab] = React.useState(0);
   const [visibleSegmentId, setVisibleSegment] = React.useState();

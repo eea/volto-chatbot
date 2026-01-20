@@ -1,15 +1,21 @@
 import { Modal, ModalContent, ModalHeader } from 'semantic-ui-react';
+import cx from 'classnames';
 import { convertToPercentage } from '../../utils';
 import SVGIcon from '../Icon';
-import { getSupportedBgColor, getScoreLevel } from './colors';
+import { getSupportedBgColor } from './colors';
 import { ClaimSegments } from './ClaimSegments';
 
 import BotIcon from '../../../icons/bot.svg';
-import './colors.less';
+
+const stripHtml = (html) => {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || '';
+};
 
 function stripMarkdown(md) {
   return (
-    md
+    stripHtml(md)
       .replace(/[`*_~>#-]/g, '') // formatting chars
       .replace(/\n{2,}/g, '\n') // extra newlines
       // [[1]](url) → <sup>1</sup>
@@ -20,14 +26,19 @@ function stripMarkdown(md) {
   );
 }
 
+const trimNonAlphanumeric = (str) =>
+  stripMarkdown(str).replace(/^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$/g, '');
+
 export function ClaimModal({ claim, markers, text, citedSources }) {
-  const scoreLevel = getScoreLevel(claim.score);
+  const highlightText = trimNonAlphanumeric(text?.[0] || '');
 
   return (
     <Modal
-      className="claim-modal"
+      className={cx('claim-modal', getSupportedBgColor(claim.score, 'claim'))}
       trigger={
-        <span className={`claim ${getSupportedBgColor(claim.score)}`}>
+        <span
+          className={cx('claim', getSupportedBgColor(claim.score, 'claim'))}
+        >
           {text}
         </span>
       }
@@ -40,13 +51,14 @@ export function ClaimModal({ claim, markers, text, citedSources }) {
             </div>
             <span className="claim-label">Verified Claim</span>
           </div>
-          <blockquote
-            className={`claim-quote ${getSupportedBgColor(claim.score)}`}
-          >
+          <blockquote className="claim-quote">
             &ldquo;
             <span
               dangerouslySetInnerHTML={{
-                __html: stripMarkdown(claim.claimString),
+                __html: stripMarkdown(claim.claimString).replace(
+                  highlightText,
+                  `<b>${highlightText}</b>`,
+                ),
               }}
             />
             &rdquo;
@@ -54,9 +66,9 @@ export function ClaimModal({ claim, markers, text, citedSources }) {
         </div>
       </ModalHeader>
       <ModalContent>
-        <div className={`claim-verification-card ${scoreLevel}`}>
+        <div className="claim-verification-card">
           <div className="score-badge-section">
-            <div className={`score-badge ${scoreLevel}`}>
+            <div className="score-badge">
               <span className="score-percentage">
                 {convertToPercentage(claim.score)}
               </span>
@@ -64,7 +76,7 @@ export function ClaimModal({ claim, markers, text, citedSources }) {
             </div>
             <div className="score-progress-bar">
               <div
-                className={`score-progress-fill ${scoreLevel}`}
+                className="score-progress-fill"
                 style={{ width: `${claim.score * 100}%` }}
               />
             </div>

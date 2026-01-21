@@ -32,20 +32,12 @@
 
 .generate-colors(@namespace, @name, @color, @lighter-value: 20, @darker-value: 20) {
   @var-name: ~'--@{namespace}-color';
-  @values: 10, 20, 30, 40, 50;
 
   .@{namespace}-@{name} {
     // Fallback (Less compile-time)
     --@{namespace}-color: @color;
     --@{namespace}-lighter-color: lighten(@color, @lighter-value);
     --@{namespace}-darker-color: darken(@color, @darker-value);
-
-    // Modern browsers (CSS runtime)
-    /* prettier-ignore */
-    @supports (color: hsl(from white h s l)) {
-      --@{namespace}-lighter-color: hsl(from var(@var-name) h s calc(l + @lighter-value));
-      --@{namespace}-darker-color: hsl(from var(@var-name) h s calc(l - @darker-value));
-  }
   }
 }
 

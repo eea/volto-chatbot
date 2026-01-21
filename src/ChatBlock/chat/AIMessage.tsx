@@ -410,15 +410,6 @@ export function AIMessage({
               </RendererComponent>
             </div>
           ))}
-
-        {isLoading &&
-          isLastMessage &&
-          !isFetchingRelatedQuestions &&
-          !message.isFinalMessageComing && (
-            <div className="loader-container">
-              <div className="loader" />
-            </div>
-          )}
       </div>
 
       {/* Total fail message */}

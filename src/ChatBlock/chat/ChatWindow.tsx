@@ -1,5 +1,11 @@
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useMemo,
+  useCallback,
+} from 'react';
 import type { Persona } from '../types/interfaces';
-import { useRef, useEffect, useState, useMemo, useCallback } from 'react';
 import { Button, Form, Segment, Checkbox } from 'semantic-ui-react';
 import { injectLazyLibs } from '@plone/volto/helpers/Loadable';
 import { trackEvent } from '@eeacms/volto-matomo/utils';
@@ -169,35 +175,52 @@ function ChatWindow({
               style={{ maxHeight: height }}
             >
               {messages.map((message, index) => (
-                <ChatMessage
-                  key={message.messageId}
-                  message={message}
-                  isLoading={isStreaming}
-                  isDeepResearchEnabled={isDeepResearchEnabled}
-                  libs={libs}
-                  onChoice={(message) => onSubmit({ message })}
-                  onFetchRelatedQuestions={onFetchRelatedQuestions}
-                  enableFeedback={enableFeedback}
-                  scrollToInput={scrollToInput}
-                  feedbackReasons={feedbackReasons}
-                  qualityCheck={qualityCheck}
-                  qualityCheckStages={qualityCheckStages}
-                  qualityCheckContext={qualityCheckContext}
-                  qualityCheckEnabled={qualityCheckEnabled}
-                  noSupportDocumentsMessage={noSupportDocumentsMessage}
-                  totalFailMessage={totalFailMessage}
-                  isFetchingRelatedQuestions={isFetchingRelatedQuestions}
-                  enableShowTotalFailMessage={enableShowTotalFailMessage}
-                  enableMatomoTracking={enableMatomoTracking}
-                  persona={persona.id}
-                  maxContextSegments={maxContextSegments}
-                  isLastMessage={index === messages.length - 1}
-                  className={index === messages.length - 1 ? 'most-recent' : ''}
-                  chatWindowRef={chatWindowRef}
-                  chatWindowEndRef={chatWindowEndRef}
-                  showTools={showTools}
-                />
+                <React.Fragment>
+                  <ChatMessage
+                    key={message.messageId}
+                    message={message}
+                    isLoading={isStreaming}
+                    isDeepResearchEnabled={isDeepResearchEnabled}
+                    libs={libs}
+                    onChoice={(message) => onSubmit({ message })}
+                    onFetchRelatedQuestions={onFetchRelatedQuestions}
+                    enableFeedback={enableFeedback}
+                    scrollToInput={scrollToInput}
+                    feedbackReasons={feedbackReasons}
+                    qualityCheck={qualityCheck}
+                    qualityCheckStages={qualityCheckStages}
+                    qualityCheckContext={qualityCheckContext}
+                    qualityCheckEnabled={qualityCheckEnabled}
+                    noSupportDocumentsMessage={noSupportDocumentsMessage}
+                    totalFailMessage={totalFailMessage}
+                    isFetchingRelatedQuestions={isFetchingRelatedQuestions}
+                    enableShowTotalFailMessage={enableShowTotalFailMessage}
+                    enableMatomoTracking={enableMatomoTracking}
+                    persona={persona.id}
+                    maxContextSegments={maxContextSegments}
+                    isLastMessage={index === messages.length - 1}
+                    className={
+                      index === messages.length - 1 ? 'most-recent' : ''
+                    }
+                    chatWindowRef={chatWindowRef}
+                    chatWindowEndRef={chatWindowEndRef}
+                    showTools={showTools}
+                  />
+                </React.Fragment>
               ))}
+
+              {isStreaming &&
+                !isFetchingRelatedQuestions &&
+                !messages[messages.length - 1].isFinalMessageComing && (
+                  <div className="comment">
+                    <div className="circle assistant placeholder"></div>
+                    <div className="comment-content">
+                      <div className="loader-container">
+                        <div className="loader" />
+                      </div>
+                    </div>
+                  </div>
+                )}
             </div>
           </>
         )}

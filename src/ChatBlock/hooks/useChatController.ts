@@ -231,7 +231,7 @@ export function useChatController({
             message: messageText,
             chatSessionId: sessionId,
             parentMessageId: parentMessageId || null,
-            useAgentSearch: isDeepResearchEnabled,
+            useAgentSearch: false,
             regenerate: false,
             filters: null,
             selectedDocumentIds: [],

@@ -3,12 +3,12 @@ import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import RelatedQuestions from '../components/RelatedQuestions';
 
+import { trackEvent } from '@eeacms/volto-matomo/utils';
+
 // Mock @eeacms/volto-matomo/utils
 jest.mock('@eeacms/volto-matomo/utils', () => ({
   trackEvent: jest.fn(),
 }));
-
-import { trackEvent } from '@eeacms/volto-matomo/utils';
 
 describe('RelatedQuestions', () => {
   const mockOnChoice = jest.fn();

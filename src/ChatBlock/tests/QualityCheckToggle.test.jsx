@@ -19,7 +19,9 @@ describe('QualityCheckToggle', () => {
       />,
     );
 
-    expect(container.querySelector('.quality-check-toggle')).toBeInTheDocument();
+    expect(
+      container.querySelector('.quality-check-toggle'),
+    ).toBeInTheDocument();
   });
 
   it('renders checkbox with correct label', () => {

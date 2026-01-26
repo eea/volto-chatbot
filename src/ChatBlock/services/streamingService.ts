@@ -15,6 +15,7 @@ export interface SendMessageParams {
   modelVersion?: string;
   temperature?: number;
   systemPromptOverride?: string;
+  taskPromptOverride?: string;
   useExistingUserMessage?: boolean;
   alternateAssistantId?: number;
   signal?: AbortSignal;
@@ -181,6 +182,7 @@ export async function* sendMessage({
   modelVersion,
   temperature,
   systemPromptOverride,
+  taskPromptOverride,
   useExistingUserMessage,
   alternateAssistantId,
   signal,
@@ -211,11 +213,10 @@ export async function* sendMessage({
           }
         : null),
     query_override: queryOverride,
-    prompt_override: systemPromptOverride
-      ? {
-          system_prompt: systemPromptOverride,
-        }
-      : null,
+    prompt_override: {
+      ...(systemPromptOverride ? { system_prompt: systemPromptOverride } : {}),
+      ...(taskPromptOverride ? { task_prompt: taskPromptOverride } : {}),
+    },
     llm_override:
       temperature || modelVersion
         ? {

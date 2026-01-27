@@ -16,7 +16,7 @@ function ChatBlockView(props) {
 export default withDanswerData((props) => [
   'assistantData',
   typeof props.data?.assistant !== 'undefined'
-    ? superagent.get(`/_da/v1/persona/${props.data.assistant}`).type('json')
+    ? superagent.get(`/_v1_da/persona/${props.data.assistant}`).type('json')
     : null,
   props.data?.assistant,
 ])(ChatBlockView);

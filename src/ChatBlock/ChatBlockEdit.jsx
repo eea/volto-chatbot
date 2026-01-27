@@ -38,5 +38,5 @@ const ChatBlockEdit = (props) => {
 
 export default withDanswerData(() => [
   'assistants',
-  superagent.get('/_da/persona?include_deleted=false').type('json'),
+  superagent.get('/_da/v1/persona?include_deleted=false').type('json'),
 ])(ChatBlockEdit);

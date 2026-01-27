@@ -3,7 +3,7 @@ const makeLoaderFinder = require('razzle-dev-utils/makeLoaderFinder');
 
 const modify = (config, { target, dev }, webpack) => {
   const markedPath = path.dirname(require.resolve('marked'));
-  const nodeFetch = path.dirname(require.resolve('node-fetch'));
+  // const nodeFetch = path.dirname(require.resolve('node-fetch'));
 
   const babelLoaderFinder = makeLoaderFinder('babel-loader');
   const babelLoader = config.module.rules.find(babelLoaderFinder);
@@ -26,10 +26,14 @@ const modify = (config, { target, dev }, webpack) => {
   include.push(markedPath);
   // include.push(nodeFetch);
 
-  babelLoader.use[0].options.plugins = [
-    ...(babelLoader.use[0].options.plugins || []),
-    '@babel/plugin-proposal-private-methods',
-  ];
+  const plugs = babelLoader.use[0].options.plugins || [];
+
+  if (plugs.indexOf('@babel/plugin-proposal-private-methods') < 0) {
+    babelLoader.use[0].options.plugins = [
+      ...(plugs || []),
+      '@babel/plugin-proposal-private-methods',
+    ];
+  }
 
   return config;
 };

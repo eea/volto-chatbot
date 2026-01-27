@@ -71,8 +71,6 @@ describe('convertGenerativesClaimToVerifyClaimResponse', () => {
     expect(result).toEqual({
       claims: [
         {
-          claimId: 1,
-          claimString: 'Test claim string',
           startOffset: 100,
           endOffset: 120,
           rationale: 'Test explanation',

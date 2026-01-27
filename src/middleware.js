@@ -5,7 +5,6 @@ import debug from 'debug';
 import fs from 'fs';
 
 const log = debug('volto-chatbot');
-// import readline from 'readline';
 
 const MOCK_STREAM_DELAY = parseInt(process.env.MOCK_STREAM_DELAY || '0');
 
@@ -218,6 +217,7 @@ async function send_danswer_request(
     } else {
       res.set('Content-Type', response.headers.get('Content-Type'));
     }
+
     response.body.pipe(res);
   } catch (error) {
     throw error;
@@ -225,7 +225,7 @@ async function send_danswer_request(
 }
 
 export default async function middleware(req, res, next) {
-  const path = req.url.replace('/_da/', '/');
+  const path = req.url.replace('/_da/v1/', '/');
 
   const reqUrl = `${process.env.DANSWER_URL || ''}/api${path}`;
 

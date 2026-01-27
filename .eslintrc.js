@@ -19,7 +19,7 @@ if (configFile) {
 const AddonConfigurationRegistry = require(`${voltoPath}/addon-registry.js`);
 const reg = new AddonConfigurationRegistry(projectRootPath);
 
-// Extends ESlint configuration for adding aliases to `src` directories in Volto addons
+// Extends ESlint configuration for adding the aliases to `src` directories in Volto addons
 const addonAliases = Object.keys(reg.packages).map((o) => [
   o,
   reg.packages[o].modulePath,
@@ -40,7 +40,7 @@ const defaultConfig = {
           ['@root', `${__dirname}/src`],
           ['~', `${__dirname}/src`],
         ],
-        extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
+        extensions: ['.js', '.jsx', '.json'],
       },
       'babel-plugin-root-import': {
         rootPathSuffix: 'src',
@@ -54,10 +54,7 @@ const defaultConfig = {
         allowReferrer: true,
       },
     ],
-    // 'import/no-unresolved': 'off',
-    'no-console': 'off',
-    // 'react-hooks/exhaustive-deps': 'warn',
-  },
+  }
 };
 
 const config = addonExtenders.reduce(

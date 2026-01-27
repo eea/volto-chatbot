@@ -12,8 +12,8 @@ const applyConfig = (config) => {
     const proxyMiddleware = require('./middleware').default;
     const halloumiMiddleware = require('./halloumi/middleware').default;
 
-    middleware.all('**/_da/**', proxyMiddleware);
-    middleware.all('**/_ha/**', halloumiMiddleware);
+    middleware.all('**/_da/v1/**', proxyMiddleware);
+    middleware.all('**/_ha/v1/**', halloumiMiddleware);
 
     middleware.id = 'chatbot';
 
@@ -42,17 +42,5 @@ const applyConfig = (config) => {
 
   return config;
 };
-
-export {
-  createChatSession,
-  sendMessage,
-} from './ChatBlock/services/streamingService';
-export { MessageProcessor } from './ChatBlock/services/messageProcessor';
-export { default as withDanswerData } from './ChatBlock/hocs/withDanswerData';
-export * from './ChatBlock/packets';
-
-export { default as UserActionsToolbar } from './ChatBlock/components/UserActionsToolbar';
-export { default as FeedbackModal } from './ChatBlock/components/FeedbackModal';
-export { default as ChatMessageFeedback } from './ChatBlock/components/ChatMessageFeedback';
 
 export default applyConfig;

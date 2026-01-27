@@ -6,7 +6,7 @@ import { ChatBlockSchema } from './schema';
 export default function installChatBlock(config) {
   config.blocks.blocksConfig.danswerChat = {
     id: 'danswerChat',
-    title: 'AI Chatbot',
+    title: 'AI Chatbot (DEPRECATED)',
     icon: codeSVG,
     group: 'common',
     view: ChatBlockView,

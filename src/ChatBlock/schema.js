@@ -1,5 +1,3 @@
-import { PacketType } from './types/streamingModels';
-
 const ScoreRangeSchema = {
   title: 'Score Range',
   fieldsets: [
@@ -71,7 +69,6 @@ export function ChatBlockSchema({ assistants, data }) {
         id: 'default',
         title: 'Default',
         fields: [
-          'chatTitle',
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
@@ -82,7 +79,6 @@ export function ChatBlockSchema({ assistants, data }) {
           'starterPromptsPosition',
           'showAssistantPrompts',
           'enableQgen',
-          'deepResearch',
           'enableShowTotalFailMessage',
           ...(data.enableShowTotalFailMessage ? ['totalFailMessage'] : []),
           'qualityCheck',
@@ -99,11 +95,12 @@ export function ChatBlockSchema({ assistants, data }) {
             : []),
           'enableFeedback',
           ...(data.enableFeedback ? ['feedbackReasons'] : []),
-          'showTools',
           'enableMatomoTracking',
           'scrollToInput',
+          'showToolCalls',
           'showAssistantTitle',
           'showAssistantDescription',
+          'chatTitle',
         ],
       },
     ],
@@ -138,15 +135,6 @@ export function ChatBlockSchema({ assistants, data }) {
               { text: 'No supported information found in the documents' },
             ],
           },
-        ],
-      },
-      deepResearch: {
-        title: 'Deep research',
-        choices: [
-          ['always_on', 'Always on'],
-          ['unavailable', 'Unavailable'],
-          ['user_on', 'User choice, on by default'],
-          ['user_off', 'User choice, off by default'],
         ],
       },
       assistant: {
@@ -345,14 +333,10 @@ range is from 0 to 100`,
           'Enable tracking of user interactions via Matomo Analytics. When enabled, the chatbot will send events for: ' +
           'starter prompt clicks, user-submitted questions, clicks on related questions, and feedback on answers (positive/negative).',
       },
-      showTools: {
-        title: 'Show tools',
-        type: 'string',
-        choices: [
-          [PacketType.SEARCH_TOOL_START, 'Search tool'],
-          [PacketType.REASONING_START, 'Reasoning tool'],
-        ],
-        isMulti: true,
+      showToolCalls: {
+        title: 'Show query used in retriever',
+        type: 'boolean',
+        default: true,
       },
       placeholderPrompt: {
         default: 'Ask a question',

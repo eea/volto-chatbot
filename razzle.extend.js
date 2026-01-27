@@ -26,10 +26,14 @@ const modify = (config, { target, dev }, webpack) => {
   include.push(markedPath);
   // include.push(nodeFetch);
 
-  babelLoader.use[0].options.plugins = [
-    ...(babelLoader.use[0].options.plugins || []),
-    '@babel/plugin-proposal-private-methods',
-  ];
+  const plugs = babelLoader.use[0].options.plugins || [];
+
+  if (plugs.indexOf('@babel/plugin-proposal-private-methods') < 0) {
+    babelLoader.use[0].options.plugins = [
+      ...(plugs || []),
+      '@babel/plugin-proposal-private-methods',
+    ];
+  }
 
   return config;
 };

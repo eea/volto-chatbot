@@ -1,11 +1,10 @@
 import React from 'react';
-import { compose } from 'redux';
 import superagent from 'superagent';
 import { BlockDataForm, SidebarPortal } from '@plone/volto/components';
 
 import ChatBlockView from './ChatBlockView';
 import { ChatBlockSchema } from './schema';
-import withDanswerData from './hocs/withDanswerData';
+import withDanswerData from './withDanswerData';
 
 const ChatBlockEdit = (props) => {
   const { onChangeBlock, block, assistants, data } = props;
@@ -37,10 +36,7 @@ const ChatBlockEdit = (props) => {
   );
 };
 
-export default compose(
-  withDanswerData(() => [
-    'assistants',
-    superagent.get('/_da/persona?include_deleted=false').type('json'),
-  ]),
-  // withDanswerData(() => ['tool', superagent.get('/_da/tool').type('json')]), // May be needed in the future
-)(ChatBlockEdit);
+export default withDanswerData(() => [
+  'assistants',
+  superagent.get('/_da/persona?include_deleted=false').type('json'),
+])(ChatBlockEdit);

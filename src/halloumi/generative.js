@@ -199,8 +199,6 @@ export function convertGenerativesClaimToVerifyClaimResponse(
     const claimResponseWindow = prompt.responseOffsets.get(claimId);
     const score = generativeClaim.probabilities.get('supported');
     const claim = {
-      claimId,
-      claimString: generativeClaim.claimString,
       startOffset: claimResponseWindow.startOffset,
       endOffset: claimResponseWindow.endOffset,
       rationale: generativeClaim.explanation,

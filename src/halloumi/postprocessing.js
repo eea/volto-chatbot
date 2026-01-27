@@ -90,8 +90,7 @@ function getSupportStatusFromSubsegment(subsegment) {
 function getClaimFromSegment(segment) {
   const claim_segments = segment.split('><');
   const claimId = getClaimIdFromSubsegment(claim_segments[0]);
-  // Strip trailing '>' which can occur in malformed segments without subclaims
-  const claimString = claim_segments[1]?.replace(/>$/, '') || '';
+  const claimString = claim_segments[1];
 
   const subclaims = [];
   let claimProgressIndex = 3; // Start at 3 to skip the claim id, claim string and the subclaims tag
@@ -122,18 +121,11 @@ function getClaimFromSegment(segment) {
     }
   }
 
-  const segments =
-    cite_tag_index >= 0
-      ? getClaimCitationsFromSubsegment(claim_segments[cite_tag_index + 1])
-      : [];
-  const explanation =
-    explanation_index >= 0 ? claim_segments[explanation_index] : '';
-
-  // Default to true if label not found
-  const supported =
-    label_index >= 0
-      ? getSupportStatusFromSubsegment(claim_segments[label_index])
-      : true;
+  const segments = getClaimCitationsFromSubsegment(
+    claim_segments[cite_tag_index + 1],
+  );
+  const explanation = claim_segments[explanation_index];
+  const supported = getSupportStatusFromSubsegment(claim_segments[label_index]);
 
   const claim = {
     claimId,
@@ -161,43 +153,13 @@ export function getClaimsFromResponse(response) {
   let segments = response.split('<end||r>');
   const claims = [];
 
-  for (let i = 0; i < segments.length; i++) {
-    const segment = segments[i];
-
+  for (const segment of segments) {
     if (segment.length === 0) {
       continue;
     }
 
-    // Skip segments that don't start with a valid claim marker <|r*|>
-    if (!segment.match(/^<\|r\d+\|>/)) {
-      continue;
-    }
-
-    // Check if this segment is well-formed (has subclaims within it)
-    // Well-formed: <|r1|><claim><|subclaims|>...<|supported|>...<end||r>
-    // Malformed:   <|r1|><claim><end||r><|subclaims|>...<|supported|>...<end||r>
-    // The malformed case puts verification data AFTER <end||r>, creating orphan segments
-    if (segment.includes('<|subclaims|>')) {
-      // Well-formed segment - process normally
-      const claim = getClaimFromSegment(segment);
-      claims.push(claim);
-    } else {
-      // Malformed segment - look for orphan data in the next segment
-      let fullSegment = segment;
-
-      // Look ahead for orphan segment (starts with <|subclaims|>)
-      if (i + 1 < segments.length) {
-        const nextSegment = segments[i + 1];
-        if (nextSegment.startsWith('<|subclaims|>')) {
-          // Merge: segment ends with '>', orphan starts with '<'
-          fullSegment = segment + nextSegment;
-          i++; // Skip the orphan in next iteration
-        }
-      }
-
-      const claim = getClaimFromSegment(fullSegment);
-      claims.push(claim);
-    }
+    const claim = getClaimFromSegment(segment);
+    claims.push(claim);
   }
 
   return claims;

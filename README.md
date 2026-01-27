@@ -16,10 +16,6 @@
 
 [Volto](https://github.com/plone/volto) add-on that integrates an AI-powered chatbot with a customizable interface and advanced settings to tailor its behavior and enhance user interactions.
 
-## Upgrade
-
-**1.0.0 (Breaking)** - This release introduces breaking changes to the chatbot configuration and API endpoints, making it compatible with Onyx v2.
-
 ## Features
 
 https://github.com/user-attachments/assets/f9b5f813-672f-4e4d-81d0-bf2aec35b587
@@ -30,27 +26,27 @@ The **Volto Chatbot** block allows the integration of an AI-powered chatbot into
 
 ## Functionalities
 
-| **Property**                 | **Description**                                                                 | **Type** | **Default**                      |
-| ---------------------------- | ------------------------------------------------------------------------------- | -------- | -------------------------------- |
-| `assistant`                  | Choose from the list of available assistants configured in the application.     | Dropdown | -                                |
-| `qgenAsistantId`             | Select an assistant for generating related questions.                           | Dropdown | -                                |
-| `enableQgen`                 | Toggle the generation of related questions.                                     | Boolean  | `false`                          |
-| `enableFeedback`             | Enable or disable thumbs up/down feedback for assistant responses.              | Boolean  | `true`                           |
-| `enableMatomoTracking`       | Enable tracking of user interactions via Matomo Analytics.                      | Boolean  | `true`                           |
-| `enableShowTotalFailMessage` | Show total failure message.                                                     | Boolean  | `false`                          |
-| `showAssistantTitle`         | Display or hide the assistant's title in the chat interface.                    | Boolean  | `true`                           |
-| `showAssistantDescription`   | Display or hide the assistant's description in the chat interface.              | Boolean  | `true`                           |
-| `qualityCheck`               | Show Halloumi-based automated quality check.                                    | Dropdown | `Disabled`                       |
-| `onDemandInputToggle`        | Sets the default state of the fact-check AI toggle.                             | Boolean  | `true`                           |
-| `showTools`                  | Show or hide tools in the chat interface.                                       | Array    | `["internal_search_tool_start"]` |
-| `scrollToInput`              | Automatically scroll the page to focus on the chat input when interacting.      | Boolean  | `false`                          |
-| `showAssistantPrompts`       | Show or hide predefined prompts provided by the assistant.                      | Boolean  | `true`                           |
-| `enableStarterPrompts`       | Define custom prompts to initiate a chat with the assistant.                    | Boolean  | `false`                          |
-| `starterPromptsHeading`      | Heading shown above the prompts.                                                | String   | -                                |
-| `starterPromptsPosition`     | Prompts position.                                                               | Dropdown | `Top`                            |
-| `placeholderPrompt`          | Set placeholder text for the chat input field.                                  | String   | `Ask a question`                 |
-| `chatTitle`                  | Title assigned to saved chats, visible only in Danswer or analytics.            | String   | `Online public chat`             |
-| `height`                     | Set the height of the chat window using CSS dimensions (e.g., `500px`, `70vh`). | String   | -                                |
+| **Property**                 | **Description**                                                                 | **Type** | **Default**          |
+| ---------------------------- | ------------------------------------------------------------------------------- | -------- | -------------------- |
+| `assistant`                  | Choose from the list of available assistants configured in the application.     | Dropdown | -                    |
+| `qgenAsistantId`             | Select an assistant for generating related questions.                           | Dropdown | -                    |
+| `enableQgen`                 | Toggle the generation of related questions.                                     | Boolean  | `false`              |
+| `enableFeedback`             | Enable or disable thumbs up/down feedback for assistant responses.              | Boolean  | `true`               |
+| `enableMatomoTracking`       | Enable tracking of user interactions via Matomo Analytics.                      | Boolean  | `true`               |
+| `enableShowTotalFailMessage` | Show total failure message.                                                     | Boolean  | `false`              |
+| `showAssistantTitle`         | Display or hide the assistant's title in the chat interface.                    | Boolean  | `true`               |
+| `showAssistantDescription`   | Display or hide the assistant's description in the chat interface.              | Boolean  | `true`               |
+| `qualityCheck`               | Show Halloumi-based automated quality check.                                    | Dropdown | `Disabled`           |
+| `onDemandInputToggle`        | Sets the default state of the fact-check AI toggle.                             | Boolean  | `true`               |
+| `scrollToInput`              | Automatically scroll the page to focus on the chat input when interacting.      | Boolean  | `false`              |
+| `showToolCalls`              | Show query used in retriever.                                                   | Boolean  | `true`               |
+| `showAssistantPrompts`       | Show or hide predefined prompts provided by the assistant.                      | Boolean  | `true`               |
+| `enableStarterPrompts`       | Define custom prompts to initiate a chat with the assistant.                    | Boolean  | `false`              |
+| `starterPromptsHeading`      | Heading shown above the prompts.                                                | String   | -                    |
+| `starterPromptsPosition`     | Prompts position.                                                               | Dropdown | `Top`                |
+| `placeholderPrompt`          | Set placeholder text for the chat input field.                                  | String   | `Ask a question`     |
+| `chatTitle`                  | Title assigned to saved chats, visible only in Danswer or analytics.            | String   | `Online public chat` |
+| `height`                     | Set the height of the chat window using CSS dimensions (e.g., `500px`, `70vh`). | String   | -                    |
 
 ---
 

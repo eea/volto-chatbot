@@ -12,8 +12,8 @@ const applyConfig = (config) => {
     const proxyMiddleware = require('./middleware').default;
     const halloumiMiddleware = require('./halloumi/middleware').default;
 
-    middleware.all('**/_da/v1/**', proxyMiddleware);
-    middleware.all('**/_ha/v1/**', halloumiMiddleware);
+    middleware.all('**/_v1_da/**', proxyMiddleware);
+    middleware.all('**/_v1_ha/**', halloumiMiddleware);
 
     middleware.id = 'chatbot';
 

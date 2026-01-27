@@ -6,7 +6,7 @@ export const delay = (ms) => {
 
 export async function createChatSession(personaId, description) {
   const createChatSessionResponse = await fetch(
-    '/_da/v1/chat/create-chat-session',
+    '/_v1_da/chat/create-chat-session',
     {
       method: 'POST',
       headers: {
@@ -46,7 +46,7 @@ export async function createChatMessageFeedback({
   }
 
   const createChatMessageFeedbackResponse = await fetch(
-    '/_da/v1/chat/create-chat-message-feedback',
+    '/_v1_da/chat/create-chat-message-feedback',
     {
       method: 'POST',
       headers: {
@@ -165,7 +165,7 @@ export async function* sendMessage({
   const documentsAreSelected =
     selectedDocumentIds && selectedDocumentIds.length > 0;
 
-  const sendMessageResponse = await fetch('/_da/v1/chat/send-message', {
+  const sendMessageResponse = await fetch('/_v1_da/chat/send-message', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

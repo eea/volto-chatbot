@@ -6,7 +6,7 @@ const Sentry = loadable.lib(
 );
 
 async function fetchHalloumi(answer, sources, maxContextSegments) {
-  const halloumiResponse = await fetch('/_ha/generate', {
+  const halloumiResponse = await fetch('/_v1_ha/generate', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',

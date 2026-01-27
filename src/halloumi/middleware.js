@@ -30,7 +30,7 @@ const classifyModel = {
 };
 
 export default async function middleware(req, res, next) {
-  const path = req.url.replace('/_ha/', '/');
+  const path = req.url.replace('/_v1_ha/', '/');
 
   if (!(LLMGW_TOKEN && LLMGW_URL)) {
     res.send({

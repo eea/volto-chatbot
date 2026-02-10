@@ -69,6 +69,7 @@ export function ChatBlockSchema({ assistants, data }) {
         id: 'default',
         title: 'Default',
         fields: [
+          'migrate',
           'assistant',
           'qgenAsistantId',
           'placeholderPrompt',
@@ -105,6 +106,10 @@ export function ChatBlockSchema({ assistants, data }) {
       },
     ],
     properties: {
+      migrate: {
+        title: 'Migrate',
+        widget: 'danswerChatMigrate',
+      },
       enableShowTotalFailMessage: {
         title: 'Show total failure message',
         type: 'boolean',

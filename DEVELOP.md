@@ -47,7 +47,7 @@ For new Volto 18+ projects, use Cookieplone. It includes `mrs-developer` by defa
             }
         }
 
-1.  Add `@eeacms/volto-chatbot` to the `addons` key in your project `package.json`
+1.  Add `@eeacms/volto-chatbot` to the `addons` key in your project `volto.config.js`
 
 1.  Install or refresh the project setup
 

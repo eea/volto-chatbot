@@ -1,6 +1,6 @@
 import React from 'react';
 import superagent from 'superagent';
-import { BlockDataForm } from '@plone/volto/components/manage/Form';
+import BlockDataForm from '@plone/volto/components/manage/Form/BlockDataForm';
 import SidebarPortal from '@plone/volto/components/manage/Sidebar/SidebarPortal';
 
 import ChatBlockView from './ChatBlockView';

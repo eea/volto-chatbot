@@ -15,9 +15,8 @@ export const RenderClaimView = (props) => {
     const isSelectedSegment = segment.id === visibleSegmentId;
     const Tag = isSelectedSegment ? 'mark' : 'span';
     return (
-      <p>
+      <p key={segment.id ?? ind}>
         <span
-          key={ind}
           ref={(el) => {
             if (el) spanRefs.current[segment.id] = el;
           }}

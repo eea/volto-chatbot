@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab, TabPane, Button } from 'semantic-ui-react';
 import LinkIcon from '@eeacms/volto-chatbot/icons/external-link.svg';
-import { SVGIcon } from '../utils';
+import { SVGIcon } from '@eeacms/volto-chatbot/ChatBlock/utils';
 import { RenderClaimView } from './RenderClaimView';
 
 const VISIBLE_SEGMENTS = 50; // Number of citations to show by default

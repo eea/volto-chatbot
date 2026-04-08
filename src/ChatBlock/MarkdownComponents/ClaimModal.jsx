@@ -1,5 +1,8 @@
 import { Modal, ModalContent, ModalHeader } from 'semantic-ui-react';
-import { convertToPercentage, SVGIcon } from '../utils';
+import {
+  convertToPercentage,
+  SVGIcon,
+} from '@eeacms/volto-chatbot/ChatBlock/utils';
 import { getSupportedBgColor, getSupportedTextColor } from './colors';
 import { ClaimSegments } from './ClaimSegments';
 

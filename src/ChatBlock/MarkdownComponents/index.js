@@ -1,7 +1,7 @@
 import React from 'react';
 import { ClaimModal } from './ClaimModal';
 import { Citation } from './Citation';
-import { transformEmailsToLinks } from '../utils';
+import { transformEmailsToLinks } from '@eeacms/volto-chatbot/ChatBlock/utils';
 
 export function components(message, markers, citedSources) {
   return {

@@ -1,10 +1,18 @@
 import debug from 'debug';
 import { getVerifyClaimResponse } from './generative';
+import { isPathAllowed } from '../middleware';
 
 const log = debug('halloumi');
 
 const MSG_INVALID_CONFIGURATION =
   'Invalid configuration: missing LLMGW_TOKEN or LLMGW_URL';
+
+// Allowed paths for _v1_ha proxy.
+// When adding new endpoints, update this list.
+const ALLOWED_HALLOUMI_PATHS = [
+  { path: '/generate', methods: ['POST'] },
+  { path: '/classify', methods: ['POST'] },
+];
 
 const LLMGW_URL = process.env.LLMGW_URL;
 const LLMGW_TOKEN = process.env.LLMGW_TOKEN;
@@ -31,6 +39,14 @@ const classifyModel = {
 
 export default async function middleware(req, res, next) {
   const path = req.url.replace('/_v1_ha/', '/');
+
+  // Reject paths not on the allowlist — prevents Confused Deputy attacks
+  if (!isPathAllowed(path, req.method, ALLOWED_HALLOUMI_PATHS)) {
+    res.statusCode = 404;
+    res.statusMessage = 'Not Found';
+    res.send({ error: 'Not Found' });
+    return;
+  }
 
   if (!(LLMGW_TOKEN && LLMGW_URL)) {
     res.send({

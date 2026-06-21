@@ -8,6 +8,30 @@ const log = debug('volto-chatbot');
 
 const MOCK_STREAM_DELAY = parseInt(process.env.MOCK_STREAM_DELAY || '0');
 
+// Allowed paths for _v1_da proxy.
+// When adding new endpoints, update this list.
+const ALLOWED_PROXY_PATHS = [
+  { path: '/persona', methods: ['GET'] },
+  { pathPattern: /^\/persona\/\d+$/, methods: ['GET'] },
+  { path: '/chat/create-chat-session', methods: ['POST'] },
+  { path: '/chat/send-message', methods: ['POST'] },
+  { path: '/chat/create-chat-message-feedback', methods: ['POST'] },
+];
+
+/**
+ * Check whether a stripped path matches the allowlist.
+ * Strips query strings before comparison.
+ */
+function isPathAllowed(strippedPath, method, allowedPaths) {
+  const cleanPath = strippedPath.split('?')[0];
+  return allowedPaths.some(
+    (entry) =>
+      (entry.path === cleanPath ||
+        (entry.pathPattern && entry.pathPattern.test(cleanPath))) &&
+      entry.methods.includes(method),
+  );
+}
+
 let cached_auth_cookie = null;
 let last_fetched = null;
 let maxAge;
@@ -224,8 +248,17 @@ async function send_danswer_request(
   }
 }
 
+export { isPathAllowed, ALLOWED_PROXY_PATHS };
 export default async function middleware(req, res, next) {
   const path = req.url.replace('/_v1_da/', '/');
+
+  // Reject paths not on the allowlist — prevents Confused Deputy attacks
+  if (!isPathAllowed(path, req.method, ALLOWED_PROXY_PATHS)) {
+    res.statusCode = 404;
+    res.statusMessage = 'Not Found';
+    res.send({ error: 'Not Found' });
+    return;
+  }
 
   const reqUrl = `${process.env.DANSWER_URL || ''}/api${path}`;
 

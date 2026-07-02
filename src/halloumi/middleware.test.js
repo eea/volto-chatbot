@@ -42,7 +42,7 @@ describe('halloumi middleware', () => {
       error: 'Invalid configuration: missing LLMGW_TOKEN or LLMGW_URL',
     });
 
-    process.env.LLMGW_TOKEN = origToken;
+    process.env.LLMGW_TOKEN = origToken; //betterleaks:allow
     process.env.LLMGW_URL = origUrl;
   });
 
@@ -92,7 +92,7 @@ describe('halloumi middleware - dynamic import', () => {
   it('sends response on successful getVerifyClaimResponse', async () => {
     const origToken = process.env.LLMGW_TOKEN;
     const origUrl = process.env.LLMGW_URL;
-    process.env.LLMGW_TOKEN = 'test-token';
+    process.env.LLMGW_TOKEN = 'test-token'; //betterleaks:allow
     process.env.LLMGW_URL = 'http://test-url';
 
     jest.resetModules();
@@ -116,14 +116,14 @@ describe('halloumi middleware - dynamic import', () => {
     expect(res.set).toHaveBeenCalledWith('Content-Type', 'application/json');
     expect(res.send).toHaveBeenCalledWith({ claims: [], segments: {} });
 
-    process.env.LLMGW_TOKEN = origToken;
+    process.env.LLMGW_TOKEN = origToken; //betterleaks:allow
     process.env.LLMGW_URL = origUrl;
   });
 
   it('handles errors from getVerifyClaimResponse', async () => {
     const origToken = process.env.LLMGW_TOKEN;
     const origUrl = process.env.LLMGW_URL;
-    process.env.LLMGW_TOKEN = 'test-token';
+    process.env.LLMGW_TOKEN = 'test-token'; //betterleaks:allow
     process.env.LLMGW_URL = 'http://test-url';
 
     jest.resetModules();
@@ -148,7 +148,7 @@ describe('halloumi middleware - dynamic import', () => {
       expect.objectContaining({ error: expect.stringContaining('LLM error') }),
     );
 
-    process.env.LLMGW_TOKEN = origToken;
+    process.env.LLMGW_TOKEN = origToken; //betterleaks:allow
     process.env.LLMGW_URL = origUrl;
   });
 });

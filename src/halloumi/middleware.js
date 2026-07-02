@@ -15,7 +15,7 @@ const ALLOWED_HALLOUMI_PATHS = [
 ];
 
 const LLMGW_URL = process.env.LLMGW_URL;
-const LLMGW_TOKEN = process.env.LLMGW_TOKEN;
+const LLMGW_TOKEN = process.env.LLMGW_TOKEN; //betterleaks:allow
 
 const generativeModel = {
   name: 'Inhouse-LLM/HallOumi-8B',
@@ -57,7 +57,7 @@ export default async function middleware(req, res, next) {
 
   const model = {
     ...(path === '/classify' ? classifyModel : generativeModel),
-    apiKey: LLMGW_TOKEN,
+    apiKey: LLMGW_TOKEN, //betterleaks:allow
   };
   const body = req.body;
 

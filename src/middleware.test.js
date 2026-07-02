@@ -93,7 +93,7 @@ describe('src/middleware', () => {
   });
 
   it('proxies POST request with api_key and pipes response', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
 
     await middleware(req, res, next);
@@ -114,7 +114,7 @@ describe('src/middleware', () => {
   });
 
   it('handles GET requests without body', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
     req.method = 'GET';
     req.url = '/_v1_da/persona/1';
@@ -127,7 +127,7 @@ describe('src/middleware', () => {
   });
 
   it('sends error response when fetch throws', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
 
     nodeFetch.mockRejectedValueOnce(
@@ -148,7 +148,7 @@ describe('src/middleware', () => {
   });
 
   it('handles error without response text', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
 
     nodeFetch.mockRejectedValueOnce(new Error('No response'));
@@ -165,7 +165,7 @@ describe('src/middleware', () => {
   });
 
   it('uses mock create-chat-session when MOCK_LLM_FILE_PATH is set', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
     process.env.MOCK_LLM_FILE_PATH = '/tmp/mock.jsonl';
     req.url = '/_v1_da/chat/create-chat-session';
@@ -177,7 +177,7 @@ describe('src/middleware', () => {
   });
 
   it('uses mock send-message with stream when MOCK_LLM_FILE_PATH is set', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
     process.env.MOCK_LLM_FILE_PATH = '/tmp/mock.jsonl';
     req.url = '/_v1_da/chat/send-message';
@@ -203,7 +203,7 @@ describe('src/middleware', () => {
   });
 
   it('dumps LLM response when DUMP_LLM_FILE_PATH is set', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
     process.env.DUMP_LLM_FILE_PATH = '/tmp/dumped_response.jsonl';
 
@@ -216,7 +216,7 @@ describe('src/middleware', () => {
   });
 
   it('rejects disallowed paths with 404', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
     req.url = '/_v1_da/admin/users/delete';
     req.method = 'POST';
@@ -229,7 +229,7 @@ describe('src/middleware', () => {
   });
 
   it('rejects allowed path with wrong HTTP method', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
     req.url = '/_v1_da/persona';
     req.method = 'DELETE';
@@ -242,7 +242,7 @@ describe('src/middleware', () => {
   });
 
   it('rejects path traversal attempts', async () => {
-    process.env.DANSWER_API_KEY = 'test-key';
+    process.env.DANSWER_API_KEY = 'test-key'; //betterleaks:allow
     process.env.DANSWER_URL = 'http://localhost:3000';
     req.url = '/_v1_da/../../etc/passwd';
     req.method = 'GET';

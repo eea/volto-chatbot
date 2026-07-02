@@ -52,7 +52,7 @@ authentication. Create a `.env` file in your project root with the following con
 ```env
 DANSWER_URL=https://api.danswer.com
 DANSWER_USERNAME=your_username
-DANSWER_PASSWORD=your_password
+DANSWER_PASSWORD="${DANSWER_PASSWORD}"
 ```
 
 - `DANSWER_URL`: The base URL of the Danswer service.

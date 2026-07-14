@@ -263,9 +263,9 @@ export default async function middleware(req, res, next) {
   const reqUrl = `${process.env.DANSWER_URL || ''}/api${path}`;
 
   const username = process.env.DANSWER_USERNAME;
-  const password = process.env.DANSWER_PASSWORD;
+  const password = process.env.DANSWER_PASSWORD; //betterleaks:allow
 
-  const api_key = process.env.DANSWER_API_KEY;
+  const api_key = process.env.DANSWER_API_KEY; //betterleaks:allow
   if (!(api_key || (username && password))) {
     res.send({
       error: MSG_INVALID_CONFIGURATION,
@@ -277,8 +277,8 @@ export default async function middleware(req, res, next) {
     await send_danswer_request(req, res, {
       url: reqUrl,
       username: username,
-      password: password,
-      api_key: api_key,
+      password: password, //betterleaks:allow
+      api_key: api_key, //betterleaks:allow
     });
   } catch (error) {
     // eslint-disable-next-line

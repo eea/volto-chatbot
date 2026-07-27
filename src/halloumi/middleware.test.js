@@ -1,12 +1,19 @@
-import middleware from './middleware';
+import fetch from 'node-fetch';
 import { isPathAllowed } from '../middleware';
 
-jest.mock('./generative');
+// Mock node-fetch
+jest.mock('node-fetch');
 
 describe('halloumi middleware', () => {
-  let req, res, next;
+  let req, res, next, middleware;
 
   beforeEach(() => {
+    fetch.mockReset();
+    // Clear the module cache so middleware is re-imported with current env vars
+    jest.resetModules();
+    // Re-mock after reset
+    jest.mock('node-fetch', () => jest.fn());
+
     req = {
       url: '/_v1_ha/generate',
       method: 'POST',
@@ -30,23 +37,90 @@ describe('halloumi middleware', () => {
     jest.restoreAllMocks();
   });
 
-  it('returns error when LLMGW_TOKEN is missing', async () => {
-    const origToken = process.env.LLMGW_TOKEN;
-    const origUrl = process.env.LLMGW_URL;
-    delete process.env.LLMGW_TOKEN;
-    delete process.env.LLMGW_URL;
+  it('proxies request to rag-fact-checker and returns response', async () => {
+    process.env.RAG_FACT_CHECKER_URL = 'http://localhost:8000';
+    middleware = require('./middleware').default;
+    const mockedFetch = require('node-fetch');
+
+    const mockResponse = {
+      claims: [
+        {
+          startOffset: 0,
+          endOffset: 20,
+          segmentIds: ['0'],
+          score: 0.95,
+          rationale: 'Supported by source.',
+        },
+      ],
+      segments: { 0: { startOffset: 0, endOffset: 30 } },
+    };
+
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve(mockResponse),
+    });
 
     await middleware(req, res, next);
 
-    expect(res.send).toHaveBeenCalledWith({
-      error: 'Invalid configuration: missing LLMGW_TOKEN or LLMGW_URL',
+    expect(mockedFetch).toHaveBeenCalledWith(
+      'http://localhost:8000/halloumi/generate',
+      expect.objectContaining({
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          answer: 'test answer',
+          sources: ['source1', 'source2'],
+          max_context_segments: 3,
+        }),
+      }),
+    );
+    expect(res.set).toHaveBeenCalledWith('Content-Type', 'application/json');
+    expect(res.send).toHaveBeenCalledWith(mockResponse);
+  });
+
+  it('returns 502 when rag-fact-checker is unreachable', async () => {
+    process.env.RAG_FACT_CHECKER_URL = 'http://localhost:8000';
+    middleware = require('./middleware').default;
+    const mockedFetch = require('node-fetch');
+
+    mockedFetch.mockRejectedValue(new Error('ECONNREFUSED'));
+
+    await middleware(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(502);
+    expect(res.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: expect.stringContaining('Fact-checker unavailable'),
+      }),
+    );
+  });
+
+  it('returns error when rag-fact-checker responds with non-ok status', async () => {
+    process.env.RAG_FACT_CHECKER_URL = 'http://localhost:8000';
+    middleware = require('./middleware').default;
+    const mockedFetch = require('node-fetch');
+
+    mockedFetch.mockResolvedValue({
+      ok: false,
+      status: 500,
+      json: () => Promise.resolve({ detail: 'Internal server error' }),
     });
 
-    process.env.LLMGW_TOKEN = origToken; //betterleaks:allow
-    process.env.LLMGW_URL = origUrl;
+    await middleware(req, res, next);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.send).toHaveBeenCalledWith(
+      expect.objectContaining({
+        error: expect.stringContaining('Internal server error'),
+      }),
+    );
   });
 
   it('rejects disallowed paths with 404', async () => {
+    process.env.RAG_FACT_CHECKER_URL = 'http://localhost:8000';
+    middleware = require('./middleware').default;
+
     req.url = '/_v1_ha/admin/config';
     req.method = 'POST';
 
@@ -57,6 +131,9 @@ describe('halloumi middleware', () => {
   });
 
   it('rejects allowed path with wrong HTTP method', async () => {
+    process.env.RAG_FACT_CHECKER_URL = 'http://localhost:8000';
+    middleware = require('./middleware').default;
+
     req.url = '/_v1_ha/generate';
     req.method = 'GET';
 
@@ -65,109 +142,32 @@ describe('halloumi middleware', () => {
     expect(res.statusCode).toBe(404);
     expect(res.send).toHaveBeenCalledWith({ error: 'Not Found' });
   });
-});
 
-// These tests need a fresh module loaded with env vars set so that
-// LLMGW_TOKEN and LLMGW_URL are defined at module load time,
-// allowing the code to reach getVerifyClaimResponse.
-describe('halloumi middleware - dynamic import', () => {
-  const buildReq = () => ({
-    url: '/_v1_ha/generate',
-    method: 'POST',
-    body: {
-      sources: ['source1', 'source2'],
-      answer: 'test answer',
-      maxContextSegments: 3,
-    },
-    headers: {},
-    ip: '127.0.0.1',
-  });
+  it('uses default URL when RAG_FACT_CHECKER_URL is not set', async () => {
+    delete process.env.RAG_FACT_CHECKER_URL;
+    middleware = require('./middleware').default;
+    const mockedFetch = require('node-fetch');
 
-  const buildRes = () => ({
-    send: jest.fn(),
-    set: jest.fn(),
-    status: jest.fn().mockReturnThis(),
-  });
-
-  it('sends response on successful getVerifyClaimResponse', async () => {
-    const origToken = process.env.LLMGW_TOKEN;
-    const origUrl = process.env.LLMGW_URL;
-    process.env.LLMGW_TOKEN = 'test-token'; //betterleaks:allow
-    process.env.LLMGW_URL = 'http://test-url';
-
-    jest.resetModules();
-
-    const mockGetVerifyClaimResponse = jest
-      .fn()
-      .mockResolvedValue({ claims: [], segments: {} });
-
-    jest.setMock('./generative', {
-      getVerifyClaimResponse: mockGetVerifyClaimResponse,
+    mockedFetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: () => Promise.resolve({ claims: [], segments: {} }),
     });
 
-    const middlewareMod = require('./middleware').default;
+    await middleware(req, res, next);
 
-    const req = buildReq();
-    const res = buildRes();
-
-    await middlewareMod(req, res, jest.fn());
-
-    expect(mockGetVerifyClaimResponse).toHaveBeenCalled();
-    expect(res.set).toHaveBeenCalledWith('Content-Type', 'application/json');
-    expect(res.send).toHaveBeenCalledWith({ claims: [], segments: {} });
-
-    process.env.LLMGW_TOKEN = origToken; //betterleaks:allow
-    process.env.LLMGW_URL = origUrl;
-  });
-
-  it('handles errors from getVerifyClaimResponse', async () => {
-    const origToken = process.env.LLMGW_TOKEN;
-    const origUrl = process.env.LLMGW_URL;
-    process.env.LLMGW_TOKEN = 'test-token'; //betterleaks:allow
-    process.env.LLMGW_URL = 'http://test-url';
-
-    jest.resetModules();
-
-    const mockGetVerifyClaimResponse = jest
-      .fn()
-      .mockRejectedValue(new Error('LLM error'));
-
-    jest.setMock('./generative', {
-      getVerifyClaimResponse: mockGetVerifyClaimResponse,
-    });
-
-    const middlewareMod = require('./middleware').default;
-
-    const req = buildReq();
-    const res = buildRes();
-
-    await middlewareMod(req, res, jest.fn());
-
-    expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.send).toHaveBeenCalledWith(
-      expect.objectContaining({ error: expect.stringContaining('LLM error') }),
+    expect(mockedFetch).toHaveBeenCalledWith(
+      'http://localhost:8000/halloumi/generate',
+      expect.any(Object),
     );
-
-    process.env.LLMGW_TOKEN = origToken; //betterleaks:allow
-    process.env.LLMGW_URL = origUrl;
   });
 });
 
 describe('halloumi path allowlist', () => {
-  // Mirror of ALLOWED_HALLOUMI_PATHS from middleware.js
-  const ALLOWED_HALLOUMI_PATHS = [
-    { path: '/generate', methods: ['POST'] },
-    { path: '/classify', methods: ['POST'] },
-  ];
+  const ALLOWED_HALLOUMI_PATHS = [{ path: '/generate', methods: ['POST'] }];
 
   it('allows /generate with POST', () => {
     expect(isPathAllowed('/generate', 'POST', ALLOWED_HALLOUMI_PATHS)).toBe(
-      true,
-    );
-  });
-
-  it('allows /classify with POST', () => {
-    expect(isPathAllowed('/classify', 'POST', ALLOWED_HALLOUMI_PATHS)).toBe(
       true,
     );
   });

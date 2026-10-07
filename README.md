@@ -1,4 +1,5 @@
-# Volto Chatbot
+# Volto Chatbot 
+**[DEPRECATED]** See new add-on [eea/volto-eea-chatbot](https://github.com/eea/volto-eea-chatbot)
 
 [![Releases](https://img.shields.io/github/v/release/eea/volto-chatbot)](https://github.com/eea/volto-chatbot/releases)
 
